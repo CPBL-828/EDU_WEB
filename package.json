@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@scarlab/icons-vue": "^1.0.6",
     "prettier": "^2.7.1",
     "vue": "^3.2.37",
     "vue-router": "^4.1.5"

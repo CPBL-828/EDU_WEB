@@ -1,7 +1,10 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import "mixin";
 @import "main";
 
 * {
+  font-family: 'Noto Sans CJK KR', Noto Sans KR, sans-serif;
+  line-height: 140%;
   margin: 0;
   padding: 0;
   //overflow: hidden;

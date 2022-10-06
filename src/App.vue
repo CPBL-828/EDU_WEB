@@ -8,4 +8,4 @@ export default defineComponent({});
   <router-view></router-view>
 </template>
 
-<style src="../../edu-front/src/assets/css/index.css"></style>
+<style src="../../EDU_FRONT/src/assets/css/index.css"></style>

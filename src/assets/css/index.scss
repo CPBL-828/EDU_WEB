@@ -3,7 +3,7 @@
 @import "main";
 
 * {
-  font-family: 'Noto Sans CJK KR', Noto Sans KR, sans-serif;
+  font-family: "Noto Sans CJK KR", Noto Sans KR, sans-serif;
   line-height: 140%;
   margin: 0;
   padding: 0;
@@ -11,6 +11,7 @@
 }
 
 #app {
+  background-color: $background-color;
   margin: 0;
   padding: 0;
   width: 100%;

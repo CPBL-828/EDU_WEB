@@ -1,11 +1,21 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted } from "vue";
 
-export default defineComponent({});
+export default defineComponent({
+  setup() {
+    onMounted(() => {
+      console.log(
+        "  ハ____ハ      ｡ﾟﾟ･｡･ﾟﾟ｡\n" +
+          " ꒰ ⬩ ω ⬩ ꒱    ˚｡     ｡˚\n" +
+          " |   つ Success! ﾟ･｡･ﾟ\n"
+      );
+    });
+  },
+});
 </script>
 
 <template>
   <router-view></router-view>
 </template>
 
-<style src="../../EDU_FRONT/src/assets/css/index.css"></style>
+<style src="./assets/css/index.css"></style>

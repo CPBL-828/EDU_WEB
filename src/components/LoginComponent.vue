@@ -28,7 +28,7 @@ export default defineComponent({
       //   USER_ID: userId.value,
       // };
       if (userId.value) {
-        window.alert("로그인 성공!");
+        window.alert("로그인 성공입니다!");
         router.push("/main-" + userType.value);
       } else {
         window.alert(whoAmI.value + " ID를 입력해 주세요!");

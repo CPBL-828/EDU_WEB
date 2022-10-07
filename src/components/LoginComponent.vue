@@ -10,24 +10,41 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const whoAmI = ref<string>("undefined");
+    const userType = ref<string>();
+    const whoAmI = ref<string>();
     const userId = ref<string>();
 
     const goBack = () => {
       router.back();
     };
+
+    /*
+    @brief 로그인 실행
+    @date 22/10/06
+     */
     const doLogin = () => {
-      console.log(userId.value);
+      // let data: object = {
+      //   USER_KEY: route.fullPath.substring(1, 4),
+      //   USER_ID: userId.value,
+      // };
+      if (userId.value) {
+        window.alert("로그인 성공!");
+        router.push("/main-" + userType.value);
+      } else {
+        window.alert(whoAmI.value + " ID를 입력해 주세요!");
+      }
     };
 
     onMounted(() => {
-      if (route.fullPath.substring(1, 4) === USER_KEY.STU) {
+      userType.value = route.fullPath.substring(1, 4);
+
+      if (userType.value === USER_KEY.STU) {
         whoAmI.value = "학생";
-      } else if (route.fullPath.substring(1, 4) === USER_KEY.PAR) {
+      } else if (userType.value === USER_KEY.PAR) {
         whoAmI.value = "학부모";
-      } else if (route.fullPath.substring(1, 4) === USER_KEY.TEA) {
+      } else if (userType.value === USER_KEY.TEA) {
         whoAmI.value = "강사";
-      } else if (route.fullPath.substring(1, 4) === USER_KEY.ADM) {
+      } else if (userType.value === USER_KEY.ADM) {
         whoAmI.value = "관리자";
       }
     });

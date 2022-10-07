@@ -1,76 +1,74 @@
-section.login-page {
-  position: relative;
+.login-page {
   width: 100%;
   height: 100%;
   background-color: white;
 
-  .login-page {
-    width: 100%;
-    height: 100%;
+  &-header {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -5%);
+    font-weight: 700;
+    color: $disable-color;
+  }
 
-    &-header {
-      position: absolute;
-      top: 5%;
-      left: 50%;
-      transform: translate(-50%, -5%);
-      font-weight: 700;
-      color: $disable-color;
+  &-select {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    &-hello {
+      font-size: 22px;
+      color: $sub-color;
+
+      &-guide {
+        font-size: 24px;
+        font-weight: 700;
+      }
     }
 
-    &-select {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
+    &-section {
+      display: flex;
+      margin: 45px 0;
 
-      &-hello {
-        font-size: 22px;
-        color: $sub-color;
+      &-item {
+        position: relative;
+        box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.3);
+        width: 170px;
+        height: 170px;
+        background-color: $primary-color;
+        border-radius: 25px;
+        margin: 0 16px;
+        cursor: pointer;
 
-        &-guide {
-          font-size: 24px;
-          font-weight: 700;
+        &:hover {
+          background-color: $hover-color;
         }
-      }
 
-      &-section {
-        display: flex;
-        margin: 45px 0;
+        &-user {
+          position: absolute;
+          font-size: 18px;
+          font-weight: 700;
+          color: white;
+          top: 13px;
+          left: 20px;
+        }
 
-        &-item {
-          position: relative;
-          box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.3);
-          width: 170px;
-          height: 170px;
-          background-color: $primary-color;
-          border-radius: 25px;
-          margin: 0 16px;
-          cursor: pointer;
-
-          &-user {
+        &-icon {
+          img {
             position: absolute;
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
-            top: 13px;
-            left: 20px;
+            height: 116px;
+            bottom: 0;
+            right: 0;
           }
+        }
 
-          &-icon {
-            img {
-              position: absolute;
-              height: 116px;
-              bottom: 0;
-              right: 0;
-            }
-          }
-
-          &:hover {
-            img {
-              height: 126px;
-              transition: all 200ms;
-            }
+        &:hover {
+          img {
+            height: 126px;
+            transition: all 200ms;
           }
         }
       }
@@ -78,99 +76,93 @@ section.login-page {
   }
 }
 
-section.login-input {
-  position: relative;
+.login-input {
   width: 100%;
   height: 100%;
 
-  .login-input {
-    width: 100%;
-    height: 100%;
+  .back {
+    position: absolute;
+    width: 185px;
+    top: 30px;
+    left: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: $sub-color;
+    font-weight: 700;
+    cursor: pointer;
 
-    .back {
-      position: absolute;
-      width: 185px;
-      top: 30px;
-      left: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: $sub-color;
-      font-weight: 700;
-      cursor: pointer;
-
-      &:hover {
-        opacity: 0.7;
-      }
+    &:hover {
+      opacity: 0.7;
     }
+  }
 
-    &-box {
-      position: relative;
+  &-box {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 580px;
+    height: 498px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 4px 4px 20px 4px $disable-color;
+
+    &-section {
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 580px;
-      height: 498px;
-      background-color: white;
-      border-radius: 20px;
-      box-shadow: 4px 4px 20px 4px $disable-color;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-      &-section {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      &-title {
+        font-size: 24px;
+        font-weight: 700;
+      }
 
-        &-title {
-          font-size: 24px;
-          font-weight: 700;
-        }
+      &-sub {
+        font-size: 16px;
+        color: $disable-color;
+      }
 
-        &-sub {
-          font-size: 16px;
-          color: $disable-color;
-        }
+      &-icon {
+        width: 100px;
+        height: 100px;
+        color: $disable-color;
+        margin: 10px 0;
+      }
 
-        &-icon {
-          width: 100px;
-          height: 100px;
-          color: $disable-color;
-          margin: 10px 0;
-        }
+      &-input {
+        width: 290px;
+        height: 40px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        color: $sub-color;
+        border: 3px solid $disable-color;
+        border-radius: 20px;
+      }
 
-        &-input {
-          width: 290px;
-          height: 40px;
-          text-align: center;
-          font-size: 16px;
-          font-weight: 700;
-          color: $sub-color;
-          border: 3px solid $disable-color;
-          border-radius: 20px;
-        }
+      input[type="text"]:focus {
+        border: 3px solid $sub-color;
+      }
 
-        input[type="text"]:focus {
-          border: 3px solid $sub-color;
-        }
+      &-btn {
+        width: 164px;
+        height: 40px;
+        border-radius: 19px;
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+        background-color: $primary-color;
+        border: 0;
+        margin: 10px 0;
+        cursor: pointer;
 
-        &-btn {
-          width: 164px;
-          height: 40px;
-          border-radius: 19px;
-          font-size: 16px;
-          font-weight: 700;
-          color: white;
-          background-color: $primary-color;
-          border: 0;
-          margin: 10px 0;
-          cursor: pointer;
-
-          &:hover {
-            background-color: $hover-color;
-          }
+        &:hover {
+          background-color: $hover-color;
         }
       }
     }

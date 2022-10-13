@@ -4,6 +4,7 @@ import { ChevronLeftSquareIcon } from "@scarlab/icons-vue/outline";
 import { UserCircleIcon } from "@scarlab/icons-vue/solid";
 import { useRoute, useRouter } from "vue-router";
 import { KEYS, USER_KEY } from "../constant";
+import { defaultInterface } from "../lib/types";
 export default defineComponent({
   name: "LoginComponent",
   components: { ChevronLeftSquareIcon, UserCircleIcon },
@@ -11,7 +12,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const userType = ref<string>();
-    const whoAmI = ref<object>({ KEY: "", VALUE: "" });
+    const whoAmI = ref<defaultInterface>();
     const userId = ref<string>();
 
     const goBack = () => {
@@ -91,7 +92,7 @@ export default defineComponent({
         <div class="login-input-box-section">
           <div class="login-input-box-section-title">LOGIN</div>
           <div class="login-input-box-section-sub">
-            {{ whoAmI.VALUE }} ID 입력해주세요
+            {{ whoAmI?.VALUE }} ID 입력해주세요
           </div>
           <user-circle-icon class="login-input-box-section-icon" />
           <input

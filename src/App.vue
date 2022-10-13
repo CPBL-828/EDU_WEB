@@ -7,7 +7,7 @@ export default defineComponent({
   components: { SidebarComponent },
   setup() {
     const route = useRoute();
-    const sidebarState = ref(false);
+    const sidebarState = ref(true);
     onMounted(() => {
       console.log(
         "  ハ____ハ      ｡ﾟﾟ･｡･ﾟﾟ｡\n" +
@@ -20,9 +20,8 @@ export default defineComponent({
     watch(
       () => route.path,
       () => {
-        if (route.path !== "/" && route.path.substring(1, 6) !== "login") {
-          sidebarState.value = true;
-        }
+        sidebarState.value =
+          route.path === "/" || route.path.substring(1, 6) === "login";
       }
     );
 
@@ -34,7 +33,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <sidebar-component v-if="sidebarState"></sidebar-component>
+  <sidebar-component v-if="!sidebarState"></sidebar-component>
   <router-view></router-view>
 </template>
 

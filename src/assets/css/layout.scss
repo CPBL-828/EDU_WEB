@@ -1,0 +1,47 @@
+section.sidebar {
+  width: 128px;
+  height: 100%;
+  float: left;
+
+  .sidebar {
+    position: fixed;
+    z-index: 10;
+    width: 128px;
+    height: 100%;
+    background-color: $primary-color;
+    color: white;
+
+    &-category {
+      width: 100%;
+      height: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.category {
+  width: 100%;
+  text-align: center;
+
+  &-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 88px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $hover-color;
+    }
+
+    i {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+  }
+}

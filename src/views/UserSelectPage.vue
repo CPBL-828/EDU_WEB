@@ -36,7 +36,7 @@ export default defineComponent({
     @param 로그인 유저를 표시할 userType의 key 값
      */
     const goLogin = (key: string) => {
-      router.push("/" + key);
+      router.push("/login" + key);
     };
 
     return {

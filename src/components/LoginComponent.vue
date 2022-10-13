@@ -36,7 +36,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      userType.value = route.fullPath.substring(1, 4);
+      userType.value = route.fullPath.substring(6, 10);
 
       if (userType.value === USER_KEY.STU) {
         whoAmI.value = "학생";

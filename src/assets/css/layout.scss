@@ -1,100 +1,105 @@
-section.sidebar {
-  position: relative;
-  z-index: 3;
-  width: 128px;
+div.away {
   height: 100%;
-  float: left;
+  width: 128px;
 
-  .sidebar {
+  section.sidebar {
+    position: relative;
+    z-index: 3;
     width: 128px;
     height: 100%;
-    background-color: $primary-color;
-    color: white;
+    float: left;
 
-    &-category {
-      width: 100%;
-      height: auto;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &-logout {
-      color: white;
-      font-size: 12px;
-      position: absolute;
-      bottom: 5%;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: pointer;
-    }
-  }
-}
-
-section.sub-sidebar {
-  position: absolute;
-  width: auto;
-  height: 100%;
-  z-index: 2;
-
-  .sub-sidebar {
-    &-close {
-      transform: translateX(0);
-      transition: all 500ms;
+    .sidebar {
       width: 128px;
-      height: 100vh;
-    }
-
-    &-open {
-      background-color: white;
-      width: 200px;
-      height: 100vh;
-      transform: translateX(128px);
-      transition: all 250ms;
-      box-shadow: 0 0 10px 0 $disable-color;
+      height: 100%;
+      background-color: $primary-color;
+      color: white;
 
       &-category {
         width: 100%;
+        height: auto;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+      }
 
-        &-item {
-          font-weight: bold;
-          display: flex;
-          align-content: center;
-          justify-content: center;
-          align-items: center;
-          height: 50px;
-          border: 2px solid white;
-          cursor: pointer;
+      &-logout {
+        color: white;
+        font-size: 12px;
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        cursor: pointer;
+      }
+    }
+  }
 
-          &:hover {
-            border: 2px solid rgba(204, 204, 204, 0.2);
-            color: $hover-color;
+  section.sub-sidebar {
+    position: absolute;
+    width: auto;
+    height: 100%;
+    z-index: 2;
+
+    .sub-sidebar {
+      &-close {
+        transform: translateX(0);
+        transition: all 500ms;
+        width: 128px;
+        height: 100vh;
+      }
+
+      &-open {
+        background-color: white;
+        width: 200px;
+        height: 100vh;
+        transform: translateX(128px);
+        transition: all 250ms;
+        box-shadow: 0 0 10px 0 $disable-color;
+
+        &-category {
+          width: 100%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+
+          &-item {
+            font-weight: bold;
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            border: 2px solid white;
+            cursor: pointer;
+
+            &:hover {
+              border: 2px solid rgba(204, 204, 204, 0.2);
+              color: $hover-color;
+            }
           }
         }
       }
-    }
 
-    .back {
-      text-align: right;
-      font-size: 20px;
-      color: $disable-color;
-      cursor: pointer;
+      .back {
+        text-align: right;
+        font-size: 20px;
+        color: $disable-color;
+        cursor: pointer;
 
-      i {
-        margin: 30px 17px;
+        i {
+          margin: 30px 17px;
+        }
       }
-    }
 
-    .hi {
-      font-weight: bold;
-      color: $sub-color;
-      text-align: center;
-      cursor: default;
+      .hi {
+        font-weight: bold;
+        color: $sub-color;
+        text-align: center;
+        cursor: default;
+      }
     }
   }
 }

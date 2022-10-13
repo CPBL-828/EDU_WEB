@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import { KEYS, USER_KEY } from "../constant";
 import CategoryItem from "./CategoryItem.vue";
 import { categoryInterface, defaultInterface } from "../lib/types";
@@ -16,6 +16,12 @@ export default defineComponent({
     const subItem = ref<categoryInterface[]>();
     const resultItem = ref<defaultInterface[]>();
     const subState = ref(false);
+
+    const onClickAway = (event: Event) => {
+      if (event.isTrusted) {
+        subState.value = false;
+      }
+    };
 
     const selectMain = (main: categoryInterface) => {
       if (main.HAS_CHILD) {
@@ -50,10 +56,19 @@ export default defineComponent({
         subItem.value = KYO_SUB;
       }
     });
+
+    watch(
+      () => subState.value,
+      () => {
+        console.log(subState.value);
+      }
+    );
+
     return {
       mainItem,
       resultItem,
       subState,
+      onClickAway,
       selectMain,
       selectSub,
       doLogout,
@@ -63,36 +78,38 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="sidebar">
-    <div class="sidebar" v-if="mainItem">
-      <div class="sidebar-user"></div>
-      <div class="sidebar-category">
-        <category-item
-          :main-category="mainItem"
-          @selectMain="selectMain"
-        ></category-item>
-      </div>
-    </div>
-    <div class="sidebar-logout" @click="doLogout">로그아웃</div>
-  </section>
-
-  <section class="sub-sidebar">
-    <div class="sub-sidebar" v-if="resultItem">
-      <div :class="subState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
-        <div class="back">
-          <i class="fa-solid fa-angles-left" @click="subState = false"></i>
+  <div class="away" v-click-away="onClickAway">
+    <section class="sidebar">
+      <div class="sidebar" v-if="mainItem">
+        <div class="sidebar-user"></div>
+        <div class="sidebar-category">
+          <category-item
+            :main-category="mainItem"
+            @selectMain="selectMain"
+          ></category-item>
         </div>
-        <div class="hi">반갑습니다!</div>
-        <div class="sub-sidebar-open-category">
-          <div
-            class="sub-sidebar-open-category-item"
-            v-for="item in resultItem"
-            @click="selectSub(item)"
-          >
-            {{ item.VALUE }}
+      </div>
+      <div class="sidebar-logout" @click="doLogout">로그아웃</div>
+    </section>
+
+    <section class="sub-sidebar">
+      <div class="sub-sidebar" v-if="resultItem">
+        <div :class="subState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
+          <div class="back">
+            <i class="fa-solid fa-angles-left" @click="subState = false"></i>
+          </div>
+          <div class="hi">반갑습니다!</div>
+          <div class="sub-sidebar-open-category">
+            <div
+              class="sub-sidebar-open-category-item"
+              v-for="item in resultItem"
+              @click="selectSub(item)"
+            >
+              {{ item.VALUE }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>

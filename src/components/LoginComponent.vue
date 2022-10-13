@@ -11,7 +11,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const userType = ref<string>();
-    const whoAmI = ref<string>();
+    const whoAmI = ref<object>({ KEY: "", VALUE: "" });
     const userId = ref<string>();
 
     const goBack = () => {
@@ -30,10 +30,28 @@ export default defineComponent({
       // };
       if (userId.value) {
         window.alert("로그인 성공!");
-        localStorage.setItem(
-          KEYS.LU,
-          JSON.stringify({ userType: USER_KEY.TEA })
-        );
+        if (userType.value === USER_KEY.STU) {
+          localStorage.setItem(
+            KEYS.LU,
+            JSON.stringify({ userType: USER_KEY.STU })
+          );
+        } else if (userType.value === USER_KEY.PAR) {
+          localStorage.setItem(
+            KEYS.LU,
+            JSON.stringify({ userType: USER_KEY.PAR })
+          );
+        } else if (userType.value === USER_KEY.TEA) {
+          localStorage.setItem(
+            KEYS.LU,
+            JSON.stringify({ userType: USER_KEY.TEA })
+          );
+        } else if (userType.value === USER_KEY.ADM) {
+          //TODO 반환된 userType에 따라 로그인 관리자 구분
+          localStorage.setItem(
+            KEYS.LU,
+            JSON.stringify({ userType: USER_KEY.ADM })
+          );
+        }
         router.push("/main-" + userType.value);
       } else {
         window.alert(whoAmI.value + " ID를 입력해 주세요!");
@@ -44,13 +62,13 @@ export default defineComponent({
       userType.value = route.fullPath.substring(6, 10);
 
       if (userType.value === USER_KEY.STU) {
-        whoAmI.value = "학생";
+        whoAmI.value = { KEY: USER_KEY.STU, VALUE: "학생" };
       } else if (userType.value === USER_KEY.PAR) {
-        whoAmI.value = "학부모";
+        whoAmI.value = { KEY: USER_KEY.PAR, VALUE: "학부모" };
       } else if (userType.value === USER_KEY.TEA) {
-        whoAmI.value = "강사";
+        whoAmI.value = { KEY: USER_KEY.TEA, VALUE: "강사" };
       } else if (userType.value === USER_KEY.ADM) {
-        whoAmI.value = "관리자";
+        whoAmI.value = { KEY: USER_KEY.ADM, VALUE: "관리자" };
       }
     });
     return {
@@ -73,7 +91,7 @@ export default defineComponent({
         <div class="login-input-box-section">
           <div class="login-input-box-section-title">LOGIN</div>
           <div class="login-input-box-section-sub">
-            {{ whoAmI }} ID 입력해주세요
+            {{ whoAmI.VALUE }} ID 입력해주세요
           </div>
           <user-circle-icon class="login-input-box-section-icon" />
           <input

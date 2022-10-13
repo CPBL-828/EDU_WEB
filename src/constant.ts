@@ -6,3 +6,7 @@ export const USER_KEY = {
   KYO_ADM: "KYO_ADM",
   ETC_ADM: "ETC_ADM",
 };
+
+export const KEYS = {
+  LU: "LU",
+};

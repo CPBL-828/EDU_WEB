@@ -3,7 +3,7 @@ import { defineComponent, onMounted, ref } from "vue";
 import { ChevronLeftSquareIcon } from "@scarlab/icons-vue/outline";
 import { UserCircleIcon } from "@scarlab/icons-vue/solid";
 import { useRoute, useRouter } from "vue-router";
-import { USER_KEY } from "../constant";
+import { KEYS, USER_KEY } from "../constant";
 export default defineComponent({
   name: "LoginComponent",
   components: { ChevronLeftSquareIcon, UserCircleIcon },
@@ -20,6 +20,7 @@ export default defineComponent({
 
     /*
     @brief 로그인 실행
+            성공 시, LocalStorage에 userData 저장
     @date 22/10/06
      */
     const doLogin = () => {
@@ -29,6 +30,10 @@ export default defineComponent({
       // };
       if (userId.value) {
         window.alert("로그인 성공!");
+        localStorage.setItem(
+          KEYS.LU,
+          JSON.stringify({ userType: USER_KEY.TEA })
+        );
         router.push("/main-" + userType.value);
       } else {
         window.alert(whoAmI.value + " ID를 입력해 주세요!");

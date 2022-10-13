@@ -2,37 +2,61 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { KEYS, USER_KEY } from "../constant";
 import CategoryItem from "./CategoryItem.vue";
-import { categoryInterface } from "../lib/types";
-import { TEA_MAIN, TEA_SUB } from "../dummyCategory";
+import { categoryInterface, defaultInterface } from "../lib/types";
+import { KYO_MAIN, KYO_SUB, TEA_MAIN, TEA_SUB } from "../dummyCategory";
+import { useRouter } from "vue-router";
+import common from "../lib/common";
 export default defineComponent({
   name: "SidebarComponent",
   components: { CategoryItem },
   setup() {
+    const router = useRouter();
     const userData = ref({ userType: "" });
     const mainItem = ref<categoryInterface[]>();
     const subItem = ref<categoryInterface[]>();
-    const resultItem = ref<categoryInterface>();
+    const resultItem = ref<defaultInterface[]>();
+    const subState = ref(false);
 
     const selectMain = (main: categoryInterface) => {
-      subItem.value?.map((item: categoryInterface) => {
-        if (main.KEY === item.KEY) resultItem.value = item;
-      });
+      if (main.HAS_CHILD) {
+        subItem.value?.map((item: categoryInterface) => {
+          if (main.KEY === item.KEY)
+            resultItem.value = item.VALUE as defaultInterface[];
+        });
+        subState.value = true;
+      } else {
+        console.log(main.VALUE);
+        subState.value = false;
+      }
+    };
 
-      console.log(resultItem.value?.VALUE);
+    const selectSub = (sub: categoryInterface) => {
+      console.log(sub.KEY);
+    };
+
+    const doLogout = () => {
+      common.removeItem(KEYS.LU);
+      router.push("/");
     };
 
     onMounted(() => {
       //TODO userData localStorage에서 받아오기
-      userData.value = JSON.parse(localStorage.getItem(KEYS.LU));
+      userData.value = common.getItem(KEYS.LU);
       if (userData.value?.userType === USER_KEY.TEA) {
         mainItem.value = TEA_MAIN;
         subItem.value = TEA_SUB;
+      } else if (userData.value?.userType === USER_KEY.ADM) {
+        mainItem.value = KYO_MAIN;
+        subItem.value = KYO_SUB;
       }
     });
     return {
       mainItem,
-      subItem,
+      resultItem,
+      subState,
       selectMain,
+      selectSub,
+      doLogout,
     };
   },
 });
@@ -47,6 +71,27 @@ export default defineComponent({
           :main-category="mainItem"
           @selectMain="selectMain"
         ></category-item>
+      </div>
+    </div>
+    <div class="sidebar-logout" @click="doLogout">로그아웃</div>
+  </section>
+
+  <section class="sub-sidebar">
+    <div class="sub-sidebar" v-if="resultItem">
+      <div :class="subState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
+        <div class="back">
+          <i class="fa-solid fa-angles-left" @click="subState = false"></i>
+        </div>
+        <div class="hi">반갑습니다!</div>
+        <div class="sub-sidebar-open-category">
+          <div
+            class="sub-sidebar-open-category-item"
+            v-for="item in resultItem"
+            @click="selectSub(item)"
+          >
+            {{ item.VALUE }}
+          </div>
+        </div>
       </div>
     </div>
   </section>

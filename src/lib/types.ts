@@ -10,4 +10,17 @@ export interface categoryInterface {
   HAS_CHILD?: boolean;
 }
 
-export interface userInterface {}
+export interface teacherInterface {
+  createDate: string;
+  editDate: string;
+  id: string;
+  joinDate: string;
+  leaveDate: string;
+  name: string;
+  part: string;
+  profileImg: string;
+  resSubject: string;
+  resume: string;
+  teacherKey: string;
+  userKey: string;
+}

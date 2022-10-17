@@ -14,7 +14,6 @@ export default defineComponent({
           " ꒰ ⬩ ω ⬩ ꒱    ˚｡    ｡˚\n" +
           " |   つ Success! ﾟ･｡･ﾟ\n"
       );
-      console.log(route.path);
     });
 
     watch(

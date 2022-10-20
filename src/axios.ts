@@ -24,7 +24,6 @@ export const ApiClient = async (url: string, data: string) => {
   return await getApiClient()
     .post(url, data)
     .then((res) => {
-      console.log(res);
       return res.data;
     })
     .catch(() => {

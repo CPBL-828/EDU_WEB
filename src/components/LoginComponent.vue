@@ -4,7 +4,11 @@ import { ChevronLeftSquareIcon } from "@scarlab/icons-vue/outline";
 import { UserCircleIcon } from "@scarlab/icons-vue/solid";
 import { useRoute, useRouter } from "vue-router";
 import { KEYS, USER_KEY } from "../constant";
-import { defaultInterface, teacherInterface } from "../lib/types";
+import {
+  adminInterface,
+  defaultInterface,
+  teacherInterface,
+} from "../lib/types";
 import { ApiClient } from "../axios";
 import common from "../lib/common";
 export default defineComponent({
@@ -28,7 +32,7 @@ export default defineComponent({
      */
     const doLogin = async () => {
       let data: object = {
-        userType: route.fullPath.substring(1, 4),
+        userType: userType.value,
         id: userId.value,
       };
 
@@ -39,45 +43,46 @@ export default defineComponent({
         );
 
         if (result) {
-          let userData: teacherInterface = result[0] || {};
-          console.log(result);
-          userData.userKey = route.fullPath.substring(1, 4);
-          common.setItem(KEYS.LU, common.makeJson(userData));
-          window.alert("로그인 성공!");
-          await router.push("/" + userType.value + "/main");
+          let user: string =
+            userType.value === USER_KEY.STU
+              ? "student"
+              : userType.value === USER_KEY.PAR
+              ? "parent"
+              : userType.value === USER_KEY.TEA
+              ? "teacher"
+              : userType.value === USER_KEY.ADM
+              ? "admin"
+              : "";
+          let userData =
+            userType.value === USER_KEY.STU
+              ? result
+              : userType.value === USER_KEY.PAR
+              ? result
+              : userType.value === USER_KEY.TEA
+              ? (result as teacherInterface)
+              : userType.value === USER_KEY.ADM
+              ? (result as adminInterface)
+              : result;
+
+          console.log(userData);
+          common.setItem(KEYS.LU, common.makeJson(userData as object));
+          common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
+
+          window.alert("로그인 성공. 환영합니다!");
+          await router.push("/" + user + "/main");
         } else {
-          console.log("not result");
+          window.alert(whoAmI.value?.VALUE + " 정보를 찾을 수 없어요!");
         }
-        //   window.alert("로그인 성공!");
-        //   if (userType.value === USER_KEY.STU) {
-        //     localStorage.setItem(
-        //       KEYS.LU,
-        //       JSON.stringify({ userType: USER_KEY.STU })
-        //     );
-        //   } else if (userType.value === USER_KEY.PAR) {
-        //     localStorage.setItem(
-        //       KEYS.LU,
-        //       JSON.stringify({ userType: USER_KEY.PAR })
-        //     );
-        //   } else if (userType.value === USER_KEY.TEA) {
-        //     localStorage.setItem(
-        //       KEYS.LU,
-        //       JSON.stringify({ userType: USER_KEY.TEA })
-        //     );
-        //   } else if (userType.value === USER_KEY.ADM) {
-        //     //TODO 반환된 userType에 따라 로그인 관리자 구분
-        //     localStorage.setItem(
-        //       KEYS.LU,
-        //       JSON.stringify({ userType: USER_KEY.ADM })
-        //     );
-        //   }
-        // } else {
-        //   window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
+      } else {
+        window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
       }
     };
 
     onMounted(() => {
-      userType.value = route.fullPath.substring(1, 4);
+      userType.value = route.fullPath
+        .split("/")[1]
+        .substring(0, 3)
+        .toUpperCase();
 
       if (userType.value === USER_KEY.STU) {
         whoAmI.value = { KEY: USER_KEY.STU, VALUE: "학생" };

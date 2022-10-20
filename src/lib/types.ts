@@ -22,5 +22,6 @@ export interface teacherInterface {
   resSubject: string;
   resume: string;
   teacherKey: string;
-  userKey: string;
 }
+
+export interface adminInterface {}

@@ -35,8 +35,8 @@ export default defineComponent({
         });
         subState.value = true;
       } else {
-        console.log(main.VALUE);
         subState.value = false;
+        console.log(main.VALUE);
       }
     };
 
@@ -97,13 +97,13 @@ export default defineComponent({
     </section>
 
     <section class="sub-sidebar">
-      <div class="sub-sidebar" v-if="resultItem">
+      <div class="sub-sidebar">
         <div :class="subState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
           <div class="back">
             <i class="fa-solid fa-angles-left" @click="subState = false"></i>
           </div>
           <div class="hi">반갑습니다!</div>
-          <div class="sub-sidebar-open-category">
+          <div class="sub-sidebar-open-category" v-if="resultItem">
             <div
               class="sub-sidebar-open-category-item"
               v-for="item in resultItem"

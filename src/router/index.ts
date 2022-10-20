@@ -7,12 +7,12 @@ const routes = [
     component: () => import("../views/UserSelectPage.vue"),
   },
   {
-    path: "/login:userKey",
+    path: "/:userKey/login",
     name: "login",
     component: () => import("../views/LoginPage.vue"),
   },
   {
-    path: "/main-:userType",
+    path: "/:userType/main",
     name: "main",
     component: () => import("../views/MainPage.vue"),
   },

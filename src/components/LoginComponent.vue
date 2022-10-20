@@ -28,25 +28,25 @@ export default defineComponent({
      */
     const doLogin = async () => {
       let data: object = {
-        // USER_KEY: route.fullPath.substring(6, 9),
+        userType: route.fullPath.substring(1, 4),
         id: userId.value,
       };
 
       if (userId.value) {
-        if (userId.value === "sso") {
-          const result = await ApiClient(
-            "/members/teacher",
-            common.makeJson(data)
-          );
+        const result = await ApiClient(
+          "/members/compare/",
+          common.makeJson(data)
+        );
 
-          let userData: teacherInterface = result[0];
-          userData.userKey = route.fullPath.substring(6, 9);
+        if (result) {
+          let userData: teacherInterface = result[0] || {};
+          console.log(result);
+          userData.userKey = route.fullPath.substring(1, 4);
           common.setItem(KEYS.LU, common.makeJson(userData));
-
           window.alert("로그인 성공!");
-          await router.push("/main-" + userType.value);
+          await router.push("/" + userType.value + "/main");
         } else {
-          window.alert("id가 틀립니다.");
+          console.log("not result");
         }
         //   window.alert("로그인 성공!");
         //   if (userType.value === USER_KEY.STU) {
@@ -71,13 +71,13 @@ export default defineComponent({
         //       JSON.stringify({ userType: USER_KEY.ADM })
         //     );
         //   }
-      } else {
-        window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
+        // } else {
+        //   window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
       }
     };
 
     onMounted(() => {
-      userType.value = route.fullPath.substring(6, 9);
+      userType.value = route.fullPath.substring(1, 4);
 
       if (userType.value === USER_KEY.STU) {
         whoAmI.value = { KEY: USER_KEY.STU, VALUE: "학생" };

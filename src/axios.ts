@@ -1,16 +1,17 @@
 import Axios from "axios";
+import { CONSTANT } from "./constant";
 
 let axios = Axios.create({
-  baseURL: "http://172.30.1.28:8000",
-  timeout: 1000 * 60 * 3,
+  baseURL: CONSTANT.BASE_URL,
+  timeout: 1000 * 60 * 2,
   headers: { "Content-Type": "application/json" },
 });
 
 export const getApiClient = () => {
   if (!axios) {
     axios = Axios.create({
-      baseURL: "http://172.30.1.28:8000",
-      timeout: 1000 * 60 * 3,
+      baseURL: CONSTANT.BASE_URL,
+      timeout: 1000 * 60 * 2,
       headers: { "Content-Type": "application/json" },
     });
   }
@@ -18,11 +19,12 @@ export const getApiClient = () => {
   return axios;
 };
 
-export const ApiClient = async (url: string, data: object | string) => {
+export const ApiClient = async (url: string, data: string) => {
   console.log(data);
   return await getApiClient()
-    .get(url)
+    .post(url, data)
     .then((res) => {
+      console.log(res);
       return res.data;
     })
     .catch(() => {

@@ -1,3 +1,7 @@
+export const CONSTANT = {
+  BASE_URL: "http://192.168.0.14:8000",
+};
+
 export const USER_KEY = {
   STU: "STU",
   PAR: "PAR",

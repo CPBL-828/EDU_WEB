@@ -3,6 +3,7 @@ import { defineComponent, onMounted, ref, watch } from "vue";
 import { KEYS, USER_KEY } from "../constant";
 import CategoryItem from "./CategoryItem.vue";
 import {
+  adminInterface,
   categoryInterface,
   defaultInterface,
   teacherInterface,
@@ -15,7 +16,8 @@ export default defineComponent({
   components: { CategoryItem },
   setup() {
     const router = useRouter();
-    const userData = ref<teacherInterface>();
+    const userData = ref<teacherInterface | adminInterface>();
+    const userKey = ref({ userKey: "" });
     const mainItem = ref<categoryInterface[]>();
     const subItem = ref<categoryInterface[]>();
     const resultItem = ref<defaultInterface[]>();
@@ -52,10 +54,12 @@ export default defineComponent({
     onMounted(() => {
       //TODO userData localStorage에서 받아오기
       userData.value = common.getItem(KEYS.LU);
-      if (userData.value?.userKey === USER_KEY.TEA) {
+      userKey.value = common.getItem(KEYS.UK);
+
+      if (userKey.value.userKey === USER_KEY.TEA) {
         mainItem.value = TEA_MAIN;
         subItem.value = TEA_SUB;
-      } else if (userData.value?.userKey === USER_KEY.ADM) {
+      } else if (userKey.value.userKey === USER_KEY.ADM) {
         mainItem.value = KYO_MAIN;
         subItem.value = KYO_SUB;
       }

@@ -13,4 +13,5 @@ export const USER_KEY = {
 
 export const KEYS = {
   LU: "LU",
+  UK: "UK",
 };

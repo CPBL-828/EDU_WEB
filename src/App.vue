@@ -21,7 +21,7 @@ export default defineComponent({
       () => route.path,
       () => {
         sidebarState.value =
-          route.path === "/" || route.path.substring(5, 10) === "login";
+          route.path === "/" || route.path.split("/")[2] === "login";
       }
     );
 

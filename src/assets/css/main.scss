@@ -171,4 +171,18 @@
 
 section.my-info {
   //TODO 내 정보 화면 작업
+  .my-info {
+    &-head {
+      width: 1314px;
+      height: 95px;
+      background-color: #e7e7e7;
+    }
+
+    &-body {
+      width: 1314px;
+      height: 929px;
+      background-color: #f8f8f8;
+      position: relative;
+    }
+  }
 }

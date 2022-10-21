@@ -9,12 +9,18 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    //props.userData;
     return {};
   },
 });
 </script>
 
 <template>
-  <section class="my-info">내 정보!!!!!!</section>
+  <section class="my-info">
+    <div class="my-info">
+      <div class="my-info-head">log할거임</div>
+      <div class="my-info-body">내용물 들어갈 공간</div>
+    </div>
+  </section>
 </template>

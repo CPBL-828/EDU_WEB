@@ -23,10 +23,24 @@ export default defineComponent({
       <div class="my-info-head">
         <div class="my-info-head-log">
           <div class="my-info-head-log-img"></div>
-          <div class="my-info-head-log-text">log > log</div>
+          <div class="my-info-head-log-text">내정보 > 출근부</div>
         </div>
       </div>
-      <div class="my-info-body">내용물 들어갈 공간</div>
+      <div class="my-info-body">
+        <div class="my-info-body-section">
+          <div class="my-info-body-section-tag">tag</div>
+          <div class="my-info-body-section-main">
+            <div class="my-info-body-section-main-info">
+              <div class="my-info-body-section-main-info-img">img</div>
+              <div class="my-info-body-section-main-info-text">
+                <div class="my-info-body-section-main-info-text-name">
+                  이름 : name
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>

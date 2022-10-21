@@ -10,6 +10,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    //push 할때 잠시 지워두기
     //props.userData;
     return {};
   },
@@ -19,7 +20,12 @@ export default defineComponent({
 <template>
   <section class="my-info">
     <div class="my-info">
-      <div class="my-info-head">log할거임</div>
+      <div class="my-info-head">
+        <div class="my-info-head-log">
+          <div class="my-info-head-log-img"></div>
+          <div class="my-info-head-log-text">log > log</div>
+        </div>
+      </div>
       <div class="my-info-body">내용물 들어갈 공간</div>
     </div>
   </section>

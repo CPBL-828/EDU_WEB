@@ -30,8 +30,19 @@ export default defineComponent({
       },
     ]);
 
+    /*
+    @brief 로그인 화면으로 이동
+    @date 22/10/06
+    @param 로그인 유저를 표시할 userType의 key 값
+     */
     const goLogin = (key: string) => {
-      router.push("/" + key);
+      let user: string = "";
+      if (key === USER_KEY.STU) user = "student";
+      else if (key === USER_KEY.PAR) user = "parent";
+      else if (key === USER_KEY.TEA) user = "teacher";
+      else if (key === USER_KEY.ADM) user = "admin";
+
+      router.push("/" + user + "/login");
     };
 
     return {

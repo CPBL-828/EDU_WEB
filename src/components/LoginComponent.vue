@@ -3,7 +3,14 @@ import { defineComponent, onMounted, ref } from "vue";
 import { ChevronLeftSquareIcon } from "@scarlab/icons-vue/outline";
 import { UserCircleIcon } from "@scarlab/icons-vue/solid";
 import { useRoute, useRouter } from "vue-router";
-import { USER_KEY } from "../constant";
+import { KEYS, USER_KEY } from "../constant";
+import {
+  adminInterface,
+  defaultInterface,
+  teacherInterface,
+} from "../lib/types";
+import { ApiClient } from "../axios";
+import common from "../lib/common";
 export default defineComponent({
   name: "LoginComponent",
   components: { ChevronLeftSquareIcon, UserCircleIcon },
@@ -11,7 +18,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const userType = ref<string>();
-    const whoAmI = ref<string>();
+    const whoAmI = ref<defaultInterface>();
     const userId = ref<string>();
 
     const goBack = () => {
@@ -20,32 +27,71 @@ export default defineComponent({
 
     /*
     @brief 로그인 실행
+            성공 시, LocalStorage에 userData 저장
     @date 22/10/06
      */
-    const doLogin = () => {
-      // let data: object = {
-      //   USER_KEY: route.fullPath.substring(1, 4),
-      //   USER_ID: userId.value,
-      // };
+    const doLogin = async () => {
+      let data: object = {
+        userType: userType.value,
+        id: userId.value,
+      };
+
       if (userId.value) {
-        window.alert("로그인 성공입니다!");
-        router.push("/main-" + userType.value);
+        const result = await ApiClient(
+          "/members/compare/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          let user: string =
+            userType.value === USER_KEY.STU
+              ? "student"
+              : userType.value === USER_KEY.PAR
+              ? "parent"
+              : userType.value === USER_KEY.TEA
+              ? "teacher"
+              : userType.value === USER_KEY.ADM
+              ? "admin"
+              : "";
+          let userData =
+            userType.value === USER_KEY.STU
+              ? result
+              : userType.value === USER_KEY.PAR
+              ? result
+              : userType.value === USER_KEY.TEA
+              ? (result as teacherInterface)
+              : userType.value === USER_KEY.ADM
+              ? (result as adminInterface)
+              : result;
+
+          console.log(userData);
+          common.setItem(KEYS.LU, common.makeJson(userData as object));
+          common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
+
+          window.alert("로그인 성공. 환영합니다!");
+          await router.push("/" + user + "/main");
+        } else {
+          window.alert(whoAmI.value?.VALUE + " 정보를 찾을 수 없어요!");
+        }
       } else {
-        window.alert(whoAmI.value + " ID를 입력해 주세요!");
+        window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
       }
     };
 
     onMounted(() => {
-      userType.value = route.fullPath.substring(1, 4);
+      userType.value = route.fullPath
+        .split("/")[1]
+        .substring(0, 3)
+        .toUpperCase();
 
       if (userType.value === USER_KEY.STU) {
-        whoAmI.value = "학생";
+        whoAmI.value = { KEY: USER_KEY.STU, VALUE: "학생" };
       } else if (userType.value === USER_KEY.PAR) {
-        whoAmI.value = "학부모";
+        whoAmI.value = { KEY: USER_KEY.PAR, VALUE: "학부모" };
       } else if (userType.value === USER_KEY.TEA) {
-        whoAmI.value = "강사";
+        whoAmI.value = { KEY: USER_KEY.TEA, VALUE: "강사" };
       } else if (userType.value === USER_KEY.ADM) {
-        whoAmI.value = "관리자";
+        whoAmI.value = { KEY: USER_KEY.ADM, VALUE: "관리자" };
       }
     });
     return {
@@ -68,7 +114,7 @@ export default defineComponent({
         <div class="login-input-box-section">
           <div class="login-input-box-section-title">LOGIN</div>
           <div class="login-input-box-section-sub">
-            {{ whoAmI }} ID 입력해주세요
+            {{ whoAmI?.VALUE }} ID 입력해주세요
           </div>
           <user-circle-icon class="login-input-box-section-icon" />
           <input

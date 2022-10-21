@@ -1,0 +1,32 @@
+<script lang="ts">
+import { defineComponent, onMounted, PropType, ref } from "vue";
+import { categoryInterface } from "../lib/types";
+export default defineComponent({
+  name: "CategoryItem",
+  props: {
+    mainCategory: {
+      type: Array as PropType<Array<categoryInterface>>,
+      required: true,
+    },
+  },
+  setup() {
+    onMounted(() => {});
+    return {};
+  },
+});
+</script>
+
+<template>
+  <section>
+    <div class="category">
+      <div
+        class="category-item"
+        v-for="item in mainCategory"
+        @click="$emit('selectMain', item)"
+      >
+        <i :class="item.ICON"></i>
+        {{ item.VALUE }}
+      </div>
+    </div>
+  </section>
+</template>

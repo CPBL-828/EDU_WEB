@@ -44,6 +44,7 @@ export default defineComponent({
 
     const selectSub = (sub: categoryInterface) => {
       console.log(sub.KEY);
+      router.push();
     };
 
     const doLogout = () => {
@@ -89,6 +90,7 @@ export default defineComponent({
   <div class="away" v-click-away="onClickAway">
     <section class="sidebar">
       <div class="sidebar" v-if="mainItem">
+        <img src="/public/assets/image/logo.png" alt="logo" />
         <div class="sidebar-user"></div>
         <div class="sidebar-category">
           <category-item

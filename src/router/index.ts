@@ -19,7 +19,7 @@ const routes = [
   {
     path: "/m-place",
     name: "myplace",
-    component: () => import("../views/MainPage.vue"),
+    component: () => import("../views/MyInfoPage.vue"),
   },
 ];
 

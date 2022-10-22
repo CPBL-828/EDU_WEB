@@ -23,6 +23,10 @@ export default defineComponent({
     const resultItem = ref<defaultInterface[]>();
     const subState = ref(false);
 
+    const goMain = () => {
+      router.push("/main");
+    };
+
     const onClickAway = (event: Event) => {
       if (event.isTrusted) {
         subState.value = false;
@@ -30,6 +34,7 @@ export default defineComponent({
     };
 
     const selectMain = (main: categoryInterface) => {
+      router.push("/" + main.KEY.toLowerCase());
       if (main.HAS_CHILD) {
         subItem.value?.map((item: categoryInterface) => {
           if (main.KEY === item.KEY)
@@ -78,6 +83,7 @@ export default defineComponent({
       mainItem,
       resultItem,
       subState,
+      goMain,
       onClickAway,
       selectMain,
       selectSub,
@@ -91,7 +97,7 @@ export default defineComponent({
   <div class="away" v-click-away="onClickAway">
     <section class="sidebar">
       <div class="sidebar" v-if="mainItem">
-        <img src="/public/assets/image/logo.png" alt="logo" />
+        <img src="/public/assets/image/logo.png" alt="logo" @click="goMain" />
         <div class="sidebar-user"></div>
         <div class="sidebar-category">
           <category-item

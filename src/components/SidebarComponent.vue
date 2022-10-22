@@ -44,12 +44,13 @@ export default defineComponent({
 
     const selectSub = (sub: categoryInterface) => {
       console.log(sub.KEY);
-      router.push();
     };
 
     const doLogout = () => {
-      common.removeItem(KEYS.LU);
-      router.push("/");
+      if (window.confirm("로그아웃 하시겠습니까?")) {
+        common.removeItem(KEYS.LU);
+        router.push("/");
+      }
     };
 
     onMounted(() => {

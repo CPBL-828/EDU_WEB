@@ -4,7 +4,12 @@ export const STU_MAIN: categoryInterface[] = [];
 export const PAR_MAIN: categoryInterface[] = [];
 
 export const TEA_MAIN: categoryInterface[] = [
-  { KEY: "MINF", VALUE: "내 정보", ICON: "fa-solid fa-user", HAS_CHILD: true },
+  {
+    KEY: "M-PLACE",
+    VALUE: "내 공간",
+    ICON: "fa-solid fa-user",
+    HAS_CHILD: true,
+  },
   {
     KEY: "STUDENT",
     VALUE: "학생 관리",
@@ -33,7 +38,7 @@ export const TEA_MAIN: categoryInterface[] = [
 
 export const TEA_SUB: categoryInterface[] = [
   {
-    KEY: "MINF",
+    KEY: "M-PLACE",
     VALUE: [
       { KEY: "INFO", VALUE: "내 정보" },
       { KEY: "WORK", VALUE: "출근부" },

@@ -24,6 +24,7 @@ export default defineComponent({
     const subState = ref(false);
 
     const goMain = () => {
+      common.removeItem(KEYS.MR);
       router.push("/main");
     };
 
@@ -34,7 +35,12 @@ export default defineComponent({
     };
 
     const selectMain = (main: categoryInterface) => {
+      common.setItem(
+        KEYS.MR,
+        common.makeJson({ mr: "/" + main.KEY.toLowerCase() })
+      );
       router.push("/" + main.KEY.toLowerCase());
+
       if (main.HAS_CHILD) {
         subItem.value?.map((item: categoryInterface) => {
           if (main.KEY === item.KEY)
@@ -48,7 +54,7 @@ export default defineComponent({
     };
 
     const selectSub = (sub: categoryInterface) => {
-      console.log(sub.KEY);
+      router.push(common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase());
     };
 
     const doLogout = () => {

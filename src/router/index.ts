@@ -18,7 +18,12 @@ const routes = [
   },
   {
     path: "/m-place",
-    name: "myplace",
+    name: "my-place",
+    component: () => import("../views/MyInfoPage.vue"),
+  },
+  {
+    path: "/m-place/:subCategory",
+    name: "sub-category",
     component: () => import("../views/MyInfoPage.vue"),
   },
 ];

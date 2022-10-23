@@ -36,7 +36,7 @@ export default defineComponent({
       //   id: userId.value,
       // };
 
-      if (userId.value === "sso") {
+      if (userId.value) {
         // const result = await ApiClient(
         //   "/members/compare/",
         //   common.makeJson(data)
@@ -63,26 +63,30 @@ export default defineComponent({
         // } else {
         //   window.alert(whoAmI.value?.VALUE + " 정보를 찾을 수 없어요!");
         // }
-        const userData: teacherInterface = {
-          createDate: "createDate",
-          editDate: "editDate",
-          id: userId.value,
-          joinDate: "22-10-22",
-          leaveDate: "",
-          name: "고소현",
-          part: "중등부",
-          profileImg: "프로필사진 경로",
-          resSubject: "중등국어",
-          resume: "이력서 경로",
-          teacherKey: "akjheuf-132",
-          phone: "010-2222-2222",
-        };
+        if (userId.value === "sso") {
+          const userData: teacherInterface = {
+            createDate: "createDate",
+            editDate: "editDate",
+            id: userId.value,
+            joinDate: "22-10-22",
+            leaveDate: "",
+            name: "고소현",
+            part: "중등부",
+            profileImg: "프로필사진 경로",
+            resSubject: "중등국어",
+            resume: "이력서 경로",
+            teacherKey: "akjheuf-132",
+            phone: "010-2222-2222",
+          };
 
-        common.setItem(KEYS.LU, common.makeJson(userData as object));
-        common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
+          common.setItem(KEYS.LU, common.makeJson(userData as object));
+          common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
 
-        window.alert("로그인 성공. 환영합니다!");
-        await router.push("/main");
+          window.alert("로그인 성공. 환영합니다!");
+          await router.push("/main");
+        } else {
+          window.alert("사용자 정보를 찾을 수 없습니다.");
+        }
       } else {
         window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
       }

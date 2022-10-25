@@ -39,7 +39,7 @@ export default defineComponent({
         KEYS.MR,
         common.makeJson({ mr: "/" + main.KEY.toLowerCase() })
       );
-      router.push("/" + main.KEY.toLowerCase());
+      // router.push("/" + main.KEY.toLowerCase());
 
       if (main.HAS_CHILD) {
         subItem.value?.map((item: categoryInterface) => {
@@ -49,7 +49,7 @@ export default defineComponent({
         subState.value = true;
       } else {
         subState.value = false;
-        console.log(main.VALUE);
+        router.push("/" + common.getItem(KEYS.MR).mr);
       }
     };
 

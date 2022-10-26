@@ -36,7 +36,7 @@ export default defineComponent({
 <template>
   <calendar-popup v-if="!sidebarState"></calendar-popup>
   <sidebar-component v-if="!sidebarState"></sidebar-component>
-  <header-component></header-component>
+  <header-component v-if="!sidebarState"></header-component>
   <router-view></router-view>
 </template>
 

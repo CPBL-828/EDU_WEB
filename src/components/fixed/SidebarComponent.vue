@@ -1,16 +1,16 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
-import { KEYS, USER_KEY } from "../constant";
+import { KEYS, USER_KEY } from "../../constant";
 import CategoryItem from "./CategoryItem.vue";
 import {
   adminInterface,
   categoryInterface,
   defaultInterface,
   teacherInterface,
-} from "../lib/types";
-import { KYO_MAIN, KYO_SUB, TEA_MAIN, TEA_SUB } from "../dummyCategory";
+} from "../../lib/types";
+import { KYO_MAIN, KYO_SUB, TEA_MAIN, TEA_SUB } from "../../dummyCategory";
 import { useRouter } from "vue-router";
-import common from "../lib/common";
+import common from "../../lib/common";
 export default defineComponent({
   name: "SidebarComponent",
   components: { CategoryItem },
@@ -103,7 +103,7 @@ export default defineComponent({
   <div class="away" v-click-away="onClickAway">
     <section class="sidebar">
       <div class="sidebar" v-if="mainItem">
-        <img src="/public/assets/image/logo.png" alt="logo" @click="goMain" />
+        <img src="/assets/image/logo.png" alt="logo" @click="goMain" />
         <div class="sidebar-user"></div>
         <div class="sidebar-category">
           <category-item

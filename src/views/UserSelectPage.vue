@@ -11,22 +11,22 @@ export default defineComponent({
       {
         KEY: USER_KEY.STU,
         VALUE: "학생",
-        ICON: "/public/assets/image/login-student-icon.png",
+        ICON: "/assets/image/login-student-icon.png",
       },
       {
         KEY: USER_KEY.PAR,
         VALUE: "학부모",
-        ICON: "/public/assets/image/login-parent-icon.png",
+        ICON: "/assets/image/login-parent-icon.png",
       },
       {
         KEY: USER_KEY.TEA,
         VALUE: "강사",
-        ICON: "/public/assets/image/login-teacher-icon.png",
+        ICON: "/assets/image/login-teacher-icon.png",
       },
       {
         KEY: USER_KEY.ADM,
         VALUE: "관리자",
-        ICON: "/public/assets/image/login-admin-icon.png",
+        ICON: "/assets/image/login-admin-icon.png",
       },
     ]);
 

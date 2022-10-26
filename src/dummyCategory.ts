@@ -1,4 +1,4 @@
-import { categoryInterface } from "./lib/types";
+import { categoryInterface, defaultInterface } from "./lib/types";
 
 export const STU_MAIN: categoryInterface[] = [];
 export const PAR_MAIN: categoryInterface[] = [];
@@ -42,7 +42,7 @@ export const TEA_MAIN: categoryInterface[] = [
   },
 ];
 
-export const TEA_SUB: categoryInterface[] = [
+export const TEA_SUB: defaultInterface[] = [
   {
     KEY: "NOTICE",
     VALUE: [

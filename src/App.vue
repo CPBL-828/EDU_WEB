@@ -1,11 +1,12 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
-import SidebarComponent from "./components/SidebarComponent.vue";
+import SidebarComponent from "./components/fixed/SidebarComponent.vue";
 import { useRoute } from "vue-router";
-import CalendarPopup from "./components/CalendarPopup.vue";
+import CalendarPopup from "./components/fixed/CalendarPopup.vue";
+import HeaderComponent from "./components/fixed/HeaderComponent.vue";
 
 export default defineComponent({
-  components: { CalendarPopup, SidebarComponent },
+  components: { HeaderComponent, CalendarPopup, SidebarComponent },
   setup() {
     const route = useRoute();
     const sidebarState = ref(true);
@@ -35,6 +36,7 @@ export default defineComponent({
 <template>
   <calendar-popup v-if="!sidebarState"></calendar-popup>
   <sidebar-component v-if="!sidebarState"></sidebar-component>
+  <header-component></header-component>
   <router-view></router-view>
 </template>
 

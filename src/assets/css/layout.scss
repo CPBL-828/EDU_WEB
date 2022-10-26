@@ -1,3 +1,27 @@
+section.header {
+  width: 100%;
+  height: 95px;
+
+  .header {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: #e7e7e7;
+
+    .path {
+      position: absolute;
+      right: 10%;
+      bottom: 10%;
+      font-size: 15px;
+      color: $sub-color;
+
+      i {
+        padding: 10px;
+      }
+    }
+  }
+}
+
 div.away {
   float: left;
   height: 100%;

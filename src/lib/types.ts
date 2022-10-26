@@ -1,6 +1,6 @@
 export interface defaultInterface {
   KEY: string;
-  VALUE: string;
+  VALUE: string | defaultInterface[];
 }
 
 export interface categoryInterface {

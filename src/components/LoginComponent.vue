@@ -124,7 +124,7 @@ export default defineComponent({
       <div class="back" @click="goBack">
         <chevron-left-square-icon /> 이전 화면으로 돌아가기
       </div>
-      <div class="login-input-box">
+      <div class="login-input-box" @keyup.enter="doLogin">
         <div class="login-input-box-section">
           <div class="login-input-box-section-title">LOGIN</div>
           <div class="login-input-box-section-sub">

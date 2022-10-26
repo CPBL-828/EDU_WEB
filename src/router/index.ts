@@ -17,8 +17,13 @@ const routes = [
     component: () => import("../views/MainPage.vue"),
   },
   {
+    path: "/notice/:noticeType",
+    name: "notice",
+    component: () => import("../views/NoticePage.vue"),
+  },
+  {
     path: "/m-place/:subCategory",
-    name: "sub-category",
+    name: "m-place",
     component: () => import("../views/MyInfoPage.vue"),
   },
 ];

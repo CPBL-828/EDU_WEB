@@ -78,6 +78,7 @@ div.away {
 
     .sub-sidebar {
       &-close {
+        opacity: 0;
         transform: translateX(0);
         transition: all 500ms;
         width: 128px;
@@ -194,4 +195,117 @@ div.away {
   z-index: 12;
   top: 15px;
   right: 15px;
+}
+
+section.data-list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .data-list {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90%;
+    height: 90%;
+
+    table {
+      position: absolute;
+      top: 70px;
+      width: 100%;
+      height: auto;
+      border-top: 2px solid $sub-color;
+      border-bottom: 2px solid $disable-color;
+      border-spacing: 0;
+
+      thead {
+        font-size: 16px;
+        font-weight: bold;
+        width: 100%;
+
+        tr {
+          th {
+            padding: 15px 0 15px 0;
+          }
+        }
+      }
+
+      tbody {
+        width: 700px;
+
+        tr {
+          width: 100%;
+          color: $sub-color;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $background-color;
+          }
+
+          td {
+            text-align: center;
+            padding: 15px 0 15px 0;
+            border-top: 2px solid $disable-color;
+          }
+        }
+      }
+    }
+  }
+
+  .pagination {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+
+    div {
+      cursor: pointer;
+    }
+
+    span {
+      color: $disable-color;
+      padding: 0 10px;
+      cursor: pointer;
+      font-size: 14px;
+
+      &:hover {
+        color: $sub-color;
+        font-weight: bold;
+      }
+    }
+
+    .page-active {
+      color: $sub-color;
+      font-weight: bold;
+    }
+
+    .arrow {
+      width: 30px;
+      height: 30px;
+      margin: 0 20px;
+      pointer-events: none;
+      opacity: 0;
+
+      &-active {
+        background-color: $disable-color;
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        pointer-events: auto;
+        opacity: 1;
+        color: white;
+        margin: 0 20px;
+
+        &:hover {
+          color: $sub-color;
+        }
+      }
+    }
+  }
 }

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import LoginComponent from "../components/fixed/LoginComponent.vue";
+import LoginComponent from "../components/LoginComponent.vue";
 export default defineComponent({
   name: "InitPage",
   components: { LoginComponent },

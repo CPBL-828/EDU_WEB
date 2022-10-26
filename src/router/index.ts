@@ -17,11 +17,6 @@ const routes = [
     component: () => import("../views/MainPage.vue"),
   },
   {
-    path: "/m-place",
-    name: "my-place",
-    component: () => import("../views/MyInfoPage.vue"),
-  },
-  {
     path: "/m-place/:subCategory",
     name: "sub-category",
     component: () => import("../views/MyInfoPage.vue"),

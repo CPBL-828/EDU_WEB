@@ -5,6 +5,12 @@ export const PAR_MAIN: categoryInterface[] = [];
 
 export const TEA_MAIN: categoryInterface[] = [
   {
+    KEY: "NOTICE",
+    VALUE: "공지",
+    ICON: "fa-solid fa-bell",
+    HAS_CHILD: true,
+  },
+  {
     KEY: "M-PLACE",
     VALUE: "내 공간",
     ICON: "fa-solid fa-user",
@@ -37,6 +43,13 @@ export const TEA_MAIN: categoryInterface[] = [
 ];
 
 export const TEA_SUB: categoryInterface[] = [
+  {
+    KEY: "NOTICE",
+    VALUE: [
+      { KEY: "ALL", VALUE: "전체 공지" },
+      { KEY: "MY", VALUE: "내 공지" },
+    ],
+  },
   {
     KEY: "M-PLACE",
     VALUE: [

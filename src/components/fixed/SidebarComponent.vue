@@ -78,13 +78,6 @@ export default defineComponent({
       }
     });
 
-    watch(
-      () => subState.value,
-      () => {
-        console.log(subState.value);
-      }
-    );
-
     return {
       mainItem,
       resultItem,

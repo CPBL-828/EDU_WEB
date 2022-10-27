@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { TEA_MAIN, TEA_SUB } from "../../dummyCategory";
+import { KYO_MAIN, KYO_SUB, TEA_MAIN, TEA_SUB } from "../../dummyCategory";
 import { categoryInterface, defaultInterface } from "../../lib/types";
 import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
@@ -19,7 +19,9 @@ export default defineComponent({
 
     const findRoute = () => {
       mr.value = common.getItem(KEYS.MR).mr?.split("/")[0]?.toUpperCase();
-      sr.value = common.getItem(KEYS.SR).sr?.split("/")[0]?.toUpperCase();
+      sr.value = common.getItem(KEYS.SR)
+        ? common.getItem(KEYS.SR).sr?.split("/")[0]?.toUpperCase()
+        : undefined;
 
       if (userKey.value === USER_KEY.STU) {
       } else if (userKey.value === USER_KEY.PAR) {
@@ -29,6 +31,24 @@ export default defineComponent({
             main.value = item.VALUE as string;
 
             TEA_SUB.map((child: defaultInterface) => {
+              if (item.KEY === child.KEY) {
+                (child.VALUE as defaultInterface[]).map(
+                  (v: defaultInterface) => {
+                    if (sr.value === v.KEY) {
+                      sub.value = v.VALUE as string;
+                    }
+                  }
+                );
+              }
+            });
+          }
+        });
+      } else if (userKey.value === USER_KEY.ADM) {
+        KYO_MAIN.map((item: categoryInterface) => {
+          if (mr.value === item.KEY) {
+            main.value = item.VALUE as string;
+
+            KYO_SUB.map((child: defaultInterface) => {
               if (item.KEY === child.KEY) {
                 (child.VALUE as defaultInterface[]).map(
                   (v: defaultInterface) => {

@@ -17,6 +17,12 @@ const routes = [
     component: () => import("../views/MainPage.vue"),
   },
   {
+    // 관리자의 전체 공지
+    path: "/notice",
+    name: "all-notice",
+    component: () => import("../views/NoticePage.vue"),
+  },
+  {
     path: "/notice/:noticeType",
     name: "notice",
     component: () => import("../views/NoticePage.vue"),

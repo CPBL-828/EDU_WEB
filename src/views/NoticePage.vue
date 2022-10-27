@@ -102,7 +102,7 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      if (route.path === "/notice/all") {
+      if (route.path === "/notice" || route.path === "/notice/all") {
         fakeData.value = [
           {
             type: "전체 공지",

@@ -9,7 +9,7 @@ export default defineComponent({
       required: true,
     },
     dataList: {
-      type: Object as PropType<Array<object>>,
+      type: Object as PropType<Array<object> | undefined>,
       required: true,
     },
   },
@@ -31,20 +31,22 @@ export default defineComponent({
     watch(
       () => currentPage.value,
       () => {
-        showList.value = props.dataList.slice(
+        showList.value = props.dataList?.slice(
           listCnt * currentPage.value - 10,
           listCnt * currentPage.value
-        );
+        ) as [];
       }
     );
 
     onMounted(() => {
-      if (props.dataList.length > listCnt) {
-        showList.value = props.dataList.slice(0, listCnt);
-        page.value = Math.ceil(props.dataList.length / 10);
-      } else {
-        showList.value = props.dataList;
-        page.value = 0;
+      if (props.dataList) {
+        if (props.dataList.length > listCnt) {
+          showList.value = props.dataList.slice(0, listCnt);
+          page.value = Math.ceil(props.dataList.length / 10);
+        } else {
+          showList.value = props.dataList;
+          page.value = 0;
+        }
       }
     });
     return {
@@ -60,7 +62,7 @@ export default defineComponent({
 
 <template>
   <section class="data-list">
-    <div class="data-list" v-if="dataList">
+    <div class="data-list">
       <table class="data-list-section">
         <thead class="data-list-section-header">
           <tr class="data-list-section-header-item">

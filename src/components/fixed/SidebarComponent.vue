@@ -25,6 +25,7 @@ export default defineComponent({
 
     const goMain = () => {
       common.removeItem(KEYS.MR);
+      common.removeItem(KEYS.SR);
       router.push("/main");
     };
 
@@ -35,10 +36,7 @@ export default defineComponent({
     };
 
     const selectMain = (main: categoryInterface) => {
-      common.setItem(
-        KEYS.MR,
-        common.makeJson({ mr: "/" + main.KEY.toLowerCase() })
-      );
+      common.setItem(KEYS.MR, common.makeJson({ mr: main.KEY.toLowerCase() }));
       // router.push("/" + main.KEY.toLowerCase());
 
       if (main.HAS_CHILD) {
@@ -54,7 +52,10 @@ export default defineComponent({
     };
 
     const selectSub = (sub: categoryInterface) => {
-      router.push(common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase());
+      common.setItem(KEYS.SR, common.makeJson({ sr: sub.KEY.toLowerCase() }));
+      router.push(
+        "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
+      );
     };
 
     const doLogout = () => {

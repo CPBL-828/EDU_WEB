@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue";
-import { adminInterface, teacherInterface } from "../lib/types";
+import { adminInterface, teacherInterface } from "../../lib/types";
 export default defineComponent({
   name: "MyInfoComponent",
   props: {

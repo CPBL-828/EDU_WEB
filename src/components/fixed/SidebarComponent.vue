@@ -8,7 +8,16 @@ import {
   defaultInterface,
   teacherInterface,
 } from "../../lib/types";
-import { KYO_MAIN, KYO_SUB, TEA_MAIN, TEA_SUB } from "../../dummyCategory";
+import {
+  KYO_MAIN,
+  KYO_SUB,
+  PAR_MAIN,
+  PAR_SUB,
+  STU_MAIN,
+  STU_SUB,
+  TEA_MAIN,
+  TEA_SUB,
+} from "../../dummyCategory";
 import { useRoute, useRouter } from "vue-router";
 import common from "../../lib/common";
 export default defineComponent({
@@ -40,6 +49,7 @@ export default defineComponent({
     };
 
     const selectMain = (main: categoryInterface) => {
+      if (common.getItem(KEYS.SR)) common.removeItem(KEYS.SR);
       common.setItem(KEYS.MR, common.makeJson({ mr: main.KEY.toLowerCase() }));
       // router.push("/" + main.KEY.toLowerCase());
 
@@ -57,13 +67,12 @@ export default defineComponent({
 
     const selectSub = (sub: categoryInterface) => {
       common.setItem(KEYS.SR, common.makeJson({ sr: sub.KEY.toLowerCase() }));
-
       router.push(
         "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
       );
-      setTimeout(() => {
-        subState.value = false;
-      }, 3000);
+      // setTimeout(() => {
+      //   subState.value = false;
+      // }, 3000);
     };
 
     const doLogout = () => {
@@ -86,7 +95,13 @@ export default defineComponent({
       userData.value = common.getItem(KEYS.LU);
       userKey.value = common.getItem(KEYS.UK);
 
-      if (userKey.value.userKey === USER_KEY.TEA) {
+      if (userKey.value.userKey === USER_KEY.PAR) {
+        mainItem.value = PAR_MAIN;
+        subItem.value = PAR_SUB;
+      } else if (userKey.value.userKey === USER_KEY.STU) {
+        mainItem.value = STU_MAIN;
+        subItem.value = STU_SUB;
+      } else if (userKey.value.userKey === USER_KEY.TEA) {
         mainItem.value = TEA_MAIN;
         subItem.value = TEA_SUB;
       } else if (userKey.value.userKey === USER_KEY.ADM) {

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import MyInfoComponent from "../components/MyInfoComponent.vue";
+import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
 import { adminInterface, teacherInterface } from "../lib/types";
 import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
@@ -28,7 +28,7 @@ export default defineComponent({
   <section v-if="userData">
     <my-info-component
       v-if="!adminState"
-      :user-data="userData !== undefined ? userData : {}"
+      :user-data="userData ? userData : {}"
     ></my-info-component>
   </section>
 </template>

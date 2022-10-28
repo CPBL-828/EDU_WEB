@@ -18,11 +18,11 @@ export default defineComponent({
       () => route.path,
       () => {
         currentCategory.value = route.path.split("/")[2]?.toUpperCase();
-        console.log(currentCategory.value);
       }
     );
 
     onMounted(() => {
+      currentCategory.value = route.path.split("/")[2]?.toUpperCase();
       userData.value = common.getItem(KEYS.LU);
     });
     return {
@@ -36,7 +36,7 @@ export default defineComponent({
 <template>
   <section>
     <my-info-component
-      v-if="currentCategory !== 'WORK' && currentCategory !== 'SUGGESTION'"
+      v-if="currentCategory === 'INFO'"
       :user-data="userData ? userData : {}"
     ></my-info-component>
     <div v-if="currentCategory === 'WORK'">출근부</div>

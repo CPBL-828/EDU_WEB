@@ -1,13 +1,14 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
-import MyInfoComponent from "../components/MyInfoComponent.vue";
+import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
 import { adminInterface, teacherInterface } from "../lib/types";
 import common from "../lib/common";
 import { KEYS } from "../constant";
 import { useRoute } from "vue-router";
+import WorkReportComponent from "../components/myInfo/WorkReportComponent.vue";
 export default defineComponent({
   name: "MyInfoPage",
-  components: { MyInfoComponent },
+  components: { WorkReportComponent, MyInfoComponent },
   setup() {
     const route = useRoute();
     const userData = ref<teacherInterface | adminInterface>();

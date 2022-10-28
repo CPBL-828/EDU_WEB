@@ -39,7 +39,9 @@ export default defineComponent({
       v-if="currentCategory === 'INFO'"
       :user-data="userData ? userData : {}"
     ></my-info-component>
-    <div v-if="currentCategory === 'WORK'">출근부</div>
+    <work-report-component
+      v-if="currentCategory === 'WORK'"
+    ></work-report-component>
     <div v-if="currentCategory === 'SUGGESTION'">건의사항</div>
   </section>
 </template>

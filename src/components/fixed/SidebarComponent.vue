@@ -23,7 +23,7 @@ export default defineComponent({
     const subItem = ref<categoryInterface[]>();
     const resultItem = ref<defaultInterface[]>();
     const subState = ref(false);
-    const selectSubState = ref(false);
+    const selectSubState = ref<string | undefined>(undefined);
 
     const goMain = () => {
       common.removeItem(KEYS.MR);
@@ -56,10 +56,13 @@ export default defineComponent({
 
     const selectSub = (sub: categoryInterface) => {
       common.setItem(KEYS.SR, common.makeJson({ sr: sub.KEY.toLowerCase() }));
-      // subState.value = false;
+
       router.push(
         "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
       );
+      // setTimeout(() => {
+      //   subState.value = false;
+      // }, 3000);
     };
 
     const doLogout = () => {
@@ -71,11 +74,14 @@ export default defineComponent({
 
     watch(
       () => route.path,
-      () => {}
+      () => {
+        if (route.path.split("/")[2]) {
+          selectSubState.value = route.path.split("/")[2].toUpperCase();
+        }
+      }
     );
 
     onMounted(() => {
-      //TODO userData localStorage에서 받아오기
       userData.value = common.getItem(KEYS.LU);
       userKey.value = common.getItem(KEYS.UK);
 
@@ -85,6 +91,10 @@ export default defineComponent({
       } else if (userKey.value.userKey === USER_KEY.ADM) {
         mainItem.value = KYO_MAIN;
         subItem.value = KYO_SUB;
+      }
+
+      if (route.path.split("/")[2]) {
+        selectSubState.value = route.path.split("/")[2].toUpperCase();
       }
     });
 
@@ -128,8 +138,11 @@ export default defineComponent({
           <div class="hi">반갑습니다!</div>
           <div class="sub-sidebar-open-category" v-if="resultItem">
             <div
-              class="sub-sidebar-open-category-item"
-              :id="item.KEY.toLowerCase()"
+              :class="
+                selectSubState === item.KEY
+                  ? 'sub-sidebar-open-category-item-active'
+                  : 'sub-sidebar-open-category-item'
+              "
               v-for="item in resultItem"
               @click="selectSub(item)"
             >

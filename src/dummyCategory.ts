@@ -1,7 +1,119 @@
 import { categoryInterface, defaultInterface } from "./lib/types";
 
-export const STU_MAIN: categoryInterface[] = [];
-export const PAR_MAIN: categoryInterface[] = [];
+export const STU_MAIN: categoryInterface[] = [
+  {
+    KEY: "M-PLACE",
+    VALUE: "내 공간",
+    ICON: "fa-solid fa-user",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "SCHEDULE",
+    VALUE: "시간표",
+    ICON: "fa-solid fa-chart-pie",
+    HAS_CHILD: false,
+  },
+  {
+    KEY: "LECTURE",
+    VALUE: "수강 현황",
+    ICON: "fa-solid fa-address-card",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "TEST",
+    VALUE: "시험 현황",
+    ICON: "fa-solid fa-highlighter",
+    HAS_CHILD: true,
+  },
+];
+
+export const STU_SUB: defaultInterface[] = [
+  {
+    KEY: "M-PLACE",
+    VALUE: [
+      { KEY: "INFO", VALUE: "내 정보" },
+      { KEY: "SUGGESTION", VALUE: "건의사항" },
+    ],
+  },
+  {
+    KEY: "LECTURE",
+    VALUE: [
+      { KEY: "ATTENDANCE", VALUE: "출석 현황" },
+      { KEY: "ASSIGNMENT", VALUE: "과제" },
+    ],
+  },
+  {
+    KEY: "TEST",
+    VALUE: [
+      { KEY: "SCHEDULE", VALUE: "시험 일정" },
+      { KEY: "SCORE", VALUE: "성적 입력" },
+    ],
+  },
+];
+
+export const PAR_MAIN: categoryInterface[] = [
+  {
+    KEY: "M-PLACE",
+    VALUE: "내 공간",
+    ICON: "fa-solid fa-user",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "SCHEDULE",
+    VALUE: "자녀 시간표",
+    ICON: "fa-solid fa-chart-pie",
+    HAS_CHILD: false,
+  },
+  {
+    KEY: "LECTURE",
+    VALUE: "수강 현황",
+    ICON: "fa-solid fa-address-card",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "TEST",
+    VALUE: "시험 현황",
+    ICON: "fa-solid fa-highlighter",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "CNA",
+    VALUE: "상담 및 분석",
+    ICON: "fa-solid fa-magnifying-glass-chart",
+    HAS_CHILD: true,
+  },
+];
+
+export const PAR_SUB: defaultInterface[] = [
+  {
+    KEY: "M-PLACE",
+    VALUE: [
+      { KEY: "INFO", VALUE: "내 정보" },
+      { KEY: "SUGGESTION", VALUE: "건의사항" },
+    ],
+  },
+  {
+    KEY: "LECTURE",
+    VALUE: [
+      { KEY: "ATTENDANCE", VALUE: "출석 현황" },
+      { KEY: "ASSIGNMENT", VALUE: "과제" },
+    ],
+  },
+  {
+    KEY: "TEST",
+    VALUE: [
+      { KEY: "SCHEDULE", VALUE: "시험 일정" },
+      { KEY: "SCORE", VALUE: "성적 입력" },
+    ],
+  },
+  {
+    KEY: "CNA",
+    VALUE: [
+      { KEY: "CONSULT", VALUE: "상담" },
+      { KEY: "ANALYSIS", VALUE: "분석" },
+    ],
+  },
+];
 
 export const TEA_MAIN: categoryInterface[] = [
   {

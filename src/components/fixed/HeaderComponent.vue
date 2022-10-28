@@ -1,7 +1,16 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { KYO_MAIN, KYO_SUB, TEA_MAIN, TEA_SUB } from "../../dummyCategory";
+import {
+  KYO_MAIN,
+  KYO_SUB,
+  PAR_MAIN,
+  PAR_SUB,
+  STU_MAIN,
+  STU_SUB,
+  TEA_MAIN,
+  TEA_SUB,
+} from "../../dummyCategory";
 import { categoryInterface, defaultInterface } from "../../lib/types";
 import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
@@ -24,23 +33,63 @@ export default defineComponent({
         : undefined;
 
       if (userKey.value === USER_KEY.STU) {
+        STU_MAIN.map((item: categoryInterface) => {
+          if (mr.value === item.KEY) {
+            main.value = item.VALUE as string;
+
+            if (item.HAS_CHILD) {
+              STU_SUB.map((child: defaultInterface) => {
+                if (item.KEY === child.KEY) {
+                  (child.VALUE as defaultInterface[]).map(
+                    (v: defaultInterface) => {
+                      if (sr.value === v.KEY) {
+                        sub.value = v.VALUE as string;
+                      }
+                    }
+                  );
+                }
+              });
+            }
+          }
+        });
       } else if (userKey.value === USER_KEY.PAR) {
+        PAR_MAIN.map((item: categoryInterface) => {
+          if (mr.value === item.KEY) {
+            main.value = item.VALUE as string;
+
+            if (item.HAS_CHILD) {
+              PAR_SUB.map((child: defaultInterface) => {
+                if (item.KEY === child.KEY) {
+                  (child.VALUE as defaultInterface[]).map(
+                    (v: defaultInterface) => {
+                      if (sr.value === v.KEY) {
+                        sub.value = v.VALUE as string;
+                      }
+                    }
+                  );
+                }
+              });
+            }
+          }
+        });
       } else if (userKey.value === USER_KEY.TEA) {
         TEA_MAIN.map((item: categoryInterface) => {
           if (mr.value === item.KEY) {
             main.value = item.VALUE as string;
 
-            TEA_SUB.map((child: defaultInterface) => {
-              if (item.KEY === child.KEY) {
-                (child.VALUE as defaultInterface[]).map(
-                  (v: defaultInterface) => {
-                    if (sr.value === v.KEY) {
-                      sub.value = v.VALUE as string;
+            if (item.HAS_CHILD) {
+              TEA_SUB.map((child: defaultInterface) => {
+                if (item.KEY === child.KEY) {
+                  (child.VALUE as defaultInterface[]).map(
+                    (v: defaultInterface) => {
+                      if (sr.value === v.KEY) {
+                        sub.value = v.VALUE as string;
+                      }
                     }
-                  }
-                );
-              }
-            });
+                  );
+                }
+              });
+            }
           }
         });
       } else if (userKey.value === USER_KEY.ADM) {
@@ -71,6 +120,7 @@ export default defineComponent({
           showRoute.value = false;
         } else {
           showRoute.value = true;
+          sub.value = undefined;
           findRoute();
         }
       }

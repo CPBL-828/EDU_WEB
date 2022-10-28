@@ -8,4 +8,14 @@ export default defineComponent({
 });
 </script>
 
-<template>여기는 컴포넌트입니다~</template>
+<template>
+  <section class="my-work">
+    <div class="my-work">
+      <div class="test">좀</div>
+      <div class="my-work-section">
+        <div class="my-work-section-tag">tag</div>
+        <div class="my-work-section-box">box</div>
+      </div>
+    </div>
+  </section>
+</template>

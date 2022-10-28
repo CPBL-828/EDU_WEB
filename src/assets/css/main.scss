@@ -273,3 +273,34 @@ section.my-info {
     }
   }
 }
+
+section.my-work {
+  left: 128px;
+
+  .my-work {
+    position: relative;
+    width: calc(100% - 128px);
+    height: 100%;
+    background-color: blueviolet;
+
+    &-section {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+
+      &-tag {
+        width: 200px;
+        height: 42px;
+        border-radius: 25px 25px 0 0;
+        background-color: #0099ff;
+      }
+    }
+
+    &-box {
+      width: 1200px;
+      height: 720px;
+      background-color: blue;
+      border-radius: 0 40px 40px 40px;
+    }
+  }
+}

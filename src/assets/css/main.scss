@@ -386,16 +386,43 @@ section.my-work {
             &-calendar {
               width: 360px;
               height: 362px;
-              background-color: #b6b6b6;
               border-radius: 10px;
+
+              .vc-container {
+                width: 100%;
+                height: 100%;
+                border: 2px solid $disable-color;
+                box-shadow: 4px 4px 5px 0 rgba(204, 204, 204, 0.3);
+
+                .vc-weeks {
+                  margin-top: 15%;
+                }
+              }
             }
 
             &-record {
+              position: relative;
               width: 360px;
               height: 208px;
-              background-color: #b6b6b6;
+              background-color: white;
               margin-top: 18px;
               border-radius: 10px;
+              border: 2px solid $disable-color;
+              box-shadow: 4px 4px 5px 0 rgba(204, 204, 204, 0.3);
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              color: $sub-color;
+
+              .title {
+                color: $disable-color;
+                margin-bottom: 13px;
+              }
+
+              .user {
+                margin-bottom: 6px;
+              }
             }
           }
         }

@@ -1,9 +1,38 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref } from "vue";
+import {
+  adminInterface,
+  defaultInterface,
+  teacherInterface,
+} from "../../lib/types";
+import { USER_KEY } from "../../constant";
 export default defineComponent({
   name: "WorkReportComponent",
-  setup() {
-    return {};
+  props: {
+    userKey: {
+      type: String as PropType<string | undefined>,
+      required: true,
+    },
+    userData: {
+      type: Object as PropType<teacherInterface | adminInterface>,
+      required: true,
+    },
+  },
+  setup(props) {
+    const today = ref<Date>(new Date());
+    const date = ref<Date>(new Date());
+    const teacherName = ref<string | undefined>(undefined);
+
+    onMounted(() => {
+      if (props.userKey === USER_KEY.TEA) {
+        teacherName.value = (props.userData as teacherInterface).name;
+      }
+    });
+    return {
+      today,
+      date,
+      teacherName,
+    };
   },
 });
 </script>
@@ -16,7 +45,10 @@ export default defineComponent({
         <div class="my-work-section-main">
           <div class="my-work-section-main-today">
             <i class="fa-solid fa-calendar-week"></i>
-            today
+            TODAY : {{ today.toISOString().substring(0, 4) }}년
+            {{ today.toISOString().substring(5, 7) }}월
+            {{ today.toISOString().substring(8, 10) }}일
+            {{ today.toString().substring(0, 4) }}
           </div>
           <div class="my-work-section-main-section">
             <div class="my-work-section-main-section-input">
@@ -45,7 +77,7 @@ export default defineComponent({
                   <input
                     type="button"
                     class="my-work-section-main-section-input-section-out-btn"
-                    value="출근"
+                    value="퇴근"
                   />
                 </div>
               </div>
@@ -55,10 +87,24 @@ export default defineComponent({
                 확인 원하는 일자 선택
               </div>
               <div class="my-work-section-main-section-check-calendar">
-                calendar
+                <v-date-picker
+                  is-expended
+                  mode="date"
+                  v-model="date"
+                ></v-date-picker>
               </div>
               <div class="my-work-section-main-section-check-record">
-                출근부 기록 보기
+                <div class="title">출근부 기록 보기</div>
+
+                <div class="date">
+                  {{ date?.toISOString().substring(0, 4) }}년
+                  {{ date?.toISOString().substring(5, 7) }}월
+                  {{ date?.toISOString().substring(8, 10) }}일
+                </div>
+                <div class="user">{{ teacherName }} 강사님</div>
+
+                <div class="start">출근 -</div>
+                <div class="end">퇴근 -</div>
               </div>
             </div>
           </div>

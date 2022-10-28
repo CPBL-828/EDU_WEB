@@ -20,12 +20,6 @@ export default defineComponent({
 <template>
   <section class="my-info">
     <div class="my-info">
-      <div class="my-info-head">
-        <div class="my-info-head-log">
-          <div class="my-info-head-log-img"></div>
-          <div class="my-info-head-log-text">내정보 > 출근부</div>
-        </div>
-      </div>
       <div class="my-info-body">
         <div class="my-info-body-section">
           <div class="my-info-body-section-tag">tag</div>

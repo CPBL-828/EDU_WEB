@@ -61,9 +61,9 @@ export default defineComponent({
       router.push(
         "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
       );
-      // setTimeout(() => {
-      //   subState.value = false;
-      // }, 3000);
+      setTimeout(() => {
+        subState.value = false;
+      }, 3000);
     };
 
     const doLogout = () => {

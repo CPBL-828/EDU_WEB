@@ -29,6 +29,7 @@ export default defineComponent({
       common.removeItem(KEYS.MR);
       common.removeItem(KEYS.SR);
       subState.value = false;
+      selectSubState.value = undefined;
       router.push("/main");
     };
 

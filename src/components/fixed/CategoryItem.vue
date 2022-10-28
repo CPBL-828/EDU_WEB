@@ -17,7 +17,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <section>
+  <section class="category">
     <div class="category">
       <div
         class="category-item"

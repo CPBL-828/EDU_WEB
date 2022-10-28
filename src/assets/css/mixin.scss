@@ -11,3 +11,9 @@ $disable-color: #cccccc;
   font-weight: 400;
   font-style: normal;
 }
+
+@mixin section-custom {
+  position: relative;
+  left: 128px;
+  width: calc(100% - 128px);
+}

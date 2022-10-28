@@ -32,7 +32,7 @@ export default defineComponent({
       () => currentPage.value,
       () => {
         showList.value = props.dataList?.slice(
-          listCnt * currentPage.value - 10,
+          listCnt * currentPage.value - listCnt,
           listCnt * currentPage.value
         ) as [];
       }

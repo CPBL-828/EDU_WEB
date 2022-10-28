@@ -25,10 +25,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <section v-if="userData">
-    <my-info-component
-      v-if="!adminState"
-      :user-data="userData ? userData : {}"
-    ></my-info-component>
-  </section>
+  <my-info-component
+    v-if="userData && !adminState"
+    :user-data="userData ? userData : {}"
+  ></my-info-component>
 </template>

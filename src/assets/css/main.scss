@@ -1,74 +1,78 @@
-.login-page {
+section.login-page {
   width: 100%;
   height: 100%;
   background-color: white;
 
-  &-header {
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translate(-50%, -5%);
-    font-weight: 700;
-    color: $disable-color;
-  }
+  .login-page {
+    height: 100%;
 
-  &-select {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-
-    &-hello {
-      font-size: 22px;
-      color: $sub-color;
-
-      &-guide {
-        font-size: 24px;
-        font-weight: 700;
-      }
+    &-header {
+      position: absolute;
+      top: 5%;
+      left: 50%;
+      transform: translate(-50%, -5%);
+      font-weight: 700;
+      color: $disable-color;
     }
 
-    &-section {
-      display: flex;
-      margin: 45px 0;
+    &-select {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
 
-      &-item {
-        position: relative;
-        box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.3);
-        width: 170px;
-        height: 170px;
-        background-color: $primary-color;
-        border-radius: 25px;
-        margin: 0 16px;
-        cursor: pointer;
+      &-hello {
+        font-size: 22px;
+        color: $sub-color;
 
-        &:hover {
-          background-color: $hover-color;
-        }
-
-        &-user {
-          position: absolute;
-          font-size: 18px;
+        &-guide {
+          font-size: 24px;
           font-weight: 700;
-          color: white;
-          top: 13px;
-          left: 20px;
         }
+      }
 
-        &-icon {
-          img {
-            position: absolute;
-            height: 116px;
-            bottom: 0;
-            right: 0;
+      &-section {
+        display: flex;
+        margin: 45px 0;
+
+        &-item {
+          position: relative;
+          box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.3);
+          width: 170px;
+          height: 170px;
+          background-color: $primary-color;
+          border-radius: 25px;
+          margin: 0 16px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $hover-color;
           }
-        }
 
-        &:hover {
-          img {
-            height: 126px;
-            transition: all 200ms;
+          &-user {
+            position: absolute;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            top: 13px;
+            left: 20px;
+          }
+
+          &-icon {
+            img {
+              position: absolute;
+              height: 116px;
+              bottom: 0;
+              right: 0;
+            }
+          }
+
+          &:hover {
+            img {
+              height: 126px;
+              transition: all 200ms;
+            }
           }
         }
       }
@@ -76,93 +80,97 @@
   }
 }
 
-.login-input {
+section.login-input {
   width: 100%;
   height: 100%;
 
-  .back {
-    position: absolute;
-    width: 185px;
-    top: 30px;
-    left: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: $sub-color;
-    font-weight: 700;
-    cursor: pointer;
+  .login-input {
+    height: 100%;
 
-    &:hover {
-      opacity: 0.7;
-    }
-  }
-
-  &-box {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 580px;
-    height: 498px;
-    background-color: white;
-    border-radius: 20px;
-    box-shadow: 4px 4px 20px 4px $disable-color;
-
-    &-section {
+    .back {
       position: absolute;
+      width: 185px;
+      top: 30px;
+      left: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: $sub-color;
+      font-weight: 700;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    &-box {
+      position: relative;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      width: 580px;
+      height: 498px;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 4px 4px 20px 4px $disable-color;
 
-      &-title {
-        font-size: 24px;
-        font-weight: 700;
-      }
+      &-section {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-      &-sub {
-        font-size: 16px;
-        color: $disable-color;
-      }
+        &-title {
+          font-size: 24px;
+          font-weight: 700;
+        }
 
-      &-icon {
-        width: 100px;
-        height: 100px;
-        color: $disable-color;
-        margin: 10px 0;
-      }
+        &-sub {
+          font-size: 16px;
+          color: $disable-color;
+        }
 
-      &-input {
-        width: 290px;
-        height: 40px;
-        text-align: center;
-        font-size: 16px;
-        font-weight: 700;
-        color: $sub-color;
-        border: 3px solid $disable-color;
-        border-radius: 20px;
-      }
+        &-icon {
+          width: 100px;
+          height: 100px;
+          color: $disable-color;
+          margin: 10px 0;
+        }
 
-      input[type="text"]:focus {
-        border: 3px solid $sub-color;
-      }
+        &-input {
+          width: 290px;
+          height: 40px;
+          text-align: center;
+          font-size: 16px;
+          font-weight: 700;
+          color: $sub-color;
+          border: 3px solid $disable-color;
+          border-radius: 20px;
+        }
 
-      &-btn {
-        width: 164px;
-        height: 40px;
-        border-radius: 19px;
-        font-size: 16px;
-        font-weight: 700;
-        color: white;
-        background-color: $primary-color;
-        border: 0;
-        margin: 10px 0;
-        cursor: pointer;
+        input[type="text"]:focus {
+          border: 3px solid $sub-color;
+        }
 
-        &:hover {
-          background-color: $hover-color;
+        &-btn {
+          width: 164px;
+          height: 40px;
+          border-radius: 19px;
+          font-size: 16px;
+          font-weight: 700;
+          color: white;
+          background-color: $primary-color;
+          border: 0;
+          margin: 10px 0;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $hover-color;
+          }
         }
       }
     }
@@ -170,58 +178,55 @@
 }
 
 section.my-info {
-  //TODO 내 정보 화면 작업
+  @include section-custom();
+
   .my-info {
-    position: relative;
-    width: 100%;
     height: 100%;
 
-    &-head {
-      position: absolute;
-      width: 100%;
-      height: 95px;
-      background-color: #e7e7e7;
-
-      &-log {
-        position: absolute;
-        width: 235px;
-        height: 22px;
-        display: flex;
-        flex-direction: row;
-        right: 117px;
-        top: 52px;
-
-        &-img {
-          //이미지는 어디서 가지고 오면 좋을까,,
-          width: 15px;
-          height: 20px;
-          background-color: blueviolet;
-        }
-
-        &-text {
-          display: flex;
-          align-items: center;
-          color: #565656;
-          font-size: 15px;
-          margin-left: 11px;
-        }
-      }
-    }
+    //&-head {
+    //  position: absolute;
+    //  width: 100%;
+    //  height: 95px;
+    //  background-color: #e7e7e7;
+    //
+    //  &-log {
+    //    position: absolute;
+    //    width: 235px;
+    //    height: 22px;
+    //    display: flex;
+    //    flex-direction: row;
+    //    right: 117px;
+    //    top: 52px;
+    //
+    //    &-img {
+    //      //이미지는 어디서 가지고 오면 좋을까,,
+    //      width: 15px;
+    //      height: 20px;
+    //      background-color: blueviolet;
+    //    }
+    //
+    //    &-text {
+    //      display: flex;
+    //      align-items: center;
+    //      color: #565656;
+    //      font-size: 15px;
+    //      margin-left: 11px;
+    //    }
+    //  }
+    //}
 
     &-body {
+      position: relative;
       width: 100%;
-      height: calc(100% - 95px);
+      height: 100%;
       background-color: #f8f8f8;
-      position: absolute;
-      top: 95px;
-      left: 128px;
 
       &-section {
+        position: absolute;
         display: flex;
         flex-direction: column;
-        position: absolute;
-        top: 50%;
-        left: calc(50% - 64px);
+        top: calc(50% - 21px);
+        left: 50%;
         transform: translate(-50%, -50%);
 
         &-tag {
@@ -241,10 +246,7 @@ section.my-info {
           width: 858px;
           height: 300px;
           background-color: white;
-          border-top-left-radius: 0px;
-          border-top-right-radius: 40px;
-          border-bottom-left-radius: 40px;
-          border-bottom-right-radius: 40px;
+          border-radius: 0 40px 40px 40px;
 
           &-info {
             width: 619px;
@@ -275,11 +277,10 @@ section.my-info {
 }
 
 section.my-work {
-  left: 128px;
+  @include section-custom();
 
   .my-work {
-    position: relative;
-    width: calc(100% - 128px);
+    width: 100%;
     height: 100%;
     background-color: blueviolet;
 

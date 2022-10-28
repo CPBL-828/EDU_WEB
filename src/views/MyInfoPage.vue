@@ -34,14 +34,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <section>
-    <my-info-component
-      v-if="currentCategory === 'INFO'"
-      :user-data="userData ? userData : {}"
-    ></my-info-component>
-    <work-report-component
-      v-if="currentCategory === 'WORK'"
-    ></work-report-component>
-    <div v-if="currentCategory === 'SUGGESTION'">건의사항</div>
-  </section>
+  <my-info-component
+    v-if="currentCategory === 'INFO'"
+    :user-data="userData ? userData : {}"
+  ></my-info-component>
+  <work-report-component
+    v-if="currentCategory === 'WORK'"
+  ></work-report-component>
+  <div v-if="currentCategory === 'SUGGESTION'">건의사항</div>
 </template>

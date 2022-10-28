@@ -9,12 +9,13 @@ import {
   teacherInterface,
 } from "../../lib/types";
 import { KYO_MAIN, KYO_SUB, TEA_MAIN, TEA_SUB } from "../../dummyCategory";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import common from "../../lib/common";
 export default defineComponent({
   name: "SidebarComponent",
   components: { CategoryItem },
   setup() {
+    const route = useRoute();
     const router = useRouter();
     const userData = ref<teacherInterface | adminInterface>();
     const userKey = ref({ userKey: "" });
@@ -22,10 +23,12 @@ export default defineComponent({
     const subItem = ref<categoryInterface[]>();
     const resultItem = ref<defaultInterface[]>();
     const subState = ref(false);
+    const selectSubState = ref(false);
 
     const goMain = () => {
       common.removeItem(KEYS.MR);
       common.removeItem(KEYS.SR);
+      subState.value = false;
       router.push("/main");
     };
 
@@ -53,6 +56,7 @@ export default defineComponent({
 
     const selectSub = (sub: categoryInterface) => {
       common.setItem(KEYS.SR, common.makeJson({ sr: sub.KEY.toLowerCase() }));
+      // subState.value = false;
       router.push(
         "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
       );
@@ -64,6 +68,11 @@ export default defineComponent({
         router.push("/");
       }
     };
+
+    watch(
+      () => route.path,
+      () => {}
+    );
 
     onMounted(() => {
       //TODO userData localStorage에서 받아오기
@@ -83,6 +92,7 @@ export default defineComponent({
       mainItem,
       resultItem,
       subState,
+      selectSubState,
       goMain,
       onClickAway,
       selectMain,
@@ -119,6 +129,7 @@ export default defineComponent({
           <div class="sub-sidebar-open-category" v-if="resultItem">
             <div
               class="sub-sidebar-open-category-item"
+              :id="item.KEY.toLowerCase()"
               v-for="item in resultItem"
               @click="selectSub(item)"
             >

@@ -20,7 +20,7 @@ export default defineComponent({
     watch(
       () => route.path,
       () => {
-        if (route.path === "/all") {
+        if (route.path === "/notice/all") {
           fakeData.value = [
             {
               type: "전체 공지",

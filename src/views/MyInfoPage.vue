@@ -43,6 +43,7 @@ export default defineComponent({
 <template>
   <my-info-component
     v-if="currentCategory === 'INFO'"
+    :user-key="userKey"
     :user-data="userData ? userData : {}"
   ></my-info-component>
   <work-report-component

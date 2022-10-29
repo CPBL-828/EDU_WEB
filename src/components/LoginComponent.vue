@@ -72,7 +72,7 @@ export default defineComponent({
             leaveDate: "",
             name: "고소현",
             part: "중등부",
-            profileImg: "프로필사진 경로",
+            profileImg: "",
             resSubject: "중등국어",
             resume: "이력서 경로",
             teacherKey: "akjheuf-132",

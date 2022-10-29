@@ -183,59 +183,119 @@ section.my-info {
   .my-info {
     height: 100%;
 
-    &-body {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background-color: #f8f8f8;
+    &-section {
+      position: absolute;
+      width: 858px;
+      flex-direction: column;
+      top: calc(50% - 21px);
+      left: 50%;
+      transform: translate(-50%, -50%);
 
-      &-section {
-        position: absolute;
+      &-tag {
+        width: 200px;
+        height: 42px;
+        background-color: $primary-color;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
         display: flex;
-        flex-direction: column;
-        top: calc(50% - 21px);
-        left: 50%;
-        transform: translate(-50%, -50%);
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 15px;
+      }
 
-        &-tag {
-          width: 200px;
-          height: 42px;
-          background-color: #0099ff;
-          border-top-left-radius: 25px;
-          border-top-right-radius: 25px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-size: 15px;
+      &-main {
+        width: 100%;
+        height: 300px;
+        background-color: white;
+        border-radius: 0 40px 40px 40px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &-img {
+          position: relative;
+          left: 78px;
+          width: 190px;
+          height: 190px;
+          background-color: $disable-color;
+          border-radius: 15px;
+
+          i[class*="camera"] {
+            position: absolute;
+            color: white;
+            top: 15px;
+            right: 15px;
+            font-size: 27px;
+          }
+
+          i[class*="user"] {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 109px;
+          }
         }
 
-        &-main {
-          width: 858px;
-          height: 300px;
-          background-color: white;
-          border-radius: 0 40px 40px 40px;
+        &-content {
+          position: absolute;
+          left: 355px;
 
-          &-info {
-            width: 619px;
-            height: 198px;
-            margin-left: 78px;
-            margin-top: 51px;
+          &-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: $sub-color;
+
+            div {
+              margin-bottom: 5px;
+            }
+          }
+
+          &-btn {
             display: flex;
-            flex-direction: row;
-            align-items: center;
+            margin-top: 18px;
+            font-size: 16px;
+            font-weight: bold;
 
-            &-img {
-              width: 190px;
-              height: 190px;
-              background-color: #565656;
+            input {
+              width: 164px;
+              height: 40px;
+              border: 0;
+              background-color: $primary-color;
+              color: white;
+              border-radius: 19px;
+              cursor: pointer;
+              font-weight: bold;
+              font-size: 16px;
+
+              &:hover {
+                outline: 0;
+                background-color: $hover-color;
+              }
             }
 
-            &-text {
-              width: 342px;
-              height: 198px;
-              margin-left: 87px;
-              background-color: blue;
+            .edit-btn {
+              width: 164px;
+              height: 40px;
+              border: 2px solid $primary-color;
+              border-radius: 19px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: $primary-color;
+              margin-left: 14px;
+              cursor: pointer;
+
+              i {
+                margin-right: 5px;
+              }
+
+              &:hover {
+                border: 2px solid $hover-color;
+                color: $hover-color;
+              }
             }
           }
         }
@@ -261,7 +321,7 @@ section.my-work {
       &-tag {
         width: 200px;
         height: 42px;
-        background-color: #0099ff;
+        background-color: $primary-color;
         border-radius: 25px 25px 0 0;
         display: flex;
         align-items: center;

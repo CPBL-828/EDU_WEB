@@ -173,7 +173,7 @@ export const TEA_SUB: defaultInterface[] = [
   {
     KEY: "STUDENT",
     VALUE: [
-      { KEY: "INFO", VALUE: "학생 정보" },
+      { KEY: "S-INFO", VALUE: "학생 정보" },
       { KEY: "CONSULT", VALUE: "상담" },
       { KEY: "ANALYSIS", VALUE: "분석" },
     ],
@@ -253,7 +253,7 @@ export const KYO_SUB: categoryInterface[] = [
   {
     KEY: "TEACHER",
     VALUE: [
-      { KEY: "INFO", VALUE: "강사 정보" },
+      { KEY: "T-INFO", VALUE: "강사 정보" },
       { KEY: "WORK", VALUE: "출근부" },
       { KEY: "SUGGESTION", VALUE: "건의사항" },
     ],
@@ -261,7 +261,7 @@ export const KYO_SUB: categoryInterface[] = [
   {
     KEY: "STUDENT",
     VALUE: [
-      { KEY: "INFO", VALUE: "학생 정보" },
+      { KEY: "S-INFO", VALUE: "학생 정보" },
       { KEY: "CONSULT", VALUE: "상담" },
       { KEY: "ANALYSIS", VALUE: "분석" },
       { KEY: "SUGGESTION", VALUE: "건의사항" },
@@ -277,7 +277,7 @@ export const KYO_SUB: categoryInterface[] = [
   {
     KEY: "LECTURE",
     VALUE: [
-      { KEY: "INFO", VALUE: "강의 조회" },
+      { KEY: "L-INFO", VALUE: "강의 조회" },
       { KEY: "ATTENDANCE", VALUE: "출결 현황" },
       { KEY: "ASSIGNMENT", VALUE: "과제" },
       { KEY: "REPORT", VALUE: "일지" },

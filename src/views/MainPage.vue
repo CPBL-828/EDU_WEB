@@ -9,15 +9,20 @@ export default defineComponent({
   components: { MyInfoComponent },
   setup() {
     const adminState = ref(false);
+    const userKey = ref<string | undefined>(undefined);
     const userData = ref<teacherInterface | adminInterface>();
 
     onMounted(() => {
-      if (common.getItem(KEYS.UK).userKey === USER_KEY.ADM)
-        adminState.value = true;
+      if (common.getItem(KEYS.UK)) {
+        userKey.value = common.getItem(KEYS.UK).userKey;
+        if (common.getItem(KEYS.UK).userKey === USER_KEY.ADM)
+          adminState.value = true;
+      }
       userData.value = common.getItem(KEYS.LU);
     });
     return {
       adminState,
+      userKey,
       userData,
     };
   },
@@ -27,6 +32,7 @@ export default defineComponent({
 <template>
   <my-info-component
     v-if="userData && !adminState"
+    :userKey="userKey"
     :user-data="userData ? userData : {}"
   ></my-info-component>
 </template>

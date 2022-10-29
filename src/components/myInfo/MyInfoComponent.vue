@@ -41,8 +41,8 @@ export default defineComponent({
         <div class="my-info-section-main">
           <div class="my-info-section-main-img">
             <i class="fa-solid fa-camera"></i>
-            <i class="fa-solid fa-user" v-if="!userData.profileImg"></i>
-            <input type="file" v-if="userData.profileImg" />
+            <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <input type="file" v-if="teacherInfo?.profileImg" />
           </div>
           <div class="my-info-section-main-content">
             <div

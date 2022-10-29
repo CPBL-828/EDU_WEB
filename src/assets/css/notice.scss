@@ -8,8 +8,8 @@ section.notice {
       position: absolute;
       max-width: 1200px;
       width: 100%;
-      height: 100%;
-      top: 50%;
+      height: auto;
+      top: calc(50% - 21px);
       left: 50%;
       transform: translate(-50%, -50%);
 
@@ -17,8 +17,7 @@ section.notice {
         width: 200px;
         height: 42px;
         background-color: $primary-color;
-        border-top-left-radius: 25px;
-        border-top-right-radius: 25px;
+        border-radius: 25px 25px 0 0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -27,10 +26,7 @@ section.notice {
       }
 
       &-body {
-        position: absolute;
         background-color: white;
-        top: 50%;
-        transform: translateY(-50%);
         width: 100%;
         height: 800px;
         border-radius: 0 40px 40px 40px;
@@ -38,7 +34,7 @@ section.notice {
         .search {
           position: absolute;
           z-index: 3;
-          top: calc(50% - 350px);
+          top: calc(50% - 330px);
           transform: translateY(-50%);
           left: 5%;
           width: 275px;

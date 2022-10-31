@@ -397,19 +397,19 @@ section.my-work {
                   opacity: 0;
                   position: absolute;
                   width: 374px;
-                  z-index: 0;
+                  z-index: 1;
                   transform: translateY(14px);
                   transition: all 300ms;
                   display: flex;
                   justify-content: center;
 
                   &-come {
+                    opacity: 1;
                     position: absolute;
                     width: 374px;
                     transform: translateY(64px);
                     transition: all 300ms;
                     z-index: 3;
-                    opacity: 1;
                     border: 2px solid $disable-color;
                     display: flex;
                     justify-content: center;
@@ -472,6 +472,7 @@ section.my-work {
                   border: 0;
                   color: $disable-color;
                   background-color: white;
+                  font-weight: bold;
                 }
 
                 i {

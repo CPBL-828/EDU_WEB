@@ -312,6 +312,9 @@ section.my-work {
 
     &-section {
       position: absolute;
+      max-width: 1200px;
+      width: 100%;
+      height: auto;
       display: flex;
       flex-direction: column;
       top: calc(50% - 21px);
@@ -331,15 +334,17 @@ section.my-work {
       }
 
       &-main {
-        width: 1200px;
+        position: relative;
+        width: 100%;
         height: 720px;
         background-color: white;
         border-radius: 0 40px 40px 40px;
 
         &-today {
+          position: absolute;
+          top: 20px;
+          left: 32px;
           width: 100%;
-          height: 19px;
-          margin: 20px 0 0 32px;
           font-size: 13px;
           color: $sub-color;
 
@@ -349,11 +354,10 @@ section.my-work {
         }
 
         &-section {
-          width: 1020px;
-          height: 654px;
-          margin-left: 32px;
+          position: absolute;
+          width: 100%;
+          height: 100%;
           display: flex;
-          flex-direction: row;
 
           &-input {
             width: 680px;
@@ -361,7 +365,7 @@ section.my-work {
             position: relative;
 
             &-section {
-              width: 501px;
+              width: auto;
               height: 129px;
               position: absolute;
               top: 35%;
@@ -370,33 +374,6 @@ section.my-work {
               display: flex;
               flex-direction: column;
               justify-content: space-around;
-
-              input[type="text"] {
-                text-align: center;
-                width: 370px;
-                height: 40px;
-                border-radius: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: white;
-                border: 2px solid $disable-color;
-
-                &::placeholder {
-                  color: $disable-color;
-                }
-              }
-
-              input[type="button"] {
-                width: 108px;
-                height: 30px;
-                background-color: $primary-color;
-                color: white;
-                border-radius: 10px;
-                //테두리색 안넣었는데 왜 있고 난리,,,
-                border: 0;
-                cursor: pointer;
-              }
 
               &-guide {
                 width: 300px;
@@ -411,36 +388,128 @@ section.my-work {
               }
 
               &-come {
-                height: 40px;
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
                 align-items: center;
+                margin-top: 10px;
+
+                .calendar {
+                  opacity: 0;
+                  position: absolute;
+                  width: 374px;
+                  z-index: 0;
+                  transform: translateY(14px);
+                  transition: all 300ms;
+                  display: flex;
+                  justify-content: center;
+
+                  &-come {
+                    position: absolute;
+                    width: 374px;
+                    transform: translateY(64px);
+                    transition: all 300ms;
+                    z-index: 3;
+                    opacity: 1;
+                    border: 2px solid $disable-color;
+                    display: flex;
+                    justify-content: center;
+                    box-shadow: 4px 4px 5px 0 rgba(86, 86, 86, 0.15);
+                  }
+                }
               }
 
               &-out {
-                height: 40px;
                 display: flex;
                 flex-direction: row;
-                justify-content: space-between;
                 align-items: center;
+                margin-top: 10px;
+
+                .calendar {
+                  opacity: 0;
+                  position: absolute;
+                  width: 374px;
+                  z-index: 0;
+                  transform: translateY(14px);
+                  transition: all 300ms;
+                  display: flex;
+                  justify-content: center;
+
+                  &-out {
+                    position: absolute;
+                    width: 374px;
+                    transform: translateY(64px);
+                    transition: all 300ms;
+                    z-index: 3;
+                    opacity: 1;
+                    border: 2px solid $disable-color;
+                    display: flex;
+                    justify-content: center;
+                    box-shadow: 4px 4px 5px 0 rgba(86, 86, 86, 0.15);
+                  }
+                }
+              }
+
+              div[class$="datetime"] {
+                position: relative;
+                z-index: 2;
+                margin-right: 23px;
+                width: 370px;
+                height: 40px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $disable-color;
+                border: 2px solid $disable-color;
+
+                input[type="text"] {
+                  text-align: center;
+                  width: 360px;
+                  height: 40px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  border: 0;
+                  color: $disable-color;
+                  background-color: white;
+                }
+
+                i {
+                  position: absolute;
+                  font-size: 18px;
+                  right: 20px;
+                  cursor: pointer;
+                }
+              }
+
+              input[type="button"] {
+                width: 108px;
+                height: 30px;
+                background-color: $primary-color;
+                color: white;
+                border-radius: 10px;
+                border: 0;
+                cursor: pointer;
+
+                &:hover {
+                  background-color: $hover-color;
+                }
               }
             }
           }
 
           &-check {
-            width: 360px;
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            justify-content: center;
 
             &-header {
-              height: 24px;
               display: flex;
               align-items: center;
               justify-content: center;
               color: $disable-color;
+              margin-bottom: 10px;
             }
 
             &-calendar {

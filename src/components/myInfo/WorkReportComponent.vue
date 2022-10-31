@@ -21,7 +21,40 @@ export default defineComponent({
   setup(props) {
     const today = ref<Date>(new Date());
     const date = ref<Date>(new Date());
+    const comeTime = ref<Date>(new Date());
+    const fixCome = ref<Date | undefined>(undefined);
+    const outTime = ref<Date>(new Date());
+    const fixOut = ref<Date | undefined>(undefined);
+    const calendarState = ref<string | undefined>(undefined);
     const teacherName = ref<string | undefined>(undefined);
+
+    const openCalendar = (v: string) => {
+      if (calendarState.value !== undefined) {
+        calendarState.value = undefined;
+      } else {
+        if (v === "come") {
+          calendarState.value = "come";
+        } else {
+          calendarState.value = "out";
+        }
+      }
+    };
+
+    const onClickAway = (event: Event) => {
+      if (event.isTrusted) {
+        calendarState.value = undefined;
+      }
+    };
+
+    const saveComeTime = (t: Date) => {
+      calendarState.value = undefined;
+      fixCome.value = t;
+    };
+
+    const saveOutTime = (t: Date) => {
+      calendarState.value = undefined;
+      fixOut.value = t;
+    };
 
     onMounted(() => {
       if (props.userKey === USER_KEY.TEA) {
@@ -31,7 +64,16 @@ export default defineComponent({
     return {
       today,
       date,
+      comeTime,
+      fixCome,
+      outTime,
+      fixOut,
+      calendarState,
       teacherName,
+      openCalendar,
+      onClickAway,
+      saveComeTime,
+      saveOutTime,
     };
   },
 });
@@ -57,27 +99,69 @@ export default defineComponent({
                   출근부에 기록될 일자를 입력해주세요.
                 </div>
                 <div class="my-work-section-main-section-input-section-come">
-                  <input
-                    type="text"
-                    class="my-work-section-main-section-input-section-come-date"
-                    placeholder="날짜 및 현재 시간 선택"
-                  />
+                  <div
+                    class="my-work-section-main-section-input-section-come-datetime"
+                  >
+                    <input
+                      type="text"
+                      :value="
+                        fixCome
+                          ? fixCome.toLocaleString().slice(0, -3)
+                          : '날짜 및 현재 시간 선택'
+                      "
+                      :disabled="true"
+                    />
+                    <i
+                      class="fa-solid fa-chevron-down"
+                      @click="openCalendar('come')"
+                    ></i>
+                  </div>
                   <input
                     type="button"
                     class="my-work-section-main-section-input-section-come-btn"
                     value="출근"
+                    @click="saveComeTime(comeTime)"
+                  />
+                  <v-date-picker
+                    :class="
+                      calendarState === 'come' ? 'calendar-come' : 'calendar'
+                    "
+                    mode="time"
+                    v-model="comeTime"
+                    :minute-increment="10"
                   />
                 </div>
                 <div class="my-work-section-main-section-input-section-out">
-                  <input
-                    type="text"
-                    class="my-work-section-main-section-input-section-out-date"
-                    placeholder="날짜 및 현재 시간 선택"
-                  />
+                  <div
+                    class="my-work-section-main-section-input-section-out-datetime"
+                  >
+                    <input
+                      type="text"
+                      :value="
+                        fixOut
+                          ? fixOut.toLocaleString().slice(0, -3)
+                          : '날짜 및 현재 시간 선택'
+                      "
+                      :disabled="true"
+                    />
+                    <i
+                      class="fa-solid fa-chevron-down"
+                      @click="openCalendar('out')"
+                    ></i>
+                  </div>
                   <input
                     type="button"
                     class="my-work-section-main-section-input-section-out-btn"
                     value="퇴근"
+                    @click="saveOutTime(outTime)"
+                  />
+                  <v-date-picker
+                    :class="
+                      calendarState === 'out' ? 'calendar-out' : 'calendar'
+                    "
+                    mode="time"
+                    v-model="outTime"
+                    :minute-increment="10"
                   />
                 </div>
               </div>

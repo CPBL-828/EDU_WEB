@@ -31,62 +31,62 @@ export default defineComponent({
     @date 22/10/06
      */
     const doLogin = async () => {
-      // let data: object = {
-      //   userType: userType.value,
-      //   id: userId.value,
-      // };
+      let data: object = {
+        userType: userType.value,
+        id: userId.value,
+      };
 
       if (userId.value) {
-        // const result = await ApiClient(
-        //   "/members/compare/",
-        //   common.makeJson(data)
-        // );
-        //
-        // if (result) {
-        //   let userData =
-        //     userType.value === USER_KEY.STU
-        //       ? result
-        //       : userType.value === USER_KEY.PAR
-        //       ? result
-        //       : userType.value === USER_KEY.TEA
-        //       ? (result as teacherInterface)
-        //       : userType.value === USER_KEY.ADM
-        //       ? (result as adminInterface)
-        //       : result;
-        //
-        //   console.log(userData);
-        //   common.setItem(KEYS.LU, common.makeJson(userData as object));
-        //   common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
-        //
-        //   window.alert("로그인 성공. 환영합니다!");
-        //   await router.push("/main");
-        // } else {
-        //   window.alert(whoAmI.value?.VALUE + " 정보를 찾을 수 없어요!");
-        // }
-        if (userId.value === "sso") {
-          const userData: teacherInterface = {
-            createDate: "createDate",
-            editDate: "editDate",
-            id: userId.value,
-            joinDate: "22-10-22",
-            leaveDate: "",
-            name: "고소현",
-            part: "중등부",
-            profileImg: "",
-            resSubject: "중등국어",
-            resume: "이력서 경로",
-            teacherKey: "akjheuf-132",
-            phone: "010-2222-2222",
-          };
+        const result = await ApiClient(
+          "/members/compare/",
+          common.makeJson(data)
+        );
 
+        if (result) {
+          let userData =
+            userType.value === USER_KEY.STU
+              ? result
+              : userType.value === USER_KEY.PAR
+              ? result
+              : userType.value === USER_KEY.TEA
+              ? (result as teacherInterface)
+              : userType.value === USER_KEY.ADM
+              ? (result as adminInterface)
+              : result;
+
+          console.log(userData);
           common.setItem(KEYS.LU, common.makeJson(userData as object));
           common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
 
           window.alert("로그인 성공. 환영합니다!");
           await router.push("/main");
         } else {
-          window.alert("사용자 정보를 찾을 수 없습니다.");
+          window.alert(whoAmI.value?.VALUE + " 정보를 찾을 수 없어요!");
         }
+        // if (userId.value === "sso") {
+        //   const userData: teacherInterface = {
+        //     createDate: "createDate",
+        //     editDate: "editDate",
+        //     id: userId.value,
+        //     joinDate: "22-10-22",
+        //     leaveDate: "",
+        //     name: "고소현",
+        //     part: "중등부",
+        //     profileImg: "",
+        //     resSubject: "중등국어",
+        //     resume: "이력서 경로",
+        //     teacherKey: "akjheuf-132",
+        //     phone: "010-2222-2222",
+        //   };
+        //
+        //   common.setItem(KEYS.LU, common.makeJson(userData as object));
+        //   common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
+        //
+        //   window.alert("로그인 성공. 환영합니다!");
+        //   await router.push("/main");
+        // } else {
+        //   window.alert("사용자 정보를 찾을 수 없습니다.");
+        // }
       } else {
         window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
       }

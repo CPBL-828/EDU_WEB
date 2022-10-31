@@ -51,7 +51,11 @@ export default defineComponent({
             >
               <div class="name">이름 : {{ teacherInfo.name }}</div>
               <div class="id">아이디 : {{ teacherInfo.id }}</div>
-              <div class="join">입사일 : {{ teacherInfo.joinDate }}</div>
+              <div class="join">
+                입사일 : {{ teacherInfo.joinDate.substring(0, 4) }}/{{
+                  teacherInfo.joinDate.substring(5, 7)
+                }}/{{ teacherInfo.joinDate.substring(8, 10) }}
+              </div>
               <div class="subject">담당과목 : {{ teacherInfo.resSubject }}</div>
               <div class="part">담당학년 : {{ teacherInfo.part }}</div>
             </div>

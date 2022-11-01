@@ -42,6 +42,15 @@ section.my-info {
           background-color: $disable-color;
           border-radius: 15px;
 
+          > input {
+            opacity: 0;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            width: 27px;
+            height: 27px;
+          }
+
           i[class*="camera"] {
             position: absolute;
             color: white;

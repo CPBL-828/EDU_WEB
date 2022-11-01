@@ -153,6 +153,7 @@ section.login-input {
         }
 
         input[type="text"]:focus {
+          outline: 0;
           border: 3px solid $sub-color;
         }
 

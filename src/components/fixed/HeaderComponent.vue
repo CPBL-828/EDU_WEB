@@ -52,11 +52,11 @@ export default defineComponent({
 <template>
   <section class="header">
     <div class="header">
-      <div class="path" v-if="showRoute">
+      <div class="path" v-if="showRoute && category">
         <i class="fa-solid fa-bars"></i>
-        {{ category[0]["VALUE"]
-        }}<i class="fa-solid fa-angle-right" v-if="category[1]"></i
-        >{{ category[1]["VALUE"] }}
+        {{ category[0] ? category[0]["VALUE"] : "" }}
+        <i class="fa-solid fa-angle-right" v-if="category[1]"></i>
+        {{ category[1] ? category[1]["VALUE"] : "" }}
       </div>
     </div>
   </section>

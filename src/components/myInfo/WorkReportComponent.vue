@@ -3,6 +3,8 @@ import { defineComponent, onMounted, PropType, ref } from "vue";
 import {
   adminInterface,
   defaultInterface,
+  parentInterface,
+  studentInterface,
   teacherInterface,
 } from "../../lib/types";
 import { USER_KEY } from "../../constant";

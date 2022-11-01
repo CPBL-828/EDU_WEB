@@ -1,7 +1,12 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
-import { adminInterface, teacherInterface } from "../lib/types";
+import {
+  adminInterface,
+  parentInterface,
+  studentInterface,
+  teacherInterface,
+} from "../lib/types";
 import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
 export default defineComponent({
@@ -10,7 +15,9 @@ export default defineComponent({
   setup() {
     const adminState = ref(false);
     const userKey = ref<string | undefined>(undefined);
-    const userData = ref<teacherInterface | adminInterface>();
+    const userData = ref<
+      parentInterface | studentInterface | teacherInterface | undefined
+    >(undefined);
 
     onMounted(() => {
       if (common.getItem(KEYS.UK)) {
@@ -31,8 +38,8 @@ export default defineComponent({
 
 <template>
   <my-info-component
-    v-if="userData && !adminState"
+    v-if="userData !== undefined && !adminState"
     :userKey="userKey"
-    :user-data="userData ? userData : {}"
+    :user-data="userData"
   ></my-info-component>
 </template>

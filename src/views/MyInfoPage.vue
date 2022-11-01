@@ -1,7 +1,12 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
-import { adminInterface, teacherInterface } from "../lib/types";
+import {
+  adminInterface,
+  parentInterface,
+  studentInterface,
+  teacherInterface,
+} from "../lib/types";
 import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
 import { useRoute } from "vue-router";
@@ -13,7 +18,12 @@ export default defineComponent({
   setup: function () {
     const route = useRoute();
     const userKey = ref<string | undefined>(undefined);
-    const userData = ref<teacherInterface | adminInterface>();
+    const myInfoUser = ref<
+      parentInterface | studentInterface | teacherInterface | undefined
+    >(undefined);
+    const workUser = ref<teacherInterface | adminInterface | undefined>(
+      undefined
+    );
     const currentCategory = ref<string | undefined>(undefined);
 
     watch(
@@ -28,12 +38,14 @@ export default defineComponent({
       userKey.value = common.getItem(KEYS.UK).userKey;
 
       if (userKey.value === USER_KEY.TEA) {
-        userData.value = common.getItem(KEYS.LU) as teacherInterface;
+        myInfoUser.value = common.getItem(KEYS.LU) as teacherInterface;
+        workUser.value = common.getItem(KEYS.LU) as teacherInterface;
       }
     });
     return {
       userKey,
-      userData,
+      myInfoUser,
+      workUser,
       currentCategory,
     };
   },
@@ -42,14 +54,14 @@ export default defineComponent({
 
 <template>
   <my-info-component
-    v-if="currentCategory === 'INFO'"
+    v-if="myInfoUser !== undefined && currentCategory === 'INFO'"
     :user-key="userKey"
-    :user-data="userData ? userData : {}"
+    :user-data="myInfoUser"
   ></my-info-component>
   <work-report-component
-    v-if="currentCategory === 'WORK'"
+    v-if="workUser !== undefined && currentCategory === 'WORK'"
     :user-key="userKey"
-    :user-data="userData ? userData : {}"
+    :user-data="workUser"
   ></work-report-component>
   <div v-if="currentCategory === 'SUGGESTION'">건의사항</div>
 </template>

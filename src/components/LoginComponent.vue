@@ -7,6 +7,8 @@ import { KEYS, USER_KEY } from "../constant";
 import {
   adminInterface,
   defaultInterface,
+  parentInterface,
+  studentInterface,
   teacherInterface,
 } from "../lib/types";
 import { ApiClient } from "../axios";
@@ -45,9 +47,9 @@ export default defineComponent({
         if (result) {
           let userData =
             userType.value === USER_KEY.STU
-              ? result
+              ? (result as studentInterface)
               : userType.value === USER_KEY.PAR
-              ? result
+              ? (result as parentInterface)
               : userType.value === USER_KEY.TEA
               ? (result as teacherInterface)
               : userType.value === USER_KEY.ADM

@@ -24,8 +24,8 @@ const routes = [
   },
   // 관리자의 강사 관리
   {
-    path: "/teacher/:subCategory",
-    name: "teacher-info",
+    path: "/t-manage/:subCategory",
+    name: "t-manage",
     component: () => import("../views/TeacherManagePage.vue"),
   },
   {

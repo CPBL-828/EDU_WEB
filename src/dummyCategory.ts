@@ -129,7 +129,7 @@ export const TEA_MAIN: categoryInterface[] = [
     HAS_CHILD: true,
   },
   {
-    KEY: "STUDENT",
+    KEY: "S-MANAGE",
     VALUE: "학생 관리",
     ICON: "fa-solid fa-users",
     HAS_CHILD: true,
@@ -171,7 +171,7 @@ export const TEA_SUB: defaultInterface[] = [
     ],
   },
   {
-    KEY: "STUDENT",
+    KEY: "S-MANAGE",
     VALUE: [
       { KEY: "S-INFO", VALUE: "학생 정보" },
       { KEY: "CONSULT", VALUE: "상담" },
@@ -218,13 +218,13 @@ export const KYO_MAIN: categoryInterface[] = [
     HAS_CHILD: false,
   },
   {
-    KEY: "TEACHER",
+    KEY: "T-MANAGE",
     VALUE: "강사 관리",
     ICON: "fa-solid fa-chalkboard-user",
     HAS_CHILD: true,
   },
   {
-    KEY: "STUDENT",
+    KEY: "S-MANAGE",
     VALUE: "학생 관리",
     ICON: "fa-solid fa-users",
     HAS_CHILD: true,
@@ -251,7 +251,7 @@ export const KYO_MAIN: categoryInterface[] = [
 
 export const KYO_SUB: categoryInterface[] = [
   {
-    KEY: "TEACHER",
+    KEY: "T-MANAGE",
     VALUE: [
       { KEY: "T-INFO", VALUE: "강사 정보" },
       { KEY: "WORK", VALUE: "출근부" },
@@ -259,7 +259,7 @@ export const KYO_SUB: categoryInterface[] = [
     ],
   },
   {
-    KEY: "STUDENT",
+    KEY: "S-MANAGE",
     VALUE: [
       { KEY: "S-INFO", VALUE: "학생 정보" },
       { KEY: "CONSULT", VALUE: "상담" },

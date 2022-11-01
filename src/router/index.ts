@@ -30,7 +30,7 @@ const routes = [
   {
     path: "/m-place/:subCategory",
     name: "m-place",
-    component: () => import("../views/MyInfoPage.vue"),
+    component: () => import("../views/MyPlacePage.vue"),
   },
 ];
 

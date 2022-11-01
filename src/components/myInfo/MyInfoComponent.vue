@@ -67,71 +67,62 @@ export default defineComponent({
               : ""
           }}
         </div>
-        <div class="my-info-section-main" v-if="teacherInfo">
+        <div class="my-info-section-main" v-if="teacherInfo || studentInfo">
           <div class="my-info-section-main-img">
             <i class="fa-solid fa-camera"></i>
-            <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <i
+              class="fa-solid fa-user"
+              v-if="!teacherInfo?.profileImg || !studentInfo?.profileImg"
+            ></i>
             <input type="file" accept="image/*" />
           </div>
           <div class="my-info-section-main-content">
             <div
               class="my-info-section-main-content-text"
-              v-if="teacherInfo && !editState"
+              v-if="(studentInfo || teacherInfo) && !editState"
             >
-              <div class="name">
+              <div class="name" v-if="teacherInfo">
                 이름 : {{ teacherInfo.name }} ({{ teacherInfo.id }})
               </div>
-              <div class="phone">
+              <div class="phone" v-if="teacherInfo">
                 연락처 : {{ teacherInfo.phone.substring(0, 3) }}-{{
                   teacherInfo.phone.substring(3, 7)
                 }}-{{ teacherInfo.phone.substring(7, 11) }}
               </div>
-              <div class="join">
+              <div class="join" v-if="teacherInfo">
                 입사일 : {{ teacherInfo.joinDate.substring(0, 4) }}/{{
                   teacherInfo.joinDate.substring(5, 7)
                 }}/{{ teacherInfo.joinDate.substring(8, 10) }}
               </div>
-              <div class="subject">담당과목 : {{ teacherInfo.resSubject }}</div>
-              <div class="part">담당학년 : {{ teacherInfo.part }}</div>
-            </div>
-            <div class="my-info-section-main-content-btn">
-              <input
-                type="button"
-                class="view-btn"
-                :value="teacherInfo ? '이력서 보기' : ''"
-              />
-              <div class="edit-btn">
-                <i class="fa-solid fa-pen"></i>정보 수정
+              <div class="subject" v-if="teacherInfo">
+                담당과목 : {{ teacherInfo.resSubject }}
               </div>
-            </div>
-          </div>
-        </div>
+              <div class="part" v-if="teacherInfo">
+                담당학년 : {{ teacherInfo.part }}
+              </div>
 
-        <div class="my-info-section-main" v-if="studentInfo">
-          <div class="my-info-section-main-img">
-            <i class="fa-solid fa-camera"></i>
-            <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
-            <input type="file" accept="image/*" />
-          </div>
-          <div class="my-info-section-main-content">
-            <div
-              class="my-info-section-main-content-text"
-              v-if="studentInfo && !editState"
-            >
-              <div class="name">
+              <div class="name" v-if="studentInfo">
                 이름 : {{ studentInfo.name }} ({{ studentInfo.id }})
               </div>
-              <div class="join">
-                학교 : {{ studentInfo.school }} {{ studentInfo.grade }}학년
-              </div>
-              <div class="part">
+              <div class="part" v-if="studentInfo">
                 연락처 : {{ studentInfo.phone.substring(0, 3) }}-{{
                   studentInfo.phone.substring(3, 7)
                 }}-{{ studentInfo.phone.substring(7, 11) }}
               </div>
+              <div class="join" v-if="studentInfo">
+                학교 : {{ studentInfo.school?.slice(0, -3) }}
+                {{ studentInfo.grade }}학년
+              </div>
             </div>
             <div class="my-info-section-main-content-btn">
               <input
+                v-if="teacherInfo"
+                type="button"
+                class="view-btn"
+                :value="teacherInfo ? '이력서 보기' : ''"
+              />
+              <input
+                v-if="studentInfo"
                 type="button"
                 class="view-btn"
                 :value="studentInfo ? '세부 정보' : ''"

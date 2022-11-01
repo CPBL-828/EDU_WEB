@@ -26,7 +26,7 @@ const routes = [
   {
     path: "/t-manage/:subCategory",
     name: "t-manage",
-    component: () => import("../views/TeacherManagePage.vue"),
+    component: () => import("../views/teacherManage/TeacherManagePage.vue"),
   },
   {
     path: "/notice/:noticeType",

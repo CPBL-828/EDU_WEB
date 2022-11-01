@@ -17,3 +17,15 @@ $disable-color: #cccccc;
   width: calc(100% - 128px);
   overflow: scroll;
 }
+
+@mixin tag-custom {
+  width: 200px;
+  height: 42px;
+  background-color: $primary-color;
+  border-radius: 25px 25px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 15px;
+}

@@ -3,13 +3,14 @@ import { defineComponent, onMounted, PropType, ref } from "vue";
 import {
   adminInterface,
   defaultInterface,
-  parentInterface,
-  studentInterface,
   teacherInterface,
 } from "../../lib/types";
 import { USER_KEY } from "../../constant";
-import { useRoute } from "vue-router";
 import common from "../../lib/common";
+
+/*
+@brief 강사의 출근부 입력 및 열람 페이지
+ */
 export default defineComponent({
   name: "WorkReportComponent",
   props: {
@@ -18,7 +19,7 @@ export default defineComponent({
       required: true,
     },
     userData: {
-      type: Object as PropType<teacherInterface | adminInterface>,
+      type: Object as PropType<teacherInterface>,
       required: true,
     },
   },
@@ -31,7 +32,6 @@ export default defineComponent({
     const outTime = ref<Date>(new Date());
     const fixOut = ref<Date | undefined>(undefined);
     const calendarState = ref<string | undefined>(undefined);
-    const teacherName = ref<string | undefined>(undefined);
 
     const openCalendar = (v: string) => {
       if (calendarState.value !== undefined) {
@@ -63,10 +63,6 @@ export default defineComponent({
 
     onMounted(() => {
       category.value = common.findCategory();
-
-      if (props.userKey === USER_KEY.TEA) {
-        teacherName.value = (props.userData as teacherInterface).name;
-      }
     });
     return {
       category,
@@ -77,7 +73,6 @@ export default defineComponent({
       outTime,
       fixOut,
       calendarState,
-      teacherName,
       openCalendar,
       onClickAway,
       saveComeTime,
@@ -201,7 +196,7 @@ export default defineComponent({
                   {{ date?.toISOString().substring(5, 7) }}월
                   {{ date?.toISOString().substring(8, 10) }}일
                 </div>
-                <div class="user">{{ teacherName }} 강사님</div>
+                <div class="user">{{ userData.name }} 강사님</div>
 
                 <div class="start">출근 -</div>
                 <div class="end">퇴근 -</div>

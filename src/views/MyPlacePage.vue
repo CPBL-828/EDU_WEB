@@ -3,7 +3,6 @@ import { defineComponent, onMounted, ref, watch } from "vue";
 import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
 import {
   adminInterface,
-  defaultInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
@@ -13,6 +12,9 @@ import { KEYS, USER_KEY } from "../constant";
 import { useRoute } from "vue-router";
 import WorkReportComponent from "../components/myInfo/WorkReportComponent.vue";
 
+/*
+@brief 메인 카테고리 [내 공간]의 메뉴들에 해당하는 페이지 로딩
+ */
 export default defineComponent({
   name: "MyInfoPage",
   components: { WorkReportComponent, MyInfoComponent },
@@ -22,11 +24,12 @@ export default defineComponent({
     const myInfoUser = ref<
       parentInterface | studentInterface | teacherInterface | undefined
     >(undefined);
-    const workUser = ref<teacherInterface | adminInterface | undefined>(
-      undefined
-    );
+    const workUser = ref<teacherInterface | undefined>(undefined);
     const currentCategory = ref<string | undefined>(undefined);
 
+    /*
+    @brief 사용자가 선택하는 카테고리를 추적
+     */
     watch(
       () => route.path,
       () => {
@@ -43,8 +46,10 @@ export default defineComponent({
       } else if (userKey.value === USER_KEY.PAR) {
         myInfoUser.value = common.getItem(KEYS.LU) as parentInterface;
       } else if (userKey.value === USER_KEY.TEA) {
-        myInfoUser.value = common.getItem(KEYS.LU) as teacherInterface;
-        workUser.value = common.getItem(KEYS.LU) as teacherInterface;
+        if (currentCategory.value === "INFO")
+          myInfoUser.value = common.getItem(KEYS.LU) as teacherInterface;
+        else if (currentCategory.value === "WORK")
+          workUser.value = common.getItem(KEYS.LU) as teacherInterface;
       }
     });
     return {

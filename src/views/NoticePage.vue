@@ -4,7 +4,10 @@ import DataListComponent from "../components/DataListComponent.vue";
 import { defaultInterface } from "../lib/types";
 import { useRoute } from "vue-router";
 import common from "../lib/common";
-import { KEYS } from "../constant";
+
+/*
+@brief 공지사항을 표시하는 페이지
+ */
 export default defineComponent({
   name: "NoticePage",
   components: { DataListComponent },
@@ -24,7 +27,7 @@ export default defineComponent({
       () => route.path,
       () => {
         category.value = common.findCategory();
-        if (route.path === "/notice/all") {
+        if (route.path === "/notice" || route.path === "/notice/all") {
           fakeData.value = [
             {
               type: "전체 공지",
@@ -108,7 +111,11 @@ export default defineComponent({
     onMounted(() => {
       category.value = common.findCategory();
 
-      if (route.path === "/notice" || route.path === "/notice/all") {
+      if (
+        route.path === "/main" ||
+        route.path === "/notice" ||
+        route.path === "/notice/all"
+      ) {
         fakeData.value = [
           {
             type: "전체 공지",

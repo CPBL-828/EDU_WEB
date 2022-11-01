@@ -25,7 +25,6 @@ export default defineComponent({
     },
   },
   setup: function (props) {
-    const route = useRoute();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const parentInfo = ref<parentInterface | undefined>(undefined);
@@ -33,14 +32,7 @@ export default defineComponent({
     const editState = ref(false);
 
     onMounted(() => {
-      if (route.path === "/main") {
-        category.value = [
-          { KEY: "main", VALUE: "메인" },
-          { KEY: "sub", VALUE: "" },
-        ];
-      } else {
-        category.value = common.findCategory();
-      }
+      category.value = common.findCategory();
 
       if (props.userKey === USER_KEY.PAR) {
         parentInfo.value = props.userData as parentInterface;

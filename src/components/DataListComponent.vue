@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../lib/types";
+
 export default defineComponent({
   name: "DataListComponent",
   props: {
@@ -29,6 +30,9 @@ export default defineComponent({
     };
 
     watch(
+      /*
+        @brief 현재 페이지가 변경되면, 페이지 값에 따라 표시할 dataList 변경
+         */
       () => currentPage.value,
       () => {
         showList.value = props.dataList?.slice(
@@ -39,6 +43,9 @@ export default defineComponent({
     );
 
     onMounted(() => {
+      /*
+      @brief props.dataList 길이에 맞춰 페이징 설정
+       */
       if (props.dataList) {
         if (props.dataList.length > listCnt) {
           showList.value = props.dataList.slice(0, listCnt);

@@ -20,6 +20,10 @@ import {
 } from "../../dummyCategory";
 import { useRoute, useRouter } from "vue-router";
 import common from "../../lib/common";
+
+/*
+@brief 사이드바 및 서브 사이드바
+ */
 export default defineComponent({
   name: "SidebarComponent",
   components: { CategoryItem },
@@ -51,7 +55,6 @@ export default defineComponent({
     const selectMain = (main: categoryInterface) => {
       if (common.getItem(KEYS.SR)) common.removeItem(KEYS.SR);
       common.setItem(KEYS.MR, common.makeJson({ mr: main.KEY.toLowerCase() }));
-      // router.push("/" + main.KEY.toLowerCase());
 
       if (main.HAS_CHILD) {
         subItem.value?.map((item: categoryInterface) => {

@@ -6,14 +6,6 @@ export default defineComponent({
     const showState = ref(false);
     const date = ref<Date>(new Date());
 
-    const showCalendar = () => {
-      showState.value = true;
-    };
-
-    const offCalendar = () => {
-      showState.value = false;
-    };
-
     const changeShowState = () => {
       showState.value = !showState.value;
     };

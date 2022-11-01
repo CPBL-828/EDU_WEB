@@ -8,11 +8,13 @@ import {
   teacherInterface,
 } from "../../lib/types";
 import { USER_KEY } from "../../constant";
+import { useRoute } from "vue-router";
+import common from "../../lib/common";
 export default defineComponent({
   name: "WorkReportComponent",
   props: {
     userKey: {
-      type: String as PropType<string | undefined>,
+      type: String as PropType<string>,
       required: true,
     },
     userData: {
@@ -21,6 +23,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const category = ref<Array<defaultInterface> | undefined>(undefined);
     const today = ref<Date>(new Date());
     const date = ref<Date>(new Date());
     const comeTime = ref<Date>(new Date());
@@ -59,11 +62,14 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      category.value = common.findCategory();
+
       if (props.userKey === USER_KEY.TEA) {
         teacherName.value = (props.userData as teacherInterface).name;
       }
     });
     return {
+      category,
       today,
       date,
       comeTime,
@@ -85,7 +91,15 @@ export default defineComponent({
   <section class="my-work">
     <div class="my-work">
       <div class="my-work-section">
-        <div class="my-work-section-tag">tag</div>
+        <div class="my-work-section-tag">
+          {{
+            category
+              ? category[1]["VALUE"]
+                ? category[1]["VALUE"]
+                : category[0]["VALUE"]
+              : ""
+          }}
+        </div>
         <div class="my-work-section-main">
           <div class="my-work-section-main-today">
             <i class="fa-solid fa-calendar-week"></i>

@@ -38,7 +38,7 @@ export default defineComponent({
 
 <template>
   <my-info-component
-    v-if="userData !== undefined && !adminState"
+    v-if="userKey !== undefined && userData !== undefined && !adminState"
     :userKey="userKey"
     :user-data="userData"
   ></my-info-component>

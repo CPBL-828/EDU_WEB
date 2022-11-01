@@ -1,17 +1,20 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from "vue";
+import { defineComponent, onMounted, Prop, PropType, ref } from "vue";
 import {
   adminInterface,
+  defaultInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
 } from "../../lib/types";
-import { USER_KEY } from "../../constant";
+import { KEYS, USER_KEY } from "../../constant";
+import common from "../../lib/common";
+import { useRoute } from "vue-router";
 export default defineComponent({
   name: "MyInfoComponent",
   props: {
     userKey: {
-      type: String as PropType<string | undefined>,
+      type: String as PropType<string>,
       required: true,
     },
     userData: {
@@ -21,13 +24,24 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup: function (props) {
+    const route = useRoute();
+    const category = ref<Array<defaultInterface> | undefined>(undefined);
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const parentInfo = ref<parentInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
 
     onMounted(() => {
+      if (route.path === "/main") {
+        category.value = [
+          { KEY: "main", VALUE: "메인" },
+          { KEY: "sub", VALUE: "" },
+        ];
+      } else {
+        category.value = common.findCategory();
+      }
+
       if (props.userKey === USER_KEY.PAR) {
         parentInfo.value = props.userData as parentInterface;
       } else if (props.userKey === USER_KEY.STU) {
@@ -36,7 +50,9 @@ export default defineComponent({
         teacherInfo.value = props.userData as teacherInterface;
       }
     });
+
     return {
+      category,
       studentInfo,
       parentInfo,
       teacherInfo,
@@ -50,20 +66,34 @@ export default defineComponent({
   <section class="my-info">
     <div class="my-info">
       <div class="my-info-section">
-        <div class="my-info-section-tag">tag</div>
+        <div class="my-info-section-tag">
+          {{
+            category
+              ? category[1]["VALUE"]
+                ? category[1]["VALUE"]
+                : category[0]["VALUE"]
+              : ""
+          }}
+        </div>
         <div class="my-info-section-main" v-if="teacherInfo">
           <div class="my-info-section-main-img">
             <i class="fa-solid fa-camera"></i>
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
-            <input type="file" v-if="teacherInfo?.profileImg" />
+            <input type="file" accept="image/*" />
           </div>
           <div class="my-info-section-main-content">
             <div
               class="my-info-section-main-content-text"
               v-if="teacherInfo && !editState"
             >
-              <div class="name">이름 : {{ teacherInfo.name }}</div>
-              <div class="id">아이디 : {{ teacherInfo.id }}</div>
+              <div class="name">
+                이름 : {{ teacherInfo.name }} ({{ teacherInfo.id }})
+              </div>
+              <div class="phone">
+                연락처 : {{ teacherInfo.phone.substring(0, 3) }}-{{
+                  teacherInfo.phone.substring(3, 7)
+                }}-{{ teacherInfo.phone.substring(7, 11) }}
+              </div>
               <div class="join">
                 입사일 : {{ teacherInfo.joinDate.substring(0, 4) }}/{{
                   teacherInfo.joinDate.substring(5, 7)
@@ -89,15 +119,16 @@ export default defineComponent({
           <div class="my-info-section-main-img">
             <i class="fa-solid fa-camera"></i>
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
-            <input type="file" v-if="studentInfo?.profileImg" />
+            <input type="file" accept="image/*" />
           </div>
           <div class="my-info-section-main-content">
             <div
               class="my-info-section-main-content-text"
               v-if="studentInfo && !editState"
             >
-              <div class="name">이름 : {{ studentInfo.name }}</div>
-              <div class="id">아이디 : {{ studentInfo.id }}</div>
+              <div class="name">
+                이름 : {{ studentInfo.name }} ({{ studentInfo.id }})
+              </div>
               <div class="join">
                 학교 : {{ studentInfo.school }} {{ studentInfo.grade }}학년
               </div>

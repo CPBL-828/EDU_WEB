@@ -3,6 +3,7 @@ import { defineComponent, onMounted, ref, watch } from "vue";
 import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
 import {
   adminInterface,
+  defaultInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
@@ -37,7 +38,11 @@ export default defineComponent({
       currentCategory.value = route.path.split("/")[2]?.toUpperCase();
       userKey.value = common.getItem(KEYS.UK).userKey;
 
-      if (userKey.value === USER_KEY.TEA) {
+      if (userKey.value === USER_KEY.STU) {
+        myInfoUser.value = common.getItem(KEYS.LU) as studentInterface;
+      } else if (userKey.value === USER_KEY.PAR) {
+        myInfoUser.value = common.getItem(KEYS.LU) as parentInterface;
+      } else if (userKey.value === USER_KEY.TEA) {
         myInfoUser.value = common.getItem(KEYS.LU) as teacherInterface;
         workUser.value = common.getItem(KEYS.LU) as teacherInterface;
       }
@@ -54,12 +59,20 @@ export default defineComponent({
 
 <template>
   <my-info-component
-    v-if="myInfoUser !== undefined && currentCategory === 'INFO'"
+    v-if="
+      userKey !== undefined &&
+      myInfoUser !== undefined &&
+      currentCategory === 'INFO'
+    "
     :user-key="userKey"
     :user-data="myInfoUser"
   ></my-info-component>
   <work-report-component
-    v-if="workUser !== undefined && currentCategory === 'WORK'"
+    v-if="
+      userKey !== undefined &&
+      workUser !== undefined &&
+      currentCategory === 'WORK'
+    "
     :user-key="userKey"
     :user-data="workUser"
   ></work-report-component>

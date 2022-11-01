@@ -3,6 +3,8 @@ import { defineComponent, onMounted, ref, watch } from "vue";
 import DataListComponent from "../components/DataListComponent.vue";
 import { defaultInterface } from "../lib/types";
 import { useRoute } from "vue-router";
+import common from "../lib/common";
+import { KEYS } from "../constant";
 export default defineComponent({
   name: "NoticePage",
   components: { DataListComponent },
@@ -14,12 +16,14 @@ export default defineComponent({
       { KEY: "DATE", VALUE: "작성일자" },
       { KEY: "WRITER", VALUE: "작성자" },
     ];
+    const category = ref<Array<defaultInterface> | undefined>(undefined);
 
     const fakeData = ref<Array<object> | undefined>(undefined);
 
     watch(
       () => route.path,
       () => {
+        category.value = common.findCategory();
         if (route.path === "/notice/all") {
           fakeData.value = [
             {
@@ -102,6 +106,8 @@ export default defineComponent({
     );
 
     onMounted(() => {
+      category.value = common.findCategory();
+
       if (route.path === "/notice" || route.path === "/notice/all") {
         fakeData.value = [
           {
@@ -182,6 +188,7 @@ export default defineComponent({
       console.log(fakeData.value);
     });
     return {
+      category,
       fakeHeader,
       fakeData,
     };
@@ -193,7 +200,15 @@ export default defineComponent({
   <section class="notice">
     <div class="notice">
       <div class="notice-section">
-        <div class="notice-section-tag">tag</div>
+        <div class="notice-section-tag">
+          {{
+            category
+              ? category[1]["VALUE"]
+                ? category[1]["VALUE"]
+                : category[0]["VALUE"]
+              : ""
+          }}
+        </div>
         <div class="notice-section-body" v-if="fakeData">
           <div class="search">
             <i class="fa-solid fa-magnifying-glass"></i>

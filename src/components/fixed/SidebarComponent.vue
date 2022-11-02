@@ -81,6 +81,9 @@ export default defineComponent({
     const doLogout = () => {
       if (window.confirm("로그아웃 하시겠습니까?")) {
         common.removeItem(KEYS.LU);
+        common.removeItem(KEYS.UK);
+        common.removeItem(KEYS.MR);
+        common.removeItem(KEYS.SR);
         router.push("/");
       }
     };

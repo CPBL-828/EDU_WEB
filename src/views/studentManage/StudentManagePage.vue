@@ -1,18 +1,19 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import common from "../../lib/common";
 import UserInfoComponent from "../../components/UserInfoComponent.vue";
-import { teacherInterface } from "../../lib/types";
+import { studentInterface } from "../../lib/types";
 
 /*
-@brief 관리자 권한의 메인 카테고리 [강사 관리]에서 접근할 수 있는 페이지들 표시
+@brief 강사 및 관리자 권한의 메인 카테고리 [학목 관리]에서 접근할 수 있는 페이지들 표시
  */
 export default defineComponent({
-  name: "TeacherManagePage",
+  name: "StudentManagePage",
   components: { UserInfoComponent },
   setup() {
     const route = useRoute();
-    const teacherInfo = ref<Array<teacherInterface> | undefined>(undefined);
+    const studentInfo = ref<Array<studentInterface> | undefined>(undefined);
     const currentCategory = ref<string | undefined>(undefined);
 
     watch(
@@ -27,7 +28,7 @@ export default defineComponent({
     });
 
     return {
-      teacherInfo,
+      studentInfo,
       currentCategory,
     };
   },
@@ -36,7 +37,7 @@ export default defineComponent({
 
 <template>
   <user-info-component
-    v-if="currentCategory === 'T-INFO'"
-    :user-data="teacherInfo !== undefined ? teacherInfo : []"
+    v-if="currentCategory === 'S-INFO'"
+    :user-data="studentInfo !== undefined ? studentInfo : []"
   ></user-info-component>
 </template>

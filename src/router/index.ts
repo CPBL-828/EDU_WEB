@@ -38,6 +38,11 @@ const routes = [
     name: "m-place",
     component: () => import("../views/MyPlacePage.vue"),
   },
+  {
+    path: "/s-manage/:subCategory",
+    name: "s-manage",
+    component: () => import("../views/studentManage/StudentManagePage.vue"),
+  },
 ];
 
 const router = createRouter({

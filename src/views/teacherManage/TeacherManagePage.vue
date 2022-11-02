@@ -2,7 +2,6 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import UserInfoComponent from "../../components/UserInfoComponent.vue";
-import { teacherInterface } from "../../lib/types";
 
 /*
 @brief 관리자 권한의 메인 카테고리 [강사 관리]에서 접근할 수 있는 페이지들 표시
@@ -12,7 +11,6 @@ export default defineComponent({
   components: { UserInfoComponent },
   setup() {
     const route = useRoute();
-    const teacherInfo = ref<Array<teacherInterface> | undefined>(undefined);
     const currentCategory = ref<string | undefined>(undefined);
 
     watch(
@@ -27,7 +25,6 @@ export default defineComponent({
     });
 
     return {
-      teacherInfo,
       currentCategory,
     };
   },
@@ -37,6 +34,6 @@ export default defineComponent({
 <template>
   <user-info-component
     v-if="currentCategory === 'T-INFO'"
-    :user-data="teacherInfo !== undefined ? teacherInfo : []"
+    view-user="TEA"
   ></user-info-component>
 </template>

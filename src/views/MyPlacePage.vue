@@ -11,13 +11,14 @@ import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
 import { useRoute } from "vue-router";
 import WorkReportComponent from "../components/myInfo/WorkReportComponent.vue";
+import SuggestionComponent from "../components/myInfo/SuggestionComponent.vue";
 
 /*
 @brief 메인 카테고리 [내 공간]의 메뉴들에 해당하는 페이지 로딩
  */
 export default defineComponent({
   name: "MyInfoPage",
-  components: { WorkReportComponent, MyInfoComponent },
+  components: { SuggestionComponent, WorkReportComponent, MyInfoComponent },
   setup: function () {
     const route = useRoute();
     const userKey = ref<string | undefined>(undefined);
@@ -81,5 +82,13 @@ export default defineComponent({
     :user-key="userKey"
     :user-data="workUser"
   ></work-report-component>
-  <div v-if="currentCategory === 'SUGGESTION'">건의사항</div>
+  <SuggestionComponent
+    v-if="
+      userKey !== undefined &&
+      workUser !== undefined &&
+      currentCategory === 'SUGGESTION'
+    "
+    :user-key="userKey"
+    :user-data="workUser"
+  ></SuggestionComponent>
 </template>

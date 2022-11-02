@@ -47,10 +47,10 @@ export default defineComponent({
       } else if (userKey.value === USER_KEY.PAR) {
         myInfoUser.value = common.getItem(KEYS.LU) as parentInterface;
       } else if (userKey.value === USER_KEY.TEA) {
-        if (currentCategory.value === "INFO")
-          myInfoUser.value = common.getItem(KEYS.LU) as teacherInterface;
-        else if (currentCategory.value === "WORK")
-          workUser.value = common.getItem(KEYS.LU) as teacherInterface;
+        // if (currentCategory.value === "INFO")
+        myInfoUser.value = common.getItem(KEYS.LU) as teacherInterface;
+        // else if (currentCategory.value === "WORK")
+        workUser.value = common.getItem(KEYS.LU) as teacherInterface;
       }
     });
     return {
@@ -65,29 +65,17 @@ export default defineComponent({
 
 <template>
   <my-info-component
-    v-if="
-      userKey !== undefined &&
-      myInfoUser !== undefined &&
-      currentCategory === 'INFO'
-    "
+    v-if="userKey && myInfoUser && currentCategory === 'INFO'"
     :user-key="userKey"
     :user-data="myInfoUser"
   ></my-info-component>
   <work-report-component
-    v-if="
-      userKey !== undefined &&
-      workUser !== undefined &&
-      currentCategory === 'WORK'
-    "
+    v-if="userKey && workUser && currentCategory === 'WORK'"
     :user-key="userKey"
     :user-data="workUser"
   ></work-report-component>
   <SuggestionComponent
-    v-if="
-      userKey !== undefined &&
-      workUser !== undefined &&
-      currentCategory === 'SUGGESTION'
-    "
+    v-if="userKey && workUser && currentCategory === 'SUGGESTION'"
     :user-key="userKey"
     :user-data="workUser"
   ></SuggestionComponent>

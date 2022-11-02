@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { USER_KEY } from "../constant";
+import { USER_KEY } from "../../constant";
 import { useRouter } from "vue-router";
 
 /*

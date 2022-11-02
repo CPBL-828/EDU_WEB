@@ -191,8 +191,6 @@ export default defineComponent({
           },
         ];
       }
-
-      console.log(fakeData.value);
     });
     return {
       category,

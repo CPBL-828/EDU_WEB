@@ -20,7 +20,6 @@ export const getApiClient = () => {
 };
 
 export const ApiClient = async (url: string, data: string) => {
-  console.log(data);
   return await getApiClient()
     .post(url, data)
     .then((res) => {

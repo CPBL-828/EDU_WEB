@@ -27,7 +27,31 @@ export default defineComponent({
     const userData = ref<
       Array<studentInterface | teacherInterface> | undefined
     >(undefined);
+    const total = ref<string | undefined>(undefined);
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const search = ref<string | undefined>(undefined);
+    const searchData = ref<
+      Array<studentInterface | teacherInterface> | undefined
+    >(undefined);
+
+    const doSearch = async () => {
+      if (search.value) {
+        let data = { search: search.value };
+        const result = await ApiClient(
+          "/members/getStudentList/",
+          common.makeJson(data)
+        );
+
+        if (result.count > 0) {
+          searchData.value = result.resultData as studentInterface[];
+          total.value = result.count;
+        } else {
+          window.alert("검색 내용을 찾을 수 없어요.");
+        }
+      } else {
+        searchData.value = undefined;
+      }
+    };
 
     onMounted(async () => {
       userKey.value = common.getItem(KEYS.UK).userKey;
@@ -41,7 +65,8 @@ export default defineComponent({
         );
 
         if (result) {
-          userData.value = result as studentInterface[];
+          userData.value = result.resultData as studentInterface[];
+          total.value = result.count;
         }
       } else {
       }
@@ -51,6 +76,10 @@ export default defineComponent({
       userKey,
       category,
       userData,
+      total,
+      search,
+      searchData,
+      doSearch,
     };
   },
 });
@@ -70,10 +99,21 @@ export default defineComponent({
           }}
         </div>
         <div class="user-info-section-body" v-if="viewUser === 'STU'">
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              v-model="search"
+              placeholder="학생명, 학교명으로 검색"
+              @keyup.enter="doSearch"
+            />
+          </div>
+          <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
           <card-list-component
             v-if="userData && viewUser"
             :view-user="viewUser"
             :user-list="userData"
+            :search-list="searchData ? searchData : []"
           ></card-list-component>
         </div>
         <div class="user-info-section-body" v-if="viewUser === 'TEA'">

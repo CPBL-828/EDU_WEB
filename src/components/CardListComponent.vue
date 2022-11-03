@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { studentInterface, teacherInterface } from "../lib/types";
 import { USER_KEY } from "../constant";
 export default defineComponent({
@@ -10,13 +10,36 @@ export default defineComponent({
       required: true,
     },
     userList: {
-      types: Array as PropType<Array<studentInterface | teacherInterface>>,
+      types: Object as PropType<Array<studentInterface | teacherInterface>>,
       required: true,
+    },
+    searchList: {
+      types: Object as PropType<Array<studentInterface | teacherInterface>>,
+      required: false,
     },
   },
   setup(props) {
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const teacherList = ref<Array<teacherInterface> | undefined>(undefined);
+
+    watch(
+      () => props.searchList,
+      () => {
+        if (Object.keys(props.searchList as object).length > 0) {
+          if (props.viewUser === USER_KEY.STU) {
+            studentList.value = props.searchList as studentInterface[];
+          } else {
+            teacherList.value = props.searchList as teacherInterface[];
+          }
+        } else {
+          if (props.viewUser === USER_KEY.STU) {
+            studentList.value = props.userList as studentInterface[];
+          } else {
+            teacherList.value = props.userList as teacherInterface[];
+          }
+        }
+      }
+    );
 
     onMounted(() => {
       if (props.viewUser === USER_KEY.STU) {
@@ -41,7 +64,7 @@ export default defineComponent({
         <div v-if="!item.profileImg" class="card-item-profile">
           <i class="fa-solid fa-user"></i>
         </div>
-        <img v-if="item.profileImg" :src="item.profileImg" />
+        <img v-if="item.profileImg" :src="item.profileImg" alt="profile" />
         <div class="card-item-info">
           <div class="card-item-info-name">
             <span class="title">이름</span>

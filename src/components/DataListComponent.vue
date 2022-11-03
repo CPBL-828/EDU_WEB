@@ -13,6 +13,10 @@ export default defineComponent({
       type: Object as PropType<Array<object> | undefined>,
       required: true,
     },
+    rowHeight: {
+      type: Number as PropType<number>,
+      required: false,
+    },
   },
   setup(props) {
     const showList = ref([{}]);
@@ -80,30 +84,35 @@ export default defineComponent({
         </thead>
         <tbody class="data-list-section-body">
           <tr class="data=list=section-body-item" v-for="item in showList">
-            <td v-for="i in item">{{ i }}</td>
+            <td
+              v-for="i in item"
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ i }}
+            </td>
           </tr>
         </tbody>
       </table>
-      <div>
-        <div class="pagination" v-if="page !== 0">
-          <div
-            :class="currentPage !== 1 ? 'arrow-active' : 'arrow'"
-            @click="changePage(0)"
-          >
-            <i class="fa-solid fa-angle-left"></i>
-          </div>
-          <span
-            @click="selectPage(i)"
-            v-for="i in page"
-            :class="currentPage === i ? 'page-active' : 'page'"
-            >{{ i }}</span
-          >
-          <div
-            :class="currentPage !== page ? 'arrow-active' : 'arrow'"
-            @click="changePage(1)"
-          >
-            <i class="fa-solid fa-angle-right"></i>
-          </div>
+      <div class="pagination" v-if="page !== 0">
+        <div
+          :class="currentPage !== 1 ? 'arrow-active' : 'arrow'"
+          @click="changePage(0)"
+        >
+          <i class="fa-solid fa-angle-left"></i>
+        </div>
+        <span
+          @click="selectPage(i)"
+          v-for="i in page"
+          :class="currentPage === i ? 'page-active' : 'page'"
+          >{{ i }}</span
+        >
+        <div
+          :class="currentPage !== page ? 'arrow-active' : 'arrow'"
+          @click="changePage(1)"
+        >
+          <i class="fa-solid fa-angle-right"></i>
         </div>
       </div>
     </div>

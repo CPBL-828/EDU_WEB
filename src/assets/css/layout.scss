@@ -252,7 +252,7 @@ section.data-list {
 
         tr {
           th {
-            padding: 15px 0 15px 0;
+            height: 52px;
           }
         }
       }
@@ -271,7 +271,7 @@ section.data-list {
 
           td {
             text-align: center;
-            padding: 15px 0 15px 0;
+            height: 52px;
             border-top: 2px solid $disable-color;
           }
         }

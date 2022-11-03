@@ -2,7 +2,6 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
 import {
-  adminInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
@@ -75,8 +74,7 @@ export default defineComponent({
     :user-data="workUser"
   ></work-report-component>
   <SuggestionComponent
-    v-if="userKey && workUser && currentCategory === 'SUGGESTION'"
+    v-if="userKey && currentCategory === 'SUGGESTION'"
     :user-key="userKey"
-    :user-data="workUser"
   ></SuggestionComponent>
 </template>

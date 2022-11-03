@@ -375,3 +375,104 @@ section.my-work {
     }
   }
 }
+
+section.suggestion {
+  @include section-custom();
+
+  .suggestion {
+    height: 100%;
+
+    &-section {
+      position: absolute;
+      max-width: 1200px;
+      width: 100%;
+      height: auto;
+      top: calc(50% - 21px);
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      &-tag {
+        @include tag-custom();
+      }
+
+      &-body {
+        position: relative;
+        width: 100%;
+        height: 750px;
+        background-color: white;
+        border-radius: 0 40px 40px 40px;
+
+        &-title {
+          position: absolute;
+          z-index: 1;
+          top: 24px;
+          left: 40px;
+          font-size: 14px;
+          font-weight: bold;
+          color: $sub-color;
+        }
+
+        &-state {
+          position: absolute;
+          z-index: 2;
+          top: 66px;
+          left: 40px;
+          display: flex;
+          align-items: center;
+          font-size: 12px;
+          color: $sub-color;
+
+          span {
+            width: 100px;
+            height: 24px;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background-color: #e7e7e7;
+            color: $disable-color;
+          }
+
+          span[class*="active"] {
+            border: 2px solid $disable-color;
+            background-color: white;
+            color: $sub-color;
+          }
+
+          &-ok {
+            border: 2px solid $disable-color;
+            border-right: 1px solid $disable-color;
+            border-radius: 19px 0 0 19px;
+            margin-left: 10px;
+
+            &-active {
+              border-right: 1px solid $disable-color;
+              border-radius: 19px 0 0 19px;
+              margin-left: 10px;
+            }
+          }
+
+          &-wait {
+            border: 2px solid $disable-color;
+            border-left: 1px solid $disable-color;
+            border-radius: 0 19px 19px 0;
+
+            &-active {
+              border-left: 1px solid $disable-color;
+              border-radius: 0 19px 19px 0;
+            }
+          }
+        }
+
+        &-data {
+          position: relative;
+          z-index: 0;
+          width: 700px;
+          height: 95%;
+        }
+      }
+    }
+  }
+}

@@ -1,15 +1,13 @@
 <script lang="ts">
-import { defineComponent, onMounted, Prop, PropType, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref } from "vue";
 import {
-  adminInterface,
   defaultInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
 } from "../../lib/types";
-import { KEYS, USER_KEY } from "../../constant";
+import { USER_KEY } from "../../constant";
 import common from "../../lib/common";
-import { useRoute } from "vue-router";
 export default defineComponent({
   name: "MyInfoComponent",
   props: {

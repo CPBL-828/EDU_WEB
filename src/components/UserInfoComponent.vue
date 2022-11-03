@@ -64,7 +64,7 @@ export default defineComponent({
           common.makeJson(data)
         );
 
-        if (result) {
+        if (result.count > 0) {
           userData.value = result.resultData as studentInterface[];
           total.value = result.count;
         }
@@ -115,6 +115,9 @@ export default defineComponent({
             :user-list="userData"
             :search-list="searchData ? searchData : []"
           ></card-list-component>
+          <span v-if="!userData" class="total"
+            >등록된 학생 정보가 없습니다.</span
+          >
         </div>
         <div class="user-info-section-body" v-if="viewUser === 'TEA'">
           <card-list-component

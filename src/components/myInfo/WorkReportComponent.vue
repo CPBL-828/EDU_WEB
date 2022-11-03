@@ -1,11 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref } from "vue";
-import {
-  adminInterface,
-  defaultInterface,
-  teacherInterface,
-} from "../../lib/types";
-import { USER_KEY } from "../../constant";
+import { defaultInterface, teacherInterface } from "../../lib/types";
 import common from "../../lib/common";
 
 /*

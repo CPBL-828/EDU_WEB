@@ -69,7 +69,7 @@ export default defineComponent({
           <div class="card-item-info-name">
             <span class="title">이름</span>
             <span class="name">{{ item.name }}</span>
-            <span class="school">{{ item.school }}</span>
+            <span class="school">{{ item.school }} ({{ item.grade }}학년)</span>
           </div>
           <div class="card-item-info-phone">
             <span class="title">연락처</span>
@@ -84,7 +84,7 @@ export default defineComponent({
               </div>
               <div class="card-item-info-phone-section-par">
                 <span class="title">학부모</span>
-                <span class="number">어떻게 알아</span>
+                <span class="number">준비 중입니다</span>
               </div>
             </div>
           </div>

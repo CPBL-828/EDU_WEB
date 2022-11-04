@@ -472,6 +472,12 @@ section.suggestion {
           width: 700px;
           height: 95%;
         }
+
+        &-drop {
+          position: absolute;
+          top: 15px;
+          right: 30px;
+        }
       }
     }
   }

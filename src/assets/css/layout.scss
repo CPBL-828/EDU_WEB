@@ -503,80 +503,63 @@ section.card {
 
 section.drop {
   position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 30px;
 
   .drop {
-    z-index: 5;
+    position: absolute;
+    z-index: 3;
     width: 100%;
     height: 100%;
+    border: 2px solid $disable-color;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: $disable-color;
+  }
+
+  div[class$="-list"],
+  div[class$="-opened"] {
+    position: absolute;
+    width: 100%;
+    border: 2px solid $disable-color;
+    border-radius: 10px;
+    color: $disable-color;
+    transition: all 300ms;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+  }
+
+  .drop-list {
+    opacity: 0;
+    transform: translateY(20px);
+
+    &-opened {
+      opacity: 1;
+      transform: translateY(40px);
+    }
+  }
+
+  div[class*="item"] {
+    width: calc(100% - 10px);
+    height: 30px;
+    margin: 5px 0;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid $disable-color;
-    color: $disable-color;
+  }
+
+  div[class$="active"] {
+    background-color: $background-color;
     border-radius: 10px;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: default;
-
-    > i {
-      position: absolute;
-      right: 13px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    &-list {
-      opacity: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: absolute;
-      transform: translateY(90px);
-      color: $disable-color;
-      border: 2px solid $disable-color;
-      border-radius: 10px;
-      transition: all 300ms;
-      width: 100%;
-
-      &-open {
-        opacity: 1;
-        position: absolute;
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        transform: translateY(105px);
-        border: 2px solid $disable-color;
-        border-radius: 10px;
-        transition: all 300ms;
-        width: 100%;
-
-        div[class*="item"] {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin: 5px 0;
-          cursor: pointer;
-        }
-
-        div[class*="item-active"] {
-          border-radius: 10px;
-          background-color: $background-color;
-          color: $sub-color;
-        }
-      }
-
-      div[class*="item"] {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 5px 0;
-      }
-
-      div[class*="item-active"] {
-        border-radius: 10px;
-        background-color: $background-color;
-        color: $sub-color;
-      }
-    }
+    color: $sub-color;
   }
 }

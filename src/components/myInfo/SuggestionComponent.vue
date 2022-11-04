@@ -2,7 +2,7 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../../lib/types";
 import common from "../../lib/common";
-import DataListComponent from "../DataListComponent.vue";
+import DataListComponent from "../custom/DataListComponent.vue";
 
 /*
 @brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
@@ -26,6 +26,11 @@ export default defineComponent({
       { KEY: "TYPE", VALUE: "건의 유형" },
       { KEY: "STATE", VALUE: "교무 처리 여부" },
       { KEY: "DETAIL", VALUE: "상세 사항" },
+    ];
+    const aefe: defaultInterface[] = [
+      { KEY: "ewf", VALUE: "wefj" },
+      { KEY: "ewf", VALUE: "wefj" },
+      { KEY: "ewf", VALUE: "wefj" },
     ];
     const fakeData: Array<object> = [
       {
@@ -94,6 +99,7 @@ export default defineComponent({
     });
     return {
       category,
+      aefe,
       selectState,
       header,
       fakeData,

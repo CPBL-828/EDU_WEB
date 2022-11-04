@@ -8,4 +8,15 @@ export default defineComponent({
 });
 </script>
 
-<template>계획서 작성</template>
+<template>
+  <section class="tea-plan">
+    <div class="tea-plan">
+      <div class="tea-plan-section">
+        <div class="tea-plan-section-tag">계획서 작성</div>
+        <div class="tea-plan-section-body">
+          <div class="tea-plan-section-body-list">list가 주르를르륽</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

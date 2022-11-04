@@ -1,0 +1,38 @@
+section.tea-plan {
+  @include section-custom();
+
+  .tea-plan {
+    height: 100%;
+
+    &-section {
+      position: absolute;
+      max-width: 1200px;
+      width: 100%;
+      height: auto;
+      top: calc(50% - 21px);
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      &-tag {
+        @include tag-custom();
+      }
+
+      &-body {
+        position: relative;
+        background-color: white;
+        width: 100%;
+        height: 700px;
+        border-radius: 0 40px 40px 40px;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+
+        &-list {
+          background-color: $hover-color;
+        }
+      }
+    }
+  }
+}

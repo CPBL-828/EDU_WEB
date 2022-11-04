@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
-import DataListComponent from "../components/DataListComponent.vue";
+import DataListComponent from "../components/custom/DataListComponent.vue";
 import { defaultInterface } from "../lib/types";
 import { useRoute } from "vue-router";
 import common from "../lib/common";

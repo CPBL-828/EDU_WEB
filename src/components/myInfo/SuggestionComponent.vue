@@ -2,7 +2,8 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../../lib/types";
 import common from "../../lib/common";
-import DataListComponent from "../DataListComponent.vue";
+import DataListComponent from "../custom/DataListComponent.vue";
+import DropBoxComponent from "../custom/DropBoxComponent.vue";
 
 /*
 @brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
@@ -11,7 +12,7 @@ import DataListComponent from "../DataListComponent.vue";
  */
 export default defineComponent({
   name: "SuggestionComponent",
-  components: { DataListComponent },
+  components: { DropBoxComponent, DataListComponent },
   props: {
     userKey: {
       type: String as PropType<string>,
@@ -85,6 +86,15 @@ export default defineComponent({
       },
     ];
 
+    const placeholder: string = "건의 유형";
+    const list: defaultInterface[] = [
+      { KEY: "first", VALUE: "please" },
+      { KEY: "second", VALUE: "save" },
+      { KEY: "third", VALUE: "my life" },
+      { KEY: "forth", VALUE: "im almost dead" },
+    ];
+    const width: string = "270px";
+
     const changeState = (v: string) => {
       selectState.value = v;
     };
@@ -98,6 +108,9 @@ export default defineComponent({
       header,
       fakeData,
       changeState,
+      placeholder,
+      list,
+      width,
     };
   },
 });
@@ -145,6 +158,13 @@ export default defineComponent({
               :header="header"
               :row-height="39"
             ></data-list-component>
+          </div>
+          <div class="suggestion-section-body-drop">
+            <drop-box-component
+              :placeholder="placeholder"
+              :select-list="list"
+              :row-width="width"
+            ></drop-box-component>
           </div>
         </div>
       </div>

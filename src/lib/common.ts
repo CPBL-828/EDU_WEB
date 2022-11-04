@@ -111,7 +111,7 @@ const findCategory = () => {
           }
         }
       });
-    } else if (userKey === USER_KEY.ADM) {
+    } else if (userKey === USER_KEY.KYO_ADM || userKey === USER_KEY.ETC_ADM) {
       KYO_MAIN.map((item: categoryInterface) => {
         if (mr === item.KEY) {
           data.value[0].VALUE = item.VALUE as string;

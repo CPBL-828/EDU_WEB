@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import CardListComponent from "./CardListComponent.vue";
+import CardListComponent from "./custom/CardListComponent.vue";
 import {
   defaultInterface,
   studentInterface,

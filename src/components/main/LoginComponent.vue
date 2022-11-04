@@ -3,16 +3,16 @@ import { defineComponent, onMounted, ref } from "vue";
 import { ChevronLeftSquareIcon } from "@scarlab/icons-vue/outline";
 import { UserCircleIcon } from "@scarlab/icons-vue/solid";
 import { useRoute, useRouter } from "vue-router";
-import { KEYS, USER_KEY } from "../constant";
+import { KEYS, USER_KEY } from "../../constant";
 import {
   adminInterface,
   defaultInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
-} from "../lib/types";
-import { ApiClient } from "../axios";
-import common from "../lib/common";
+} from "../../lib/types";
+import { ApiClient } from "../../axios";
+import common from "../../lib/common";
 
 /*
 @brief
@@ -50,16 +50,31 @@ export default defineComponent({
         );
 
         if (result) {
-          let userData =
-            userType.value === USER_KEY.STU
-              ? (result as studentInterface)
-              : userType.value === USER_KEY.PAR
-              ? (result as parentInterface)
-              : userType.value === USER_KEY.TEA
-              ? (result as teacherInterface)
-              : userType.value === USER_KEY.ADM
-              ? (result as adminInterface)
-              : result;
+          let userData;
+          // userType.value === USER_KEY.STU
+          //   ? (result as studentInterface)
+          //   : userType.value === USER_KEY.PAR
+          //   ? (result as parentInterface)
+          //   : userType.value === USER_KEY.TEA
+          //   ? (result as teacherInterface)
+          //   : userType.value === USER_KEY.ADM
+          //   ? (result as adminInterface)
+          //   : result;
+
+          if (userType.value === USER_KEY.STU) {
+            userData = result as studentInterface;
+          } else if (userType.value === USER_KEY.PAR) {
+            userData = result as parentInterface;
+          } else if (userType.value === USER_KEY.TEA) {
+            userData = result as teacherInterface;
+          } else {
+            userData = result as adminInterface;
+            if (userData.type === "교무") {
+              userType.value = USER_KEY.KYO_ADM;
+            } else {
+              userType.value = USER_KEY.ETC_ADM;
+            }
+          }
 
           // console.log(userData);
           common.setItem(KEYS.LU, common.makeJson(userData as object));

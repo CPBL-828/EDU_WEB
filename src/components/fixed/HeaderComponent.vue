@@ -55,7 +55,7 @@ export default defineComponent({
       <div class="path" v-if="showRoute && category">
         <i class="fa-solid fa-bars"></i>
         {{ category[0] ? category[0]["VALUE"] : "" }}
-        <i class="fa-solid fa-angle-right" v-if="category[1]"></i>
+        <i class="fa-solid fa-angle-right" v-if="category[1]['VALUE']"></i>
         {{ category[1] ? category[1]["VALUE"] : "" }}
       </div>
     </div>

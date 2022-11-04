@@ -26,5 +26,5 @@ export default defineComponent({
   <div class="calendar-section">
     <v-date-picker v-if="showState" mode="date" v-model="date"></v-date-picker>
   </div>
-  <div class="prevent-calendar"></div>
+  <div v-if="showState" class="prevent-calendar"></div>
 </template>

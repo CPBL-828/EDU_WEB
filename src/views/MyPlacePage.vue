@@ -73,8 +73,8 @@ export default defineComponent({
     :user-key="userKey"
     :user-data="workUser"
   ></work-report-component>
-  <SuggestionComponent
+  <suggestion-component
     v-if="userKey && currentCategory === 'SUGGESTION'"
     :user-key="userKey"
-  ></SuggestionComponent>
+  ></suggestion-component>
 </template>

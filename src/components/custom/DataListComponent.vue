@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import { defaultInterface } from "../lib/types";
+import { defaultInterface } from "../../lib/types";
 
 export default defineComponent({
   name: "DataListComponent",

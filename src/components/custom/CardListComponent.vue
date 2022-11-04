@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import { studentInterface, teacherInterface } from "../lib/types";
-import { USER_KEY } from "../constant";
+import { studentInterface, teacherInterface } from "../../lib/types";
+import { USER_KEY } from "../../constant";
 export default defineComponent({
   name: "CardListComponent",
   props: {

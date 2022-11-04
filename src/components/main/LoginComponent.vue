@@ -3,16 +3,16 @@ import { defineComponent, onMounted, ref } from "vue";
 import { ChevronLeftSquareIcon } from "@scarlab/icons-vue/outline";
 import { UserCircleIcon } from "@scarlab/icons-vue/solid";
 import { useRoute, useRouter } from "vue-router";
-import { KEYS, USER_KEY } from "../constant";
+import { KEYS, USER_KEY } from "../../constant";
 import {
   adminInterface,
   defaultInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
-} from "../lib/types";
-import { ApiClient } from "../axios";
-import common from "../lib/common";
+} from "../../lib/types";
+import { ApiClient } from "../../axios";
+import common from "../../lib/common";
 
 /*
 @brief

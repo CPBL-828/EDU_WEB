@@ -43,6 +43,11 @@ const routes = [
     name: "s-manage",
     component: () => import("../views/studentManage/StudentManagePage.vue"),
   },
+  {
+    path: "/schedule/:subCategory",
+    name: "schedule",
+    component: () => import("../views/scheduleManage/ScheduleManagePage.vue"),
+  },
 ];
 
 const router = createRouter({

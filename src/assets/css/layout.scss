@@ -506,34 +506,35 @@ section.drop {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: auto;
   height: 30px;
 
   .drop {
-    position: absolute;
+    position: relative;
+    height: 30px;
     z-index: 3;
-    width: 100%;
-    height: 100%;
     border: 2px solid $disable-color;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    font-size: 12px;
     font-weight: bold;
-    color: $disable-color;
+    color: $sub-color;
     background-color: white;
 
     i {
       position: absolute;
       right: 13px;
       font-size: 16px;
+      color: $disable-color;
     }
   }
 
   div[class$="-list"],
   div[class$="-opened"] {
     position: absolute;
-    width: 100%;
     border: 2px solid #d9d9d9;
     border-radius: 10px;
     color: $disable-color;
@@ -541,6 +542,7 @@ section.drop {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 12px;
     font-weight: bold;
     background-color: white;
     box-shadow: 4px 4px 5px 0 rgba(86, 86, 86, 0.15);
@@ -548,11 +550,11 @@ section.drop {
 
   .drop-list {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(-30px);
 
     &-opened {
       opacity: 1;
-      transform: translateY(40px);
+      transform: translateY(5px);
     }
   }
 

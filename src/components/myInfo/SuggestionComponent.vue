@@ -93,7 +93,8 @@ export default defineComponent({
       { KEY: "third", VALUE: "my life" },
       { KEY: "forth", VALUE: "im almost dead" },
     ];
-    const width: string = "270px";
+    const width: string = "280px";
+    const datetime = ref<string>(new Date().toLocaleString().slice(0, -3));
 
     const changeState = (v: string) => {
       selectState.value = v;
@@ -108,6 +109,7 @@ export default defineComponent({
       header,
       fakeData,
       changeState,
+      datetime,
       placeholder,
       list,
       width,
@@ -159,12 +161,26 @@ export default defineComponent({
               :row-height="39"
             ></data-list-component>
           </div>
-          <div class="suggestion-section-body-drop">
-            <drop-box-component
-              :placeholder="placeholder"
-              :select-list="list"
-              :row-width="width"
-            ></drop-box-component>
+          <div class="suggestion-section-body-write">
+            <span class="suggestion-section-body-write-title">
+              건의사항 작성
+            </span>
+            <div class="suggestion-section-body-write-drop">
+              <drop-box-component
+                :placeholder="placeholder"
+                :select-list="list"
+                :row-width="width"
+              ></drop-box-component>
+            </div>
+            <div class="suggestion-section-body-write-date">
+              {{ datetime }}
+            </div>
+            <input
+              type="text"
+              placeholder="내용을 입력해주세요."
+              class="suggestion-section-body-write-context"
+            />
+            <div class="suggestion-section-body-write-btn">건의하기</div>
           </div>
         </div>
       </div>

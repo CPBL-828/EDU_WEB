@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, PropType, ref} from "vue";
+import { defineComponent, PropType, ref } from "vue";
 import { defaultInterface } from "../../lib/types";
 
 /*
@@ -57,15 +57,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="drop" :style="'width: ' + rowWidth" v-click-away="onClickAway">
-    <div class="drop" @click="changeOpenState">
+  <section class="drop" v-click-away="onClickAway">
+    <div class="drop" @click="changeOpenState" :style="'width: ' + rowWidth">
       {{ main }}
-      <i
-          class="fa-solid fa-chevron-down"
-      ></i>
+      <i class="fa-solid fa-chevron-down"></i>
     </div>
-    <div :class="!openState ? 'drop-list' : 'drop-list-opened'">
+    <div
+      :class="!openState ? 'drop-list' : 'drop-list-opened'"
+      :style="'width: ' + rowWidth"
+    >
       <div
+        v-if="openState"
         v-for="item in itemList"
         :class="
           selectItem === item?.KEY ? 'drop-list-item-active' : 'drop-list-item'

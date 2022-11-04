@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import {defineComponent, PropType, ref} from "vue";
 import { defaultInterface } from "../../lib/types";
 
 /*
@@ -23,22 +23,32 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const main = ref<string>(props.placeholder as string);
     const openState = ref(false);
     const itemList: defaultInterface[] = props.selectList as defaultInterface[];
     const selectItem = ref<string | undefined>(undefined);
+
+    const onClickAway = (event: Event) => {
+      if (event.isTrusted) {
+        openState.value = false;
+      }
+    };
 
     const changeOpenState = () => {
       openState.value = !openState.value;
     };
 
-    const changeItem = (v: string) => {
-      selectItem.value = v;
+    const changeItem = (v: defaultInterface) => {
+      selectItem.value = v.KEY;
+      main.value = v.VALUE as string;
     };
 
     return {
+      main,
       openState,
       itemList,
       selectItem,
+      onClickAway,
       changeOpenState,
       changeItem,
     };
@@ -47,9 +57,12 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="drop" :style="'width: ' + rowWidth">
+  <section class="drop" :style="'width: ' + rowWidth" v-click-away="onClickAway">
     <div class="drop" @click="changeOpenState">
-      {{ placeholder }}
+      {{ main }}
+      <i
+          class="fa-solid fa-chevron-down"
+      ></i>
     </div>
     <div :class="!openState ? 'drop-list' : 'drop-list-opened'">
       <div
@@ -57,7 +70,7 @@ export default defineComponent({
         :class="
           selectItem === item?.KEY ? 'drop-list-item-active' : 'drop-list-item'
         "
-        @click="changeItem(item?.KEY)"
+        @click="changeItem(item)"
       >
         {{ item?.VALUE }}
       </div>

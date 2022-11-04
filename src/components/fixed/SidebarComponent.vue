@@ -110,9 +110,10 @@ export default defineComponent({
       } else if (userKey.value.userKey === USER_KEY.TEA) {
         mainItem.value = TEA_MAIN;
         subItem.value = TEA_SUB;
-      } else if (userKey.value.userKey === USER_KEY.ADM) {
+      } else if (userKey.value.userKey === USER_KEY.KYO_ADM) {
         mainItem.value = KYO_MAIN;
         subItem.value = KYO_SUB;
+      } else {
       }
 
       if (route.path.split("/")[2]) {

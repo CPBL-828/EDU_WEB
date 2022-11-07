@@ -85,12 +85,12 @@ export default defineComponent({
       }
     );
 
-    // watch(
-    // () => props.dataList,
-    // () => {
-    //   setDataList();
-    // }
-    // );
+    watch(
+      () => props.noticeList || props.suggestList,
+      () => {
+        setDataList();
+      }
+    );
 
     onMounted(() => {
       /*

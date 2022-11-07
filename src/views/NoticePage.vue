@@ -93,9 +93,8 @@ export default defineComponent({
             />
           </div>
           <data-list-component
-            data-type="notice"
             :header="header"
-            :data-list="noticeList"
+            :notice-list="noticeList"
           ></data-list-component>
         </div>
         <div class="notice-section-body" v-if="!noticeList">

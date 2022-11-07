@@ -136,8 +136,7 @@ export default defineComponent({
           </div>
           <div class="suggestion-section-body-data" v-if="viewSuggestList">
             <data-list-component
-              data-type="suggestion"
-              :data-list="viewSuggestList"
+              :suggest-list="viewSuggestList"
               :header="header"
               :row-height="39"
             ></data-list-component>

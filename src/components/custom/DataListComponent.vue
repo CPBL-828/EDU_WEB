@@ -1,16 +1,20 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import { defaultInterface } from "../../lib/types";
+import { defaultInterface, noticeInterface } from "../../lib/types";
 
 export default defineComponent({
   name: "DataListComponent",
   props: {
+    dataType: {
+      type: String as PropType<string>,
+      required: true,
+    },
     header: {
-      type: Object as PropType<Array<defaultInterface>>,
+      type: Array as PropType<Array<defaultInterface>>,
       required: true,
     },
     dataList: {
-      type: Object as PropType<Array<object> | undefined>,
+      type: Array as PropType<Array<noticeInterface> | undefined>,
       required: true,
     },
     rowHeight: {
@@ -19,7 +23,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const showList = ref([{}]);
+    const showList = ref<Array<noticeInterface> | undefined>(undefined);
+    const totalCnt = ref(0);
     const page = ref<number>(10);
     const currentPage = ref<number>(1);
     const listCnt: number = 10;
@@ -46,14 +51,30 @@ export default defineComponent({
       }
     );
 
+    watch(
+      () => props.dataList,
+      () => {
+        if (props.dataList) {
+          if (props.dataList.length > listCnt) {
+            showList.value = props.dataList.slice(0, listCnt);
+            page.value = Math.ceil(props.dataList.length / 10);
+          } else {
+            showList.value = props.dataList;
+            page.value = 0;
+          }
+        }
+      }
+    );
+
     onMounted(() => {
       /*
       @brief props.dataList 길이에 맞춰 페이징 설정
        */
       if (props.dataList) {
-        if (props.dataList.length > listCnt) {
+        totalCnt.value = props.dataList.length;
+        if (totalCnt.value > listCnt) {
           showList.value = props.dataList.slice(0, listCnt);
-          page.value = Math.ceil(props.dataList.length / 10);
+          page.value = Math.ceil(totalCnt.value / 10);
         } else {
           showList.value = props.dataList;
           page.value = 0;
@@ -62,6 +83,7 @@ export default defineComponent({
     });
     return {
       showList,
+      totalCnt,
       page,
       currentPage,
       selectPage,
@@ -83,14 +105,40 @@ export default defineComponent({
           </tr>
         </thead>
         <tbody class="data-list-section-body">
-          <tr class="data=list=section-body-item" v-for="item in showList">
+          <tr
+            class="data=list=section-body-item"
+            v-if="dataType === 'notice'"
+            v-for="(item, index) in showList"
+          >
             <td
-              v-for="i in item"
               :style="
                 rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
               "
             >
-              {{ i }}
+              {{ item.type }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.title }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.createDate.substring(0, 4) }}/{{
+                item.createDate.substring(5, 7)
+              }}/{{ item.createDate.substring(8, 10) }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.writerKey }}
             </td>
           </tr>
         </tbody>

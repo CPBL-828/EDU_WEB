@@ -48,5 +48,4 @@ export default defineComponent({
     :userKey="userKey"
     :user-data="userData"
   ></my-info-component>
-  <notice-page v-if="adminState"></notice-page>
 </template>

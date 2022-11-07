@@ -59,3 +59,15 @@ export interface adminInterface {
   createDate: string;
   editDate: string;
 }
+
+export interface noticeInterface {
+  noticeKey: string;
+  type: string;
+  writerKey: string;
+  readerKey: string;
+  delState: string;
+  title: string;
+  content: string;
+  createDate: string;
+  editDate: string;
+}

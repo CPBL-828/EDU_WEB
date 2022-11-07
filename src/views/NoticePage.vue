@@ -1,201 +1,69 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import DataListComponent from "../components/custom/DataListComponent.vue";
-import { defaultInterface } from "../lib/types";
+import { defaultInterface, noticeInterface } from "../lib/types";
 import { useRoute } from "vue-router";
 import common from "../lib/common";
+import { ApiClient } from "../axios";
 
 /*
 @brief 공지사항을 표시하는 페이지
+       전체 공지의 경우 공지 데이터의 type이 '전체'인 것만 보여주면 되고,
+       공지 > 내 공지 접근 시, 현재 로그인한 user의 userKey를 getNoticeList parameter로 보내 해당 유저만 열람 가능한 공지 목록 표시
  */
 export default defineComponent({
   name: "NoticePage",
   components: { DataListComponent },
   setup() {
     const route = useRoute();
-    const fakeHeader: defaultInterface[] = [
+    const header: defaultInterface[] = [
       { KEY: "TYPE", VALUE: "공지 유형" },
       { KEY: "TITLE", VALUE: "공지 제목" },
       { KEY: "DATE", VALUE: "작성일자" },
       { KEY: "WRITER", VALUE: "작성자" },
     ];
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const noticeList = ref<Array<noticeInterface> | undefined>(undefined);
+    const search = ref<string | undefined>(undefined);
 
-    const fakeData = ref<Array<object> | undefined>(undefined);
+    const getNoticeList = async () => {
+      //TODO getNoticeList parameter: type, readerKey, year 추가
+      let data = { search: "" };
+      if (search.value) {
+        data = { search: search.value };
+      }
+      const result = await ApiClient(
+        "/info/getNoticeList/",
+        common.makeJson(data)
+      );
+
+      if (result.count > 0) {
+        noticeList.value = result.resultData;
+      }
+    };
 
     watch(
       () => route.path,
       () => {
         category.value = common.findCategory();
         if (route.path === "/notice" || route.path === "/notice/all") {
-          fakeData.value = [
-            {
-              type: "전체 공지",
-              title: "공휴일 안내",
-              date: "2022-10-10",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "미납 학원생 관한 안내",
-              date: "2022-10-18",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "정기 공지입니다.",
-              date: "2022-10-19",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "정기 공지입니다.",
-              date: "2022-09-19",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "정기 공지입니다.",
-              date: "2022-08-19",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "정기 공지입니다.",
-              date: "2022-07-19",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "정기 공지입니다.",
-              date: "2022-06-19",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "정기 공지입니다.",
-              date: "2022-05-19",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "가정의 달 안내",
-              date: "2022-05-15",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "가정의 달 안내",
-              date: "2022-05-15",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "5월 학원 행사 관련 공지",
-              date: "2022-05-13",
-              writer: "관리자",
-            },
-            {
-              type: "전체 공지",
-              title: "모든 강사진 필독",
-              date: "2022-04-10",
-              writer: "관리자",
-            },
-          ];
+          getNoticeList();
         } else {
-          fakeData.value = undefined;
+          noticeList.value = undefined;
         }
       }
     );
 
-    onMounted(() => {
+    onMounted(async () => {
       category.value = common.findCategory();
-
-      if (
-        route.path === "/main" ||
-        route.path === "/notice" ||
-        route.path === "/notice/all"
-      ) {
-        fakeData.value = [
-          {
-            type: "전체 공지",
-            title: "공휴일 안내",
-            date: "2022-10-10",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "미납 학원생 관한 안내",
-            date: "2022-10-18",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "정기 공지입니다.",
-            date: "2022-10-19",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "정기 공지입니다.",
-            date: "2022-09-19",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "정기 공지입니다.",
-            date: "2022-08-19",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "정기 공지입니다.",
-            date: "2022-07-19",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "정기 공지입니다.",
-            date: "2022-06-19",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "정기 공지입니다.",
-            date: "2022-05-19",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "가정의 달 안내",
-            date: "2022-05-15",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "가정의 달 안내",
-            date: "2022-05-15",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "5월 학원 행사 관련 공지",
-            date: "2022-05-13",
-            writer: "관리자",
-          },
-          {
-            type: "전체 공지",
-            title: "모든 강사진 필독",
-            date: "2022-04-10",
-            writer: "관리자",
-          },
-        ];
-      }
+      await getNoticeList();
     });
     return {
       category,
-      fakeHeader,
-      fakeData,
+      header,
+      noticeList,
+      search,
+      getNoticeList,
     };
   },
 });
@@ -214,17 +82,23 @@ export default defineComponent({
               : ""
           }}
         </div>
-        <div class="notice-section-body" v-if="fakeData">
+        <div class="notice-section-body" v-if="noticeList">
           <div class="search">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="공지 제목 / 내용 검색" />
+            <input
+              type="text"
+              v-model="search"
+              placeholder="공지 제목 / 내용 검색"
+              @keypress.enter="getNoticeList"
+            />
           </div>
           <data-list-component
-            :header="fakeHeader"
-            :data-list="fakeData"
+            data-type="notice"
+            :header="header"
+            :data-list="noticeList"
           ></data-list-component>
         </div>
-        <div class="notice-section-body" v-if="!fakeData">
+        <div class="notice-section-body" v-if="!noticeList">
           <div class="no-data">불러올 데이터가 없습니다!</div>
         </div>
       </div>

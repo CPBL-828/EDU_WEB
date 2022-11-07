@@ -131,7 +131,7 @@ export default defineComponent({
               type="text"
               v-model="search"
               placeholder="학생명, 학교명으로 검색"
-              @keydown.enter="getUserList"
+              @keypress.enter="getUserList"
             />
           </div>
           <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
@@ -152,7 +152,7 @@ export default defineComponent({
               type="text"
               v-model="search"
               placeholder="강사명, 담당 학년, 담당 과목으로 검색"
-              @keydown.enter="getUserList"
+              @keypress.enter="getUserList"
             />
           </div>
           <span v-if="total" class="total">강사 총 원 : {{ total }} 명</span>

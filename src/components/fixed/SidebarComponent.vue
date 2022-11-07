@@ -9,6 +9,8 @@ import {
   teacherInterface,
 } from "../../lib/types";
 import {
+  ETC_MAIN,
+  ETC_SUB,
   KYO_MAIN,
   KYO_SUB,
   PAR_MAIN,
@@ -114,6 +116,8 @@ export default defineComponent({
         mainItem.value = KYO_MAIN;
         subItem.value = KYO_SUB;
       } else {
+        mainItem.value = ETC_MAIN;
+        subItem.value = ETC_SUB;
       }
 
       if (route.path.split("/")[2]) {

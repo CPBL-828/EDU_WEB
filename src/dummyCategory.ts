@@ -291,3 +291,84 @@ export const KYO_SUB: categoryInterface[] = [
     ],
   },
 ];
+
+export const ETC_MAIN: categoryInterface[] = [
+  {
+    KEY: "ROOM",
+    VALUE: "강의실 관리",
+    ICON: "fa-solid fa-school",
+    HAS_CHILD: false,
+  },
+  {
+    KEY: "NOTICE",
+    VALUE: "공지 관리",
+    ICON: "fa-solid fa-bell",
+    HAS_CHILD: false,
+  },
+  {
+    KEY: "T-MANAGE",
+    VALUE: "강사 관리",
+    ICON: "fa-solid fa-chalkboard-user",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "S-MANAGE",
+    VALUE: "학생 관리",
+    ICON: "fa-solid fa-users",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "SCHEDULE",
+    VALUE: "시간표 관리",
+    ICON: "fa-solid fa-chart-pie",
+    HAS_CHILD: false,
+  },
+  {
+    KEY: "LECTURE",
+    VALUE: "강의 관리",
+    ICON: "fa-solid fa-address-card",
+    HAS_CHILD: true,
+  },
+  {
+    KEY: "TEST",
+    VALUE: "시험 관리",
+    ICON: "fa-solid fa-highlighter",
+    HAS_CHILD: true,
+  },
+];
+
+export const ETC_SUB: categoryInterface[] = [
+  {
+    KEY: "T-MANAGE",
+    VALUE: [
+      { KEY: "T-INFO", VALUE: "강사 정보" },
+      { KEY: "WORK", VALUE: "출근부" },
+      { KEY: "SUGGESTION", VALUE: "건의사항" },
+    ],
+  },
+  {
+    KEY: "S-MANAGE",
+    VALUE: [
+      { KEY: "S-INFO", VALUE: "학생 정보" },
+      { KEY: "CONSULT", VALUE: "상담" },
+      { KEY: "ANALYSIS", VALUE: "분석" },
+      { KEY: "SUGGESTION", VALUE: "건의사항" },
+    ],
+  },
+  {
+    KEY: "LECTURE",
+    VALUE: [
+      { KEY: "L-INFO", VALUE: "강의 조회" },
+      { KEY: "ATTENDANCE", VALUE: "출결 현황" },
+      { KEY: "ASSIGNMENT", VALUE: "과제" },
+      { KEY: "REPORT", VALUE: "일지" },
+    ],
+  },
+  {
+    KEY: "TEST",
+    VALUE: [
+      { KEY: "SCHEDULE", VALUE: "시험 일정" },
+      { KEY: "SCORE", VALUE: "성적" },
+    ],
+  },
+];

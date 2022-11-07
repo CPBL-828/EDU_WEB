@@ -13,40 +13,28 @@ export default defineComponent({
       types: Object as PropType<Array<studentInterface | teacherInterface>>,
       required: true,
     },
-    searchList: {
-      types: Object as PropType<Array<studentInterface | teacherInterface>>,
-      required: false,
-    },
   },
   setup(props) {
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const teacherList = ref<Array<teacherInterface> | undefined>(undefined);
 
-    watch(
-      () => props.searchList,
-      () => {
-        if (Object.keys(props.searchList as object).length > 0) {
-          if (props.viewUser === USER_KEY.STU) {
-            studentList.value = props.searchList as studentInterface[];
-          } else {
-            teacherList.value = props.searchList as teacherInterface[];
-          }
-        } else {
-          if (props.viewUser === USER_KEY.STU) {
-            studentList.value = props.userList as studentInterface[];
-          } else {
-            teacherList.value = props.userList as teacherInterface[];
-          }
-        }
-      }
-    );
-
-    onMounted(() => {
+    const setUserList = () => {
       if (props.viewUser === USER_KEY.STU) {
         studentList.value = props.userList as studentInterface[];
       } else {
         teacherList.value = props.userList as teacherInterface[];
       }
+    };
+
+    watch(
+      () => props.userList,
+      () => {
+        setUserList();
+      }
+    );
+
+    onMounted(() => {
+      setUserList();
     });
 
     return {

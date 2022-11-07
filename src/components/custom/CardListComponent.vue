@@ -91,6 +91,37 @@ export default defineComponent({
         </div>
         <div class="card-item-detail">상세 조회</div>
       </div>
+      <div v-if="teacherList" v-for="item in teacherList" class="card-item">
+        <div v-if="!item.profileImg" class="card-item-profile">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <img v-if="item.profileImg" :src="item.profileImg" alt="profile" />
+        <div class="card-item-info">
+          <div class="card-item-info-name">
+            <span class="title">이름</span>
+            <span class="name">{{ item.name }}</span>
+            <span class="school">{{ item.part }} {{ item.resSubject }}</span>
+          </div>
+          <div class="card-item-info-phone">
+            <span class="title">연락처</span>
+            <div class="card-item-info-phone-section">
+              <div class="card-item-info-phone-section-stu">
+                <span class="title">phone</span>
+                <span class="number"
+                  >{{ item.phone.substring(0, 3) }}-{{
+                    item.phone.substring(3, 7)
+                  }}-{{ item.phone.substring(7, 11) }}</span
+                >
+              </div>
+              <div class="card-item-info-phone-section-par">
+                <span class="title">email</span>
+                <span class="number">준비 중입니다.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-item-detail">상세 조회</div>
+      </div>
     </div>
   </section>
 </template>

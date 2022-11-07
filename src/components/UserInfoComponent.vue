@@ -34,22 +34,60 @@ export default defineComponent({
       Array<studentInterface | teacherInterface> | undefined
     >(undefined);
 
-    const doSearch = async () => {
-      if (search.value) {
-        let data = { search: search.value };
-        const result = await ApiClient(
-          "/members/getStudentList/",
-          common.makeJson(data)
-        );
+    const getUserList = async () => {
+      let data = { search: "" };
 
-        if (result.count > 0) {
-          searchData.value = result.resultData as studentInterface[];
-          total.value = result.count;
+      if (search.value) {
+        data = { search: search.value };
+        if (props.viewUser === USER_KEY.STU) {
+          const result = await ApiClient(
+            "/members/getStudentList/",
+            common.makeJson(data)
+          );
+
+          if (result.count > 0) {
+            searchData.value = result.resultData as studentInterface[];
+            total.value = result.count;
+          } else {
+            window.alert("검색 내용을 찾을 수 없어요.");
+          }
         } else {
-          window.alert("검색 내용을 찾을 수 없어요.");
+          const result = await ApiClient(
+            "/members/getTeacherList/",
+            common.makeJson(data)
+          );
+
+          if (result.count > 0) {
+            searchData.value = result.resultData as teacherInterface[];
+            total.value = result.count;
+          } else {
+            window.alert("검색 내용을 찾을 수 없어요.");
+          }
         }
       } else {
         searchData.value = undefined;
+
+        if (props.viewUser === USER_KEY.STU) {
+          const result = await ApiClient(
+            "/members/getStudentList/",
+            common.makeJson(data)
+          );
+
+          if (result.count > 0) {
+            userData.value = result.resultData as studentInterface[];
+            total.value = result.count;
+          }
+        } else {
+          const result = await ApiClient(
+            "/members/getTeacherList/",
+            common.makeJson(data)
+          );
+
+          if (result.count > 0) {
+            userData.value = result.resultData as teacherInterface[];
+            total.value = result.count;
+          }
+        }
       }
     };
 
@@ -57,19 +95,7 @@ export default defineComponent({
       userKey.value = common.getItem(KEYS.UK).userKey;
       category.value = common.findCategory();
 
-      let data = { search: "" };
-      if (props.viewUser === USER_KEY.STU) {
-        const result = await ApiClient(
-          "/members/getStudentList/",
-          common.makeJson(data)
-        );
-
-        if (result.count > 0) {
-          userData.value = result.resultData as studentInterface[];
-          total.value = result.count;
-        }
-      } else {
-      }
+      await getUserList();
     });
 
     return {
@@ -79,7 +105,7 @@ export default defineComponent({
       total,
       search,
       searchData,
-      doSearch,
+      getUserList,
     };
   },
 });
@@ -105,7 +131,7 @@ export default defineComponent({
               type="text"
               v-model="search"
               placeholder="학생명, 학교명으로 검색"
-              @keyup.enter="doSearch"
+              @keydown.enter="getUserList"
             />
           </div>
           <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
@@ -120,11 +146,25 @@ export default defineComponent({
           >
         </div>
         <div class="user-info-section-body" v-if="viewUser === 'TEA'">
+          <div class="search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              v-model="search"
+              placeholder="강사명, 담당 학년, 담당 과목으로 검색"
+              @keydown.enter="getUserList"
+            />
+          </div>
+          <span v-if="total" class="total">강사 총 원 : {{ total }} 명</span>
           <card-list-component
             v-if="userData && viewUser"
             :view-user="viewUser"
             :user-list="userData"
+            :search-list="searchData ? searchData : []"
           ></card-list-component>
+          <span v-if="!userData" class="total">
+            등록된 강사 정보가 없습니다.
+          </span>
         </div>
       </div>
     </div>

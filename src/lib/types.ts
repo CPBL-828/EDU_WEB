@@ -71,3 +71,14 @@ export interface noticeInterface {
   createDate: string;
   editDate: string;
 }
+
+export interface suggestInterface {
+  suggestKey: string;
+  writerKey: string;
+  type: string;
+  state: string;
+  content: string;
+  createDate: string;
+  editDate: string;
+  adminKey: string;
+}

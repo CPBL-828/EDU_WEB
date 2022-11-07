@@ -1,6 +1,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import { defaultInterface, noticeInterface } from "../../lib/types";
+import {
+  defaultInterface,
+  noticeInterface,
+  suggestInterface,
+} from "../../lib/types";
 
 export default defineComponent({
   name: "DataListComponent",
@@ -14,7 +18,9 @@ export default defineComponent({
       required: true,
     },
     dataList: {
-      type: Array as PropType<Array<noticeInterface> | undefined>,
+      type: Array as PropType<
+        Array<noticeInterface | suggestInterface> | undefined
+      >,
       required: true,
     },
     rowHeight: {
@@ -23,7 +29,9 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const showList = ref<Array<noticeInterface> | undefined>(undefined);
+    const showList = ref<Array<noticeInterface | suggestInterface> | undefined>(
+      undefined
+    );
     const totalCnt = ref(0);
     const page = ref<number>(10);
     const currentPage = ref<number>(1);
@@ -108,7 +116,7 @@ export default defineComponent({
           <tr
             class="data=list=section-body-item"
             v-if="dataType === 'notice'"
-            v-for="(item, index) in showList"
+            v-for="item in showList"
           >
             <td
               :style="
@@ -122,7 +130,8 @@ export default defineComponent({
                 rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
               "
             >
-              {{ item.title }}
+              <!--              {{ item.title }}-->
+              제목 타입 에러 수정 중
             </td>
             <td
               :style="
@@ -140,6 +149,34 @@ export default defineComponent({
             >
               {{ item.writerKey }}
             </td>
+          </tr>
+
+          <tr
+            class="data=list=section-body-item"
+            v-if="dataType === 'suggestion'"
+            v-for="item in showList"
+          >
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.createDate.substring(0, 4) }}/{{
+                item.createDate.substring(5, 7)
+              }}/{{ item.createDate.substring(8, 10) }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.type }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            ></td>
           </tr>
         </tbody>
       </table>

@@ -1,9 +1,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import { defaultInterface } from "../../lib/types";
+import { defaultInterface, suggestInterface } from "../../lib/types";
 import common from "../../lib/common";
 import DataListComponent from "../custom/DataListComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
+import { ApiClient } from "../../axios";
 
 /*
 @brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
@@ -25,93 +26,72 @@ export default defineComponent({
     const header: defaultInterface[] = [
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
-      { KEY: "STATE", VALUE: "교무 처리 여부" },
       { KEY: "DETAIL", VALUE: "상세 사항" },
     ];
-    const fakeData: Array<object> = [
-      {
-        date: "2022-10-03",
-        type: "type01",
-        state: "Y",
-      },
-      {
-        date: "2022-10-03",
-        type: "type01",
-        state: "Y",
-      },
-      {
-        date: "2022-10-03",
-        type: "type03",
-        state: "N",
-      },
-      {
-        date: "2022-10-03",
-        type: "type01",
-        state: "Y",
-      },
-      {
-        date: "2022-10-03",
-        type: "type02",
-        state: "N",
-      },
-      {
-        date: "2022-10-03",
-        type: "type02",
-        state: "Y",
-      },
-      {
-        date: "2022-10-03",
-        type: "type02",
-        state: "N",
-      },
-      {
-        date: "2022-10-03",
-        type: "type02",
-        state: "N",
-      },
-      {
-        date: "2022-10-03",
-        type: "type02",
-        state: "Y",
-      },
-      {
-        date: "2022-10-03",
-        type: "type02",
-        state: "Y",
-      },
-      {
-        date: "2022-10-03",
-        type: "type02",
-        state: "Y",
-      },
-    ];
-
     const placeholder: string = "건의 유형";
-    const list: defaultInterface[] = [
-      { KEY: "first", VALUE: "please" },
-      { KEY: "second", VALUE: "save" },
-      { KEY: "third", VALUE: "my life" },
-      { KEY: "forth", VALUE: "im almost dead" },
+    const typeList: defaultInterface[] = [
+      { KEY: "LECTURE", VALUE: "강의" },
+      { KEY: "STUDENT", VALUE: "학생" },
+      { KEY: "TEACHER", VALUE: "강사" },
+      { KEY: "FACILITY", VALUE: "시설물" },
+      { KEY: "ETC", VALUE: "기타" },
     ];
     const width: string = "280px";
     const datetime = ref<string>(new Date().toLocaleString().slice(0, -3));
+    const allSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
+    const viewSuggestList = ref<Array<suggestInterface>>([]);
 
     const changeState = (v: string) => {
       selectState.value = v;
+
+      if (allSuggestList.value) {
+        viewSuggestList.value = [];
+
+        if (v === "ok") {
+          allSuggestList.value.map((item: suggestInterface) => {
+            if (item.state === "Y") {
+              viewSuggestList.value.push(item);
+            }
+          });
+        } else {
+          allSuggestList.value.map((item: suggestInterface) => {
+            if (item.state === "N") {
+              viewSuggestList.value.push(item);
+            }
+          });
+        }
+      }
     };
 
-    onMounted(() => {
+    onMounted(async () => {
       category.value = common.findCategory();
+
+      let data = { search: "" };
+      const result = await ApiClient(
+        "/info/getSuggestList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        allSuggestList.value = result.resultData;
+
+        allSuggestList.value?.map((item: suggestInterface) => {
+          if (item.state === "Y") {
+            viewSuggestList.value.push(item);
+          }
+        });
+      }
     });
+
     return {
       category,
       selectState,
       header,
-      fakeData,
       changeState,
       datetime,
+      viewSuggestList,
       placeholder,
-      list,
+      typeList,
       width,
     };
   },
@@ -154,9 +134,10 @@ export default defineComponent({
               >대기중</span
             >
           </div>
-          <div class="suggestion-section-body-data">
+          <div class="suggestion-section-body-data" v-if="viewSuggestList">
             <data-list-component
-              :data-list="fakeData"
+              data-type="suggestion"
+              :data-list="viewSuggestList"
               :header="header"
               :row-height="39"
             ></data-list-component>
@@ -168,15 +149,14 @@ export default defineComponent({
             <div class="suggestion-section-body-write-drop">
               <drop-box-component
                 :placeholder="placeholder"
-                :select-list="list"
+                :select-list="typeList"
                 :row-width="width"
               ></drop-box-component>
             </div>
             <div class="suggestion-section-body-write-date">
               {{ datetime }}
             </div>
-            <input
-              type="text"
+            <textarea
               placeholder="내용을 입력해주세요."
               class="suggestion-section-body-write-context"
             />

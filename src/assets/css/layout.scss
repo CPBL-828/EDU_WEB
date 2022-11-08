@@ -507,11 +507,11 @@ section.drop {
   left: 50%;
   transform: translate(-50%, -50%);
   width: auto;
-  height: 30px;
+  height: 35px;
 
   .drop {
     position: relative;
-    height: 30px;
+    height: 33px;
     z-index: 3;
     border: 2px solid $disable-color;
     border-radius: 10px;
@@ -519,7 +519,7 @@ section.drop {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     color: $sub-color;
     background-color: white;

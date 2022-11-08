@@ -185,7 +185,9 @@ export default defineComponent({
               :style="
                 rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
               "
-            ></td>
+            >
+              상담 내용 조회
+            </td>
           </tr>
         </tbody>
       </table>

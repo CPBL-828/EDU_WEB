@@ -1,15 +1,14 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import UserInfoComponent from "../../components/UserInfoComponent.vue";
-import StudentAnalysisComponent from "../../components/studentManage/StudentAnalysisComponent.vue";
+import UserInfoComponent from "../components/UserInfoComponent.vue";
 
 /*
-@brief 강사 및 관리자 권한의 메인 카테고리 [학목 관리]에서 접근할 수 있는 페이지들 표시
+@brief 관리자 권한의 메인 카테고리 [강사 관리]에서 접근할 수 있는 페이지들 표시
  */
 export default defineComponent({
-  name: "StudentManagePage",
-  components: { UserInfoComponent, StudentAnalysisComponent },
+  name: "TeacherManagePage",
+  components: { UserInfoComponent },
   setup() {
     const route = useRoute();
     const currentCategory = ref<string | undefined>(undefined);
@@ -21,7 +20,7 @@ export default defineComponent({
       }
     );
 
-    onMounted(async () => {
+    onMounted(() => {
       currentCategory.value = route.path.split("/")[2]?.toUpperCase();
     });
 
@@ -34,10 +33,7 @@ export default defineComponent({
 
 <template>
   <user-info-component
-    v-if="currentCategory === 'S-INFO'"
-    view-user="STU"
+    v-if="currentCategory === 'T-INFO'"
+    view-user="TEA"
   ></user-info-component>
-  <student-analysis-component
-    v-if="currentCategory === 'ANALYSIS'"
-  ></student-analysis-component>
 </template>

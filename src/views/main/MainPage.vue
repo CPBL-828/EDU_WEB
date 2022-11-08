@@ -1,14 +1,14 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import MyInfoComponent from "../components/myInfo/MyInfoComponent.vue";
+import MyInfoComponent from "../../components/myInfo/MyInfoComponent.vue";
 import {
   parentInterface,
   studentInterface,
   teacherInterface,
-} from "../lib/types";
-import common from "../lib/common";
-import { KEYS, USER_KEY } from "../constant";
-import NoticePage from "./NoticePage.vue";
+} from "../../lib/types";
+import common from "../../lib/common";
+import { KEYS, USER_KEY } from "../../constant";
+import NoticePage from "../NoticePage.vue";
 
 /*
 @brief

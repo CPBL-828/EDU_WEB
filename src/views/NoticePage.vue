@@ -32,13 +32,17 @@ export default defineComponent({
       if (search.value) {
         data = { search: search.value };
       }
-      const result = await ApiClient(
-        "/info/getNoticeList/",
-        common.makeJson(data)
-      );
+      if (route.path === "/notice" || route.path === "/notice/all") {
+        const result = await ApiClient(
+          "/info/getNoticeList/",
+          common.makeJson(data)
+        );
 
-      if (result.count > 0) {
-        noticeList.value = result.resultData;
+        if (result.count > 0) {
+          noticeList.value = result.resultData;
+        }
+      } else {
+        noticeList.value = undefined;
       }
     };
 
@@ -46,11 +50,7 @@ export default defineComponent({
       () => route.path,
       () => {
         category.value = common.findCategory();
-        if (route.path === "/notice" || route.path === "/notice/all") {
-          getNoticeList();
-        } else {
-          noticeList.value = undefined;
-        }
+        getNoticeList();
       }
     );
 

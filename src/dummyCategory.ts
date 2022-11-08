@@ -150,7 +150,7 @@ export const TEA_MAIN: categoryInterface[] = [
     KEY: "TEST",
     VALUE: "시험 관리",
     ICON: "fa-solid fa-highlighter",
-    HAS_CHILD: true,
+    HAS_CHILD: false,
   },
 ];
 
@@ -193,13 +193,6 @@ export const TEA_SUB: defaultInterface[] = [
       { KEY: "ATTENDANCE", VALUE: "출석부" },
       { KEY: "CHECK", VALUE: "출석체크" },
       { KEY: "ASSIGNMENT", VALUE: "과제" },
-    ],
-  },
-  {
-    KEY: "TEST",
-    VALUE: [
-      { KEY: "SCHEDULE", VALUE: "시험 일정" },
-      { KEY: "SCORE", VALUE: "성적 입력" },
     ],
   },
 ];

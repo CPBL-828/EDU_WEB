@@ -65,6 +65,7 @@ export default defineComponent({
         });
         subState.value = true;
       } else {
+        if (selectSubState.value) selectSubState.value = undefined;
         subState.value = false;
         router.push("/" + common.getItem(KEYS.MR).mr);
       }

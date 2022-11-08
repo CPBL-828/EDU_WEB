@@ -1,9 +1,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import CurrentScheduleComponent from "../../components/scheduleManage/CurrentScheduleComponent.vue";
-import ScheduleAskComponent from "../../components/scheduleManage/ScheduleAskComponent.vue";
-import PlanMakeComponent from "../../components/scheduleManage/PlanMakeComponent.vue";
+import CurrentScheduleComponent from "../components/scheduleManage/CurrentScheduleComponent.vue";
+import ScheduleAskComponent from "../components/scheduleManage/ScheduleAskComponent.vue";
+import PlanMakeComponent from "../components/scheduleManage/PlanMakeComponent.vue";
 
 export default defineComponent({
   name: "ScheduleManagePage.vue",

@@ -4,17 +4,17 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: () => import("../views/firstPages/UserSelectPage.vue"),
+    component: () => import("../views/main/UserSelectPage.vue"),
   },
   {
     path: "/:userKey/login",
     name: "login",
-    component: () => import("../views/firstPages/LoginPage.vue"),
+    component: () => import("../views/main/LoginPage.vue"),
   },
   {
     path: "/main",
     name: "main",
-    component: () => import("../views/MainPage.vue"),
+    component: () => import("../views/main/MainPage.vue"),
   },
   {
     // 관리자의 전체 공지
@@ -26,7 +26,7 @@ const routes = [
   {
     path: "/t-manage/:subCategory",
     name: "t-manage",
-    component: () => import("../views/teacherManage/TeacherManagePage.vue"),
+    component: () => import("../views/TeacherManagePage.vue"),
   },
   {
     path: "/notice/:noticeType",
@@ -41,12 +41,12 @@ const routes = [
   {
     path: "/s-manage/:subCategory",
     name: "s-manage",
-    component: () => import("../views/studentManage/StudentManagePage.vue"),
+    component: () => import("../views/StudentManagePage.vue"),
   },
   {
     path: "/schedule/:subCategory",
     name: "schedule",
-    component: () => import("../views/scheduleManage/ScheduleManagePage.vue"),
+    component: () => import("../views/ScheduleManagePage.vue"),
   },
 ];
 

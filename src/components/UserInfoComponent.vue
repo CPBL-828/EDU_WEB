@@ -23,6 +23,7 @@ export default defineComponent({
   },
   components: { CardListComponent },
   setup(props) {
+    const loginUser = ref<teacherInterface | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const userData = ref<
       Array<studentInterface | teacherInterface> | undefined
@@ -35,9 +36,9 @@ export default defineComponent({
     >(undefined);
 
     const getUserList = async () => {
-      let data = { search: "" };
+      let data = { userKey: loginUser.value?.teacherKey, search: "" };
       if (search.value) {
-        data = { search: search.value };
+        data.search = search.value;
       }
 
       if (props.viewUser === USER_KEY.STU) {
@@ -47,11 +48,14 @@ export default defineComponent({
         );
 
         if (result) {
+          console.log(result);
           if (result.count > 0) {
-            userData.value = result.resultData as studentInterface[];
+            userData.value = result.resultdata as studentInterface[];
             total.value = result.count;
           } else {
-            window.alert("검색 내용을 찾을 수 없어요.");
+            if (search.value) {
+              window.alert("검색 내용을 찾을 수 없어요.");
+            }
           }
         }
       } else {
@@ -62,10 +66,12 @@ export default defineComponent({
 
         if (result) {
           if (result.count > 0) {
-            userData.value = result.resultData as teacherInterface[];
+            userData.value = result.resultdata as teacherInterface[];
             total.value = result.count;
           } else {
-            window.alert("검색 내용을 찾을 수 없어요.");
+            if (search.value) {
+              window.alert("검색 내용을 찾을 수 없어요.");
+            }
           }
         }
       }
@@ -74,6 +80,10 @@ export default defineComponent({
     onMounted(async () => {
       userKey.value = common.getItem(KEYS.UK).userKey;
       category.value = common.findCategory();
+
+      if (common.getItem(KEYS.LU)) {
+        loginUser.value = common.getItem(KEYS.LU) as teacherInterface;
+      }
 
       await getUserList();
     });

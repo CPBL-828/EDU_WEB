@@ -614,6 +614,7 @@ section.modal {
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
 
       &:hover {
         background-color: $hover-color;

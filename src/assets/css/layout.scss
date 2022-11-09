@@ -574,3 +574,51 @@ section.drop {
     color: $sub-color;
   }
 }
+
+section.modal {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1078px;
+  height: 808px;
+
+  .modal {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 18px;
+    box-shadow: 4px 4px 20px 4px $disable-color;
+
+    i[class*="xmark"] {
+      position: absolute;
+      color: $disable-color;
+      font-size: 28px;
+      top: 17px;
+      right: 22px;
+      cursor: pointer;
+    }
+
+    &-title {
+      position: absolute;
+      font-size: 17px;
+      font-weight: bold;
+      color: $sub-color;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &-body {
+      position: absolute;
+      width: 1011px;
+      height: 714px;
+      border: 3px solid $background-color;
+      border-radius: 10px;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}

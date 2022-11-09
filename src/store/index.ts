@@ -1,7 +1,17 @@
 import { createStore } from "vuex";
 
 export default createStore({
-  state: {},
-  mutations: {},
-  getters: {},
+  state: {
+    modalState: false,
+  },
+  mutations: {
+    setModalState(state, value) {
+      state.modalState = value;
+    },
+  },
+  getters: {
+    getModalState(state) {
+      return state.modalState;
+    },
+  },
 });

@@ -2,8 +2,11 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { studentInterface, teacherInterface } from "../../lib/types";
 import { USER_KEY } from "../../constant";
+import ModalPopupComponent from "./ModalPopupComponent.vue";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "CardListComponent",
+  components: { ModalPopupComponent },
   props: {
     viewUser: {
       types: String as PropType<string>,
@@ -15,14 +18,27 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore();
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
+    const studentInfo = ref<studentInterface | undefined>(undefined);
     const teacherList = ref<Array<teacherInterface> | undefined>(undefined);
+    const teacherInfo = ref<teacherInterface | undefined>(undefined);
 
     const setUserList = () => {
       if (props.viewUser === USER_KEY.STU) {
         studentList.value = props.userList as studentInterface[];
       } else {
         teacherList.value = props.userList as teacherInterface[];
+      }
+    };
+
+    const openModal = (v: string, i: studentInterface | teacherInterface) => {
+      store.state.modalState = true;
+
+      if (v === USER_KEY.STU) {
+        studentInfo.value = i as studentInterface;
+      } else {
+        teacherInfo.value = i as teacherInterface;
       }
     };
 
@@ -39,7 +55,10 @@ export default defineComponent({
 
     return {
       studentList,
+      studentInfo,
       teacherList,
+      teacherInfo,
+      openModal,
     };
   },
 });
@@ -77,8 +96,11 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <div class="card-item-detail">상세 조회</div>
+        <div class="card-item-detail" @click="openModal('STU', item)">
+          상세 조회
+        </div>
       </div>
+
       <div v-if="teacherList" v-for="item in teacherList" class="card-item">
         <div v-if="!item.profileImg" class="card-item-profile">
           <i class="fa-solid fa-user"></i>
@@ -108,8 +130,25 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <div class="card-item-detail">상세 조회</div>
+        <div class="card-item-detail" @click="openModal('TEA', item)">
+          상세 조회
+        </div>
       </div>
     </div>
   </section>
+
+  <modal-popup-component title="학생 정보 상세 조회">
+    <template v-slot:body>
+      <div v-if="studentInfo">
+        <div v-for="item in studentInfo">
+          {{ item }}
+        </div>
+      </div>
+      <div v-if="teacherInfo">
+        <div v-for="item in teacherInfo">
+          {{ item }}
+        </div>
+      </div>
+    </template>
+  </modal-popup-component>
 </template>

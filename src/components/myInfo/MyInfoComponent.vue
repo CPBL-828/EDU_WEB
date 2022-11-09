@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import {
   defaultInterface,
   parentInterface,
@@ -8,8 +8,11 @@ import {
 } from "../../lib/types";
 import { USER_KEY } from "../../constant";
 import common from "../../lib/common";
+import { useStore } from "vuex";
+import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 export default defineComponent({
   name: "MyInfoComponent",
+  components: { ModalPopupComponent },
   props: {
     userKey: {
       type: String as PropType<string>,
@@ -23,11 +26,24 @@ export default defineComponent({
     },
   },
   setup: function (props) {
+    const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const parentInfo = ref<parentInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
+
+    const editModal = () => {
+      editState.value = true;
+      store.commit("setModalState", true);
+    };
+
+    watch(
+      () => store.state.modalState,
+      () => {
+        if (!store.state.modalState) editState.value = false;
+      }
+    );
 
     onMounted(() => {
       category.value = common.findCategory();
@@ -47,6 +63,7 @@ export default defineComponent({
       parentInfo,
       teacherInfo,
       editState,
+      editModal,
     };
   },
 });
@@ -125,7 +142,7 @@ export default defineComponent({
                 class="view-btn"
                 :value="studentInfo ? '세부 정보' : ''"
               />
-              <div class="edit-btn">
+              <div class="edit-btn" @click="editModal">
                 <i class="fa-solid fa-pen"></i>정보 수정
               </div>
             </div>
@@ -133,5 +150,19 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
+    <modal-popup-component
+      :title="editState ? '정보 수정' : '이력서 보기'"
+      btn-state="SAVE"
+    >
+      <template v-slot:body v-if="editState">
+        <div v-if="studentInfo">
+          <div v-for="item in studentInfo">{{ item }}</div>
+        </div>
+        <div v-if="teacherInfo">
+          <div v-for="item in teacherInfo">{{ item }}</div>
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 </template>

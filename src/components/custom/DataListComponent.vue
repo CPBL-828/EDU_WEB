@@ -5,9 +5,12 @@ import {
   noticeInterface,
   suggestInterface,
 } from "../../lib/types";
+import { useStore } from "vuex";
+import ModalPopupComponent from "./ModalPopupComponent.vue";
 
 export default defineComponent({
   name: "DataListComponent",
+  components: { ModalPopupComponent },
   props: {
     header: {
       type: Array as PropType<Array<defaultInterface>>,
@@ -27,8 +30,11 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore();
     const showNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
+    const noticeInfo = ref<noticeInterface | undefined>(undefined);
     const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
+    const suggestInfo = ref<suggestInterface | undefined>(undefined);
     const totalCnt = ref(0);
     const page = ref<number>(10);
     const currentPage = ref<number>(1);
@@ -63,6 +69,16 @@ export default defineComponent({
     const changePage = (v: number) => {
       if (v === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
+    };
+
+    const openModal = (v: string, i: noticeInterface | suggestInterface) => {
+      store.commit("setModalState", true);
+
+      if (v === "NOTICE") {
+        noticeInfo.value = i as noticeInterface;
+      } else {
+        suggestInfo.value = i as suggestInterface;
+      }
     };
 
     watch(
@@ -100,12 +116,15 @@ export default defineComponent({
     });
     return {
       showNoticeList,
+      noticeInfo,
       showSuggestList,
+      suggestInfo,
       totalCnt,
       page,
       currentPage,
       selectPage,
       changePage,
+      openModal,
     };
   },
 });
@@ -127,6 +146,7 @@ export default defineComponent({
             class="data=list=section-body-item"
             v-if="showNoticeList"
             v-for="item in showNoticeList"
+            @click="openModal('NOTICE', item)"
           >
             <td
               :style="
@@ -213,4 +233,13 @@ export default defineComponent({
       </div>
     </div>
   </section>
+  <modal-popup-component :title="noticeInfo ? '공지 보기' : '건의 상세'">
+    <template v-slot:body>
+      <div v-if="noticeInfo">
+        <div v-for="item in noticeInfo">
+          {{ item }}
+        </div>
+      </div>
+    </template>
+  </modal-popup-component>
 </template>

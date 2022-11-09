@@ -137,7 +137,9 @@ export default defineComponent({
     </div>
   </section>
 
-  <modal-popup-component title="학생 정보 상세 조회">
+  <modal-popup-component
+    :title="studentInfo ? '학생 정보 상세 조회' : '강사 정보 상세 조회'"
+  >
     <template v-slot:body>
       <div v-if="studentInfo">
         <div v-for="item in studentInfo">

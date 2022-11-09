@@ -8,6 +8,10 @@ export default defineComponent({
       types: String as PropType<string>,
       required: true,
     },
+    btnState: {
+      types: String as PropType<string>,
+      required: false,
+    },
   },
   setup() {
     const store = useStore();
@@ -44,6 +48,9 @@ export default defineComponent({
 <template>
   <section class="modal" v-if="popupState" v-click-away="onClickAway">
     <div class="modal">
+      <div v-if="btnState" class="modal-save">
+        {{ btnState === "SAVE" ? "저장하기" : "버튼" }}
+      </div>
       <span class="modal-title">{{ title }}</span>
       <i class="fa-solid fa-rectangle-xmark" @click="closeModal"></i>
       <div class="modal-body">

@@ -1,5 +1,9 @@
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
+/*
+@brief 헤더 우측 상단의 캘린더 팝업
+       단순 날짜 확인용
+ */
 export default defineComponent({
   name: "CalendarPopup",
   setup() {

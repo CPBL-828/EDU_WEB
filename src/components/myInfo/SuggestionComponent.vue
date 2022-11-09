@@ -5,11 +5,11 @@ import common from "../../lib/common";
 import DataListComponent from "../custom/DataListComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import { ApiClient } from "../../axios";
-
 /*
 @brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
        교무 관리자는 메인 카테고리 [학생 관리]와 [강사 관리]로 접근하여 각 유저의 건의사항 처리
        기타 관리자는 각 유저의 건의사항 열람만 가능
+@props 현재 로그인 한 유저의 권한 값
  */
 export default defineComponent({
   name: "SuggestionComponent",
@@ -20,7 +20,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectState = ref("ok");
     const header: defaultInterface[] = [

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from "vue";
+import { defineComponent, PropType } from "vue";
 import { categoryInterface } from "../../lib/types";
 export default defineComponent({
   name: "CategoryItem",

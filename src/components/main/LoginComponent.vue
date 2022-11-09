@@ -13,10 +13,8 @@ import {
 } from "../../lib/types";
 import { ApiClient } from "../../axios";
 import common from "../../lib/common";
-
 /*
-@brief
-로그인 실행 화면
+@brief 로그인 실행 화면
  */
 export default defineComponent({
   name: "LoginComponent",
@@ -51,15 +49,6 @@ export default defineComponent({
 
         if (result) {
           let userData;
-          // userType.value === USER_KEY.STU
-          //   ? (result as studentInterface)
-          //   : userType.value === USER_KEY.PAR
-          //   ? (result as parentInterface)
-          //   : userType.value === USER_KEY.TEA
-          //   ? (result as teacherInterface)
-          //   : userType.value === USER_KEY.ADM
-          //   ? (result as adminInterface)
-          //   : result;
 
           if (userType.value === USER_KEY.STU) {
             userData = result as studentInterface;
@@ -76,7 +65,6 @@ export default defineComponent({
             }
           }
 
-          // console.log(userData);
           common.setItem(KEYS.LU, common.makeJson(userData as object));
           common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
 
@@ -85,30 +73,6 @@ export default defineComponent({
         } else {
           window.alert(whoAmI.value?.VALUE + " 정보를 찾을 수 없어요!");
         }
-        // if (userId.value === "sso") {
-        //   const userData: teacherInterface = {
-        //     createDate: "createDate",
-        //     editDate: "editDate",
-        //     id: userId.value,
-        //     joinDate: "22-10-22",
-        //     leaveDate: "",
-        //     name: "고소현",
-        //     part: "중등부",
-        //     profileImg: "",
-        //     resSubject: "중등국어",
-        //     resume: "이력서 경로",
-        //     teacherKey: "akjheuf-132",
-        //     phone: "010-2222-2222",
-        //   };
-        //
-        //   common.setItem(KEYS.LU, common.makeJson(userData as object));
-        //   common.setItem(KEYS.UK, common.makeJson({ userKey: userType.value }));
-        //
-        //   window.alert("로그인 성공. 환영합니다!");
-        //   await router.push("/main");
-        // } else {
-        //   window.alert("사용자 정보를 찾을 수 없습니다.");
-        // }
       } else {
         window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
       }
@@ -116,7 +80,7 @@ export default defineComponent({
 
     onMounted(() => {
       /*
-      @brief 접속하려는 유저 타입 가져오기
+      접속하려는 유저 타입 가져오기
        */
       userType.value = route.fullPath
         .split("/")[1]

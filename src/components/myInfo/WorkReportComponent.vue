@@ -2,9 +2,9 @@
 import { defineComponent, onMounted, PropType, ref } from "vue";
 import { defaultInterface, teacherInterface } from "../../lib/types";
 import common from "../../lib/common";
-
 /*
 @brief 강사의 출근부 입력 및 열람 페이지
+@props 강사/관리자 중 현재 로그인 한 유저의 권한 값
  */
 export default defineComponent({
   name: "WorkReportComponent",
@@ -18,7 +18,7 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const today = ref<Date>(new Date());
     const date = ref<Date>(new Date());
@@ -59,6 +59,7 @@ export default defineComponent({
     onMounted(() => {
       category.value = common.findCategory();
     });
+
     return {
       category,
       today,

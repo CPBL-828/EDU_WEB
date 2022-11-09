@@ -1,10 +1,9 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue";
 import { defaultInterface } from "../../lib/types";
-
 /*
 @brief 기존의 선택 박스와 동일한 기능
-@props placeholder, selectList, rowWidth
+@props placeholder 값, 선택 항목, 행 너비
  */
 export default defineComponent({
   name: "DropBoxComponent",

@@ -4,6 +4,10 @@ import { studentInterface, teacherInterface } from "../../lib/types";
 import { USER_KEY } from "../../constant";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import { useStore } from "vuex";
+/*
+@brief 전체 학생 및 강사의 요약적 정보를 표시할 카드형 리스트
+@props 학생과 강사중 보여주고자 하는 유저 값, 해당 유저의 리스트
+ */
 export default defineComponent({
   name: "CardListComponent",
   components: { ModalPopupComponent },
@@ -42,6 +46,10 @@ export default defineComponent({
       }
     };
 
+    /*
+    상위 컴포넌트에서 검색으로 인해 userList에 담긴 값이 변경되면,
+    setUserList()를 호출해 현재 컴포넌트의 userList에도 정상적으로 적용되도록 함
+     */
     watch(
       () => props.userList,
       () => {

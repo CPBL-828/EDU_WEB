@@ -11,7 +11,6 @@ import { KEYS, USER_KEY } from "../constant";
 import { useRoute } from "vue-router";
 import WorkReportComponent from "../components/myInfo/WorkReportComponent.vue";
 import SuggestionComponent from "../components/myInfo/SuggestionComponent.vue";
-
 /*
 @brief 메인 카테고리 [내 공간]의 메뉴들에 해당하는 페이지 로딩
  */
@@ -28,7 +27,7 @@ export default defineComponent({
     const currentCategory = ref<string | undefined>(undefined);
 
     /*
-    @brief 사용자가 선택하는 카테고리를 추적
+    사용자가 선택하는 카테고리를 추적
      */
     watch(
       () => route.path,
@@ -52,6 +51,7 @@ export default defineComponent({
         workUser.value = common.getItem(KEYS.LU) as teacherInterface;
       }
     });
+
     return {
       userKey,
       myInfoUser,

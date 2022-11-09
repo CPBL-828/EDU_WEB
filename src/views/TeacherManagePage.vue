@@ -2,7 +2,6 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import UserInfoComponent from "../components/UserInfoComponent.vue";
-
 /*
 @brief 관리자 권한의 메인 카테고리 [강사 관리]에서 접근할 수 있는 페이지들 표시
  */

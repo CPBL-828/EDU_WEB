@@ -5,7 +5,6 @@ import { defaultInterface, noticeInterface } from "../lib/types";
 import { useRoute } from "vue-router";
 import common from "../lib/common";
 import { ApiClient } from "../axios";
-
 /*
 @brief 공지사항을 표시하는 페이지
        전체 공지의 경우 공지 데이터의 type이 '전체'인 것만 보여주면 되고,
@@ -58,6 +57,7 @@ export default defineComponent({
       category.value = common.findCategory();
       await getNoticeList();
     });
+
     return {
       category,
       header,

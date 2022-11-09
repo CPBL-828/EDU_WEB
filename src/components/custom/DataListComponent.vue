@@ -7,7 +7,10 @@ import {
 } from "../../lib/types";
 import { useStore } from "vuex";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
-
+/*
+@brief 글 리스트 형태의 데이터를 표현하기 위한 컴포넌트
+@props 리스트 헤더(항목) 값, 공지 데이터 리스트, 건의 데이터 리스트, 행 높이
+ */
 export default defineComponent({
   name: "DataListComponent",
   components: { ModalPopupComponent },
@@ -40,6 +43,9 @@ export default defineComponent({
     const currentPage = ref<number>(1);
     const listCnt: number = 10;
 
+    /*
+    props에 존재하는 데이터 리스트의 종류에 따라 현재 컴포넌트에서 보여줄 데이터 리스트를 set
+     */
     const setDataList = () => {
       if (props.noticeList) {
         totalCnt.value = props.noticeList.length;
@@ -83,7 +89,8 @@ export default defineComponent({
 
     watch(
       /*
-        @brief 현재 페이지가 변경되면, 페이지 값에 따라 표시할 dataList 변경
+        현재 페이지가 변경되면, 페이지 값에 따라 표시할 dataList 변경
+        페이징은 추후 별도의 컴포넌트로 분리해야 함
          */
       () => currentPage.value,
       () => {
@@ -233,6 +240,7 @@ export default defineComponent({
       </div>
     </div>
   </section>
+
   <modal-popup-component :title="noticeInfo ? '공지 보기' : '건의 상세'">
     <template v-slot:body>
       <div v-if="noticeInfo">

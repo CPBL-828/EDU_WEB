@@ -4,7 +4,6 @@ import { useRoute } from "vue-router";
 import { defaultInterface } from "../../lib/types";
 import common from "../../lib/common";
 import { KEYS } from "../../constant";
-
 /*
 @brief common.ts의 findCategory 함수를 활용하여 현재 카테고리 경로를 표시하는 헤더
  */

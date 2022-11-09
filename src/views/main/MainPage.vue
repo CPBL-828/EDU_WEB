@@ -9,11 +9,9 @@ import {
 import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
 import NoticePage from "../NoticePage.vue";
-
 /*
-@brief
-각 유저가 로그인 후, 가장 처음 표시되는 메인 화면
-학생, 학부모, 강사는 내 정보 페이지, 관리자는 공지 관리 페이지가 표시
+@brief 각 유저가 로그인 후, 가장 처음 표시되는 메인 화면
+       학생, 학부모, 강사는 내 정보 페이지, 관리자는 공지 관리 페이지가 표시
  */
 export default defineComponent({
   name: "MainPage",

@@ -4,7 +4,6 @@ import { useRoute } from "vue-router";
 import UserInfoComponent from "../components/UserInfoComponent.vue";
 import AnalysisComponent from "../components/studentManage/AnalysisComponent.vue";
 import ConsultComponent from "../components/studentManage/ConsultComponent.vue";
-
 /*
 @brief 강사 및 관리자 권한의 메인 카테고리 [학목 관리]에서 접근할 수 있는 페이지들 표시
  */

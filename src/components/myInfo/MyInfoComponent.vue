@@ -10,6 +10,10 @@ import { USER_KEY } from "../../constant";
 import common from "../../lib/common";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+/*
+@brief 강사, 학생, 학부모의 내 정보 표시
+@props 강사/학생/학부모 중 어떤 유저인지에 대한 키 값, 해당 유저의 정보
+ */
 export default defineComponent({
   name: "MyInfoComponent",
   components: { ModalPopupComponent },

@@ -2,6 +2,11 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import { defaultInterface } from "../../lib/types";
+/*
+@brief 강사는 메인 카테고리 [학생 관리]의 [상담]으로 접근 가능
+       관리자는 메인 카테고리 [학생 관리], [강사 관리]의 [상담]으로 접근 가능
+       TODO 현재 상담의 정책 부분에 대한 협의가 진행 중
+ */
 export default defineComponent({
   name: "ConsultComponent",
   components: { DropBoxComponent },
@@ -55,8 +60,6 @@ export default defineComponent({
         time.value = selectTime.value?.toTimeString().substring(0, 5);
       }
     );
-
-    onMounted(() => {});
 
     return {
       selectDate,

@@ -9,9 +9,9 @@ import {
 import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
 import { ApiClient } from "../axios";
-
 /*
 @brief 학생 및 강사 정보를 카드형 컴포넌트를 활용해 표시하기 위한 공통 페이지
+@props 보여주고자 하는 유저 값
  */
 export default defineComponent({
   name: "UserInfoComponent",

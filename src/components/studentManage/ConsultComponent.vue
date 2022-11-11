@@ -34,9 +34,17 @@ export default defineComponent({
       }
     };
 
+    const selectType = (item: defaultInterface) => {
+      console.log("상담 유형:", item);
+    };
+
     const insertConsult = () => {
       if (!date.value) {
         window.alert("상담 날짜를 입력해 주세요.");
+      } else if (!time.value) {
+        window.alert("상담 시간을 입력해 주세요.");
+      } else if (!name.value) {
+        window.alert("학생 이름을 입력해 주세요.");
       }
       let data = {
         date: date.value,
@@ -70,6 +78,7 @@ export default defineComponent({
       dateCalendarState,
       timeCalendarState,
       typeList,
+      selectType,
       openCalendar,
       insertConsult,
     };
@@ -125,6 +134,7 @@ export default defineComponent({
                 placeholder="상담 유형"
                 row-width="160px"
                 :select-list="typeList"
+                @selectValue="selectType"
               ></drop-box-component>
             </div>
             <span class="separ">|</span>

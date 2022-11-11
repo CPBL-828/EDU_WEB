@@ -21,7 +21,9 @@ export default defineComponent({
       default: "270px",
     },
   },
-  setup(props) {
+  emit: ["selectType"],
+  setup(props, context) {
+    const { emit } = context;
     const main = ref<string>(props.placeholder as string);
     const openState = ref(false);
     const itemList: defaultInterface[] = props.selectList as defaultInterface[];
@@ -40,6 +42,7 @@ export default defineComponent({
     const changeItem = (v: defaultInterface) => {
       selectItem.value = v.KEY;
       main.value = v.VALUE as string;
+      emit("selectValue", v);
     };
 
     return {

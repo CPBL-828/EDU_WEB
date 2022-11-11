@@ -63,6 +63,10 @@ export default defineComponent({
       }
     };
 
+    const selectType = (item: defaultInterface) => {
+      console.log("건의 유형: ", item);
+    };
+
     onMounted(async () => {
       category.value = common.findCategory();
 
@@ -88,6 +92,7 @@ export default defineComponent({
       selectState,
       header,
       changeState,
+      selectType,
       datetime,
       viewSuggestList,
       placeholder,
@@ -150,6 +155,7 @@ export default defineComponent({
                 :placeholder="placeholder"
                 :select-list="typeList"
                 :row-width="width"
+                @selectValue="selectType"
               ></drop-box-component>
             </div>
             <div class="suggestion-section-body-write-date">

@@ -5,6 +5,7 @@ import { defaultInterface, noticeInterface } from "../lib/types";
 import { useRoute } from "vue-router";
 import common from "../lib/common";
 import { ApiClient } from "../axios";
+import { KEYS, USER_KEY } from "../constant";
 /*
 @brief 공지사항을 표시하는 페이지
        전체 공지의 경우 공지 데이터의 type이 '전체'인 것만 보여주면 되고,
@@ -14,6 +15,7 @@ export default defineComponent({
   name: "NoticePage",
   components: { DataListComponent },
   setup() {
+    const userKey = ref<string | undefined>(undefined);
     const route = useRoute();
     const header: defaultInterface[] = [
       { KEY: "TYPE", VALUE: "공지 유형" },
@@ -27,9 +29,9 @@ export default defineComponent({
 
     const getNoticeList = async () => {
       //TODO getNoticeList parameter: type, readerKey, year 추가
-      let data = { search: "" };
+      let data = { search: "", userKey: "" };
       if (search.value) {
-        data = { search: search.value };
+        data.search = search.value;
       }
       if (route.path === "/notice" || route.path === "/notice/all") {
         const result = await ApiClient(
@@ -37,11 +39,26 @@ export default defineComponent({
           common.makeJson(data)
         );
 
-        if (result.count > 0) {
+        if (result?.count > 0) {
           noticeList.value = result.resultData;
+        } else {
+          noticeList.value = undefined;
         }
       } else {
-        noticeList.value = undefined;
+        if (userKey.value) {
+          data.userKey = userKey.value;
+        }
+        console.log(data);
+        const result = await ApiClient(
+          "/info/getNoticeList/",
+          common.makeJson(data)
+        );
+
+        if (result?.count > 0) {
+          noticeList.value = result.resultData;
+        } else {
+          noticeList.value = undefined;
+        }
       }
     };
 
@@ -54,6 +71,13 @@ export default defineComponent({
     );
 
     onMounted(async () => {
+      if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
+        userKey.value = common.getItem(KEYS.LU).parentKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
+        userKey.value = common.getItem(KEYS.LU).studentKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
+        userKey.value = common.getItem(KEYS.LU).teacherKey;
+      }
       category.value = common.findCategory();
       await getNoticeList();
     });
@@ -82,7 +106,7 @@ export default defineComponent({
               : ""
           }}
         </div>
-        <div class="notice-section-body" v-if="noticeList">
+        <div class="notice-section-body">
           <div class="search">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input
@@ -93,12 +117,13 @@ export default defineComponent({
             />
           </div>
           <data-list-component
+            v-if="noticeList"
             :header="header"
             :notice-list="noticeList"
           ></data-list-component>
-        </div>
-        <div class="notice-section-body" v-if="!noticeList">
-          <div class="no-data">불러올 데이터가 없습니다!</div>
+          <div class="no-data" v-if="!noticeList">
+            불러올 데이터가 없습니다!
+          </div>
         </div>
       </div>
     </div>

@@ -36,9 +36,18 @@ export default defineComponent({
     >(undefined);
 
     const getUserList = async () => {
-      let data = { userKey: loginUser.value?.teacherKey, search: "" };
+      let data = {
+        userKey: "",
+        search: "",
+      };
       if (search.value) {
         data.search = search.value;
+      }
+      if (
+        common.getItem(KEYS.UK).userKey.slice(-3) !== USER_KEY.ADM &&
+        loginUser.value
+      ) {
+        data.userKey = loginUser.value.teacherKey;
       }
 
       if (props.viewUser === USER_KEY.STU) {
@@ -48,9 +57,8 @@ export default defineComponent({
         );
 
         if (result) {
-          console.log(result);
           if (result.count > 0) {
-            userData.value = result.resultdata as studentInterface[];
+            userData.value = result.resultData as studentInterface[];
             total.value = result.count;
           } else {
             if (search.value) {
@@ -66,7 +74,7 @@ export default defineComponent({
 
         if (result) {
           if (result.count > 0) {
-            userData.value = result.resultdata as teacherInterface[];
+            userData.value = result.resultData as teacherInterface[];
             total.value = result.count;
           } else {
             if (search.value) {

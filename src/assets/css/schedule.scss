@@ -50,10 +50,11 @@ section.current-schedule {
       position: absolute;
       max-width: 1200px;
       width: 100%;
-      height: auto;
+      height: 100%;
       top: calc(50% - 21px);
       left: 50%;
       transform: translate(-50%, -50%);
+      overflow: scroll;
 
       &-tag {
         @include tag-custom();

@@ -82,3 +82,12 @@ export interface suggestInterface {
   editDate: string;
   adminKey: string;
 }
+
+export interface scheduleInterface {
+  name: string;
+  time: string;
+  startTime: number;
+  startMinute: number;
+  startDay: number;
+  duration: number;
+}

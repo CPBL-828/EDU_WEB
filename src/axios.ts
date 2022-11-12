@@ -27,5 +27,6 @@ export const ApiClient = async (url: string, data: string) => {
     })
     .catch(() => {
       console.error();
+      console.log("  ハ____ハ\n" + " ꒰ ⬩ ω ⬩ ꒱\n" + " |   つ Fail!\n");
     });
 };

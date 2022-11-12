@@ -7,13 +7,14 @@ import {
 } from "../../lib/types";
 import { useStore } from "vuex";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
+import PaginationComponent from "../fixed/PaginationComponent.vue";
 /*
 @brief 글 리스트 형태의 데이터를 표현하기 위한 컴포넌트
 @props 리스트 헤더(항목) 값, 공지 데이터 리스트, 건의 데이터 리스트, 행 높이
  */
 export default defineComponent({
   name: "DataListComponent",
-  components: { ModalPopupComponent },
+  components: { PaginationComponent, ModalPopupComponent },
   props: {
     header: {
       type: Array as PropType<Array<defaultInterface>>,
@@ -51,7 +52,7 @@ export default defineComponent({
         totalCnt.value = props.noticeList.length;
         if (totalCnt.value > listCnt) {
           showNoticeList.value = props.noticeList.slice(0, listCnt);
-          page.value = Math.ceil(totalCnt.value / 10);
+          page.value = Math.ceil(totalCnt.value / listCnt);
         } else {
           showNoticeList.value = props.noticeList;
           page.value = 0;
@@ -68,12 +69,12 @@ export default defineComponent({
       }
     };
 
-    const selectPage = (i: number) => {
-      currentPage.value = i;
+    const selectPage = (n: number) => {
+      currentPage.value = n;
     };
 
-    const changePage = (v: number) => {
-      if (v === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (n: number) => {
+      if (n === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 
@@ -183,7 +184,7 @@ export default defineComponent({
                 rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
               "
             >
-              {{ item.writerKey }}
+              관리자
             </td>
           </tr>
 
@@ -218,26 +219,12 @@ export default defineComponent({
           </tr>
         </tbody>
       </table>
-      <div class="pagination" v-if="page !== 0">
-        <div
-          :class="currentPage !== 1 ? 'arrow-active' : 'arrow'"
-          @click="changePage(0)"
-        >
-          <i class="fa-solid fa-angle-left"></i>
-        </div>
-        <span
-          @click="selectPage(i)"
-          v-for="i in page"
-          :class="currentPage === i ? 'page-active' : 'page'"
-          >{{ i }}</span
-        >
-        <div
-          :class="currentPage !== page ? 'arrow-active' : 'arrow'"
-          @click="changePage(1)"
-        >
-          <i class="fa-solid fa-angle-right"></i>
-        </div>
-      </div>
+      <pagination-component
+        @changePage="changePage"
+        @selectPage="selectPage"
+        :page="page"
+        :current-page="currentPage"
+      ></pagination-component>
     </div>
   </section>
 

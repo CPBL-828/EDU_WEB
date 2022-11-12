@@ -278,7 +278,9 @@ section.data-list {
       }
     }
   }
+}
 
+section.pagination {
   .pagination {
     position: absolute;
     bottom: 0;
@@ -314,6 +316,7 @@ section.data-list {
       margin: 0 20px;
       pointer-events: none;
       opacity: 0;
+      cursor: default;
 
       &-active {
         background-color: $disable-color;
@@ -327,6 +330,7 @@ section.data-list {
         opacity: 1;
         color: white;
         margin: 0 20px;
+        cursor: pointer;
 
         &:hover {
           color: $sub-color;

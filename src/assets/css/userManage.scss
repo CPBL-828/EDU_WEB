@@ -226,7 +226,8 @@ section.consult {
             font-size: 14px;
             font-weight: bold;
 
-            i[class*="user"] {
+            i[class*="user"],
+            [class*="glass"] {
               width: 20px;
               height: 20px;
               display: flex;
@@ -296,6 +297,83 @@ section.consult {
         width: 100%;
         height: 380px;
         border-radius: 0 40px 40px 40px;
+
+        .separ {
+          color: $disable-color;
+          font-size: 27px;
+          margin: 0 14px 5px 14px;
+        }
+
+        &-title {
+          position: absolute;
+          top: 16px;
+          left: 47px;
+          font-size: 13px;
+          font-weight: bold;
+          color: $disable-color;
+        }
+
+        &-item {
+          position: absolute;
+          top: 48px;
+          left: 47px;
+          display: flex;
+          align-items: center;
+
+          &-date {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 260px;
+            height: 33px;
+            border: 2px solid $disable-color;
+            border-radius: 10px;
+            color: $sub-color;
+            background-color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: default;
+
+            i[class*="filter"] {
+              position: absolute;
+              color: $disable-color;
+              left: 17px;
+              font-size: 18px;
+            }
+
+            i[class*="down"] {
+              position: absolute;
+              color: $disable-color;
+              right: 17px;
+              font-size: 18px;
+              cursor: pointer;
+            }
+
+            .calendar {
+              &-date {
+                position: absolute;
+                top: 40px;
+                width: 264px;
+              }
+
+              &-time {
+                position: absolute;
+                top: 40px;
+                width: 164px;
+
+                .vc-time-date {
+                  display: none;
+                }
+              }
+            }
+          }
+
+          &-type {
+            width: 164px;
+            height: 33px;
+          }
+        }
       }
     }
 

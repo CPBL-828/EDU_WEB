@@ -11,13 +11,18 @@ export default defineComponent({
   name: "ConsultComponent",
   components: { DropBoxComponent },
   setup() {
-    const selectDate = ref<Date>(new Date());
-    const selectTime = ref<Date>(new Date());
     const date = ref<string | undefined>(undefined);
     const time = ref<string | undefined>(undefined);
-    const name = ref<string | undefined>(undefined);
-    const dateCalendarState = ref(false);
-    const timeCalendarState = ref(false);
+    const inputDate = ref<Date | undefined>(undefined);
+    const inputTime = ref<Date | undefined>(undefined);
+    const inputName = ref<string | undefined>(undefined);
+    const planDate = ref<Date | undefined>(undefined);
+    const planName = ref<string | undefined>(undefined);
+    const listDate = ref<Date | undefined>(undefined);
+    const inputDateCalendarState = ref(false);
+    const inputTimeCalendarState = ref(false);
+    const planDateCalendarState = ref(false);
+    const listDateCalendarState = ref(false);
     const typeList: defaultInterface[] = [
       { KEY: "STUDENT", VALUE: "학생" },
       { KEY: "PARENT", VALUE: "학부모" },
@@ -26,16 +31,22 @@ export default defineComponent({
       { KEY: "ETC", VALUE: "기타" },
     ];
 
-    const openCalendar = (v: string) => {
-      if (v === "date") {
-        dateCalendarState.value = !dateCalendarState.value;
+    const openCalendar = (m: string, n: string) => {
+      if (m === "input") {
+        if (n === "date") {
+          inputDateCalendarState.value = !inputDateCalendarState.value;
+        } else {
+          inputTimeCalendarState.value = !inputTimeCalendarState.value;
+        }
+      } else if (m === "plan") {
+        planDateCalendarState.value = !planDateCalendarState.value;
       } else {
-        timeCalendarState.value = !timeCalendarState.value;
+        listDateCalendarState.value = !listDateCalendarState.value;
       }
     };
 
     const selectType = (item: defaultInterface) => {
-      console.log("상담 유형:", item);
+      // console.log("상담 유형:", item);
     };
 
     const insertConsult = () => {
@@ -43,40 +54,56 @@ export default defineComponent({
         window.alert("상담 날짜를 입력해 주세요.");
       } else if (!time.value) {
         window.alert("상담 시간을 입력해 주세요.");
-      } else if (!name.value) {
+      } else if (!inputName.value) {
         window.alert("학생 이름을 입력해 주세요.");
       }
       let data = {
         date: date.value,
         time: time.value,
-        name: name.value,
+        name: inputName.value,
       };
-
-      console.log(data);
     };
 
     watch(
-      () => selectDate.value,
+      () => inputDate.value,
       () => {
-        date.value = selectDate.value?.toDateString();
+        date.value = inputDate.value?.toDateString();
       }
     );
 
     watch(
-      () => selectTime.value,
+      () => planDate.value,
       () => {
-        time.value = selectTime.value?.toTimeString().substring(0, 5);
+        date.value = planDate.value?.toDateString();
+      }
+    );
+
+    watch(
+      () => listDate.value,
+      () => {
+        date.value = listDate.value?.toDateString();
+      }
+    );
+
+    watch(
+      () => inputTime.value,
+      () => {
+        time.value = inputTime.value?.toTimeString().substring(0, 5);
       }
     );
 
     return {
-      selectDate,
       date,
-      selectTime,
       time,
-      name,
-      dateCalendarState,
-      timeCalendarState,
+      inputDate,
+      inputTime,
+      inputName,
+      planDate,
+      planName,
+      inputDateCalendarState,
+      inputTimeCalendarState,
+      planDateCalendarState,
+      listDateCalendarState,
       typeList,
       selectType,
       openCalendar,
@@ -98,16 +125,16 @@ export default defineComponent({
           <div class="consult-input-section-body-item">
             <div class="consult-input-section-body-item-date">
               <i class="fa-solid fa-filter"></i>
-              {{ date ? date : "상담 날짜" }}
+              {{ inputDate ? inputDate?.toDateString() : "상담 날짜" }}
               <i
                 class="fa-solid fa-chevron-down"
-                @click="openCalendar('date')"
+                @click="openCalendar('input', 'date')"
               ></i>
               <v-date-picker
                 class="calendar-date"
-                v-if="dateCalendarState"
+                v-if="inputDateCalendarState"
                 mode="date"
-                v-model="selectDate"
+                v-model="inputDate"
                 :minute-increment="5"
               />
             </div>
@@ -117,13 +144,13 @@ export default defineComponent({
               {{ time ? time : "상담 시간" }}
               <i
                 class="fa-solid fa-chevron-down"
-                @click="openCalendar('time')"
+                @click="openCalendar('input', 'time')"
               ></i>
               <v-date-picker
                 class="calendar-time"
-                v-if="timeCalendarState"
+                v-if="inputTimeCalendarState"
                 mode="time"
-                v-model="selectTime"
+                v-model="inputTime"
                 :minute-increment="5"
                 is24hr
               />
@@ -140,7 +167,7 @@ export default defineComponent({
             <span class="separ">|</span>
             <div class="consult-input-section-body-item-name">
               <i class="fa-solid fa-user"></i>
-              <input type="text" placeholder="이름" v-model="name" />
+              <input type="text" placeholder="이름" v-model="inputName" />
             </div>
             <div
               class="consult-input-section-body-item-insert"
@@ -154,7 +181,46 @@ export default defineComponent({
 
       <div class="consult-plan-section">
         <div class="consult-plan-section-tag">상담 예정 현황</div>
-        <div class="consult-plan-section-body"></div>
+        <div class="consult-plan-section-body">
+          <span class="consult-plan-section-body-title">
+            상담이 완료되면 결과를 입력해 주세요.
+          </span>
+          <div class="consult-plan-section-body-item">
+            <div class="consult-plan-section-body-item-date">
+              <i class="fa-solid fa-filter"></i>
+              {{ planDate ? planDate?.toDateString() : "상담 날짜" }}
+              <i
+                class="fa-solid fa-chevron-down"
+                @click="openCalendar('plan', 'date')"
+              ></i>
+              <v-date-picker
+                class="calendar-date"
+                v-if="planDateCalendarState"
+                mode="date"
+                v-model="planDate"
+                :minute-increment="5"
+              />
+            </div>
+            <span class="separ">|</span>
+            <div class="consult-input-section-body-item-type">
+              <drop-box-component
+                placeholder="상담 유형"
+                row-width="160px"
+                :select-list="typeList"
+                @selectValue="selectType"
+              ></drop-box-component>
+            </div>
+            <span class="separ">|</span>
+            <div class="consult-input-section-body-item-name">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                placeholder="학생 이름 검색"
+                v-model="planName"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="consult-list-section">

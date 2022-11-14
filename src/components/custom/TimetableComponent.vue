@@ -1,48 +1,19 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import { scheduleInterface } from "../../lib/types";
+import { ApiClient } from "../../axios";
+import common from "../../lib/common";
+import { KEYS } from "../../constant";
 export default defineComponent({
   name: "TimetableComponent",
   setup() {
     const hour = ref<number>(0);
     const minute = ref<number>(0);
     const blockState = ref(false);
-
-    const scheduleData: scheduleInterface[] = [
-      {
-        name: "수업1",
-        time: "12-20",
-        startTime: 0,
-        startMinute: 0,
-        startDay: 3,
-        duration: 120,
-      },
-      {
-        name: "수업2",
-        time: "13-20",
-        startTime: 0,
-        startMinute: 0,
-        startDay: 5,
-        duration: 140,
-      },
-      {
-        name: "수업3",
-        time: "16-00",
-        startTime: 0,
-        startMinute: 0,
-        startDay: 2,
-        duration: 60,
-      },
-      {
-        name: "수업4",
-        time: "15-10",
-        startTime: 0,
-        startMinute: 0,
-        startDay: 6,
-        duration: 120,
-      },
-    ];
+    const amSchedule = ref<Array<scheduleInterface>>([]);
+    const pmSchedule = ref<Array<scheduleInterface>>([]);
     const scheduleInfo = ref<scheduleInterface>();
+    const color = ref<Array<string>>([]);
 
     const clickMinute = (d: string, h: number, m: number) => {
       hour.value = h + 11;
@@ -55,31 +26,41 @@ export default defineComponent({
       scheduleInfo.value = item;
     };
 
-    onMounted(() => {
-      // let hourB = (sHour - 12) * 6 * 10 + (sHour - 12 + 1);
-
-      scheduleData.map((schedule: scheduleInterface) => {
-        schedule.startTime = Number(schedule.time.substring(0, 2));
-        schedule.startMinute = Number(schedule.time.substring(3, 5));
-      });
-
+    onMounted(async () => {
       blockState.value = true;
 
-      // const block: HTMLElement = document.getElementById(
-      //   "block"
-      // ) as HTMLElement;
+      let teacherKey = common.getItem(KEYS.LU).teacherKey;
+      const result = await ApiClient(
+        "/lectures/getLectureList/",
+        common.makeJson({ userKey: teacherKey, search: "" })
+      );
 
-      // block.style.height = duration + 1 + "px";
-      // block.style.top = hourB + sMinute + "px";
-      // block.style.left = 120 + (day - 1) * 82 + "px";
+      result.resultData.map((item: scheduleInterface) => {
+        item.start = Number(item.startTime.substring(0, 2));
+        item.minute = Number(item.startTime.substring(3, 5));
+
+        if (item.start >= 13) {
+          pmSchedule.value?.push(item);
+        } else {
+          amSchedule.value?.push(item);
+        }
+
+        for (let i = 0; i < pmSchedule.value.length; i++) {
+          color.value.push(
+            "#" + Math.floor(Math.random() * 16777215).toString(16)
+          );
+        }
+      });
     });
 
     return {
       blockState,
-      scheduleData,
+      amSchedule,
+      pmSchedule,
       scheduleInfo,
       clickMinute,
       clickBlock,
+      color,
     };
   },
 });
@@ -106,24 +87,28 @@ export default defineComponent({
       </div>
     </div>
     <!--    <div class="schedule-block" id="block" @click="clickBlock()"></div>-->
-    <div class="block" v-if="scheduleData">
+    <div class="block" v-if="pmSchedule || amSchedule">
       <div
         v-if="blockState"
         class="schedule-block"
-        v-for="item in scheduleData"
+        id="block"
+        v-for="(item, index) in pmSchedule"
         :style="{
+          backgroundColor: color[index],
           position: 'absolute',
           height: item.duration + 'px',
           top:
-            (item.startTime - 12) * 6 * 10 +
-            (item.startTime - 12 + 1) +
-            item.startMinute +
+            (item.start - 12) * 6 * 10 +
+            (item.start - 12 + 1) -
+            60 +
+            item.minute +
             'px',
-          left: 120 + (item.startDay - 1) * 81 + 4 + 'px',
+          left: 120 + (item.day - 1) * 116 + 4 + 'px',
         }"
         @click="clickBlock(item)"
       >
-        {{ item.name }}
+        <span class="name">{{ item.name }}</span>
+        <span>{{ item.subject }}</span>
       </div>
     </div>
 

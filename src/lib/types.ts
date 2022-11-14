@@ -83,11 +83,32 @@ export interface suggestInterface {
   adminKey: string;
 }
 
+// export interface scheduleInterface {
+//   name: string;
+//   time: string;
+//   startTime: number;
+//   startMinute: number;
+//   startDay: number;
+//   duration: number;
+// }
+
 export interface scheduleInterface {
-  name: string;
-  time: string;
-  startTime: number;
-  startMinute: number;
-  startDay: number;
+  adminKey_id: string;
+  book: string;
+  createDate: string;
+  day: number;
   duration: number;
+  editDate: string;
+  lectureKey: string;
+  name: string;
+  progress: string;
+  reason: string;
+  roomKey_id: string;
+  startTime: string;
+  subject: string;
+  target: string;
+  teacherKey_id: string;
+  type: string;
+  start: number;
+  minute: number;
 }

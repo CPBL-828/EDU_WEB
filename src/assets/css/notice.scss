@@ -69,6 +69,18 @@ section.notice {
           transform: translate(-50%, -50%);
         }
       }
+
+      @include laptop-size {
+        max-width: 1000px;
+
+        &-body {
+          height: 600px;
+
+          .search {
+            top: 15%;
+          }
+        }
+      }
     }
   }
 }

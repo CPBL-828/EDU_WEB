@@ -20,6 +20,10 @@ section.header {
       }
     }
   }
+
+  @include laptop-size {
+    height: 70px;
+  }
 }
 
 div.away {
@@ -245,6 +249,10 @@ section.data-list {
       border-bottom: 2px solid $disable-color;
       border-spacing: 0;
 
+      @include laptop-size {
+        top: 20px;
+      }
+
       thead {
         font-size: 16px;
         font-weight: bold;
@@ -264,6 +272,9 @@ section.data-list {
           width: 100%;
           color: $sub-color;
           cursor: pointer;
+          @include laptop-size {
+            height: 30px;
+          }
 
           &:hover {
             background-color: $background-color;
@@ -689,7 +700,7 @@ section.schedule {
       background-color: $background-color;
 
       .day {
-        width: 80px;
+        width: 115px;
         background-color: rgba(217, 217, 217, 0.3);
         height: 30px;
         font-size: 13px;
@@ -701,7 +712,7 @@ section.schedule {
       }
 
       .one-hour {
-        width: 80px;
+        width: 115px;
         border: 1px solid white;
         border-right: 0;
         border-bottom: 0;
@@ -717,10 +728,12 @@ section.schedule {
 
   .block {
     position: absolute;
-    width: 574px;
+    width: calc(117px * 7);
+    height: calc(61px * 12);
     top: 61px;
     left: calc(50% + 120px + 15px);
     transform: translateX(calc(-50% - 120px));
+    overflow: hidden;
 
     .schedule-block {
       position: absolute;
@@ -728,10 +741,19 @@ section.schedule {
       left: 1px;
       transform: translateX(-120px);
       border: 1px solid white;
-      width: 80px;
+      width: 115px;
       height: 0;
       background-color: #32adff;
       color: white;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .name {
+        font-weight: bold;
+      }
     }
   }
 

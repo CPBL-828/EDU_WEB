@@ -48,7 +48,6 @@ export default defineComponent({
         if (userKey.value) {
           data.userKey = userKey.value;
         }
-        console.log(data);
         const result = await ApiClient(
           "/info/getNoticeList/",
           common.makeJson(data)

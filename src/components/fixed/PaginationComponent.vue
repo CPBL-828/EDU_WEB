@@ -1,13 +1,11 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import { noticeInterface, suggestInterface } from "../../lib/types";
 export default defineComponent({
   name: "PaginationComponent",
   props: {
     page: {
       type: Number as PropType<number>,
-      required: false,
-      default: 10,
+      required: true,
     },
     currentPage: {
       type: Number as PropType<number>,
@@ -15,16 +13,55 @@ export default defineComponent({
     },
   },
   setup(props) {
-    onMounted(() => {});
+    const startPage = ref(0);
+    const endPage = ref(0);
+    const viewPage = ref<Array<number>>([]);
 
-    return {};
+    const setViewPage = () => {
+      if (props.currentPage > 10) {
+        if (props.currentPage % 10 !== 0) {
+          startPage.value = Math.floor(props.currentPage / 10) * 10 + 1;
+          endPage.value = startPage.value + 9;
+
+          if (startPage.value + 9 > props.page) {
+            endPage.value = props.page;
+          }
+        } else {
+          startPage.value = props.currentPage - 9;
+          endPage.value = props.currentPage;
+        }
+      } else {
+        startPage.value = 1;
+        endPage.value = props.page > 10 ? 10 : props.page;
+      }
+
+      viewPage.value = [];
+      for (let i = startPage.value; i <= endPage.value; i++) {
+        viewPage.value.push(i);
+      }
+    };
+
+    watch(
+      () => props.currentPage,
+      () => {
+        setViewPage();
+      }
+    );
+
+    onMounted(() => {
+      setViewPage();
+    });
+
+    return {
+      viewPage,
+    };
   },
 });
 </script>
 
 <template>
   <section class="pagination">
-    <div class="pagination" v-if="page !== 0">
+    <div class="pagination" v-if="viewPage">
       <div
         :class="currentPage !== 1 ? 'arrow-active' : 'arrow'"
         @click="$emit('changePage', 0)"
@@ -33,7 +70,7 @@ export default defineComponent({
       </div>
       <span
         @click="$emit('selectPage', i)"
-        v-for="i in page"
+        v-for="i in viewPage"
         :class="currentPage === i ? 'page-active' : 'page'"
         >{{ i }}</span
       >

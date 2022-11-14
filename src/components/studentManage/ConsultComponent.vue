@@ -154,12 +154,12 @@ export default defineComponent({
 
       <div class="consult-plan-section">
         <div class="consult-plan-section-tag">상담 예정 현황</div>
-        <div class="consult-plan-section-body">으이그</div>
+        <div class="consult-plan-section-body"></div>
       </div>
 
       <div class="consult-list-section">
         <div class="consult-list-section-tag">상담 목록 조회</div>
-        <div class="consult-list-section-body">shit</div>
+        <div class="consult-list-section-body"></div>
       </div>
     </div>
   </section>

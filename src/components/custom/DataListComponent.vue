@@ -40,7 +40,7 @@ export default defineComponent({
     const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const suggestInfo = ref<suggestInterface | undefined>(undefined);
     const totalCnt = ref(0);
-    const page = ref<number>(10);
+    const page = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt: number = 10;
 
@@ -220,6 +220,7 @@ export default defineComponent({
         </tbody>
       </table>
       <pagination-component
+        v-if="page !== 0"
         @changePage="changePage"
         @selectPage="selectPage"
         :page="page"

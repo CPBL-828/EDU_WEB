@@ -5,6 +5,7 @@ import common from "../../lib/common";
 import DataListComponent from "../custom/DataListComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import { ApiClient } from "../../axios";
+import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 /*
 @brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
        교무 관리자는 메인 카테고리 [학생 관리]와 [강사 관리]로 접근하여 각 유저의 건의사항 처리
@@ -13,7 +14,7 @@ import { ApiClient } from "../../axios";
  */
 export default defineComponent({
   name: "SuggestionComponent",
-  components: { DropBoxComponent, DataListComponent },
+  components: { SelectButtonComponent, DropBoxComponent, DataListComponent },
   props: {
     userKey: {
       type: String as PropType<string>,
@@ -23,6 +24,10 @@ export default defineComponent({
   setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectState = ref("ok");
+    const selectItem = ref<Array<defaultInterface>>([
+      { KEY: "ok", VALUE: "처리 완료" },
+      { KEY: "wait", VALUE: "대기중" },
+    ]);
     const header: defaultInterface[] = [
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
@@ -42,6 +47,7 @@ export default defineComponent({
     const viewSuggestList = ref<Array<suggestInterface>>([]);
 
     const changeState = (v: string) => {
+      console.log(v);
       selectState.value = v;
 
       if (allSuggestList.value) {
@@ -90,6 +96,7 @@ export default defineComponent({
     return {
       category,
       selectState,
+      selectItem,
       header,
       changeState,
       selectType,
@@ -120,24 +127,13 @@ export default defineComponent({
           <span class="suggestion-section-body-title">내 건의 목록</span>
           <div class="suggestion-section-body-state">
             교무 처리 여부 :
-            <span
-              :class="
-                selectState === 'ok'
-                  ? 'suggestion-section-body-state-ok-active'
-                  : 'suggestion-section-body-state-ok'
-              "
-              @click="changeState('ok')"
-              >처리 완료</span
-            >
-            <span
-              :class="
-                selectState === 'wait'
-                  ? 'suggestion-section-body-state-wait-active'
-                  : 'suggestion-section-body-state-wait'
-              "
-              @click="changeState('wait')"
-              >대기중</span
-            >
+            <div class="suggestion-section-body-state-button">
+              <select-button-component
+                :state-value="selectItem"
+                :select-value="selectState"
+                @changeState="changeState"
+              />
+            </div>
           </div>
           <div class="suggestion-section-body-data" v-if="viewSuggestList">
             <data-list-component

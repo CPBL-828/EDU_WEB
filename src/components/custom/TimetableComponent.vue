@@ -1,19 +1,43 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { scheduleInterface } from "../../lib/types";
-import { ApiClient } from "../../axios";
-import common from "../../lib/common";
-import { KEYS } from "../../constant";
 export default defineComponent({
   name: "TimetableComponent",
-  setup() {
+  props: {
+    scheduleList: {
+      types: Array as PropType<Array<scheduleInterface>>,
+      required: true,
+    },
+    selectType: {
+      types: String as PropType<string>,
+      required: true,
+    },
+  },
+  setup(props) {
     const hour = ref<number>(0);
     const minute = ref<number>(0);
     const blockState = ref(false);
-    const amSchedule = ref<Array<scheduleInterface>>([]);
-    const pmSchedule = ref<Array<scheduleInterface>>([]);
+    const viewScheduleList = ref<Array<scheduleInterface>>([]);
     const scheduleInfo = ref<scheduleInterface>();
     const color = ref<Array<string>>([]);
+
+    const setViewList = () => {
+      if (props.scheduleList) {
+        blockState.value = true;
+        viewScheduleList.value = [];
+        (props.scheduleList as []).map((item: scheduleInterface) => {
+          if (props.selectType === "pm") {
+            if (item.start >= 13) {
+              viewScheduleList.value.push(item);
+            }
+          } else {
+            if (item.start < 13) {
+              viewScheduleList.value.push(item);
+            }
+          }
+        });
+      }
+    };
 
     const clickMinute = (d: string, h: number, m: number) => {
       hour.value = h + 11;
@@ -26,37 +50,27 @@ export default defineComponent({
       scheduleInfo.value = item;
     };
 
-    onMounted(async () => {
-      blockState.value = true;
+    watch(
+      () => props.selectType,
+      () => {
+        setViewList();
+      }
+    );
 
-      let teacherKey = common.getItem(KEYS.LU).teacherKey;
-      const result = await ApiClient(
-        "/lectures/getLectureList/",
-        common.makeJson({ userKey: teacherKey, search: "" })
-      );
-
-      result.resultData.map((item: scheduleInterface) => {
-        item.start = Number(item.startTime.substring(0, 2));
-        item.minute = Number(item.startTime.substring(3, 5));
-
-        if (item.start >= 13) {
-          pmSchedule.value?.push(item);
-        } else {
-          amSchedule.value?.push(item);
-        }
-
-        for (let i = 0; i < pmSchedule.value.length; i++) {
+    onMounted(() => {
+      setViewList();
+      if ((props.scheduleList as []).length > 0) {
+        for (let i = 0; i < (props.scheduleList as []).length; i++) {
           color.value.push(
             "#" + Math.floor(Math.random() * 16777215).toString(16)
           );
         }
-      });
+      }
     });
 
     return {
       blockState,
-      amSchedule,
-      pmSchedule,
+      viewScheduleList,
       scheduleInfo,
       clickMinute,
       clickBlock,
@@ -87,12 +101,12 @@ export default defineComponent({
       </div>
     </div>
     <!--    <div class="schedule-block" id="block" @click="clickBlock()"></div>-->
-    <div class="block" v-if="pmSchedule || amSchedule">
+    <div class="block">
       <div
-        v-if="blockState"
+        v-if="blockState && selectType === 'pm'"
         class="schedule-block"
         id="block"
-        v-for="(item, index) in pmSchedule"
+        v-for="(item, index) in viewScheduleList"
         :style="{
           backgroundColor: color[index],
           position: 'absolute',
@@ -103,6 +117,23 @@ export default defineComponent({
             60 +
             item.minute +
             'px',
+          left: 120 + (item.day - 1) * 116 + 4 + 'px',
+        }"
+        @click="clickBlock(item)"
+      >
+        <span class="name">{{ item.name }}</span>
+        <span>{{ item.subject }}</span>
+      </div>
+      <div
+        v-if="blockState && selectType === 'am'"
+        class="schedule-block"
+        id="block"
+        v-for="(item, index) in viewScheduleList"
+        :style="{
+          backgroundColor: color[index],
+          position: 'absolute',
+          height: item.duration + 'px',
+          top: item.start * 6 * 10 + (item.start + 1) - 60 + item.minute + 'px',
           left: 120 + (item.day - 1) * 116 + 4 + 'px',
         }"
         @click="clickBlock(item)"

@@ -38,24 +38,26 @@ export default defineComponent({
   <section class="select">
     <div class="select">
       <div class="select-state">
-        <span
+        <div
           :class="
             selectState === selectItem[0].KEY
               ? 'select-state-ok-active'
               : 'select-state-ok'
           "
           @click="$emit('changeState', selectItem[0].KEY)"
-          >{{ selectItem[0].VALUE }}</span
         >
-        <span
+          {{ selectItem[0].VALUE }}
+        </div>
+        <div
           :class="
             selectState === selectItem[1].KEY
               ? 'select-state-wait-active'
               : 'select-state-wait'
           "
           @click="$emit('changeState', selectItem[1].KEY)"
-          >{{ selectItem[1].VALUE }}</span
         >
+          {{ selectItem[1].VALUE }}
+        </div>
       </div>
     </div>
   </section>

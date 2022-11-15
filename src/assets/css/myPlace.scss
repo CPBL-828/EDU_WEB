@@ -425,51 +425,10 @@ section.suggestion {
           height: auto;
 
           &-button {
+            width: 200px;
+            height: 24px;
             margin-left: 10px;
           }
-          //
-          //  span {
-          //    width: 100px;
-          //    height: 24px;
-          //    font-size: 11px;
-          //    font-weight: bold;
-          //    display: flex;
-          //    justify-content: center;
-          //    align-items: center;
-          //    cursor: pointer;
-          //    background-color: #e7e7e7;
-          //    color: $disable-color;
-          //  }
-          //
-          //  span[class*="active"] {
-          //    border: 2px solid $disable-color;
-          //    background-color: white;
-          //    color: $sub-color;
-          //  }
-          //
-          //  &-ok {
-          //    border: 2px solid $disable-color;
-          //    border-right: 1px solid $disable-color;
-          //    border-radius: 19px 0 0 19px;
-          //    margin-left: 10px;
-          //
-          //    &-active {
-          //      border-right: 1px solid $disable-color;
-          //      border-radius: 19px 0 0 19px;
-          //      margin-left: 10px;
-          //    }
-          //  }
-          //
-          //  &-wait {
-          //    border: 2px solid $disable-color;
-          //    border-left: 1px solid $disable-color;
-          //    border-radius: 0 19px 19px 0;
-          //
-          //    &-active {
-          //      border-left: 1px solid $disable-color;
-          //      border-radius: 0 19px 19px 0;
-          //    }
-          //  }
         }
 
         &-data {

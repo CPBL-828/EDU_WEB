@@ -93,7 +93,7 @@ export default defineComponent({
         </div>
         <div class="my-work-section-main">
           <div class="my-work-section-main-today">
-            <i class="fa-solid fa-calendar-week"></i>
+            <i class="fa-regular fa-calendar"></i>
             TODAY : {{ today.toISOString().substring(0, 4) }}년
             {{ today.toISOString().substring(5, 7) }}월
             {{ today.toISOString().substring(8, 10) }}일

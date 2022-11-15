@@ -231,9 +231,27 @@ export default defineComponent({
 
   <modal-popup-component :title="noticeInfo ? '공지 보기' : '건의 상세'">
     <template v-slot:body>
-      <div v-if="noticeInfo">
-        <div v-for="item in noticeInfo">
-          {{ item }}
+      <div v-if="noticeInfo" class="notice-info">
+        <div class="notice-info-item">
+          <div class="notice-info-item-type">
+            <div class="label">공지 유형</div>
+            <div class="context">{{ noticeInfo.type }}</div>
+          </div>
+          <div class="notice-info-item-title">
+            <div class="label">공지 제목</div>
+            <div class="context">{{ noticeInfo.title }}</div>
+          </div>
+          <div class="notice-info-item-date">
+            <div class="label">작성 일자</div>
+            <div class="context">
+              {{ noticeInfo.createDate.substring(0, 4) }}-{{
+                noticeInfo.createDate.substring(5, 7)
+              }}-{{ noticeInfo.createDate.substring(8, 10) }}
+            </div>
+          </div>
+        </div>
+        <div class="notice-info-body">
+          <div>{{ noticeInfo.content }}</div>
         </div>
       </div>
     </template>

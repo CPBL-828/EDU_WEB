@@ -1,0 +1,143 @@
+section.modal {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1078px;
+  height: 808px;
+
+  .modal {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 18px;
+    box-shadow: 4px 4px 20px 4px $disable-color;
+
+    i[class*="xmark"] {
+      position: absolute;
+      color: $disable-color;
+      font-size: 28px;
+      top: 17px;
+      right: 22px;
+      cursor: pointer;
+    }
+
+    &-save {
+      position: absolute;
+      top: 19px;
+      left: 33px;
+      width: 110px;
+      height: 35px;
+      border-radius: 19px;
+      background-color: $primary-color;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+    }
+
+    &-title {
+      position: absolute;
+      font-size: 17px;
+      font-weight: bold;
+      color: $sub-color;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &-body {
+      position: absolute;
+      width: 1011px;
+      height: 714px;
+      border: 3px solid $background-color;
+      border-radius: 10px;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      overflow: scroll;
+
+      .notice-info {
+        width: 100%;
+        height: 100%;
+
+        &-item {
+          display: flex;
+          justify-content: center;
+          font-size: 13px;
+          font-weight: bold;
+          color: $sub-color;
+          margin-top: 20px;
+
+          div[class*="item"] {
+            display: flex;
+            width: auto;
+            height: auto;
+          }
+
+          div[class*="label"] {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 116px;
+            height: 30px;
+            border: 2px solid $disable-color;
+            border-radius: 10px 0 0 10px;
+            background-color: $disable-color;
+          }
+
+          div[class*="context"] {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 30px;
+            border: 2px solid $disable-color;
+            border-radius: 0 10px 10px 0;
+          }
+
+          &-type {
+            .context {
+              width: 116px;
+            }
+          }
+
+          &-title {
+            margin: 0 31px 0 31px;
+            .context {
+              width: 244px;
+            }
+          }
+
+          &-date {
+            .context {
+              width: 190px;
+            }
+          }
+        }
+
+        &-body {
+          width: 960px;
+          height: 620px;
+          border-radius: 10px;
+          border: 2px solid $disable-color;
+          overflow: scroll;
+          color: $disable-color;
+          margin: 23px 0 0 25px;
+
+          > div {
+            height: calc(100% - 20px);
+            margin: 10px 10px 10px 10px;
+          }
+        }
+      }
+    }
+  }
+}

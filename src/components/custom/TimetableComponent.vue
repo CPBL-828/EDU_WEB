@@ -19,7 +19,20 @@ export default defineComponent({
     const blockState = ref(false);
     const viewScheduleList = ref<Array<scheduleInterface>>([]);
     const scheduleInfo = ref<scheduleInterface>();
-    const color = ref<Array<string>>([]);
+    const color = ref<Array<string>>([
+      "#d57a7b",
+      "#e39177",
+      "#eeb958",
+      "#80bdca",
+      "#678cbf",
+      "#a4a6d2",
+      "#cc6699",
+      "#e55c65",
+      "#e58a4e",
+      "#74c29a",
+      "#5db7ad",
+      "#98b6cd",
+    ]);
 
     const setViewList = () => {
       if (props.scheduleList) {
@@ -46,10 +59,6 @@ export default defineComponent({
       console.log(d + ": " + hour.value + "-" + minute.value);
     };
 
-    const clickBlock = (item: scheduleInterface) => {
-      scheduleInfo.value = item;
-    };
-
     watch(
       () => props.selectType,
       () => {
@@ -59,13 +68,7 @@ export default defineComponent({
 
     onMounted(() => {
       setViewList();
-      if ((props.scheduleList as []).length > 0) {
-        for (let i = 0; i < (props.scheduleList as []).length; i++) {
-          color.value.push(
-            "#" + Math.floor(Math.random() * 16777215).toString(16)
-          );
-        }
-      }
+      color.value = color.value.sort(() => Math.random() - 0.5);
     });
 
     return {
@@ -73,7 +76,6 @@ export default defineComponent({
       viewScheduleList,
       scheduleInfo,
       clickMinute,
-      clickBlock,
       color,
     };
   },
@@ -119,7 +121,7 @@ export default defineComponent({
             'px',
           left: 120 + (item.day - 1) * 116 + 4 + 'px',
         }"
-        @click="clickBlock(item)"
+        @click="$emit('clickSchedule', item)"
       >
         <span class="name">{{ item.name }}</span>
         <span>{{ item.subject }}</span>
@@ -136,15 +138,11 @@ export default defineComponent({
           top: item.start * 6 * 10 + (item.start + 1) - 60 + item.minute + 'px',
           left: 120 + (item.day - 1) * 116 + 4 + 'px',
         }"
-        @click="clickBlock(item)"
+        @click="$emit('clickSchedule', item)"
       >
         <span class="name">{{ item.name }}</span>
         <span>{{ item.subject }}</span>
       </div>
-    </div>
-
-    <div class="info">
-      {{ scheduleInfo }}
     </div>
   </section>
 </template>

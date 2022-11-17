@@ -15,10 +15,11 @@ export default defineComponent({
   name: "ConsultComponent",
   components: { PaginationComponent, DropBoxComponent },
   setup() {
+    const userKey = ref<string | undefined>(undefined);
     const date = ref<string | undefined>(undefined);
     const time = ref<string | undefined>(undefined);
     const inputDate = ref<Date | undefined>(undefined);
-    const inputTime = ref<Date | undefined>(undefined);
+    const inputTime = ref<Date>(new Date());
     const inputName = ref<string | undefined>(undefined);
     const planDate = ref<Date | undefined>(undefined);
     const planName = ref<string | undefined>(undefined);
@@ -43,18 +44,29 @@ export default defineComponent({
     const showPlanConsultList = ref<Array<consultInterface>>([]);
     const listConsultList = ref<Array<consultInterface>>([]);
 
-    const setConsultList = async () => {
-      let userKey = "";
-      if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-        userKey = common.getItem(KEYS.LU).teacherKey;
-      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.ADM) {
-        userKey = common.getItem(KEYS.LU).adminKey;
-      }
+    const studentList = ref<Array<defaultInterface>>([]);
+    const setStudentList = async () => {
+      let data = { userKey: userKey.value, search: "" };
+      const result = await ApiClient(
+        "/members/getStudentList/",
+        common.makeJson(data)
+      );
 
+      if (result.count > 0) {
+        for (let i = 0; i < result.count; i++) {
+          studentList.value[i] = {
+            KEY: result.resultData[i].studentKey,
+            VALUE: result.resultData[i].name,
+          };
+        }
+      }
+    };
+
+    const setConsultList = async () => {
       //TODO getStudentList로 학생명 필터링 붙이기
       let studentKey = "";
 
-      let data = { userKey: userKey, studentKey: studentKey };
+      let data = { userKey: userKey.value, studentKey: studentKey };
       const result = await ApiClient(
         "/info/getConsultList/",
         common.makeJson(data)
@@ -163,6 +175,13 @@ export default defineComponent({
     );
 
     onMounted(() => {
+      if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
+        userKey.value = common.getItem(KEYS.LU).teacherKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.ADM) {
+        userKey.value = common.getItem(KEYS.LU).adminKey;
+      }
+
+      setStudentList();
       setConsultList();
     });
 
@@ -186,6 +205,7 @@ export default defineComponent({
       planConsultList,
       showPlanConsultList,
       listConsultList,
+      studentList,
       openCalendar,
       insertConsult,
       selectPage,
@@ -248,8 +268,13 @@ export default defineComponent({
             </div>
             <span class="separ">|</span>
             <div class="consult-input-section-body-item-name">
-              <i class="fa-solid fa-user"></i>
-              <input type="text" placeholder="이름" v-model="inputName" />
+              <!--              <i class="fa-solid fa-user"></i>-->
+              <!--              <input type="text" placeholder="이름" v-model="inputName" />-->
+              <drop-box-component
+                :select-list="studentList"
+                placeholder="학생명"
+                row-width="160px"
+              ></drop-box-component>
             </div>
             <div
               class="consult-input-section-body-item-insert"
@@ -294,12 +319,17 @@ export default defineComponent({
             </div>
             <span class="separ">|</span>
             <div class="consult-input-section-body-item-name">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <input
-                type="text"
-                placeholder="학생 이름 검색"
-                v-model="planName"
-              />
+              <!--              <i class="fa-solid fa-magnifying-glass"></i>-->
+              <!--              <input-->
+              <!--                type="text"-->
+              <!--                placeholder="학생 이름 검색"-->
+              <!--                v-model="planName"-->
+              <!--              />-->
+              <drop-box-component
+                :select-list="studentList"
+                placeholder="학생명"
+                row-width="160px"
+              ></drop-box-component>
             </div>
           </div>
           <div class="underline"></div>

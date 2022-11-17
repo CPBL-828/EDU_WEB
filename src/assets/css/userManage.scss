@@ -278,7 +278,6 @@ section.consult {
 
     &-plan-section {
       position: absolute;
-      z-index: 0;
       max-width: 1200px;
       width: 100%;
       height: auto;
@@ -315,6 +314,7 @@ section.consult {
 
         &-item {
           position: absolute;
+          z-index: 10;
           top: 46px;
           left: 47px;
           display: flex;
@@ -353,18 +353,9 @@ section.consult {
             .calendar {
               &-date {
                 position: absolute;
+                z-index: 10;
                 top: 40px;
                 width: 264px;
-              }
-
-              &-time {
-                position: absolute;
-                top: 40px;
-                width: 164px;
-
-                .vc-time-date {
-                  display: none;
-                }
               }
             }
           }

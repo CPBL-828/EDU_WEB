@@ -315,7 +315,7 @@ section.consult {
 
         &-item {
           position: absolute;
-          top: 48px;
+          top: 46px;
           left: 47px;
           display: flex;
           align-items: center;
@@ -373,6 +373,101 @@ section.consult {
             width: 164px;
             height: 33px;
           }
+        }
+
+        .underline {
+          position: absolute;
+          top: 98px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 1106px;
+          height: 1px;
+          border-bottom: 2px solid $sub-color;
+        }
+
+        &-list {
+          position: absolute;
+          top: 98px;
+          width: 100%;
+          height: 208px;
+          overflow: scroll;
+          margin-top: 17px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          &-item {
+            display: flex;
+            height: 34px;
+            font-size: 16px;
+            color: $sub-color;
+            margin-bottom: 17px;
+            cursor: default;
+
+            .sap {
+              position: absolute;
+              right: 0;
+              height: 22px;
+              border-right: 2px solid $disable-color;
+            }
+
+            div[class*="item"] {
+              position: relative;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+
+            &-date {
+              border: 2px solid #e7e7e7;
+              border-radius: 17px 0 0 17px;
+              border-right: 0;
+              width: 244px;
+            }
+
+            &-time {
+              border: 2px solid #e7e7e7;
+              border-left: 0;
+              border-right: 0;
+              width: 252px;
+            }
+
+            &-type {
+              border: 2px solid #e7e7e7;
+              border-left: 0;
+              border-right: 0;
+              width: 202px;
+            }
+
+            &-student {
+              border: 2px solid #e7e7e7;
+              border-radius: 0 17px 17px 0;
+              border-left: 0;
+              width: 166px;
+            }
+
+            &-detail {
+              width: 200px;
+              margin-left: 42px;
+              border: 2px solid $primary-color;
+              border-radius: 19px;
+              color: $primary-color;
+              font-weight: bold;
+              cursor: pointer;
+
+              &:hover {
+                background-color: $primary-color;
+                color: white;
+              }
+            }
+          }
+        }
+
+        &-pagination {
+          position: absolute;
+          bottom: 20px;
+          width: 100%;
+          height: 50px;
         }
       }
     }

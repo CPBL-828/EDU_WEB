@@ -83,15 +83,6 @@ export interface suggestInterface {
   adminKey: string;
 }
 
-// export interface scheduleInterface {
-//   name: string;
-//   time: string;
-//   startTime: number;
-//   startMinute: number;
-//   startDay: number;
-//   duration: number;
-// }
-
 export interface scheduleInterface {
   adminKey_id: string;
   book: string;
@@ -111,4 +102,15 @@ export interface scheduleInterface {
   type: string;
   start: number;
   minute: number;
+}
+
+export interface consultInterface {
+  consultKey: string;
+  consultType: string;
+  consultDate: string;
+  targetKey: string;
+  content: string;
+  studentKey_id: string;
+  createDate: string;
+  editDate: string;
 }

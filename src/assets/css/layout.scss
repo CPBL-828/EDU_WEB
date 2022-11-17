@@ -292,6 +292,9 @@ section.data-list {
 }
 
 section.pagination {
+  position: relative;
+  height: 100%;
+
   .pagination {
     position: absolute;
     bottom: 0;

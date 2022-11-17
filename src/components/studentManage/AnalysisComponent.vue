@@ -8,4 +8,20 @@ export default defineComponent({
 });
 </script>
 
-<template>학생 분석 페이지입니다</template>
+<template>
+  <section class="analysis-component">
+    <div class="analysis-component">
+      <div class="analysis-component-section">
+        <div class="analysis-component-section-tag">분석</div>
+        <div class="analysis-component-section-body">
+          <div class="analysis-component-section-body-select">
+            <div class="analysis-component-section-body-select-drop">
+              강의 선택
+            </div>
+          </div>
+          <div class="analysis-component-section-body-list">학생 리스트</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>

@@ -219,13 +219,15 @@ export default defineComponent({
           </tr>
         </tbody>
       </table>
-      <pagination-component
-        v-if="page !== 0"
-        @changePage="changePage"
-        @selectPage="selectPage"
-        :page="page"
-        :current-page="currentPage"
-      ></pagination-component>
+      <div class="data-list-pagination">
+        <pagination-component
+          v-if="page !== 0"
+          @changePage="changePage"
+          @selectPage="selectPage"
+          :page="page"
+          :current-page="currentPage"
+        ></pagination-component>
+      </div>
     </div>
   </section>
 

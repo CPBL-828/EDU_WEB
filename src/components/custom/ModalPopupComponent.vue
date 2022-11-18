@@ -13,7 +13,11 @@ export default defineComponent({
       types: String as PropType<string>,
       required: true,
     },
-    btnState: {
+    modalHeight: {
+      types: String as PropType<string>,
+      required: false,
+    },
+    modalWidth: {
       types: String as PropType<string>,
       required: false,
     },
@@ -54,10 +58,19 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="modal" v-if="popupState" v-click-away="onClickAway">
+  <section
+    class="modal"
+    v-if="popupState"
+    v-click-away="onClickAway"
+    :style="
+      modalWidth && modalHeight
+        ? 'width: ' + modalWidth + '; height: ' + modalHeight + ';'
+        : 'width: 1078px; height: 808px;'
+    "
+  >
     <div class="modal">
-      <div v-if="btnState" class="modal-save">
-        {{ btnState === "SAVE" ? "저장하기" : "버튼" }}
+      <div class="modal-button">
+        <slot name="button"></slot>
       </div>
       <span class="modal-title">{{ title }}</span>
       <i class="fa-solid fa-rectangle-xmark" @click="closeModal"></i>

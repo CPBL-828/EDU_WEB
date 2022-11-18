@@ -38,8 +38,11 @@ export default defineComponent({
     const editState = ref(false);
 
     const editModal = () => {
-      editState.value = true;
       store.commit("setModalState", true);
+    };
+
+    const changeEditState = () => {
+      editState.value = !editState.value;
     };
 
     watch(
@@ -68,6 +71,7 @@ export default defineComponent({
       teacherInfo,
       editState,
       editModal,
+      changeEditState,
     };
   },
 });
@@ -156,15 +160,80 @@ export default defineComponent({
     </div>
 
     <modal-popup-component
-      :title="editState ? '정보 수정' : '이력서 보기'"
+      title="강사 상세 정보"
       btn-state="SAVE"
+      modal-height="620px"
+      modal-width="1078px"
     >
-      <template v-slot:body v-if="editState">
+      <template v-slot:button>
+        <div class="btn">
+          <div
+            :class="editState ? 'btn-save' : 'btn-edit'"
+            @click="changeEditState()"
+          >
+            {{ editState ? "저장하기" : "수정하기" }}
+          </div>
+        </div>
+      </template>
+      <template v-slot:body v-if="!editState">
         <div v-if="studentInfo">
           <div v-for="item in studentInfo">{{ item }}</div>
         </div>
-        <div v-if="teacherInfo">
-          <div v-for="item in teacherInfo">{{ item }}</div>
+        <div class="teacher-section" v-if="teacherInfo">
+          <div class="sap"></div>
+          <div class="teacher-section-profile">
+            <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <div class="teacher-section-profile-name">
+              <span>{{ teacherInfo?.name }}</span> 강사님
+            </div>
+          </div>
+          <div class="teacher-section-info">
+            <div class="teacher-section-info-content">
+              <div class="teacher-section-info-content-left">
+                <div class="name">
+                  <span class="name-label">이름</span>
+                  <span class="name-item">{{ teacherInfo?.name }}</span>
+                </div>
+                <div class="part">
+                  <span class="part-label">담당</span>
+                  <span class="part-item"
+                    >{{ teacherInfo?.part }} {{ teacherInfo?.resSubject }}</span
+                  >
+                </div>
+                <div class="email">
+                  <span class="email-label">이메일</span>
+                  <span class="email-item">{{ teacherInfo?.email }}</span>
+                </div>
+                <div class="sns">
+                  <span class="sns-label">SNS</span>
+                  <span class="sns-item">SNS 주소</span>
+                </div>
+              </div>
+              <div class="teacher-section-info-content-right">
+                <div class="phone">
+                  <span class="phone-label">연락처</span>
+                  <span class="phone-item">
+                    {{ teacherInfo?.phone.substring(0, 3) }}-{{
+                      teacherInfo?.phone.substring(3, 7)
+                    }}-{{ teacherInfo?.phone.substring(7, 11) }}
+                  </span>
+                </div>
+                <div class="join">
+                  <span class="join-label">입사일</span>
+                  <span class="join-item"
+                    >{{ teacherInfo?.joinDate.substring(0, 4) }}.
+                    {{ teacherInfo?.joinDate.substring(5, 7) }}.
+                    {{ teacherInfo?.joinDate.substring(8, 10) }}</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:body v-if="editState">
+        <div v-if="studentInfo">
+          <div v-for="item in studentInfo">{{ item }}</div>
         </div>
       </template>
     </modal-popup-component>

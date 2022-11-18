@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "aws": "aws s3 sync ./dist s3://chunbae-storage --profile=chunbae"
   },
   "dependencies": {
     "@scarlab/icons-vue": "^1.0.6",

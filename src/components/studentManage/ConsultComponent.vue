@@ -6,6 +6,7 @@ import { ApiClient } from "../../axios";
 import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
+import DataListComponent from "../custom/DataListComponent.vue";
 /*
 @brief 강사는 메인 카테고리 [학생 관리]의 [상담]으로 접근 가능
        관리자는 메인 카테고리 [학생 관리], [강사 관리]의 [상담]으로 접근 가능
@@ -13,7 +14,7 @@ import PaginationComponent from "../fixed/PaginationComponent.vue";
  */
 export default defineComponent({
   name: "ConsultComponent",
-  components: { PaginationComponent, DropBoxComponent },
+  components: { DataListComponent, PaginationComponent, DropBoxComponent },
   setup() {
     const selectSection = ref<string | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
@@ -46,6 +47,16 @@ export default defineComponent({
     const planConsultList = ref<Array<consultInterface>>([]);
     const showPlanConsultList = ref<Array<consultInterface>>([]);
     const listConsultList = ref<Array<consultInterface>>([]);
+    const listTotalCnt = ref<number | undefined>(undefined);
+    const showListConsultList = ref<Array<consultInterface>>([]);
+
+    const listHeader: defaultInterface[] = [
+      { KEY: "date", VALUE: "상담 일자" },
+      { KEY: "time", VALUE: "상담 시간" },
+      { KEY: "type", VALUE: "상담 유형" },
+      { KEY: "student", VALUE: "상담 학생" },
+      { KEY: "teacher", VALUE: "상담 강사" },
+    ];
 
     const studentList = ref<Array<defaultInterface>>([]);
     const setStudentList = async () => {
@@ -97,6 +108,7 @@ export default defineComponent({
         else if (selectSection.value === "list") listConsultList.value = [];
       }
 
+      listTotalCnt.value = listConsultList.value.length;
       planTotalCnt.value = planConsultList.value.length;
       if (planTotalCnt.value > planListCnt) {
         showPlanConsultList.value = planConsultList.value.slice(0, planListCnt);
@@ -214,6 +226,7 @@ export default defineComponent({
       inputName,
       planDate,
       planName,
+      listDate,
       inputDateCalendarState,
       inputTimeCalendarState,
       planDateCalendarState,
@@ -227,6 +240,8 @@ export default defineComponent({
       planConsultList,
       showPlanConsultList,
       listConsultList,
+      listTotalCnt,
+      listHeader,
       studentList,
       openCalendar,
       insertConsult,
@@ -329,7 +344,7 @@ export default defineComponent({
                 :minute-increment="5"
               />
             </div>
-            <span class="separ">|</span>
+            <span class="sapar">|</span>
             <div class="consult-input-section-body-item-type">
               <drop-box-component
                 placeholder="상담 유형"
@@ -338,7 +353,7 @@ export default defineComponent({
                 @selectValue="selectType"
               ></drop-box-component>
             </div>
-            <span class="separ">|</span>
+            <span class="sapar">|</span>
             <div
               class="consult-input-section-body-item-name"
               @click="selectSection = 'plan'"
@@ -400,11 +415,53 @@ export default defineComponent({
       <div class="consult-list-section">
         <div class="consult-list-section-tag">상담 목록 조회</div>
         <div class="consult-list-section-body">
-          <div
-            v-for="item in listConsultList"
-            class="consult-list-section-body-item"
-          >
-            {{ item }}
+          <div class="consult-list-section-body-item">
+            <div class="consult-list-section-body-item-date">
+              <i class="fa-solid fa-filter"></i>
+              {{ listDate ? listDate?.toDateString() : "상담 날짜" }}
+              <i
+                class="fa-solid fa-chevron-down"
+                @click="openCalendar('list', 'date')"
+              ></i>
+              <v-date-picker
+                class="calendar-date"
+                v-if="listDateCalendarState"
+                mode="date"
+                v-model="listDate"
+                :minute-increment="5"
+              />
+            </div>
+            <span class="sapar">|</span>
+            <div class="consult-input-section-body-item-type">
+              <drop-box-component
+                placeholder="상담 유형"
+                row-width="160px"
+                :select-list="typeList"
+                @selectValue="selectType"
+              ></drop-box-component>
+            </div>
+            <span class="sapar">|</span>
+            <div
+              class="consult-input-section-body-item-name"
+              @click="selectSection = 'list'"
+            >
+              <drop-box-component
+                :select-list="studentList"
+                placeholder="학생명"
+                row-width="160px"
+                @selectValue="selectStudent"
+              ></drop-box-component>
+            </div>
+          </div>
+          <div class="consult-list-section-body-content">
+            <data-list-component
+              v-if="listTotalCnt"
+              :header="listHeader"
+              :list-cnt="7"
+              list-type="consult"
+              :data-list="listConsultList"
+              :total-cnt="listTotalCnt ? listTotalCnt : 0"
+            ></data-list-component>
           </div>
         </div>
       </div>

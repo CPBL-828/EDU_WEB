@@ -29,7 +29,7 @@ section.notice {
           z-index: 3;
           top: calc(50% - 330px);
           transform: translateY(-50%);
-          left: 5%;
+          left: 30px;
           width: 275px;
           height: 33px;
           display: flex;
@@ -63,11 +63,20 @@ section.notice {
           }
         }
 
-        .no-data {
-          position: absolute;
-          top: 50%;
+        &-content {
+          position: relative;
+          width: 1151px;
+          height: calc(100% - 120px);
+          top: 100px;
           left: 50%;
-          transform: translate(-50%, -50%);
+          transform: translateX(-50%);
+
+          .no-data {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
         }
       }
 

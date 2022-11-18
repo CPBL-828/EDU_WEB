@@ -51,14 +51,15 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      if (result.count > 0) {
-        result.resultData.map((item: scheduleInterface) => {
-          item.start = Number(item.startTime.substring(0, 2));
-          item.minute = Number(item.startTime.substring(3, 5));
-        });
+      if (result) {
+        if (result.count > 0) {
+          result.resultData.map((item: scheduleInterface) => {
+            item.start = Number(item.startTime?.substring(0, 2));
+            item.minute = Number(item.startTime?.substring(3, 5));
+          });
+          scheduleList.value = result.resultData as scheduleInterface[];
+        }
       }
-
-      scheduleList.value = result.resultData as scheduleInterface[];
     });
 
     return {

@@ -434,8 +434,10 @@ section.suggestion {
         &-data {
           position: relative;
           z-index: 0;
+          top: 105px;
+          left: 40px;
           width: 700px;
-          height: 95%;
+          height: calc(100% - 105px);
         }
 
         &-write {

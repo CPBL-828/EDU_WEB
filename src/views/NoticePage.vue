@@ -25,6 +25,7 @@ export default defineComponent({
     ];
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const noticeList = ref<Array<noticeInterface> | undefined>(undefined);
+    const totalCnt = ref<number | undefined>(undefined);
     const search = ref<string | undefined>(undefined);
 
     const getNoticeList = async () => {
@@ -59,6 +60,8 @@ export default defineComponent({
           noticeList.value = undefined;
         }
       }
+
+      totalCnt.value = noticeList.value?.length;
     };
 
     watch(
@@ -85,6 +88,7 @@ export default defineComponent({
       category,
       header,
       noticeList,
+      totalCnt,
       search,
       getNoticeList,
     };
@@ -115,13 +119,17 @@ export default defineComponent({
               @keypress.enter="getNoticeList"
             />
           </div>
-          <data-list-component
-            v-if="noticeList"
-            :header="header"
-            :notice-list="noticeList"
-          ></data-list-component>
-          <div class="no-data" v-if="!noticeList">
-            불러올 데이터가 없습니다!
+          <div class="notice-section-body-content">
+            <data-list-component
+              v-if="noticeList"
+              :header="header"
+              list-type="notice"
+              :data-list="noticeList"
+              :total-cnt="totalCnt ? totalCnt : 0"
+            ></data-list-component>
+            <div class="no-data" v-if="!noticeList">
+              불러올 데이터가 없습니다!
+            </div>
           </div>
         </div>
       </div>

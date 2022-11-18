@@ -45,9 +45,9 @@ export default defineComponent({
     const datetime = ref<string>(new Date().toLocaleString().slice(0, -3));
     const allSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const viewSuggestList = ref<Array<suggestInterface>>([]);
+    const totalCnt = ref<number | undefined>(undefined);
 
     const changeState = (v: string) => {
-      console.log(v);
       selectState.value = v;
 
       if (allSuggestList.value) {
@@ -66,11 +66,13 @@ export default defineComponent({
             }
           });
         }
+
+        totalCnt.value = viewSuggestList.value.length;
       }
     };
 
     const selectType = (item: defaultInterface) => {
-      console.log("건의 유형: ", item);
+      // console.log("건의 유형: ", item);
     };
 
     onMounted(async () => {
@@ -102,6 +104,7 @@ export default defineComponent({
       selectType,
       datetime,
       viewSuggestList,
+      totalCnt,
       placeholder,
       typeList,
       width,
@@ -137,9 +140,12 @@ export default defineComponent({
           </div>
           <div class="suggestion-section-body-data" v-if="viewSuggestList">
             <data-list-component
-              :suggest-list="viewSuggestList"
+              list-type="suggest"
+              :data-list="viewSuggestList"
               :header="header"
               :row-height="39"
+              :total-cnt="totalCnt ? totalCnt : 0"
+              :list-cnt="13"
             ></data-list-component>
           </div>
           <div class="suggestion-section-body-write">

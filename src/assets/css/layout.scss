@@ -228,30 +228,25 @@ section.category {
 
 section.data-list {
   position: absolute;
-  top: 50%;
+  width: 100%;
+  height: 100%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 
   .data-list {
     position: relative;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 90%;
+    transform: translateX(-50%);
     height: 100%;
 
     table {
       position: absolute;
-      top: 90px;
+      top: 0;
       width: 100%;
       height: auto;
       border-top: 2px solid $sub-color;
       border-bottom: 2px solid $disable-color;
       border-spacing: 0;
-
-      @include laptop-size {
-        top: 20px;
-      }
 
       thead {
         font-size: 16px;
@@ -272,9 +267,6 @@ section.data-list {
           width: 100%;
           color: $sub-color;
           cursor: pointer;
-          @include laptop-size {
-            height: 30px;
-          }
 
           &:hover {
             background-color: $background-color;

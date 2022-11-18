@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import { defineComponent, onMounted, Prop, PropType, ref, watch } from "vue";
 import {
+  consultInterface,
   defaultInterface,
   noticeInterface,
   suggestInterface,
@@ -20,12 +21,34 @@ export default defineComponent({
       type: Array as PropType<Array<defaultInterface>>,
       required: true,
     },
-    noticeList: {
-      type: Array as PropType<Array<noticeInterface>>,
-      required: false,
+    listType: {
+      type: String as PropType<string>,
+      required: true,
     },
-    suggestList: {
-      type: Array as PropType<Array<suggestInterface>>,
+    dataList: {
+      type: Array as PropType<
+        Array<noticeInterface | suggestInterface | consultInterface>
+      >,
+      required: true,
+    },
+    totalCnt: {
+      type: Number as PropType<number>,
+      required: true,
+    },
+    // noticeList: {
+    //   type: Array as PropType<Array<noticeInterface>>,
+    //   required: false,
+    // },
+    // suggestList: {
+    //   type: Array as PropType<Array<suggestInterface>>,
+    //   required: false,
+    // },
+    // consultList: {
+    //   type: Array as PropType<Array<consultInterface>>,
+    //   required: false,
+    // },
+    listCnt: {
+      type: Number as PropType<number>,
       required: false,
     },
     rowHeight: {
@@ -39,31 +62,57 @@ export default defineComponent({
     const noticeInfo = ref<noticeInterface | undefined>(undefined);
     const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const suggestInfo = ref<suggestInterface | undefined>(undefined);
-    const totalCnt = ref(0);
+    const showConsultList = ref<Array<consultInterface> | undefined>(undefined);
+    const consultInfo = ref<consultInterface | undefined>(undefined);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
-    const listCnt: number = 10;
+    const listCnt = ref<number>(0);
 
     /*
     props에 존재하는 데이터 리스트의 종류에 따라 현재 컴포넌트에서 보여줄 데이터 리스트를 set
      */
-    const setDataList = () => {
-      if (props.noticeList) {
-        totalCnt.value = props.noticeList.length;
-        if (totalCnt.value > listCnt) {
-          showNoticeList.value = props.noticeList.slice(0, listCnt);
-          page.value = Math.ceil(totalCnt.value / listCnt);
+    const setDataList = () => {};
+
+    const setNoticeList = () => {
+      if (props.dataList) {
+        if (props.totalCnt > listCnt.value) {
+          showNoticeList.value = props.dataList.slice(
+            0,
+            listCnt.value
+          ) as noticeInterface[];
+          page.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showNoticeList.value = props.noticeList;
+          showNoticeList.value = props.dataList as noticeInterface[];
           page.value = 0;
         }
-      } else if (props.suggestList) {
-        totalCnt.value = props.suggestList.length;
-        if (totalCnt.value > listCnt) {
-          showSuggestList.value = props.suggestList.slice(0, listCnt);
-          page.value = Math.ceil(totalCnt.value / 10);
+      }
+    };
+
+    const setSuggestList = () => {
+      if (props.dataList) {
+        if (props.totalCnt > listCnt.value) {
+          showSuggestList.value = props.dataList.slice(
+            0,
+            listCnt.value
+          ) as suggestInterface[];
+          page.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showSuggestList.value = props.suggestList;
+          showSuggestList.value = props.dataList as suggestInterface[];
+          page.value = 0;
+        }
+      }
+    };
+
+    const setConsultList = () => {
+      if (props.dataList) {
+        if (props.totalCnt > listCnt.value) {
+          showConsultList.value = props.dataList.slice(
+            0,
+            listCnt.value
+          ) as consultInterface[];
+          page.value = Math.ceil(props.totalCnt / listCnt.value);
+        } else {
+          showConsultList.value = props.dataList as consultInterface[];
           page.value = 0;
         }
       }
@@ -95,39 +144,60 @@ export default defineComponent({
          */
       () => currentPage.value,
       () => {
-        if (props.noticeList) {
-          showNoticeList.value = props.noticeList?.slice(
-            listCnt * currentPage.value - listCnt,
-            listCnt * currentPage.value
-          ) as [];
-        } else if (props.suggestList) {
-          showSuggestList.value = props.suggestList?.slice(
-            listCnt * currentPage.value - listCnt,
-            listCnt * currentPage.value
-          ) as [];
+        if (props.listType === "notice") {
+          showNoticeList.value = props.dataList?.slice(
+            listCnt.value * currentPage.value - listCnt.value,
+            listCnt.value * currentPage.value
+          ) as noticeInterface[];
+        } else if (props.listType === "suggest") {
+          showSuggestList.value = props.dataList?.slice(
+            listCnt.value * currentPage.value - listCnt.value,
+            listCnt.value * currentPage.value
+          ) as suggestInterface[];
+        } else if (props.listType === "consult") {
+          showConsultList.value = props.dataList?.slice(
+            listCnt.value * currentPage.value - listCnt.value,
+            listCnt.value * currentPage.value
+          ) as consultInterface[];
         }
       }
     );
 
     watch(
-      () => props.noticeList || props.suggestList,
+      () => props.dataList,
       () => {
-        setDataList();
+        if (props.listType === "consult") {
+          setConsultList();
+        } else if (props.listType === "notice") {
+          setNoticeList();
+        } else if (props.listType === "suggest") {
+          setSuggestList();
+        }
       }
     );
 
     onMounted(() => {
-      /*
-      @brief props.dataList 길이에 맞춰 페이징 설정
-       */
-      setDataList();
+      if (props.listCnt) {
+        listCnt.value = props.listCnt;
+      } else {
+        listCnt.value = 10;
+      }
+
+      if (props.listType === "consult") {
+        setConsultList();
+      } else if (props.listType === "notice") {
+        setNoticeList();
+      } else if (props.listType === "suggest") {
+        setSuggestList();
+      }
     });
     return {
       showNoticeList,
       noticeInfo,
       showSuggestList,
       suggestInfo,
-      totalCnt,
+      showConsultList,
+      consultInfo,
       page,
       currentPage,
       selectPage,
@@ -217,6 +287,46 @@ export default defineComponent({
               상담 내용 조회
             </td>
           </tr>
+
+          <tr
+            class="data=list=section-body-item"
+            v-if="showConsultList"
+            v-for="item in showConsultList"
+          >
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.createDate.substring(0, 4) }}년
+              {{ item.createDate.substring(5, 7) }}월
+              {{ item.createDate.substring(8, 10) }}일
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.consultDate?.substring(11, 16) }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.consultType }}
+            </td>
+            <td
+              :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"
+            >
+              학생명
+            </td>
+            <td
+              :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"
+            >
+              강사명
+            </td>
+          </tr>
         </tbody>
       </table>
       <div class="data-list-pagination">
@@ -230,32 +340,4 @@ export default defineComponent({
       </div>
     </div>
   </section>
-
-  <modal-popup-component :title="noticeInfo ? '공지 보기' : '건의 상세'">
-    <template v-slot:body>
-      <div v-if="noticeInfo" class="notice-info">
-        <div class="notice-info-item">
-          <div class="notice-info-item-type">
-            <div class="label">공지 유형</div>
-            <div class="context">{{ noticeInfo.type }}</div>
-          </div>
-          <div class="notice-info-item-title">
-            <div class="label">공지 제목</div>
-            <div class="context">{{ noticeInfo.title }}</div>
-          </div>
-          <div class="notice-info-item-date">
-            <div class="label">작성 일자</div>
-            <div class="context">
-              {{ noticeInfo.createDate.substring(0, 4) }}-{{
-                noticeInfo.createDate.substring(5, 7)
-              }}-{{ noticeInfo.createDate.substring(8, 10) }}
-            </div>
-          </div>
-        </div>
-        <div class="notice-info-body">
-          <div>{{ noticeInfo.content }}</div>
-        </div>
-      </div>
-    </template>
-  </modal-popup-component>
 </template>

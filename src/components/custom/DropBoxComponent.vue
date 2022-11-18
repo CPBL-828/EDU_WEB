@@ -21,7 +21,7 @@ export default defineComponent({
       default: "270px",
     },
   },
-  emit: ["selectType"],
+  emit: ["selectType", "selectStudent"],
   setup(props, context) {
     const { emit } = context;
     const main = ref<string>(props.placeholder as string);

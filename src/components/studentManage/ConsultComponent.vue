@@ -15,7 +15,10 @@ export default defineComponent({
   name: "ConsultComponent",
   components: { PaginationComponent, DropBoxComponent },
   setup() {
+    const selectSection = ref<string | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
+    const studentKey = ref<string>("");
+
     const date = ref<string | undefined>(undefined);
     const time = ref<string | undefined>(undefined);
     const inputDate = ref<Date | undefined>(undefined);
@@ -35,10 +38,10 @@ export default defineComponent({
       { KEY: "SCORE", VALUE: "성적" },
       { KEY: "ETC", VALUE: "기타" },
     ];
-    const totalCnt = ref<number>(0);
-    const page = ref<number>(0);
-    const currentPage = ref<number>(1);
-    const listCnt: number = 4;
+    const planTotalCnt = ref<number>(0);
+    const planPage = ref<number>(0);
+    const planCurrentPage = ref<number>(1);
+    const planListCnt: number = 4;
 
     const planConsultList = ref<Array<consultInterface>>([]);
     const showPlanConsultList = ref<Array<consultInterface>>([]);
@@ -63,42 +66,54 @@ export default defineComponent({
     };
 
     const setConsultList = async () => {
-      //TODO getStudentList로 학생명 필터링 붙이기
-      let studentKey = "";
-
-      let data = { userKey: userKey.value, studentKey: studentKey };
+      let data = { userKey: userKey.value, studentKey: studentKey.value };
       const result = await ApiClient(
         "/info/getConsultList/",
         common.makeJson(data)
       );
 
       if (result.count > 0) {
-        result.resultData.map((item: consultInterface) => {
-          if (item.content) {
-            listConsultList.value.push(item);
-          } else {
+        if (!selectSection.value) {
+          result.resultData.map((item: consultInterface) => {
+            if (item.content) {
+              listConsultList.value.push(item);
+            } else {
+              planConsultList.value.push(item);
+            }
+          });
+        } else if (selectSection.value === "plan") {
+          planConsultList.value = [];
+          result.resultData.map((item: consultInterface) => {
             planConsultList.value.push(item);
-          }
-        });
+          });
+        } else if (selectSection.value === "list") {
+          listConsultList.value = [];
+          result.resultData.map((item: consultInterface) => {
+            listConsultList.value.push(item);
+          });
+        }
+      } else {
+        if (selectSection.value === "plan") planConsultList.value = [];
+        else if (selectSection.value === "list") listConsultList.value = [];
       }
 
-      totalCnt.value = planConsultList.value.length;
-      if (totalCnt.value > listCnt) {
-        showPlanConsultList.value = planConsultList.value.slice(0, listCnt);
-        page.value = Math.ceil(totalCnt.value / listCnt);
+      planTotalCnt.value = planConsultList.value.length;
+      if (planTotalCnt.value > planListCnt) {
+        showPlanConsultList.value = planConsultList.value.slice(0, planListCnt);
+        planPage.value = Math.ceil(planTotalCnt.value / planListCnt);
       } else {
         showPlanConsultList.value = planConsultList.value;
-        page.value = 0;
+        planPage.value = 0;
       }
     };
 
     const selectPage = (n: number) => {
-      currentPage.value = n;
+      planCurrentPage.value = n;
     };
 
     const changePage = (n: number) => {
-      if (n === 1) currentPage.value = currentPage.value + 1;
-      else currentPage.value = currentPage.value - 1;
+      if (n === 1) planCurrentPage.value = planCurrentPage.value + 1;
+      else planCurrentPage.value = planCurrentPage.value - 1;
     };
 
     const openCalendar = (m: string, n: string) => {
@@ -117,6 +132,11 @@ export default defineComponent({
 
     const selectType = (item: defaultInterface) => {
       // console.log("상담 유형:", item);
+    };
+
+    const selectStudent = (item: defaultInterface) => {
+      studentKey.value = item.KEY;
+      setConsultList();
     };
 
     const insertConsult = () => {
@@ -163,12 +183,12 @@ export default defineComponent({
     );
 
     watch(
-      () => currentPage.value,
+      () => planCurrentPage.value,
       () => {
         if (planConsultList.value.length > 0) {
           showPlanConsultList.value = planConsultList.value?.slice(
-            listCnt * currentPage.value - listCnt,
-            listCnt * currentPage.value
+            planListCnt * planCurrentPage.value - planListCnt,
+            planListCnt * planCurrentPage.value
           ) as [];
         }
       }
@@ -186,6 +206,7 @@ export default defineComponent({
     });
 
     return {
+      selectSection,
       date,
       time,
       inputDate,
@@ -198,10 +219,11 @@ export default defineComponent({
       planDateCalendarState,
       listDateCalendarState,
       typeList,
-      totalCnt,
-      currentPage,
-      page,
+      planTotalCnt,
+      planCurrentPage,
+      planPage,
       selectType,
+      selectStudent,
       planConsultList,
       showPlanConsultList,
       listConsultList,
@@ -268,12 +290,11 @@ export default defineComponent({
             </div>
             <span class="separ">|</span>
             <div class="consult-input-section-body-item-name">
-              <!--              <i class="fa-solid fa-user"></i>-->
-              <!--              <input type="text" placeholder="이름" v-model="inputName" />-->
               <drop-box-component
                 :select-list="studentList"
                 placeholder="학생명"
                 row-width="160px"
+                @selectValue="selectStudent"
               ></drop-box-component>
             </div>
             <div
@@ -318,17 +339,15 @@ export default defineComponent({
               ></drop-box-component>
             </div>
             <span class="separ">|</span>
-            <div class="consult-input-section-body-item-name">
-              <!--              <i class="fa-solid fa-magnifying-glass"></i>-->
-              <!--              <input-->
-              <!--                type="text"-->
-              <!--                placeholder="학생 이름 검색"-->
-              <!--                v-model="planName"-->
-              <!--              />-->
+            <div
+              class="consult-input-section-body-item-name"
+              @click="selectSection = 'plan'"
+            >
               <drop-box-component
                 :select-list="studentList"
                 placeholder="학생명"
                 row-width="160px"
+                @selectValue="selectStudent"
               ></drop-box-component>
             </div>
           </div>
@@ -360,13 +379,19 @@ export default defineComponent({
               </div>
             </div>
           </div>
+          <div
+            v-if="planConsultList.length < 1"
+            class="consult-plan-section-body-list"
+          >
+            불러올 데이터가 없습니다.
+          </div>
           <div class="consult-plan-section-body-pagination">
             <pagination-component
-              v-if="page !== 0"
+              v-if="planPage !== 0"
               @changePage="changePage"
               @selectPage="selectPage"
-              :page="page"
-              :current-page="currentPage"
+              :page="planPage"
+              :current-page="planCurrentPage"
             ></pagination-component>
           </div>
         </div>
@@ -374,7 +399,14 @@ export default defineComponent({
 
       <div class="consult-list-section">
         <div class="consult-list-section-tag">상담 목록 조회</div>
-        <div class="consult-list-section-body"></div>
+        <div class="consult-list-section-body">
+          <div
+            v-for="item in listConsultList"
+            class="consult-list-section-body-item"
+          >
+            {{ item }}
+          </div>
+        </div>
       </div>
     </div>
   </section>

@@ -217,8 +217,8 @@ section.consult {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 160px;
-            height: 33px;
+            width: 164px;
+            height: 34px;
             border-radius: 10px;
             background-color: white;
             font-size: 14px;
@@ -452,6 +452,13 @@ section.consult {
           }
         }
 
+        .no-content {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
         &-pagination {
           position: absolute;
           bottom: 10px;
@@ -470,6 +477,7 @@ section.consult {
       top: 674px;
       left: 50%;
       transform: translateX(-50%);
+      padding-bottom: 69px;
 
       &-tag {
         @include tag-custom();
@@ -484,6 +492,7 @@ section.consult {
 
         &-item {
           position: absolute;
+          z-index: 10;
           left: 47px;
           top: 33px;
           display: flex;
@@ -538,8 +547,18 @@ section.consult {
 
         &-content {
           position: relative;
-          height: calc(100% - 98px);
-          top: 98px;
+          width: 1107px;
+          height: calc(100% - 128px);
+          top: 108px;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        .no-content {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
       }
     }

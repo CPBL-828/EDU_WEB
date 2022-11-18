@@ -394,10 +394,7 @@ export default defineComponent({
               </div>
             </div>
           </div>
-          <div
-            v-if="planConsultList.length < 1"
-            class="consult-plan-section-body-list"
-          >
+          <div v-if="planConsultList.length < 1" class="no-content">
             불러올 데이터가 없습니다.
           </div>
           <div class="consult-plan-section-body-pagination">
@@ -462,6 +459,9 @@ export default defineComponent({
               :data-list="listConsultList"
               :total-cnt="listTotalCnt ? listTotalCnt : 0"
             ></data-list-component>
+          </div>
+          <div v-if="listConsultList.length < 1" class="no-content">
+            불러올 데이터가 없습니다.
           </div>
         </div>
       </div>

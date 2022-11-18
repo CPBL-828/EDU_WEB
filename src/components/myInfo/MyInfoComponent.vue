@@ -62,7 +62,13 @@ export default defineComponent({
     };
 
     const doEdit = () => {
-      console.log(teacherEditInfo.value);
+      let data = { email: "", sns: "", phone: "" };
+      if (teacherInfo.value?.email !== teacherEditInfo.value.email) {
+        data.email = teacherEditInfo.value.email;
+      } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
+        data.phone = teacherEditInfo.value.phone;
+      }
+
       editState.value = false;
     };
 
@@ -82,6 +88,8 @@ export default defineComponent({
         studentInfo.value = props.userData as studentInterface;
       } else if (props.userKey === USER_KEY.TEA) {
         teacherInfo.value = props.userData as teacherInterface;
+        teacherEditInfo.value.email = teacherInfo.value.email;
+        teacherEditInfo.value.phone = teacherInfo.value.phone;
       }
     });
 
@@ -250,7 +258,7 @@ export default defineComponent({
                     v-if="editState"
                     type="text"
                     class="email-item"
-                    :value="teacherInfo?.email"
+                    v-model="teacherEditInfo.email"
                   />
                 </div>
                 <div class="sns">
@@ -276,7 +284,7 @@ export default defineComponent({
                     v-if="editState"
                     class="phone-item"
                     type="text"
-                    :value="teacherInfo?.phone"
+                    v-model="teacherEditInfo.phone"
                   />
                 </div>
                 <div class="join">

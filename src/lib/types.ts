@@ -50,6 +50,7 @@ export interface teacherInterface {
   resume: string;
   teacherKey: string;
   phone: string;
+  email: string;
 }
 
 export interface adminInterface {

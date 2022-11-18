@@ -35,11 +35,35 @@ export default defineComponent({
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const parentInfo = ref<parentInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
+    const teacherEditInfo = ref<teacherInterface>({
+      createDate: "",
+      editDate: "",
+      id: "",
+      joinDate: "",
+      leaveDate: "",
+      name: "",
+      part: "",
+      profileImg: "",
+      resSubject: "",
+      resume: "",
+      teacherKey: "",
+      phone: "",
+      email: "",
+    });
     const editState = ref(false);
 
     const editModal = () => {
-      editState.value = true;
+      editState.value = false;
       store.commit("setModalState", true);
+    };
+
+    const changeEditState = () => {
+      editState.value = true;
+    };
+
+    const doEdit = () => {
+      console.log(teacherEditInfo.value);
+      editState.value = false;
     };
 
     watch(
@@ -66,8 +90,11 @@ export default defineComponent({
       studentInfo,
       parentInfo,
       teacherInfo,
+      teacherEditInfo,
       editState,
       editModal,
+      changeEditState,
+      doEdit,
     };
   },
 });
@@ -156,15 +183,120 @@ export default defineComponent({
     </div>
 
     <modal-popup-component
-      :title="editState ? '정보 수정' : '이력서 보기'"
+      title="강사 상세 정보"
       btn-state="SAVE"
+      modal-height="620px"
+      modal-width="1078px"
     >
-      <template v-slot:body v-if="editState">
+      <template v-slot:button>
+        <div class="btn">
+          <div
+            :class="editState ? 'btn-save-active' : 'btn-save'"
+            @click="doEdit"
+          >
+            저장하기
+          </div>
+          <div
+            :class="!editState ? 'btn-edit-active' : 'btn-edit'"
+            @click="changeEditState"
+          >
+            수정하기
+          </div>
+        </div>
+      </template>
+      <template v-slot:body>
         <div v-if="studentInfo">
           <div v-for="item in studentInfo">{{ item }}</div>
         </div>
-        <div v-if="teacherInfo">
-          <div v-for="item in teacherInfo">{{ item }}</div>
+        <div class="teacher-section" v-if="teacherInfo">
+          <div class="sap"></div>
+          <div class="teacher-section-profile">
+            <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <div class="teacher-section-profile-name">
+              <span>{{ teacherInfo?.name }}</span> 강사님
+            </div>
+          </div>
+          <div class="teacher-section-info">
+            <div class="teacher-section-info-content">
+              <div class="teacher-section-info-content-left">
+                <div class="name">
+                  <span class="name-label">이름</span>
+                  <span class="name-item" v-if="!editState">{{
+                    teacherInfo?.name
+                  }}</span>
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="name-item"
+                    :disabled="true"
+                    :value="teacherInfo?.name"
+                  />
+                </div>
+                <div class="part">
+                  <span class="part-label">담당</span>
+                  <span class="part-item" v-if="!editState"
+                    >{{ teacherInfo?.part }} {{ teacherInfo?.resSubject }}</span
+                  >
+                  <div class="part-item-edit" v-if="editState">
+                    {{ teacherInfo?.part }} {{ teacherInfo?.resSubject }}
+                  </div>
+                </div>
+                <div class="email">
+                  <span class="email-label">이메일</span>
+                  <span class="email-item" v-if="!editState">{{
+                    teacherInfo?.email
+                  }}</span>
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="email-item"
+                    :value="teacherInfo?.email"
+                  />
+                </div>
+                <div class="sns">
+                  <span class="sns-label">SNS</span>
+                  <span class="sns-item" v-if="!editState">SNS 주소</span>
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="sns-item"
+                    placeholder="SNS 주소"
+                  />
+                </div>
+              </div>
+              <div class="teacher-section-info-content-right">
+                <div class="phone">
+                  <span class="phone-label">연락처</span>
+                  <span class="phone-item" v-if="!editState">
+                    {{ teacherInfo?.phone.substring(0, 3) }}-{{
+                      teacherInfo?.phone.substring(3, 7)
+                    }}-{{ teacherInfo?.phone.substring(7, 11) }}
+                  </span>
+                  <input
+                    v-if="editState"
+                    class="phone-item"
+                    type="text"
+                    :value="teacherInfo?.phone"
+                  />
+                </div>
+                <div class="join">
+                  <span class="join-label">입사일</span>
+                  <span class="join-item" v-if="!editState"
+                    >{{ teacherInfo?.joinDate.substring(0, 4) }}.
+                    {{ teacherInfo?.joinDate.substring(5, 7) }}.
+                    {{ teacherInfo?.joinDate.substring(8, 10) }}</span
+                  >
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="join-item"
+                    :disabled="true"
+                    :value="teacherInfo?.joinDate"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </modal-popup-component>

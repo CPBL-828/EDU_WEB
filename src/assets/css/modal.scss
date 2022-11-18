@@ -65,18 +65,34 @@ section.modal {
         }
 
         &-save {
-          background-color: #9e9e9e;
+          position: absolute;
+          opacity: 0;
+          z-index: -1;
 
-          &:hover {
-            background-color: $sub-color;
+          &-active {
+            opacity: 1;
+            background-color: #9e9e9e;
+            z-index: 1;
+
+            &:hover {
+              background-color: $sub-color;
+            }
           }
         }
 
         &-edit {
-          background-color: $primary-color;
+          position: absolute;
+          opacity: 0;
+          z-index: -1;
 
-          &:hover {
-            background-color: $hover-color;
+          &-active {
+            opacity: 1;
+            background-color: $primary-color;
+            z-index: 1;
+
+            &:hover {
+              background-color: $hover-color;
+            }
           }
         }
       }
@@ -175,12 +191,39 @@ section.modal {
               margin-bottom: 35px;
             }
 
+            input {
+              width: 169px;
+              height: 30px;
+              border: 2px solid #d9d9d9;
+              border-radius: 8px;
+              color: #9c9c9c;
+              outline: none;
+              margin-top: 5px;
+              margin-bottom: 17px;
+              padding-left: 11px;
+            }
+
             &-left {
               position: absolute;
               left: 119px;
 
               span.sns-item {
                 margin-bottom: 0;
+              }
+
+              .part-item-edit {
+                font-size: 13px;
+                color: #9c9c9c;
+                width: 169px;
+                height: 30px;
+                border: 2px solid #d9d9d9;
+                border-radius: 8px;
+                margin-top: 5px;
+                margin-bottom: 17px;
+                display: flex;
+                align-items: center;
+                padding-left: 11px;
+                cursor: default;
               }
             }
 

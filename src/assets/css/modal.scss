@@ -15,6 +15,7 @@ section.modal {
 
     i[class*="xmark"] {
       position: absolute;
+      z-index: 10;
       color: $disable-color;
       font-size: 28px;
       top: 17px;
@@ -22,30 +23,11 @@ section.modal {
       cursor: pointer;
     }
 
-    &-save {
-      position: absolute;
-      top: 19px;
-      left: 33px;
-      width: 110px;
-      height: 35px;
-      border-radius: 19px;
-      background-color: $primary-color;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-
-      &:hover {
-        background-color: $hover-color;
-      }
-    }
-
+    //button style
     &-button {
       .btn {
         position: absolute;
+        z-index: 10;
         top: 46px;
         left: 47px;
         width: 128px;
@@ -109,12 +91,12 @@ section.modal {
     }
 
     &-body {
-      position: absolute;
+      position: relative;
       overflow: scroll;
       width: 100%;
-      height: calc(100% - 100px); // 강사의 내 정보 상세
-      top: 100px;
+      height: 100%; // 강사의 내 정보 상세
 
+      //teacher myInfo detail
       .teacher-section {
         position: absolute;
         width: 100%;
@@ -235,6 +217,85 @@ section.modal {
                 margin-bottom: 0;
               }
             }
+          }
+        }
+      }
+
+      .detail-section {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 1010px;
+        height: 714px;
+        border: 3px solid #efefef;
+        border-radius: 10px;
+
+        &-container {
+          position: relative;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          height: auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          &-header {
+            height: auto;
+            display: flex;
+            font-size: 13px;
+            font-weight: bold;
+            color: #777777;
+
+            div[class*="header-"] {
+              display: flex;
+              height: 32px;
+
+              div[class$="label"] {
+                width: 112px;
+                background-color: #d9d9d9;
+                border-radius: 10px 0 0 10px;
+              }
+
+              div[class$="item"] {
+                border-radius: 0 10px 10px 0;
+              }
+
+              div {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: 2px solid #d9d9d9;
+              }
+
+              .type-item {
+                width: 112px;
+                margin-right: 31px;
+              }
+
+              .title-item {
+                width: 240px;
+                margin-right: 31px;
+              }
+
+              .date-item {
+                width: 186px;
+              }
+            }
+          }
+
+          &-body {
+            width: 892px;
+            height: 592px;
+            border: 2px solid #d9d9d9;
+            border-radius: 10px;
+            margin-top: 23px;
+            padding: 14px 32px;
+            font-size: 17px;
+            color: $disable-color;
+            overflow: scroll;
           }
         }
       }

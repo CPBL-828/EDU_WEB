@@ -35,18 +35,6 @@ export default defineComponent({
       type: Number as PropType<number>,
       required: true,
     },
-    // noticeList: {
-    //   type: Array as PropType<Array<noticeInterface>>,
-    //   required: false,
-    // },
-    // suggestList: {
-    //   type: Array as PropType<Array<suggestInterface>>,
-    //   required: false,
-    // },
-    // consultList: {
-    //   type: Array as PropType<Array<consultInterface>>,
-    //   required: false,
-    // },
     listCnt: {
       type: Number as PropType<number>,
       required: false,
@@ -59,11 +47,8 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const showNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
-    const noticeInfo = ref<noticeInterface | undefined>(undefined);
     const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
-    const suggestInfo = ref<suggestInterface | undefined>(undefined);
     const showConsultList = ref<Array<consultInterface> | undefined>(undefined);
-    const consultInfo = ref<consultInterface | undefined>(undefined);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
@@ -71,7 +56,6 @@ export default defineComponent({
     /*
     props에 존재하는 데이터 리스트의 종류에 따라 현재 컴포넌트에서 보여줄 데이터 리스트를 set
      */
-    const setDataList = () => {};
 
     const setNoticeList = () => {
       if (props.dataList) {
@@ -125,16 +109,6 @@ export default defineComponent({
     const changePage = (n: number) => {
       if (n === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
-    };
-
-    const openModal = (v: string, i: noticeInterface | suggestInterface) => {
-      store.commit("setModalState", true);
-
-      if (v === "NOTICE") {
-        noticeInfo.value = i as noticeInterface;
-      } else {
-        suggestInfo.value = i as suggestInterface;
-      }
     };
 
     watch(
@@ -193,16 +167,12 @@ export default defineComponent({
     });
     return {
       showNoticeList,
-      noticeInfo,
       showSuggestList,
-      suggestInfo,
       showConsultList,
-      consultInfo,
       page,
       currentPage,
       selectPage,
       changePage,
-      openModal,
     };
   },
 });
@@ -224,7 +194,7 @@ export default defineComponent({
             class="data=list=section-body-item"
             v-if="showNoticeList"
             v-for="item in showNoticeList"
-            @click="openModal('NOTICE', item)"
+            @click="$emit('showNoticeDetail', item)"
           >
             <td
               :style="

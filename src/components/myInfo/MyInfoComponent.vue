@@ -67,9 +67,10 @@ export default defineComponent({
         data.email = teacherEditInfo.value.email;
       } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
         data.phone = teacherEditInfo.value.phone;
+      } else {
+        if (window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?"))
+          editState.value = false;
       }
-
-      editState.value = false;
     };
 
     watch(

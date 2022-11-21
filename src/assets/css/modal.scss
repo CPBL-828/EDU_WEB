@@ -1,3 +1,17 @@
+@mixin detail-custom {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1010px;
+  height: 714px;
+  border: 3px solid #efefef;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 section.modal {
   position: absolute;
   z-index: 10;
@@ -327,17 +341,7 @@ section.modal {
 
       //suggest detail
       .suggest-detail {
-        position: absolute;
-        bottom: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 1010px;
-        height: 714px;
-        border: 3px solid #efefef;
-        border-radius: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        @include detail-custom();
 
         &-section {
           position: relative;
@@ -444,6 +448,74 @@ section.modal {
               margin-top: 10px;
               color: #777777;
             }
+          }
+        }
+      }
+
+      //consult detail
+      .consult-detail {
+        @include detail-custom();
+
+        &-section {
+          position: relative;
+          top: 28px;
+          width: 936px;
+          height: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          &-header {
+            width: 100%;
+            height: 34px;
+            border: 2px solid #e7e7e7;
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            color: $sub-color;
+            font-size: 14px;
+            font-weight: bold;
+
+            div {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+
+            .date {
+              width: 260px;
+            }
+
+            .time {
+              width: 265px;
+            }
+
+            .type {
+              width: 222px;
+            }
+
+            .name {
+              width: 190px;
+            }
+
+            .sap {
+              width: 1px;
+              height: 22px;
+              border-right: 2px solid #e7e7e7;
+            }
+          }
+
+          &-body {
+            width: 872px;
+            height: 582px;
+            border: 2px solid #d9d9d9;
+            border-radius: 10px;
+            margin-top: 18px;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #777777;
+            overflow: scroll;
           }
         }
       }

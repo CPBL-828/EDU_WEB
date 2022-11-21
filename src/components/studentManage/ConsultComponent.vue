@@ -181,6 +181,7 @@ export default defineComponent({
     const showConsultDetail = (item: consultInterface) => {
       listConsultDetail.value = item;
       store.commit("setModalState", true);
+      document.getElementById('consult')?.scrollTo(0, 0);
     };
 
     watch(
@@ -272,8 +273,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="consult">
-    <div class="consult" id="consult">
+  <section class="consult"  id="consult">
+    <div class="consult">
       <div class="consult-input-section">
         <div class="consult-input-section-tag">상담 일정 입력</div>
         <div class="consult-input-section-body">
@@ -486,12 +487,28 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
     <modal-popup-component title="상담 결과 조회">
       <template v-slot:body>
         <div class="consult-detail">
           <div class="consult-detail-section">
             <div class="consult-detail-section-header">
-              {{ listConsultDetail }}
+              <div class="date">
+                {{ listConsultDetail?.createDate.substring(0, 4) }}년
+                {{ listConsultDetail?.createDate.substring(5, 7) }}월
+                {{ listConsultDetail?.createDate.substring(8, 10) }}일
+              </div>
+              <div class="sap"></div>
+              <div class="time">{{ listConsultDetail?.createDate.substring(11, 16) }}</div>
+              <div class="sap"></div>
+              <div class="type">
+                {{ listConsultDetail?.consultType }}
+              </div>
+              <div class="sap"></div>
+              <div class="name">{{ listConsultDetail?.studentKey_id }}</div>
+            </div>
+            <div class="consult-detail-section-body">
+              {{ listConsultDetail?.content }}
             </div>
           </div>
         </div>

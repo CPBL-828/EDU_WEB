@@ -97,6 +97,7 @@ export default defineComponent({
         whoAmI.value = { KEY: USER_KEY.ADM, VALUE: "관리자" };
       }
     });
+
     return {
       whoAmI,
       userId,

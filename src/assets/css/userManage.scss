@@ -105,10 +105,11 @@ section.consult {
         height: 100px;
         border-radius: 0 40px 40px 40px;
 
-        .separ {
-          color: $disable-color;
-          font-size: 27px;
-          margin: 0 14px 5px 14px;
+        .sap {
+          width: 1px;
+          height: 27px;
+          border-right: 2px solid $disable-color;
+          margin: 0 14px;
         }
 
         &-title {
@@ -295,10 +296,11 @@ section.consult {
         height: 380px;
         border-radius: 0 40px 40px 40px;
 
-        .sapar {
-          color: $disable-color;
-          font-size: 27px;
-          margin: 0 14px 5px 14px;
+        .sap {
+          width: 1px;
+          height: 27px;
+          border-right: 2px solid $disable-color;
+          margin: 0 14px;
         }
 
         &-title {
@@ -393,7 +395,7 @@ section.consult {
             margin-bottom: 17px;
             cursor: default;
 
-            .sap {
+            .plan-sap {
               position: absolute;
               right: 0;
               height: 22px;
@@ -498,10 +500,11 @@ section.consult {
           display: flex;
           align-items: center;
 
-          .sapar {
-            color: $disable-color;
-            font-size: 27px;
-            margin: 0 14px 5px 14px;
+          .sap {
+            width: 1px;
+            height: 27px;
+            border-right: 2px solid $disable-color;
+            margin: 0 14px;
           }
 
           &-date {

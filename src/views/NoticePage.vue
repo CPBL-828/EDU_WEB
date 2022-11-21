@@ -9,9 +9,9 @@ import { KEYS, USER_KEY } from "../constant";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../components/custom/ModalPopupComponent.vue";
 /*
-@brief 공지사항을 표시하는 페이지
-       전체 공지의 경우 공지 데이터의 type이 '전체'인 것만 보여주면 되고,
-       공지 > 내 공지 접근 시, 현재 로그인한 user의 userKey를 getNoticeList parameter로 보내 해당 유저만 열람 가능한 공지 목록 표시
+@brief [강사, 학생, 학부모, 관리자] [Main]공지
+       [Sub]전체 공지: 공지 데이터의 type이 '전체'인 것만 표시
+       [Sub]내 공지: 현재 로그인한 user의 userKey를 getNoticeList parameter로 보내 해당 유저만 열람 가능한 공지 목록 표시
  */
 export default defineComponent({
   name: "NoticePage",
@@ -34,34 +34,40 @@ export default defineComponent({
 
     const getNoticeList = async () => {
       //TODO getNoticeList parameter: type, readerKey, year 추가
-      let data = { search: "", userKey: "" };
+      let data = { userKey: "", search: "" };
       if (search.value) {
-        data.search = search.value;
+        data = Object.assign(data, { search: search.value });
       }
+
       if (route.path === "/notice" || route.path === "/notice/all") {
         const result = await ApiClient(
           "/info/getNoticeList/",
           common.makeJson(data)
         );
 
-        if (result?.count > 0) {
-          noticeList.value = result.resultData;
-        } else {
-          noticeList.value = undefined;
+        if (result) {
+          if (result?.count > 0) {
+            noticeList.value = result.resultData;
+          } else {
+            noticeList.value = undefined;
+          }
         }
       } else {
         if (userKey.value) {
-          data.userKey = userKey.value;
+          data = Object.assign(data, { userKey: userKey.value });
         }
+
         const result = await ApiClient(
           "/info/getNoticeList/",
           common.makeJson(data)
         );
 
-        if (result?.count > 0) {
-          noticeList.value = result.resultData;
-        } else {
-          noticeList.value = undefined;
+        if (result) {
+          if (result?.count > 0) {
+            noticeList.value = result.resultData;
+          } else {
+            noticeList.value = undefined;
+          }
         }
       }
 
@@ -75,9 +81,9 @@ export default defineComponent({
 
     watch(
       () => route.path,
-      () => {
+      async () => {
         category.value = common.findCategory();
-        getNoticeList();
+        await getNoticeList();
       }
     );
 
@@ -94,8 +100,8 @@ export default defineComponent({
     });
 
     return {
-      category,
       header,
+      category,
       noticeList,
       noticeInfo,
       totalCnt,
@@ -146,20 +152,21 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
     <modal-popup-component title="공지 상세">
       <template v-slot:body>
-        <div class="detail-section">
-          <div class="detail-section-container">
-            <div class="detail-section-container-header">
-              <div class="detail-section-container-header-type">
+        <div class="notice-detail">
+          <div class="notice-detail-container">
+            <div class="notice-detail-container-header">
+              <div class="notice-detail-container-header-type">
                 <div class="type-label">공지 유형</div>
                 <div class="type-item">{{ noticeInfo?.type }}</div>
               </div>
-              <div class="detail-section-container-header-title">
+              <div class="notice-detail-container-header-title">
                 <div class="title-label">공지 제목</div>
                 <div class="title-item">{{ noticeInfo?.title }}</div>
               </div>
-              <div class="detail-section-container-header-date">
+              <div class="notice-detail-container-header-date">
                 <div class="date-label">작성 일자</div>
                 <div class="date-item">
                   {{ noticeInfo?.createDate.substring(0, 4) }}-{{
@@ -168,7 +175,7 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div class="detail-section-container-body">
+            <div class="notice-detail-container-body">
               {{ noticeInfo?.content }}
             </div>
           </div>

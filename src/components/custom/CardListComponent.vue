@@ -57,8 +57,8 @@ export default defineComponent({
       }
     );
 
-    onMounted(() => {
-      setUserList();
+    onMounted(async () => {
+      await setUserList();
     });
 
     return {
@@ -151,9 +151,9 @@ export default defineComponent({
     modal-width="1078px"
   >
     <template v-slot:body>
-      <div class="teacher-section">
+      <div class="user-detail">
         <div class="sap"></div>
-        <div class="teacher-section-profile">
+        <div class="user-detail-profile">
           <i
             class="fa-solid fa-user"
             v-if="teacherInfo && !teacherInfo?.profileImg"
@@ -162,16 +162,16 @@ export default defineComponent({
             class="fa-solid fa-user"
             v-if="studentInfo && !studentInfo?.profileImg"
           ></i>
-          <div v-if="teacherInfo" class="teacher-section-profile-name">
+          <div v-if="teacherInfo" class="user-detail-profile-name">
             <span>{{ teacherInfo?.name }}</span> 강사님
           </div>
-          <div v-if="studentInfo" class="teacher-section-profile-name">
+          <div v-if="studentInfo" class="user-detail-profile-name">
             <span>{{ studentInfo?.name }}</span> 학생
           </div>
         </div>
-        <div class="teacher-section-info">
-          <div class="teacher-section-info-content">
-            <div class="teacher-section-info-content-left">
+        <div class="user-detail-info">
+          <div class="user-detail-info-content">
+            <div class="user-detail-info-content-left">
               <div class="name">
                 <span class="name-label">이름</span>
                 <span class="name-item" v-if="teacherInfo">{{
@@ -208,7 +208,7 @@ export default defineComponent({
                 <span class="sns-item">{{ studentInfo?.address }}</span>
               </div>
             </div>
-            <div class="teacher-section-info-content-right">
+            <div class="user-detail-info-content-right">
               <div class="phone">
                 <span class="phone-label">연락처</span>
                 <span class="phone-item" v-if="teacherInfo">

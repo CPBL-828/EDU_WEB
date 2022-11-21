@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import { defineComponent, onMounted, PropType, ref } from "vue";
 import CardListComponent from "./custom/CardListComponent.vue";
 import {
   defaultInterface,
@@ -10,7 +10,8 @@ import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
 import { ApiClient } from "../axios";
 /*
-@brief 학생 및 강사 정보를 카드형 컴포넌트를 활용해 표시하기 위한 공통 페이지
+@brief [강사] [Main]학생 관리, [관리자] [Main]학생 관리, 강사 관리
+       [Sub]학생 정보, 강사 정보 접근 시 카드형 컴포넌트를 통해 유저 리스트 표시
 @props 보여주고자 하는 유저 값
  */
 export default defineComponent({
@@ -23,13 +24,13 @@ export default defineComponent({
   },
   components: { CardListComponent },
   setup(props) {
+    const category = ref<Array<defaultInterface> | undefined>(undefined);
     const loginUser = ref<teacherInterface | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const userData = ref<
       Array<studentInterface | teacherInterface> | undefined
     >(undefined);
     const total = ref<string | undefined>(undefined);
-    const category = ref<Array<defaultInterface> | undefined>(undefined);
     const search = ref<string | undefined>(undefined);
     const searchData = ref<
       Array<studentInterface | teacherInterface> | undefined
@@ -41,13 +42,13 @@ export default defineComponent({
         search: "",
       };
       if (search.value) {
-        data.search = search.value;
+        data = Object.assign(data, { search: search.value });
       }
       if (
         common.getItem(KEYS.UK).userKey.slice(-3) !== USER_KEY.ADM &&
         loginUser.value
       ) {
-        data.userKey = loginUser.value.teacherKey;
+        data = Object.assign(data, { userKey: loginUser.value.teacherKey });
       }
 
       if (props.viewUser === USER_KEY.STU) {
@@ -86,8 +87,8 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      userKey.value = common.getItem(KEYS.UK).userKey;
       category.value = common.findCategory();
+      userKey.value = common.getItem(KEYS.UK).userKey;
 
       if (common.getItem(KEYS.LU)) {
         loginUser.value = common.getItem(KEYS.LU) as teacherInterface;
@@ -97,8 +98,8 @@ export default defineComponent({
     });
 
     return {
-      userKey,
       category,
+      userKey,
       userData,
       total,
       search,

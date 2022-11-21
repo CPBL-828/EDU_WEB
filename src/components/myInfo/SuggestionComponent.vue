@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import { defineComponent, onMounted, PropType, ref } from "vue";
 import { defaultInterface, suggestInterface } from "../../lib/types";
 import common from "../../lib/common";
 import DataListComponent from "../custom/DataListComponent.vue";
@@ -114,15 +114,15 @@ export default defineComponent({
       selectState,
       selectItem,
       header,
-      changeState,
-      selectType,
+      placeholder,
+      typeList,
+      width,
       datetime,
       viewSuggestList,
       suggestDetail,
       totalCnt,
-      placeholder,
-      typeList,
-      width,
+      changeState,
+      selectType,
       showSuggestDetail,
     };
   },

@@ -8,9 +8,9 @@ import { KEYS, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import DataListComponent from "../custom/DataListComponent.vue";
 /*
-@brief 강사는 메인 카테고리 [학생 관리]의 [상담]으로 접근 가능
-       관리자는 메인 카테고리 [학생 관리], [강사 관리]의 [상담]으로 접근 가능
-       TODO 현재 상담의 정책 부분에 대한 협의가 진행 중
+@brief [강사, 관리자] [Main]학생 관리, [학부모] [Main]상담 및 분석
+       [Sub]상담 접근 시, 강사는 본인이 담당하는 학생과의 상담 정보를, 관리자는 선택한 강사의 담당 학생 상담 정보를,
+       학부모는 자신의 상담 정보를 표시
  */
 export default defineComponent({
   name: "ConsultComponent",
@@ -19,19 +19,10 @@ export default defineComponent({
     const selectSection = ref<string | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const studentKey = ref<string>("");
+    const studentList = ref<Array<defaultInterface>>([]);
 
     const date = ref<string | undefined>(undefined);
     const time = ref<string | undefined>(undefined);
-    const inputDate = ref<Date | undefined>(undefined);
-    const inputTime = ref<Date>(new Date());
-    const inputName = ref<string | undefined>(undefined);
-    const planDate = ref<Date | undefined>(undefined);
-    const planName = ref<string | undefined>(undefined);
-    const listDate = ref<Date | undefined>(undefined);
-    const inputDateCalendarState = ref(false);
-    const inputTimeCalendarState = ref(false);
-    const planDateCalendarState = ref(false);
-    const listDateCalendarState = ref(false);
     const typeList: defaultInterface[] = [
       { KEY: "STUDENT", VALUE: "학생" },
       { KEY: "PARENT", VALUE: "학부모" },
@@ -39,17 +30,30 @@ export default defineComponent({
       { KEY: "SCORE", VALUE: "성적" },
       { KEY: "ETC", VALUE: "기타" },
     ];
+
+    //상담 일정 입력
+    const inputDate = ref<Date | undefined>(undefined);
+    const inputTime = ref<Date>(new Date());
+    const inputName = ref<string | undefined>(undefined);
+    const inputDateCalendarState = ref(false);
+    const inputTimeCalendarState = ref(false);
+
+    //상담 예정 현황
+    const planDate = ref<Date | undefined>(undefined);
+    const planName = ref<string | undefined>(undefined);
+    const planDateCalendarState = ref(false);
+    const planConsultList = ref<Array<consultInterface>>([]);
+    const showPlanConsultList = ref<Array<consultInterface>>([]);
     const planTotalCnt = ref<number>(0);
     const planPage = ref<number>(0);
     const planCurrentPage = ref<number>(1);
     const planListCnt: number = 4;
 
-    const planConsultList = ref<Array<consultInterface>>([]);
-    const showPlanConsultList = ref<Array<consultInterface>>([]);
+    //상담 목록 조회
+    const listDate = ref<Date | undefined>(undefined);
+    const listDateCalendarState = ref(false);
     const listConsultList = ref<Array<consultInterface>>([]);
     const listTotalCnt = ref<number | undefined>(undefined);
-    const showListConsultList = ref<Array<consultInterface>>([]);
-
     const listHeader: defaultInterface[] = [
       { KEY: "date", VALUE: "상담 일자" },
       { KEY: "time", VALUE: "상담 시간" },
@@ -58,7 +62,6 @@ export default defineComponent({
       { KEY: "teacher", VALUE: "상담 강사" },
     ];
 
-    const studentList = ref<Array<defaultInterface>>([]);
     const setStudentList = async () => {
       let data = { userKey: userKey.value, search: "" };
       const result = await ApiClient(
@@ -119,15 +122,6 @@ export default defineComponent({
       }
     };
 
-    const selectPage = (n: number) => {
-      planCurrentPage.value = n;
-    };
-
-    const changePage = (n: number) => {
-      if (n === 1) planCurrentPage.value = planCurrentPage.value + 1;
-      else planCurrentPage.value = planCurrentPage.value - 1;
-    };
-
     const openCalendar = (m: string, n: string) => {
       if (m === "input") {
         if (n === "date") {
@@ -149,6 +143,15 @@ export default defineComponent({
     const selectStudent = (item: defaultInterface) => {
       studentKey.value = item.KEY;
       setConsultList();
+    };
+
+    const selectPage = (n: number) => {
+      planCurrentPage.value = n;
+    };
+
+    const changePage = (n: number) => {
+      if (n === 1) planCurrentPage.value = planCurrentPage.value + 1;
+      else planCurrentPage.value = planCurrentPage.value - 1;
     };
 
     const insertConsult = () => {
@@ -206,47 +209,47 @@ export default defineComponent({
       }
     );
 
-    onMounted(() => {
+    onMounted(async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         userKey.value = common.getItem(KEYS.LU).teacherKey;
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.ADM) {
         userKey.value = common.getItem(KEYS.LU).adminKey;
       }
 
-      setStudentList();
-      setConsultList();
+      await setStudentList();
+      await setConsultList();
     });
 
     return {
       selectSection,
+      studentList,
       date,
       time,
+      typeList,
       inputDate,
       inputTime,
       inputName,
-      planDate,
-      planName,
-      listDate,
       inputDateCalendarState,
       inputTimeCalendarState,
+      planDate,
+      planName,
       planDateCalendarState,
-      listDateCalendarState,
-      typeList,
-      planTotalCnt,
-      planCurrentPage,
-      planPage,
-      selectType,
-      selectStudent,
       planConsultList,
       showPlanConsultList,
+      planTotalCnt,
+      planPage,
+      planCurrentPage,
+      listDate,
+      listDateCalendarState,
       listConsultList,
       listTotalCnt,
       listHeader,
-      studentList,
       openCalendar,
-      insertConsult,
+      selectType,
+      selectStudent,
       selectPage,
       changePage,
+      insertConsult,
     };
   },
 });
@@ -277,7 +280,7 @@ export default defineComponent({
                 :minute-increment="5"
               />
             </div>
-            <span class="separ">|</span>
+            <div class="sap"></div>
             <div class="consult-input-section-body-item-time">
               <i class="fa-solid fa-clock"></i>
               {{ time ? time : "상담 시간" }}
@@ -294,7 +297,7 @@ export default defineComponent({
                 is24hr
               />
             </div>
-            <span class="separ">|</span>
+            <div class="sap"></div>
             <div class="consult-input-section-body-item-type">
               <drop-box-component
                 placeholder="상담 유형"
@@ -303,7 +306,7 @@ export default defineComponent({
                 @selectValue="selectType"
               ></drop-box-component>
             </div>
-            <span class="separ">|</span>
+            <div class="sap"></div>
             <div class="consult-input-section-body-item-name">
               <drop-box-component
                 :select-list="studentList"
@@ -344,7 +347,7 @@ export default defineComponent({
                 :minute-increment="5"
               />
             </div>
-            <span class="sapar">|</span>
+            <div class="sap"></div>
             <div class="consult-input-section-body-item-type">
               <drop-box-component
                 placeholder="상담 유형"
@@ -353,7 +356,7 @@ export default defineComponent({
                 @selectValue="selectType"
               ></drop-box-component>
             </div>
-            <span class="sapar">|</span>
+            <div class="sap"></div>
             <div
               class="consult-input-section-body-item-name"
               @click="selectSection = 'plan'"
@@ -376,15 +379,15 @@ export default defineComponent({
                 {{ item.consultDate?.substring(0, 4) }}년
                 {{ item.consultDate?.substring(5, 7) }}월
                 {{ item.consultDate?.substring(8, 10) }}일
-                <div class="sap"></div>
+                <div class="plan-sap"></div>
               </div>
               <div class="consult-plan-section-body-list-item-time">
                 {{ item.consultDate?.substring(11, 16) }}
-                <div class="sap"></div>
+                <div class="plan-sap"></div>
               </div>
               <div class="consult-plan-section-body-list-item-type">
                 {{ item.consultType }}
-                <div class="sap"></div>
+                <div class="plan-sap"></div>
               </div>
               <div class="consult-plan-section-body-list-item-student">
                 {{ item.studentKey_id }}
@@ -428,7 +431,7 @@ export default defineComponent({
                 :minute-increment="5"
               />
             </div>
-            <span class="sapar">|</span>
+            <div class="sap"></div>
             <div class="consult-input-section-body-item-type">
               <drop-box-component
                 placeholder="상담 유형"
@@ -437,7 +440,7 @@ export default defineComponent({
                 @selectValue="selectType"
               ></drop-box-component>
             </div>
-            <span class="sapar">|</span>
+            <div class="sap"></div>
             <div
               class="consult-input-section-body-item-name"
               @click="selectSection = 'list'"

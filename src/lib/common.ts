@@ -32,6 +32,9 @@ const removeItem = (key: string) => {
   localStorage.removeItem(key);
 };
 
+/*
+@brief 사용자가 현재 선택한 메인 및 서브 카테고리 추적
+ */
 const findCategory = () => {
   const data = ref<Array<defaultInterface>>([
     { KEY: "main", VALUE: "" },

@@ -1,12 +1,11 @@
 <script lang="ts">
-import { defineComponent, onMounted, Prop, PropType, ref, watch } from "vue";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import {
   consultInterface,
   defaultInterface,
   noticeInterface,
   suggestInterface,
 } from "../../lib/types";
-import { useStore } from "vuex";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 /*
@@ -45,7 +44,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
     const showNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
     const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const showConsultList = ref<Array<consultInterface> | undefined>(undefined);
@@ -56,7 +54,6 @@ export default defineComponent({
     /*
     props에 존재하는 데이터 리스트의 종류에 따라 현재 컴포넌트에서 보여줄 데이터 리스트를 set
      */
-
     const setNoticeList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
@@ -115,7 +112,7 @@ export default defineComponent({
       /*
         현재 페이지가 변경되면, 페이지 값에 따라 표시할 dataList 변경
         페이징은 추후 별도의 컴포넌트로 분리해야 함
-         */
+       */
       () => currentPage.value,
       () => {
         if (props.listType === "notice") {

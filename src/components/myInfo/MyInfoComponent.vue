@@ -36,19 +36,20 @@ export default defineComponent({
     const parentInfo = ref<parentInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const teacherEditInfo = ref<teacherInterface>({
-      createDate: "",
-      editDate: "",
-      id: "",
-      joinDate: "",
-      leaveDate: "",
-      name: "",
-      part: "",
-      profileImg: "",
-      resSubject: "",
-      resume: "",
       teacherKey: "",
+      name: "",
+      id: "",
       phone: "",
       email: "",
+      part: "",
+      resSubject: "",
+      joinDate: "",
+      leaveDate: "",
+      resume: "",
+      profileImg: "",
+      link: "",
+      createDate: "",
+      editDate: "",
     });
     const editState = ref(false);
 
@@ -122,8 +123,8 @@ export default defineComponent({
               : ""
           }}
         </div>
-        <div class="my-info-section-main" v-if="teacherInfo || studentInfo">
-          <div class="my-info-section-main-img">
+        <div class="my-info-section-body" v-if="teacherInfo || studentInfo">
+          <div class="my-info-section-body-img">
             <i class="fa-solid fa-camera"></i>
             <i
               class="fa-solid fa-user"
@@ -131,9 +132,9 @@ export default defineComponent({
             ></i>
             <input type="file" accept="image/*" />
           </div>
-          <div class="my-info-section-main-content">
+          <div class="my-info-section-body-content">
             <div
-              class="my-info-section-main-content-text"
+              class="my-info-section-body-content-text"
               v-if="(studentInfo || teacherInfo) && !editState"
             >
               <span class="name" v-if="teacherInfo">
@@ -169,7 +170,7 @@ export default defineComponent({
                 {{ studentInfo.grade }}학년
               </span>
             </div>
-            <div class="my-info-section-main-content-btn">
+            <div class="my-info-section-body-content-btn">
               <input
                 v-if="teacherInfo"
                 type="button"
@@ -217,19 +218,19 @@ export default defineComponent({
         <div v-if="studentInfo">
           <div v-for="item in studentInfo">{{ item }}</div>
         </div>
-        <div class="teacher-section" v-if="teacherInfo">
+        <div class="user-detail" v-if="teacherInfo">
           <div class="sap"></div>
-          <div class="teacher-section-profile">
+          <div class="user-detail-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
-            <div class="teacher-section-profile-name">
+            <div class="user-detail-profile-name">
               <span>{{ teacherInfo?.name }}</span> 강사님
             </div>
           </div>
-          <div class="teacher-section-info">
-            <div class="teacher-section-info-content">
-              <div class="teacher-section-info-content-left">
+          <div class="user-detail-info">
+            <div class="user-detail-info-content">
+              <div class="user-detail-info-content-left">
                 <div class="name">
                   <span class="name-label">이름</span>
                   <span class="name-item" v-if="!editState">{{
@@ -275,7 +276,7 @@ export default defineComponent({
                   />
                 </div>
               </div>
-              <div class="teacher-section-info-content-right">
+              <div class="user-detail-info-content-right">
                 <div class="phone">
                   <span class="phone-label">연락처</span>
                   <span class="phone-item" v-if="!editState">

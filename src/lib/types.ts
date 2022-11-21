@@ -12,6 +12,7 @@ export interface categoryInterface {
 
 export interface studentInterface {
   studentKey: string;
+  parentKey: string;
   name: string;
   id: string;
   birth: string;
@@ -29,28 +30,28 @@ export interface studentInterface {
 
 export interface parentInterface {
   parentKey: string;
-  id: string;
   name: string;
+  id: string;
   phone: string;
   createDate: string;
   editDate: string;
-  studentKey: string;
 }
 
 export interface teacherInterface {
-  createDate: string;
-  editDate: string;
-  id: string;
-  joinDate: string;
-  leaveDate: string;
-  name: string;
-  part: string;
-  profileImg: string;
-  resSubject: string;
-  resume: string;
   teacherKey: string;
+  name: string;
+  id: string;
   phone: string;
   email: string;
+  part: string;
+  resSubject: string;
+  joinDate: string;
+  leaveDate: string;
+  resume: string;
+  profileImg: string;
+  link: string;
+  createDate: string;
+  editDate: string;
 }
 
 export interface adminInterface {
@@ -75,43 +76,48 @@ export interface noticeInterface {
 
 export interface suggestInterface {
   suggestKey: string;
+  adminKey: string;
   writerKey: string;
+  // writerName: string;
   type: string;
   state: string;
   content: string;
+  // answer: string;
+  // answerDate: string;
   createDate: string;
   editDate: string;
-  adminKey: string;
 }
 
 export interface scheduleInterface {
-  adminKey_id: string;
-  book: string;
-  createDate: string;
-  day: number;
-  duration: number;
-  editDate: string;
   lectureKey: string;
+  roomKey_id: string;
+  teacherKey_id: string;
+  adminKey_id: string;
   name: string;
+  type: string;
+  subject: string;
+  book: string;
+  target: string;
+  day: number;
+  startTime: string;
+  duration: number;
+  suggestDate: string;
   progress: string;
   reason: string;
-  roomKey_id: string;
-  startTime: string;
-  subject: string;
-  target: string;
-  teacherKey_id: string;
-  type: string;
+  createDate: string;
+  editDate: string;
   start: number;
   minute: number;
 }
 
 export interface consultInterface {
   consultKey: string;
-  consultType: string;
-  consultDate: string;
-  targetKey: string;
-  content: string;
   studentKey_id: string;
+  // studentName: string;
+  targetKey: string;
+  consultDate: string;
+  consultType: string;
+  content: string;
   createDate: string;
   editDate: string;
 }

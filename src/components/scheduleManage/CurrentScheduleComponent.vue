@@ -8,6 +8,11 @@ import { ApiClient } from "../../axios";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+/*
+@brief [강사, 학생, 학부모, 관리자] [Main]시간표 관리
+       [Sub]현재 시간표 접근 시 해당 유저의 현재 시간표 표시
+       관리자의 경우, 강의실별 현재 시간표를 표시
+ */
 export default defineComponent({
   name: "CurrentScheduleComponent.vue",
   components: {

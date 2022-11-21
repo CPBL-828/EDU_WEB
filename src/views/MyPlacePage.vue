@@ -12,10 +12,11 @@ import { useRoute } from "vue-router";
 import WorkReportComponent from "../components/myInfo/WorkReportComponent.vue";
 import SuggestionComponent from "../components/myInfo/SuggestionComponent.vue";
 /*
-@brief 메인 카테고리 [내 공간]의 메뉴들에 해당하는 페이지 로딩
+@brief [강사, 학생, 학부모] [Main]내 공간
+       선택한 [Sub]에 따라 페이지 표시
  */
 export default defineComponent({
-  name: "MyInfoPage",
+  name: "MyPlacePage",
   components: { SuggestionComponent, WorkReportComponent, MyInfoComponent },
   setup: function () {
     const route = useRoute();
@@ -45,9 +46,7 @@ export default defineComponent({
       } else if (userKey.value === USER_KEY.PAR) {
         myInfoUser.value = common.getItem(KEYS.LU) as parentInterface;
       } else if (userKey.value === USER_KEY.TEA) {
-        // if (currentCategory.value === "INFO")
         myInfoUser.value = common.getItem(KEYS.LU) as teacherInterface;
-        // else if (currentCategory.value === "WORK")
         workUser.value = common.getItem(KEYS.LU) as teacherInterface;
       }
     });

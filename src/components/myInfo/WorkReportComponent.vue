@@ -28,6 +28,12 @@ export default defineComponent({
     const fixOut = ref<Date | undefined>(undefined);
     const calendarState = ref<string | undefined>(undefined);
 
+    const onClickAway = (event: Event) => {
+      if (event.isTrusted) {
+        calendarState.value = undefined;
+      }
+    };
+
     const openCalendar = (v: string) => {
       if (calendarState.value !== undefined) {
         calendarState.value = undefined;
@@ -37,12 +43,6 @@ export default defineComponent({
         } else {
           calendarState.value = "out";
         }
-      }
-    };
-
-    const onClickAway = (event: Event) => {
-      if (event.isTrusted) {
-        calendarState.value = undefined;
       }
     };
 
@@ -69,8 +69,8 @@ export default defineComponent({
       outTime,
       fixOut,
       calendarState,
-      openCalendar,
       onClickAway,
+      openCalendar,
       saveComeTime,
       saveOutTime,
     };
@@ -91,23 +91,23 @@ export default defineComponent({
               : ""
           }}
         </div>
-        <div class="my-work-section-main">
-          <div class="my-work-section-main-today">
+        <div class="my-work-section-body">
+          <div class="my-work-section-body-today">
             <i class="fa-regular fa-calendar"></i>
             TODAY : {{ today.toISOString().substring(0, 4) }}년
             {{ today.toISOString().substring(5, 7) }}월
             {{ today.toISOString().substring(8, 10) }}일
             {{ today.toString().substring(0, 4) }}
           </div>
-          <div class="my-work-section-main-section">
-            <div class="my-work-section-main-section-input">
-              <div class="my-work-section-main-section-input-section">
-                <div class="my-work-section-main-section-input-section-guide">
+          <div class="my-work-section-body-section">
+            <div class="my-work-section-body-section-input">
+              <div class="my-work-section-body-section-input-section">
+                <div class="my-work-section-body-section-input-section-guide">
                   출근부에 기록될 일자를 입력해주세요.
                 </div>
-                <div class="my-work-section-main-section-input-section-come">
+                <div class="my-work-section-body-section-input-section-come">
                   <div
-                    class="my-work-section-main-section-input-section-come-datetime"
+                    class="my-work-section-body-section-input-section-come-datetime"
                   >
                     <input
                       type="text"
@@ -125,7 +125,7 @@ export default defineComponent({
                   </div>
                   <input
                     type="button"
-                    class="my-work-section-main-section-input-section-come-btn"
+                    class="my-work-section-body-section-input-section-come-btn"
                     value="출근"
                     @click="saveComeTime(comeTime)"
                   />
@@ -138,9 +138,9 @@ export default defineComponent({
                     :minute-increment="10"
                   />
                 </div>
-                <div class="my-work-section-main-section-input-section-out">
+                <div class="my-work-section-body-section-input-section-out">
                   <div
-                    class="my-work-section-main-section-input-section-out-datetime"
+                    class="my-work-section-body-section-input-section-out-datetime"
                   >
                     <input
                       type="text"
@@ -158,7 +158,7 @@ export default defineComponent({
                   </div>
                   <input
                     type="button"
-                    class="my-work-section-main-section-input-section-out-btn"
+                    class="my-work-section-body-section-input-section-out-btn"
                     value="퇴근"
                     @click="saveOutTime(outTime)"
                   />
@@ -173,18 +173,18 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div class="my-work-section-main-section-check">
-              <div class="my-work-section-main-section-check-header">
+            <div class="my-work-section-body-section-check">
+              <div class="my-work-section-body-section-check-header">
                 확인 원하는 일자 선택
               </div>
-              <div class="my-work-section-main-section-check-calendar">
+              <div class="my-work-section-body-section-check-calendar">
                 <v-date-picker
                   is-expended
                   mode="date"
                   v-model="date"
                 ></v-date-picker>
               </div>
-              <div class="my-work-section-main-section-check-record">
+              <div class="my-work-section-body-section-check-record">
                 <div class="title">출근부 기록 보기</div>
 
                 <div class="date">

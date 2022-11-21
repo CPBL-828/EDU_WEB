@@ -1,6 +1,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { scheduleInterface } from "../../lib/types";
+/*
+@brief 시간표 컴포넌트
+@props 강의 리스트, 오후/오전 중 선택된 상태 값
+ */
 export default defineComponent({
   name: "TimetableComponent",
   props: {
@@ -52,12 +56,12 @@ export default defineComponent({
       }
     };
 
-    const clickMinute = (d: string, h: number, m: number) => {
-      hour.value = h + 11;
-      minute.value = (m - 1) * 10;
-
-      console.log(d + ": " + hour.value + "-" + minute.value);
-    };
+    // const clickMinute = (d: string, h: number, m: number) => {
+    //   hour.value = h + 11;
+    //   minute.value = (m - 1) * 10;
+    //
+    //   console.log(d + ": " + hour.value + "-" + minute.value);
+    // };
 
     watch(
       () => props.selectType,
@@ -75,8 +79,8 @@ export default defineComponent({
       blockState,
       viewScheduleList,
       scheduleInfo,
-      clickMinute,
       color,
+      // clickMinute,
     };
   },
 });
@@ -94,11 +98,7 @@ export default defineComponent({
       >
         <div class="day">{{ d }}</div>
         <div class="one-hour" v-for="h in 12">
-          <div
-            class="ten-minute"
-            v-for="m in 6"
-            @click="clickMinute(d, h, m)"
-          ></div>
+          <div class="ten-minute" v-for="m in 6"></div>
         </div>
       </div>
     </div>

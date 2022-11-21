@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 @brief 본인 권한을 선택하고 해당 유저의 로그인 창으로 넘어가는 페이지
  */
 export default defineComponent({
-  name: "LoginPage",
+  name: "UserSelectPage",
   setup() {
     const router = useRouter();
     const userType = ref([

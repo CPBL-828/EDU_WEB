@@ -57,7 +57,7 @@ export default defineComponent({
     const planCurrentPage = ref<number>(1);
     const planListCnt: number = 4;
     const planDetailHeader = ref<consultInterface | undefined>(undefined);
-    const planDetailContent = ref<string>('');
+    const planDetailContent = ref<string>("");
 
     //상담 목록 조회
     const listDate = ref<Date | undefined>(undefined);
@@ -181,20 +181,20 @@ export default defineComponent({
     };
 
     const openInsertPopup = (item: consultInterface) => {
-      selectSection.value = 'plan';
+      selectSection.value = "plan";
       planDetailHeader.value = item;
-      store.commit('setModalState', true);
-    }
+      store.commit("setModalState", true);
+    };
 
     const doInput = () => {
       console.log(planDetailContent.value);
-    }
+    };
 
     const showConsultDetail = (item: consultInterface) => {
-      selectSection.value = 'list';
+      selectSection.value = "list";
       listConsultDetail.value = item;
       store.commit("setModalState", true);
-      document.getElementById('consult')?.scrollTo(0, 0);
+      document.getElementById("consult")?.scrollTo(0, 0);
     };
 
     watch(
@@ -290,7 +290,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="consult"  id="consult">
+  <section class="consult" id="consult">
     <div class="consult">
       <div class="consult-input-section">
         <div class="consult-input-section-tag">상담 일정 입력</div>
@@ -426,7 +426,10 @@ export default defineComponent({
               <div class="consult-plan-section-body-list-item-student">
                 {{ item.studentKey_id }}
               </div>
-              <div class="consult-plan-section-body-list-item-detail" @click="openInsertPopup(item)">
+              <div
+                class="consult-plan-section-body-list-item-detail"
+                @click="openInsertPopup(item)"
+              >
                 상담 결과 입력
               </div>
             </div>
@@ -505,7 +508,9 @@ export default defineComponent({
       </div>
     </div>
 
-    <modal-popup-component :title="selectSection === 'list' ? '상담 결과 조회' : '상담 결과 입력'">
+    <modal-popup-component
+      :title="selectSection === 'list' ? '상담 결과 조회' : '상담 결과 입력'"
+    >
       <template v-slot:button v-if="selectSection === 'plan'">
         <div class="btn">
           <div class="btn-insert" @click="doInput">저장하기</div>
@@ -521,7 +526,9 @@ export default defineComponent({
                 {{ listConsultDetail?.createDate.substring(8, 10) }}일
               </div>
               <div class="sap"></div>
-              <div class="time">{{ listConsultDetail?.createDate.substring(11, 16) }}</div>
+              <div class="time">
+                {{ listConsultDetail?.createDate.substring(11, 16) }}
+              </div>
               <div class="sap"></div>
               <div class="type">
                 {{ listConsultDetail?.consultType }}
@@ -546,7 +553,9 @@ export default defineComponent({
                 {{ planDetailHeader?.createDate.substring(8, 10) }}일
               </div>
               <div class="sap"></div>
-              <div class="time">{{ planDetailHeader?.createDate.substring(11, 16) }}</div>
+              <div class="time">
+                {{ planDetailHeader?.createDate.substring(11, 16) }}
+              </div>
               <div class="sap"></div>
               <div class="type">
                 {{ planDetailHeader?.consultType }}
@@ -554,7 +563,11 @@ export default defineComponent({
               <div class="sap"></div>
               <div class="name">{{ planDetailHeader?.studentKey_id }}</div>
             </div>
-            <textarea v-model="planDetailContent" placeholder="상담 결과를 입력해주세요." class="consult-detail-section-body"></textarea>
+            <textarea
+              v-model="planDetailContent"
+              placeholder="상담 결과를 입력해주세요."
+              class="consult-detail-section-body"
+            ></textarea>
           </div>
         </div>
       </template>

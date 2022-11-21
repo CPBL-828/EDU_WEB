@@ -253,8 +253,10 @@ export default defineComponent({
               :style="
                 rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
               "
+              class="go-detail"
+              @click="$emit('showSuggestDetail', item)"
             >
-              상담 내용 조회
+              건의 사항 보러가기
             </td>
           </tr>
 

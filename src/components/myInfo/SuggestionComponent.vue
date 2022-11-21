@@ -6,6 +6,8 @@ import DataListComponent from "../custom/DataListComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import { ApiClient } from "../../axios";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
+import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import { useStore } from "vuex";
 /*
 @brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
        교무 관리자는 메인 카테고리 [학생 관리]와 [강사 관리]로 접근하여 각 유저의 건의사항 처리
@@ -14,14 +16,20 @@ import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
  */
 export default defineComponent({
   name: "SuggestionComponent",
-  components: { SelectButtonComponent, DropBoxComponent, DataListComponent },
+  components: {
+    ModalPopupComponent,
+    SelectButtonComponent,
+    DropBoxComponent,
+    DataListComponent,
+  },
   props: {
     userKey: {
       type: String as PropType<string>,
       required: true,
     },
   },
-  setup() {
+  setup: function () {
+    const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectState = ref("ok");
     const selectItem = ref<Array<defaultInterface>>([
@@ -45,6 +53,7 @@ export default defineComponent({
     const datetime = ref<string>(new Date().toLocaleString().slice(0, -3));
     const allSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const viewSuggestList = ref<Array<suggestInterface>>([]);
+    const suggestDetail = ref<suggestInterface | undefined>(undefined);
     const totalCnt = ref<number | undefined>(undefined);
 
     const changeState = (v: string) => {
@@ -73,6 +82,11 @@ export default defineComponent({
 
     const selectType = (item: defaultInterface) => {
       // console.log("건의 유형: ", item);
+    };
+
+    const showSuggestDetail = (item: suggestInterface) => {
+      suggestDetail.value = item;
+      store.commit("setModalState", true);
     };
 
     onMounted(async () => {
@@ -104,10 +118,12 @@ export default defineComponent({
       selectType,
       datetime,
       viewSuggestList,
+      suggestDetail,
       totalCnt,
       placeholder,
       typeList,
       width,
+      showSuggestDetail,
     };
   },
 });
@@ -146,6 +162,7 @@ export default defineComponent({
               :row-height="39"
               :total-cnt="totalCnt ? totalCnt : 0"
               :list-cnt="13"
+              @showSuggestDetail="showSuggestDetail"
             ></data-list-component>
           </div>
           <div class="suggestion-section-body-write">
@@ -172,5 +189,43 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
+    <modal-popup-component title="건의 상세">
+      <template v-slot:body>
+        <div class="suggest-detail">
+          <div class="suggest-detail-section">
+            <div class="suggest-detail-section-header">
+              <div class="date">
+                {{ suggestDetail?.createDate.substring(0, 4) }}년
+                {{ suggestDetail?.createDate.substring(5, 7) }}월
+                {{ suggestDetail?.createDate.substring(8, 10) }}일
+              </div>
+              <div class="sap"></div>
+              <div class="type">{{ suggestDetail?.type }}</div>
+              <div class="sap"></div>
+              <div class="state">
+                {{ suggestDetail?.state === "Y" ? "처리 완료" : "대기 중" }}
+              </div>
+              <div class="sap"></div>
+              <div class="writer">{{ suggestDetail?.writerKey }}</div>
+            </div>
+            <div class="top-sap"></div>
+            <div class="suggest-detail-section-content">
+              <div class="suggest-detail-section-content-label">건의내용</div>
+              <div class="suggest-detail-section-content-item">
+                {{ suggestDetail?.content }}
+              </div>
+            </div>
+            <div class="center-sap"></div>
+            <div class="suggest-detail-section-answer">
+              <div class="suggest-detail-section-answer-label">
+                관리자 답변<span>(답변일자: 박건욱 날짜 내놔)</span>
+              </div>
+              <div class="suggest-detail-section-answer-item">답변 내용</div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 </template>

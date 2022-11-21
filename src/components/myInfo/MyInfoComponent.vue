@@ -221,6 +221,8 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="teacher-section-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <i class="fa-solid fa-camera" v-if="editState"></i>
+            <input type="file" accept="image/*" v-if="editState" />
             <div class="teacher-section-profile-name">
               <span>{{ teacherInfo?.name }}</span> 강사님
             </div>

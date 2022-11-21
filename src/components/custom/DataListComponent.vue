@@ -261,6 +261,7 @@ export default defineComponent({
             class="data=list=section-body-item"
             v-if="showConsultList"
             v-for="item in showConsultList"
+            @click="$emit('showConsultDetail', item)"
           >
             <td
               :style="

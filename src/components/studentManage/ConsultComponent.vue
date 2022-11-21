@@ -7,6 +7,8 @@ import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import DataListComponent from "../custom/DataListComponent.vue";
+import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import { useStore } from "vuex";
 /*
 @brief [강사, 관리자] [Main]학생 관리, [학부모] [Main]상담 및 분석
        [Sub]상담 접근 시, 강사는 본인이 담당하는 학생과의 상담 정보를, 관리자는 선택한 강사의 담당 학생 상담 정보를,
@@ -14,8 +16,14 @@ import DataListComponent from "../custom/DataListComponent.vue";
  */
 export default defineComponent({
   name: "ConsultComponent",
-  components: { DataListComponent, PaginationComponent, DropBoxComponent },
+  components: {
+    ModalPopupComponent,
+    DataListComponent,
+    PaginationComponent,
+    DropBoxComponent,
+  },
   setup() {
+    const store = useStore();
     const selectSection = ref<string | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const studentKey = ref<string>("");
@@ -61,6 +69,7 @@ export default defineComponent({
       { KEY: "student", VALUE: "상담 학생" },
       { KEY: "teacher", VALUE: "상담 강사" },
     ];
+    const listConsultDetail = ref<consultInterface | undefined>(undefined);
 
     const setStudentList = async () => {
       let data = { userKey: userKey.value, search: "" };
@@ -169,6 +178,11 @@ export default defineComponent({
       };
     };
 
+    const showConsultDetail = (item: consultInterface) => {
+      listConsultDetail.value = item;
+      store.commit("setModalState", true);
+    };
+
     watch(
       () => inputDate.value,
       () => {
@@ -244,12 +258,14 @@ export default defineComponent({
       listConsultList,
       listTotalCnt,
       listHeader,
+      listConsultDetail,
       openCalendar,
       selectType,
       selectStudent,
       selectPage,
       changePage,
       insertConsult,
+      showConsultDetail,
     };
   },
 });
@@ -257,7 +273,7 @@ export default defineComponent({
 
 <template>
   <section class="consult">
-    <div class="consult">
+    <div class="consult" id="consult">
       <div class="consult-input-section">
         <div class="consult-input-section-tag">상담 일정 입력</div>
         <div class="consult-input-section-body">
@@ -461,6 +477,7 @@ export default defineComponent({
               list-type="consult"
               :data-list="listConsultList"
               :total-cnt="listTotalCnt ? listTotalCnt : 0"
+              @showConsultDetail="showConsultDetail"
             ></data-list-component>
           </div>
           <div v-if="listConsultList.length < 1" class="no-content">
@@ -469,5 +486,16 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <modal-popup-component title="상담 결과 조회">
+      <template v-slot:body>
+        <div class="consult-detail">
+          <div class="consult-detail-section">
+            <div class="consult-detail-section-header">
+              {{ listConsultDetail }}
+            </div>
+          </div>
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 </template>

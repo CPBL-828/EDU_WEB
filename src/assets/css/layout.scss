@@ -277,6 +277,11 @@ section.data-list {
             height: 52px;
             border-top: 2px solid $disable-color;
           }
+
+          td.go-detail {
+            font-weight: bold;
+            text-decoration: underline;
+          }
         }
       }
     }

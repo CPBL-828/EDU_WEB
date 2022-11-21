@@ -62,8 +62,15 @@ export default defineComponent({
     };
 
     const doEdit = () => {
-      console.log(teacherEditInfo.value);
-      editState.value = false;
+      let data = { email: "", sns: "", phone: "" };
+      if (teacherInfo.value?.email !== teacherEditInfo.value.email) {
+        data.email = teacherEditInfo.value.email;
+      } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
+        data.phone = teacherEditInfo.value.phone;
+      } else {
+        if (window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?"))
+          editState.value = false;
+      }
     };
 
     watch(
@@ -82,6 +89,8 @@ export default defineComponent({
         studentInfo.value = props.userData as studentInterface;
       } else if (props.userKey === USER_KEY.TEA) {
         teacherInfo.value = props.userData as teacherInterface;
+        teacherEditInfo.value.email = teacherInfo.value.email;
+        teacherEditInfo.value.phone = teacherInfo.value.phone;
       }
     });
 
@@ -212,6 +221,8 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="teacher-section-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <i class="fa-solid fa-camera" v-if="editState"></i>
+            <input type="file" accept="image/*" v-if="editState" />
             <div class="teacher-section-profile-name">
               <span>{{ teacherInfo?.name }}</span> 강사님
             </div>
@@ -250,7 +261,7 @@ export default defineComponent({
                     v-if="editState"
                     type="text"
                     class="email-item"
-                    :value="teacherInfo?.email"
+                    v-model="teacherEditInfo.email"
                   />
                 </div>
                 <div class="sns">
@@ -276,7 +287,7 @@ export default defineComponent({
                     v-if="editState"
                     class="phone-item"
                     type="text"
-                    :value="teacherInfo?.phone"
+                    v-model="teacherEditInfo.phone"
                   />
                 </div>
                 <div class="join">

@@ -424,7 +424,7 @@ export default defineComponent({
                 <div class="plan-sap"></div>
               </div>
               <div class="consult-plan-section-body-list-item-student">
-                {{ item.studentKey_id }}
+                {{ item.studentName }}
               </div>
               <div
                 class="consult-plan-section-body-list-item-detail"
@@ -534,7 +534,7 @@ export default defineComponent({
                 {{ listConsultDetail?.consultType }}
               </div>
               <div class="sap"></div>
-              <div class="name">{{ listConsultDetail?.studentKey_id }}</div>
+              <div class="name">{{ listConsultDetail?.studentName }}</div>
             </div>
             <div class="consult-detail-section-body">
               {{ listConsultDetail?.content }}
@@ -561,7 +561,7 @@ export default defineComponent({
                 {{ planDetailHeader?.consultType }}
               </div>
               <div class="sap"></div>
-              <div class="name">{{ planDetailHeader?.studentKey_id }}</div>
+              <div class="name">{{ planDetailHeader?.studentName }}</div>
             </div>
             <textarea
               v-model="planDetailContent"

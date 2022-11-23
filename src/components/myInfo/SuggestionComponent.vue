@@ -99,13 +99,16 @@ export default defineComponent({
       );
 
       if (result) {
-        allSuggestList.value = result.resultData;
+        if (result.count > 0) {
+          console.log(result);
+          allSuggestList.value = result.resultData;
 
-        allSuggestList.value?.map((item: suggestInterface) => {
-          if (item.state === "Y") {
-            viewSuggestList.value.push(item);
-          }
-        });
+          allSuggestList.value?.map((item: suggestInterface) => {
+            if (item.state === "Y") {
+              viewSuggestList.value.push(item);
+            }
+          });
+        }
       }
     });
 
@@ -207,7 +210,7 @@ export default defineComponent({
                 {{ suggestDetail?.state === "Y" ? "처리 완료" : "대기 중" }}
               </div>
               <div class="sap"></div>
-              <div class="writer">{{ suggestDetail?.writerKey }}</div>
+              <div class="writer">{{ suggestDetail?.writerName }}</div>
             </div>
             <div class="top-sap"></div>
             <div class="suggest-detail-section-content">
@@ -219,9 +222,20 @@ export default defineComponent({
             <div class="center-sap"></div>
             <div class="suggest-detail-section-answer">
               <div class="suggest-detail-section-answer-label">
-                관리자 답변<span>(답변일자: 박건욱 날짜 내놔)</span>
+                관리자 답변<span
+                  >(답변일자:
+                  {{
+                    suggestDetail?.answerDate ? suggestDetail?.answerDate : ""
+                  }})</span
+                >
               </div>
-              <div class="suggest-detail-section-answer-item">답변 내용</div>
+              <div class="suggest-detail-section-answer-item">
+                {{
+                  suggestDetail?.answer
+                    ? suggestDetail?.answer
+                    : "답변을 기다리는 중입니다."
+                }}
+              </div>
             </div>
           </div>
         </div>

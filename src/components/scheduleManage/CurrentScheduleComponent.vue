@@ -116,7 +116,6 @@ export default defineComponent({
           </div>
           <div class="current-schedule-section-body-timetable">
             <timetable-component
-              v-if="scheduleList.length > 0"
               :schedule-list="scheduleList"
               :select-type="selectState"
               @clickSchedule="selectSchedule"
@@ -145,7 +144,7 @@ export default defineComponent({
                 </div>
                 <div class="info-room">
                   <div class="label">강의실</div>
-                  {{ scheduleInfo.roomKey_id }}
+                  {{ scheduleInfo.roomName }}
                 </div>
                 <div class="info-progress">
                   <div class="label">강의 진행표</div>

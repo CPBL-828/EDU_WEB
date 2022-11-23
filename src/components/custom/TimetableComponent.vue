@@ -1,5 +1,12 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+  watch,
+} from "vue";
 import { scheduleInterface } from "../../lib/types";
 /*
 @brief 시간표 컴포넌트
@@ -71,7 +78,15 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      setViewList();
+      watch(
+        () => props.scheduleList,
+        () => {
+          if (props.scheduleList) {
+            setViewList();
+          }
+        }
+      );
+
       color.value = color.value.sort(() => Math.random() - 0.5);
     });
 

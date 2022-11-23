@@ -9,6 +9,10 @@ import {
   scheduleInterface,
   studentInterface,
 } from "../../lib/types";
+/*
+@brief [강사, 관리자] [Main]학생 관리 [Sub] 분석 접근 시,
+       분석 목록 및 상세를 열람할 학생을 먼저 선택한 후, 분석 목록 접근
+ */
 export default defineComponent({
   name: "AnalysisComponent",
   components: { DropBoxComponent },

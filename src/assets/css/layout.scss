@@ -525,16 +525,11 @@ section.card {
 }
 
 section.drop {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: auto;
-  height: 35px;
+  height: auto;
 
   .drop {
     position: relative;
-    height: 33px;
     z-index: 3;
     border: 2px solid $disable-color;
     border-radius: 10px;

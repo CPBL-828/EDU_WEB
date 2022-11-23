@@ -20,6 +20,10 @@ export default defineComponent({
       types: String as PropType<string>,
       default: "270px",
     },
+    rowHeight: {
+      types: String as PropType<string>,
+      default: "33px",
+    },
   },
   emit: ["selectType", "selectStudent"],
   setup(props, context) {
@@ -60,7 +64,11 @@ export default defineComponent({
 
 <template>
   <section class="drop" v-click-away="onClickAway">
-    <div class="drop" @click="changeOpenState" :style="'width: ' + rowWidth">
+    <div
+      class="drop"
+      @click="changeOpenState"
+      :style="'width: ' + rowWidth + '; height: ' + rowHeight + ';'"
+    >
       {{ main }}
       <i class="fa-solid fa-chevron-down"></i>
     </div>

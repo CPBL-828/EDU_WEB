@@ -78,12 +78,12 @@ export interface suggestInterface {
   suggestKey: string;
   adminKey: string;
   writerKey: string;
-  // writerName: string;
+  writerName: string;
   type: string;
   state: string;
   content: string;
-  // answer: string;
-  // answerDate: string;
+  answer: string;
+  answerDate: string;
   createDate: string;
   editDate: string;
 }
@@ -94,6 +94,7 @@ export interface scheduleInterface {
   teacherKey_id: string;
   adminKey_id: string;
   name: string;
+  roomName: string;
   type: string;
   subject: string;
   book: string;
@@ -113,11 +114,20 @@ export interface scheduleInterface {
 export interface consultInterface {
   consultKey: string;
   studentKey_id: string;
-  // studentName: string;
+  studentName: string;
   targetKey: string;
   consultDate: string;
   consultType: string;
   content: string;
+  createDate: string;
+  editDate: string;
+}
+
+export interface roomInterface {
+  roomKey: string;
+  name: string;
+  type: string;
+  totalPeople: number;
   createDate: string;
   editDate: string;
 }

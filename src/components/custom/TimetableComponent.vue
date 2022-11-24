@@ -138,7 +138,7 @@ export default defineComponent({
         }"
         @click="$emit('clickSchedule', item)"
       >
-        <span class="name">{{ item.name }}</span>
+        <span class="name">{{ item.lectureName }}</span>
         <span>{{ item.subject }}</span>
       </div>
       <div
@@ -155,7 +155,7 @@ export default defineComponent({
         }"
         @click="$emit('clickSchedule', item)"
       >
-        <span class="name">{{ item.name }}</span>
+        <span class="name">{{ item.lectureName }}</span>
         <span>{{ item.subject }}</span>
       </div>
     </div>

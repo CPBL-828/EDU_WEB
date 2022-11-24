@@ -54,7 +54,7 @@ export default defineComponent({
         }
       } else {
         if (userKey.value) {
-          data = Object.assign(data, { userKey: userKey.value });
+          data = Object.assign(data, { userKey: userKey.value, search: "" });
         }
 
         const result = await ApiClient(
@@ -83,6 +83,7 @@ export default defineComponent({
       () => route.path,
       async () => {
         category.value = common.findCategory();
+        noticeList.value = undefined;
         await getNoticeList();
       }
     );

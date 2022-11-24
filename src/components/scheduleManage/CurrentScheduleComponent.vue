@@ -58,6 +58,7 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
+          console.log(result);
           result.resultData.map((item: scheduleInterface) => {
             item.start = Number(item.startTime?.substring(0, 2));
             item.minute = Number(item.startTime?.substring(3, 5));
@@ -128,11 +129,11 @@ export default defineComponent({
                 <div class="info-underline"></div>
               </div>
               <div class="info" v-if="scheduleInfo">
-                <div class="info-name">{{ scheduleInfo.name }}</div>
+                <div class="info-name">{{ scheduleInfo.lectureName }}</div>
                 <div class="info-underline"></div>
                 <div class="info-teacher">
                   <div class="label">강사명</div>
-                  {{ scheduleInfo.teacherKey_id }}
+                  {{ scheduleInfo.teacherName }}
                 </div>
                 <div class="info-book">
                   <div class="label">교재</div>

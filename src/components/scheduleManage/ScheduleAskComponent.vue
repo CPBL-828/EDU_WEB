@@ -11,6 +11,11 @@ import { KEYS, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import TimetableComponent from "../custom/TimetableComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
+/*
+@brief [강사] [Main]시간표 관리 [Sub]시간표 건의
+       강의실 선택 시, 해당 강의실을 시간표 표시
+       강의실, 강의명, 요일, 시작 입력 받고 계획서, 교재 링크 추가해서 건의
+ */
 export default defineComponent({
   name: "ScheduleAskComponent",
   components: { DropBoxComponent, SelectButtonComponent, TimetableComponent },
@@ -34,7 +39,7 @@ export default defineComponent({
     const getScheduleList = async () => {
       let data = { userKey: "", search: "", roomKey: roomKey.value };
       const result = await ApiClient(
-        "/lectures/getLectureList/",
+        "/lectures/getScheduleList/",
         common.makeJson(data)
       );
 

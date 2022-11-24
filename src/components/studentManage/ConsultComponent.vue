@@ -80,12 +80,14 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      if (result.count > 0) {
-        for (let i = 0; i < result.count; i++) {
-          studentList.value[i] = {
-            KEY: result.resultData[i].studentKey,
-            VALUE: result.resultData[i].name,
-          };
+      if (result) {
+        if (result.count > 0) {
+          for (let i = 0; i < result.count; i++) {
+            studentList.value[i] = {
+              KEY: result.resultData[i].studentKey,
+              VALUE: result.resultData[i].name,
+            };
+          }
         }
       }
     };
@@ -97,29 +99,31 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      if (result.count > 0) {
-        if (!selectSection.value) {
-          result.resultData.map((item: consultInterface) => {
-            if (item.content) {
-              listConsultList.value.push(item);
-            } else {
+      if (result) {
+        if (result.count > 0) {
+          if (!selectSection.value) {
+            result.resultData.map((item: consultInterface) => {
+              if (item.content) {
+                listConsultList.value.push(item);
+              } else {
+                planConsultList.value.push(item);
+              }
+            });
+          } else if (selectSection.value === "plan") {
+            planConsultList.value = [];
+            result.resultData.map((item: consultInterface) => {
               planConsultList.value.push(item);
-            }
-          });
-        } else if (selectSection.value === "plan") {
-          planConsultList.value = [];
-          result.resultData.map((item: consultInterface) => {
-            planConsultList.value.push(item);
-          });
-        } else if (selectSection.value === "list") {
-          listConsultList.value = [];
-          result.resultData.map((item: consultInterface) => {
-            listConsultList.value.push(item);
-          });
+            });
+          } else if (selectSection.value === "list") {
+            listConsultList.value = [];
+            result.resultData.map((item: consultInterface) => {
+              listConsultList.value.push(item);
+            });
+          }
+        } else {
+          if (selectSection.value === "plan") planConsultList.value = [];
+          else if (selectSection.value === "list") listConsultList.value = [];
         }
-      } else {
-        if (selectSection.value === "plan") planConsultList.value = [];
-        else if (selectSection.value === "list") listConsultList.value = [];
       }
 
       listTotalCnt.value = listConsultList.value.length;

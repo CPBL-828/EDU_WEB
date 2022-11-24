@@ -93,7 +93,8 @@ export interface scheduleInterface {
   roomKey_id: string;
   teacherKey_id: string;
   adminKey_id: string;
-  name: string;
+  lectureName: string;
+  teacherName: string;
   roomName: string;
   type: string;
   subject: string;

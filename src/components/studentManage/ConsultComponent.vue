@@ -27,6 +27,7 @@ export default defineComponent({
     const selectSection = ref<string | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const studentKey = ref<string>("");
+    const consultType = ref<string>("");
     const studentList = ref<Array<defaultInterface>>([]);
 
     const date = ref<string | undefined>(undefined);
@@ -93,7 +94,12 @@ export default defineComponent({
     };
 
     const setConsultList = async () => {
-      let data = { userKey: userKey.value, studentKey: studentKey.value };
+      let data = {
+        userKey: userKey.value,
+        studentKey: studentKey.value,
+        search: consultType.value,
+      };
+      console.log(data);
       const result = await ApiClient(
         "/info/getConsultList/",
         common.makeJson(data)
@@ -112,12 +118,17 @@ export default defineComponent({
           } else if (selectSection.value === "plan") {
             planConsultList.value = [];
             result.resultData.map((item: consultInterface) => {
-              planConsultList.value.push(item);
+              if (!item.content) {
+                planConsultList.value.push(item);
+              }
             });
+            console.log(planConsultList.value);
           } else if (selectSection.value === "list") {
             listConsultList.value = [];
             result.resultData.map((item: consultInterface) => {
-              listConsultList.value.push(item);
+              if (item.content) {
+                listConsultList.value.push(item);
+              }
             });
           }
         } else {
@@ -152,7 +163,8 @@ export default defineComponent({
     };
 
     const selectType = (item: defaultInterface) => {
-      // console.log("상담 유형:", item);
+      consultType.value = item.VALUE as string;
+      setConsultList();
     };
 
     const selectStudent = (item: defaultInterface) => {
@@ -386,7 +398,10 @@ export default defineComponent({
               />
             </div>
             <div class="sap"></div>
-            <div class="consult-input-section-body-item-type">
+            <div
+              class="consult-input-section-body-item-type"
+              @click="selectSection = 'plan'"
+            >
               <drop-box-component
                 placeholder="상담 유형"
                 row-width="160px"
@@ -473,7 +488,10 @@ export default defineComponent({
               />
             </div>
             <div class="sap"></div>
-            <div class="consult-input-section-body-item-type">
+            <div
+              class="consult-input-section-body-item-type"
+              @click="selectSection = 'list'"
+            >
               <drop-box-component
                 placeholder="상담 유형"
                 row-width="160px"

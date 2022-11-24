@@ -573,13 +573,16 @@ section.drop {
 
     &-opened {
       opacity: 1;
+      height: calc(40px * 5);
       transform: translateY(5px);
+      overflow: scroll;
     }
   }
 
   div[class*="item"] {
     width: calc(100% - 10px);
-    height: 30px;
+    height: 16px;
+    padding: 7px 0;
     margin: 5px 0;
     cursor: pointer;
     display: flex;

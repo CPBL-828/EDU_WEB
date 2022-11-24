@@ -64,6 +64,7 @@ export default defineComponent({
 
         if (result) {
           if (result?.count > 0) {
+            console.log(result);
             noticeList.value = result.resultData;
           } else {
             noticeList.value = undefined;

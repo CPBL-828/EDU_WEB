@@ -35,7 +35,10 @@ export default defineComponent({
       if (result) {
         if (result.count > 0) {
           result.resultData.map((item: scheduleInterface) => {
-            lectureList.value.push({ KEY: item.lectureKey, VALUE: item.name });
+            lectureList.value.push({
+              KEY: item.lectureKey,
+              VALUE: item.lectureName,
+            });
           });
         }
       }
@@ -111,19 +114,23 @@ export default defineComponent({
               <div class="name-label">학생명</div>
               <div class="analysis-label">분석 내용</div>
             </div>
-            <div
-              class="analysis-component-section-body-list-item"
-              v-for="item in studentList"
-            >
-              <i class="fa-solid fa-user" v-if="!item.profileImg"></i>
-              <div class="analysis-component-section-body-list-item-name">
-                {{ item.name }}
-              </div>
+            <div class="analysis-component-section-body-list-student">
               <div
-                class="analysis-component-section-body-list-item-show"
-                @click="selectStudent(item)"
+                class="analysis-component-section-body-list-student-item"
+                v-for="item in studentList"
               >
-                열람하기
+                <i class="fa-solid fa-user" v-if="!item.profileImg"></i>
+                <div
+                  class="analysis-component-section-body-list-student-item-name"
+                >
+                  {{ item.name }}
+                </div>
+                <div
+                  class="analysis-component-section-body-list-student-item-show"
+                  @click="selectStudent(item)"
+                >
+                  열람하기
+                </div>
               </div>
             </div>
           </div>

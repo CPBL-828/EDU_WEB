@@ -289,7 +289,7 @@ export default defineComponent({
             <td
               :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"
             >
-              학생명
+              {{ item.studentName }}
             </td>
             <td
               :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"

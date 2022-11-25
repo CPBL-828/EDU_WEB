@@ -38,6 +38,7 @@ export default defineComponent({
 
     const modalState = ref<string | undefined>(undefined);
     const analysisInsertDetail = ref<string>("");
+    const analysisDetail = ref<analysisInterface | undefined>(undefined);
 
     const getLectureList = async () => {
       let data = { userKey: teacherKey.value, search: "" };
@@ -85,6 +86,11 @@ export default defineComponent({
     const openModal = (v: string) => {
       modalState.value = v;
       store.commit("setModalState", true);
+    };
+
+    const showAnalysisDetail = (item: analysisInterface) => {
+      analysisDetail.value = item;
+      openModal("view");
     };
 
     onMounted(async () => {
@@ -252,8 +258,10 @@ export default defineComponent({
       headerList,
       modalState,
       analysisInsertDetail,
+      analysisDetail,
       selectStudent,
       openModal,
+      showAnalysisDetail,
       apidead,
       totalCnt,
     };
@@ -346,6 +354,7 @@ export default defineComponent({
                 :total-cnt="totalCnt ? totalCnt : 0"
                 :row-height="39"
                 :list-cnt="13"
+                @showAnalysisDetail="showAnalysisDetail"
               ></data-list-component>
             </div>
           </div>
@@ -356,7 +365,7 @@ export default defineComponent({
     <modal-popup-component
       :title="modalState === 'insert' ? '분석 내용 입력' : '분석 상세 내용'"
     >
-      <template v-slot:body>
+      <template v-slot:body v-if="modalState === 'insert'">
         <div class="analysis-insert">
           <div class="analysis-insert-header">
             <div class="analysis-insert-header-lecture">강의명</div>
@@ -372,6 +381,25 @@ export default defineComponent({
             placeholder="분석 내용을 입력해주세요."
             class="analysis-insert-body"
           ></textarea>
+        </div>
+      </template>
+
+      <template v-slot:body v-if="modalState === 'view'">
+        <div class="analysis-detail">
+          <div class="analysis-detail-header">
+            <div class="analysis-detail-header-date">
+              {{ analysisDetail?.createDate }}
+            </div>
+            <div class="sap"></div>
+            <div class="analysis-detail-header-lecture">강의명 어떻게 넣지</div>
+            <div class="sap"></div>
+            <div class="analysis-detail-header-student">
+              {{ analysisDetail?.studentName }}
+            </div>
+          </div>
+          <div class="analysis-detail-body">
+            {{ analysisDetail?.content }}
+          </div>
         </div>
       </template>
     </modal-popup-component>

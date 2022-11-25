@@ -132,3 +132,14 @@ export interface roomInterface {
   createDate: string;
   editDate: string;
 }
+
+export interface analysisInterface {
+  analysisKey: string;
+  studentKey: string;
+  studentName: string;
+  writerKey: string;
+  writerName: string;
+  content: string;
+  createDate: string;
+  editDate: string;
+}

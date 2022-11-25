@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import {
+  analysisInterface,
   consultInterface,
   defaultInterface,
   noticeInterface,
@@ -26,7 +27,12 @@ export default defineComponent({
     },
     dataList: {
       type: Array as PropType<
-        Array<noticeInterface | suggestInterface | consultInterface>
+        Array<
+          | noticeInterface
+          | suggestInterface
+          | consultInterface
+          | analysisInterface
+        >
       >,
       required: true,
     },
@@ -47,6 +53,9 @@ export default defineComponent({
     const showNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
     const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const showConsultList = ref<Array<consultInterface> | undefined>(undefined);
+    const showAnalysisList = ref<Array<analysisInterface> | undefined>(
+      undefined
+    );
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
@@ -99,6 +108,21 @@ export default defineComponent({
       }
     };
 
+    const setAnalysisList = () => {
+      if (props.dataList) {
+        if (props.totalCnt > listCnt.value) {
+          showAnalysisList.value = props.dataList.slice(
+            0,
+            listCnt.value
+          ) as analysisInterface[];
+          page.value = Math.ceil(props.totalCnt / listCnt.value);
+        } else {
+          showAnalysisList.value = props.dataList as analysisInterface[];
+          page.value = 0;
+        }
+      }
+    };
+
     const selectPage = (n: number) => {
       currentPage.value = n;
     };
@@ -130,6 +154,11 @@ export default defineComponent({
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as consultInterface[];
+        } else if (props.listType === "analysis") {
+          showAnalysisList.value = props.dataList?.slice(
+            listCnt.value * currentPage.value - listCnt.value,
+            listCnt.value * currentPage.value
+          ) as analysisInterface[];
         }
       }
     );
@@ -160,12 +189,15 @@ export default defineComponent({
         setNoticeList();
       } else if (props.listType === "suggest") {
         setSuggestList();
+      } else if (props.listType === "analysis") {
+        setAnalysisList();
       }
     });
     return {
       showNoticeList,
       showSuggestList,
       showConsultList,
+      showAnalysisList,
       page,
       currentPage,
       selectPage,
@@ -294,7 +326,39 @@ export default defineComponent({
             <td
               :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"
             >
-              강사명
+              강사명 좀 내놔
+            </td>
+          </tr>
+
+          <tr
+            class="data=list=section-body-item"
+            v-if="showAnalysisList"
+            v-for="item in showAnalysisList"
+            @click="$emit('showAnalysisDetail', item)"
+          >
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.createDate.substring(0, 4) }}년
+              {{ item.createDate.substring(5, 7) }}월
+              {{ item.createDate.substring(8, 10) }}일
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.writerName }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+              class="go-detail"
+            >
+              상세 내용 보러 가기
             </td>
           </tr>
         </tbody>

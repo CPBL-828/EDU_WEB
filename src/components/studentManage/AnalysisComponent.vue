@@ -37,6 +37,7 @@ export default defineComponent({
     ];
 
     const modalState = ref<string | undefined>(undefined);
+    const analysisInsertDetail = ref<string>("");
 
     const getLectureList = async () => {
       let data = { userKey: teacherKey.value, search: "" };
@@ -250,6 +251,7 @@ export default defineComponent({
       date,
       headerList,
       modalState,
+      analysisInsertDetail,
       selectStudent,
       openModal,
       apidead,
@@ -355,7 +357,22 @@ export default defineComponent({
       :title="modalState === 'insert' ? '분석 내용 입력' : '분석 상세 내용'"
     >
       <template v-slot:body>
-        <div class="insert-section"></div>
+        <div class="analysis-insert">
+          <div class="analysis-insert-header">
+            <div class="analysis-insert-header-lecture">강의명</div>
+            <div class="analysis-insert-header-student">학생명</div>
+            <div class="analysis-insert-header-date">
+              {{ new Date().toDateString() }}
+            </div>
+            <button class="analysis-insert-header-save">저장</button>
+          </div>
+          <div class="sap"></div>
+          <textarea
+            v-model="analysisInsertDetail"
+            placeholder="분석 내용을 입력해주세요."
+            class="analysis-insert-body"
+          ></textarea>
+        </div>
       </template>
     </modal-popup-component>
   </section>

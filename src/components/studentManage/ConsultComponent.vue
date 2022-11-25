@@ -9,6 +9,7 @@ import PaginationComponent from "../fixed/PaginationComponent.vue";
 import DataListComponent from "../custom/DataListComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 /*
 @brief [강사, 관리자] [Main]학생 관리, [학부모] [Main]상담 및 분석
        [Sub]상담 접근 시, 강사는 본인이 담당하는 학생과의 상담 정보를, 관리자는 선택한 강사의 담당 학생 상담 정보를,
@@ -23,6 +24,7 @@ export default defineComponent({
     DropBoxComponent,
   },
   setup() {
+    const router = useRouter();
     const store = useStore();
     const selectSection = ref<string | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
@@ -217,12 +219,13 @@ export default defineComponent({
       };
 
       const result = await ApiClient(
-        "/info/createConsult/",
+        "/info/createConsultPlan/",
         common.makeJson(data)
       );
 
       if (result) {
         planConsultList.value.push(result);
+        router.go(0);
       }
     };
 

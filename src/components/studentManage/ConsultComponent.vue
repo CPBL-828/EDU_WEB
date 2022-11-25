@@ -26,7 +26,8 @@ export default defineComponent({
     const store = useStore();
     const selectSection = ref<string | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
-    const studentKey = ref<string>("");
+    const student = ref<defaultInterface>({ KEY: "", VALUE: "" });
+    //TODO 일정 입력, 상담 예정 나누기
     const consultType = ref<string>("");
     const studentList = ref<Array<defaultInterface>>([]);
 
@@ -43,6 +44,7 @@ export default defineComponent({
     //상담 일정 입력
     const inputDate = ref<Date | undefined>(undefined);
     const inputTime = ref<Date>(new Date());
+    const inputType = ref<string>("");
     const inputName = ref<string | undefined>(undefined);
     const inputDateCalendarState = ref(false);
     const inputTimeCalendarState = ref(false);
@@ -96,10 +98,9 @@ export default defineComponent({
     const setConsultList = async () => {
       let data = {
         userKey: userKey.value,
-        studentKey: studentKey.value,
+        studentKey: student.value.KEY,
         search: consultType.value,
       };
-      console.log(data);
       const result = await ApiClient(
         "/info/getConsultList/",
         common.makeJson(data)
@@ -108,6 +109,11 @@ export default defineComponent({
       if (result) {
         if (result.count > 0) {
           if (!selectSection.value) {
+            result.resultData = result.resultData.sort(
+              (a: consultInterface, b: consultInterface): number =>
+                +new Date(a.consultDate.substring(0, 10)) -
+                +new Date(b.consultDate.substring(0, 10))
+            );
             result.resultData.map((item: consultInterface) => {
               if (item.content) {
                 listConsultList.value.push(item);
@@ -122,7 +128,6 @@ export default defineComponent({
                 planConsultList.value.push(item);
               }
             });
-            console.log(planConsultList.value);
           } else if (selectSection.value === "list") {
             listConsultList.value = [];
             result.resultData.map((item: consultInterface) => {
@@ -162,13 +167,18 @@ export default defineComponent({
       }
     };
 
+    const selectInputType = (item: defaultInterface) => {
+      inputType.value = (item.VALUE as string) + " 상담";
+    };
+
     const selectType = (item: defaultInterface) => {
       consultType.value = item.VALUE as string;
       setConsultList();
     };
 
     const selectStudent = (item: defaultInterface) => {
-      studentKey.value = item.KEY;
+      student.value.KEY = item.KEY;
+      student.value.VALUE = item.VALUE;
       setConsultList();
     };
 
@@ -181,19 +191,39 @@ export default defineComponent({
       else planCurrentPage.value = planCurrentPage.value - 1;
     };
 
-    const insertConsult = () => {
+    const insertConsult = async () => {
       if (!date.value) {
         window.alert("상담 날짜를 입력해 주세요.");
+        return false;
       } else if (!time.value) {
         window.alert("상담 시간을 입력해 주세요.");
-      } else if (!inputName.value) {
-        window.alert("학생 이름을 입력해 주세요.");
+        return false;
+      } else if (!inputType.value) {
+        window.alert("상담 유형을 선택해 주세요.");
+        return false;
+      } else if (!student.value) {
+        window.alert("학생을 선택해 주세요.");
+        return false;
       }
+
       let data = {
-        date: date.value,
-        time: time.value,
-        name: inputName.value,
+        studentKey: student.value.KEY,
+        studentName: student.value.VALUE,
+        targetKey: userKey.value,
+        consultDate:
+          date.value && time.value ? date.value + time.value + ":00" : "",
+        content: "",
+        consultType: inputType.value,
       };
+
+      const result = await ApiClient(
+        "/info/createConsult/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        planConsultList.value.push(result);
+      }
     };
 
     const openInsertPopup = (item: consultInterface) => {
@@ -203,7 +233,7 @@ export default defineComponent({
     };
 
     const doInput = () => {
-      console.log(planDetailContent.value);
+      // console.log(planDetailContent.value);
     };
 
     const showConsultDetail = (item: consultInterface) => {
@@ -216,7 +246,13 @@ export default defineComponent({
     watch(
       () => inputDate.value,
       () => {
-        date.value = inputDate.value?.toDateString();
+        date.value =
+          inputDate.value?.toLocaleDateString().substring(6, 11) +
+          "-" +
+          inputDate.value?.toLocaleDateString().substring(3, 5) +
+          "-" +
+          inputDate.value?.toLocaleDateString().substring(0, 2) +
+          "T";
       }
     );
 
@@ -292,6 +328,7 @@ export default defineComponent({
       listHeader,
       listConsultDetail,
       openCalendar,
+      selectInputType,
       selectType,
       selectStudent,
       selectPage,
@@ -353,7 +390,7 @@ export default defineComponent({
                 placeholder="상담 유형"
                 row-width="160px"
                 :select-list="typeList"
-                @selectValue="selectType"
+                @selectValue="selectInputType"
               ></drop-box-component>
             </div>
             <div class="sap"></div>

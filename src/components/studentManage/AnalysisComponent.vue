@@ -28,6 +28,7 @@ export default defineComponent({
     const lectureList = ref<defaultInterface[]>([]);
     const studentList = ref<studentInterface[] | undefined>(undefined);
     const selectStudentState = ref(false);
+    const selectedStudent = ref<studentInterface | undefined>(undefined);
     const date = new Date();
 
     const headerList: defaultInterface[] = [
@@ -35,6 +36,8 @@ export default defineComponent({
       { KEY: "writer", VALUE: "작성자" },
       { KEY: "detail", VALUE: "상세 내용" },
     ];
+    const analysisList = ref<Array<analysisInterface> | undefined>(undefined);
+    const totalCnt = ref<number>(0);
 
     const modalState = ref<string | undefined>(undefined);
     const analysisInsertDetail = ref<string>("");
@@ -75,12 +78,27 @@ export default defineComponent({
       }
     };
 
+    //TODO
     const getAnalysisList = async () => {
-      let data = { userKey: "", studentKey: "" };
+      let data = { userKey: selectedStudent.value?.studentKey };
+
+      const result = await ApiClient(
+        "/info/getAnalysisList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          analysisList.value = result.resultData;
+          totalCnt.value = analysisList.value?.length as number;
+        }
+      }
     };
 
-    const selectStudent = (s: studentInterface) => {
+    const selectStudent = async (s: studentInterface) => {
       selectStudentState.value = true;
+      selectedStudent.value = s;
+      await getAnalysisList();
     };
 
     const openModal = (v: string) => {
@@ -104,150 +122,6 @@ export default defineComponent({
       await getStudentList();
     });
 
-    const apidead: analysisInterface[] = [
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-      {
-        analysisKey: "",
-        studentKey: "",
-        studentName: "박춘배 자냐",
-        writerKey: "",
-        writerName: "api 내놔",
-        content: "아니 완성 직전이라면서 잠을 자러 가면 어떡함?",
-        createDate: "2022-11-25",
-        editDate: "",
-      },
-    ];
-    const totalCnt: number = apidead.length;
-
     return {
       category,
       placeholder,
@@ -256,14 +130,14 @@ export default defineComponent({
       selectStudentState,
       date,
       headerList,
+      analysisList,
+      totalCnt,
       modalState,
       analysisInsertDetail,
       analysisDetail,
       selectStudent,
       openModal,
       showAnalysisDetail,
-      apidead,
-      totalCnt,
     };
   },
 });
@@ -350,7 +224,7 @@ export default defineComponent({
               <data-list-component
                 list-type="analysis"
                 :header="headerList"
-                :data-list="apidead"
+                :data-list="analysisList ? analysisList : []"
                 :total-cnt="totalCnt ? totalCnt : 0"
                 :row-height="39"
                 :list-cnt="13"

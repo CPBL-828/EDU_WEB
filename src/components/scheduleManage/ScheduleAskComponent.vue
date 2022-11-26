@@ -23,8 +23,21 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const roomKey = ref<string | undefined>(undefined);
+    const scheduleName = ref<string>("");
+    const selectedDay = ref<string>("");
+    const time = ref<Date>(new Date());
+    const duration = ref<number>();
     const roomList = ref<Array<roomInterface> | undefined>(undefined);
     const selectRoomList = ref<Array<defaultInterface>>([]);
+    const selectDayList = ref<Array<defaultInterface>>([
+      { KEY: "mon", VALUE: "월" },
+      { KEY: "tue", VALUE: "화" },
+      { KEY: "wed", VALUE: "수" },
+      { KEY: "thu", VALUE: "목" },
+      { KEY: "fri", VALUE: "금" },
+      { KEY: "sat", VALUE: "토" },
+      { KEY: "sun", VALUE: "일" },
+    ]);
     const scheduleList = ref<Array<scheduleInterface>>([]);
     const selectItem: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
@@ -77,6 +90,10 @@ export default defineComponent({
       await getScheduleList();
     };
 
+    const selectDay = (d: defaultInterface) => {
+      // console.log(d);
+    };
+
     onMounted(async () => {
       category.value = common.findCategory();
 
@@ -87,17 +104,21 @@ export default defineComponent({
       await getRoomList();
     });
 
-    let time = new Date();
     return {
       category,
+      scheduleName,
+      selectedDay,
+      time,
+      duration,
       roomList,
       selectRoomList,
+      selectDayList,
       scheduleList,
       selectItem,
       selectState,
       changeState,
       selectRoom,
-      time,
+      selectDay,
     };
   },
 });
@@ -150,20 +171,25 @@ export default defineComponent({
                   row-height="24px"
                   @selectValue="selectRoom"
                 ></drop-box-component>
-                <input class="name" type="text" placeholder="강의명" />
+                <input
+                  class="name"
+                  type="text"
+                  placeholder="강의명"
+                  v-model="scheduleName"
+                />
+                <!--                <drop-box-component-->
+                <!--                  :select-list="selectRoomList"-->
+                <!--                  placeholder="대상 학년"-->
+                <!--                  row-width="216px"-->
+                <!--                  row-height="24px"-->
+                <!--                  @selectValue="selectRoom"-->
+                <!--                ></drop-box-component>-->
                 <drop-box-component
-                  :select-list="selectRoomList"
-                  placeholder="대상 학년"
-                  row-width="216px"
-                  row-height="24px"
-                  @selectValue="selectRoom"
-                ></drop-box-component>
-                <drop-box-component
-                  :select-list="selectRoomList"
+                  :select-list="selectDayList"
                   placeholder="요일"
                   row-width="216px"
                   row-height="24px"
-                  @selectValue="selectRoom"
+                  @selectValue="selectDay"
                 ></drop-box-component>
                 <div class="start">
                   <div class="start-label">시작 시간</div>
@@ -176,13 +202,33 @@ export default defineComponent({
                   ></v-date-picker>
                 </div>
                 <div class="duration">
-                  <div class="duration-label">시작 시간</div>
+                  <div class="duration-label">지속 시간</div>
                   <div class="duration-time">
-                    <input class="duration-time-minute" type="text" />
+                    <input
+                      class="duration-time-minute"
+                      type="text"
+                      placeholder="00"
+                      v-model="duration"
+                    />
                     <span>분</span>
                   </div>
                 </div>
               </div>
+              <div class="schedule-ask-section-body-info-container-etc">
+                <button
+                  class="schedule-ask-section-body-info-container-etc-planner"
+                >
+                  강의 계획서 첨부하기
+                </button>
+                <button
+                  class="schedule-ask-section-body-info-container-etc-book"
+                >
+                  교재 링크 입력하기
+                </button>
+              </div>
+              <button class="schedule-ask-section-body-info-container-submit">
+                건의하기
+              </button>
             </div>
           </div>
         </div>

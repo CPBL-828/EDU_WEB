@@ -117,6 +117,7 @@ export interface consultInterface {
   studentKey_id: string;
   studentName: string;
   targetKey: string;
+  targetName: string;
   consultDate: string;
   consultType: string;
   content: string;

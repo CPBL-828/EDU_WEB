@@ -326,7 +326,7 @@ export default defineComponent({
             <td
               :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"
             >
-              강사명 좀 내놔
+              {{ item.targetName }}
             </td>
           </tr>
 

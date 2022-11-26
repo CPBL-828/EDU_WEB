@@ -44,7 +44,6 @@ export default defineComponent({
       );
 
       if (result) {
-        console.log(result);
         if (result.count > 0) {
           result.resultData.map((item: scheduleInterface) => {
             item.start = Number(item.startTime?.substring(0, 2));

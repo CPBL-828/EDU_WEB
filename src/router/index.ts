@@ -48,6 +48,11 @@ const routes = [
     name: "schedule",
     component: () => import("../views/ScheduleManagePage.vue"),
   },
+  {
+    path: "/lecture/:subCategory",
+    name: "lecture",
+    component: () => import("../views/LectureManagePage.vue"),
+  },
 ];
 
 const router = createRouter({

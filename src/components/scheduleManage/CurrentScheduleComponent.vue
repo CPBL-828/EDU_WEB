@@ -50,7 +50,7 @@ export default defineComponent({
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         teacherKey = common.getItem(KEYS.LU).teacherKey;
       }
-      let data = { userKey: teacherKey, search: "" };
+      let data = { userKey: teacherKey, search: "", roomKey: "" };
       const result = await ApiClient(
         "/lectures/getLectureList/",
         common.makeJson(data)
@@ -58,12 +58,16 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          console.log(result);
           result.resultData.map((item: scheduleInterface) => {
             item.start = Number(item.startTime?.substring(0, 2));
             item.minute = Number(item.startTime?.substring(3, 5));
+
+            if (item.progress === "등록") {
+              scheduleList.value.push(item as scheduleInterface);
+            }
           });
-          scheduleList.value = result.resultData as scheduleInterface[];
+
+          console.log("현재 시간표: ", scheduleList.value);
         }
       }
     });
@@ -117,6 +121,7 @@ export default defineComponent({
           </div>
           <div class="current-schedule-section-body-timetable">
             <timetable-component
+              v-if="scheduleList.length > 0"
               :schedule-list="scheduleList"
               :select-type="selectState"
               @clickSchedule="selectSchedule"

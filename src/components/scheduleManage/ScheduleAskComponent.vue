@@ -50,19 +50,23 @@ export default defineComponent({
     };
 
     const getScheduleList = async () => {
-      let data = { userKey: "", search: "", roomKey: roomKey.value };
+      let data = { userKey: userKey.value, search: "", roomKey: roomKey.value };
       const result = await ApiClient(
-        "/lectures/getScheduleList/",
+        "/lectures/getLectureList/",
         common.makeJson(data)
       );
 
       if (result) {
+        scheduleList.value = [];
         if (result.count > 0) {
           result.resultData.map((item: scheduleInterface) => {
             item.start = Number(item.startTime?.substring(0, 2));
             item.minute = Number(item.startTime?.substring(3, 5));
+
+            if (item.progress === "등록") {
+              scheduleList.value.push(item as scheduleInterface);
+            }
           });
-          scheduleList.value = result.resultData as scheduleInterface[];
         }
       }
     };
@@ -70,7 +74,7 @@ export default defineComponent({
     const getRoomList = async () => {
       let data = { search: "" };
       const result = await ApiClient(
-        "/lectures/getLectureRoomList/",
+        "/lectures/getRoomList/",
         common.makeJson(data)
       );
 

@@ -77,15 +77,15 @@ export default defineComponent({
       }
     );
 
+    watch(
+      () => props.scheduleList as [],
+      () => {
+        setViewList();
+      }
+    );
+
     onMounted(() => {
-      watch(
-        () => props.scheduleList,
-        () => {
-          if (props.scheduleList) {
-            setViewList();
-          }
-        }
-      );
+      setViewList();
 
       color.value = color.value.sort(() => Math.random() - 0.5);
     });
@@ -102,7 +102,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="schedule">
+  <section class="schedule" v-if="viewScheduleList">
     <div class="all">
       <div class="time-label">
         <span v-for="i in 12">{{ i < 10 ? "0" + i : i }}</span>

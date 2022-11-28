@@ -29,39 +29,86 @@ section.planner {
         justify-content: center;
         align-items: center;
 
-        table {
+        &-list {
           position: absolute;
-          top: 50%;
+          top: 56px;
           left: 50%;
-          transform: translate(-50%, -50%);
-          border: 2px solid #d9d9d9;
-          width: 1117px;
-          height: auto;
-          border-spacing: 0;
+          transform: translateX(-50%);
 
-          thead {
-            width: 100%;
-            height: 43px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #343434;
-            background-color: #eaeaea;
+          table {
+            border: 2px solid #d9d9d9;
+            width: 1117px;
+            height: auto;
+            border-spacing: 0;
 
-            tr {
-              th.name {
-                width: 40%;
+            thead {
+              width: 100%;
+              height: 43px;
+              font-size: 14px;
+              font-weight: bold;
+              color: #343434;
+              background-color: #eaeaea;
+
+              tr {
+                th.name {
+                  width: 30%;
+                }
+                th.day {
+                  width: 10%;
+                }
+                th.time {
+                  width: 10%;
+                }
+                th.progress {
+                  width: 20%;
+                }
+                th.planner {
+                  width: 30%;
+                }
               }
-              th.day {
-                width: 15%;
-              }
-              th.time {
-                width: 15%;
-              }
-              th.planner {
-                width: 30%;
+            }
+
+            tbody {
+              tr {
+                height: 45px;
+                font-size: 14px;
+                font-weight: normal;
+                color: $sub-color;
+
+                &:hover {
+                  background-color: $background-color;
+                }
+
+                td {
+                  text-align: center;
+                  border-top: 2px solid #d9d9d9;
+                  border-right: 2px solid #d9d9d9;
+                  cursor: default;
+                }
+
+                td.name,
+                td.time,
+                td.planner {
+                  background-color: #f4f4f4;
+                }
+
+                td.planner {
+                  border-right: 0;
+                  text-decoration: underline;
+                  cursor: pointer;
+
+                  &:hover {
+                    font-weight: bold;
+                  }
+                }
               }
             }
           }
+        }
+
+        &-page {
+          position: absolute;
+          bottom: 56px;
         }
       }
     }

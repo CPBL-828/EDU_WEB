@@ -53,7 +53,12 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      setViewPage();
+      watch(
+        () => props.page,
+        () => {
+          setViewPage();
+        }
+      );
     });
 
     return {

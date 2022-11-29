@@ -65,6 +65,7 @@ div.away {
         left: 50%;
         transform: translateX(-50%);
         cursor: pointer;
+        transition: all 0.2s;
 
         &:hover {
           font-weight: 600;
@@ -112,6 +113,7 @@ div.away {
             height: 50px;
             border: 2px solid white;
             cursor: pointer;
+            transition: all 0.2s;
 
             &:hover {
               border: 2px solid rgba(204, 204, 204, 0.2);
@@ -179,6 +181,7 @@ section.category {
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
+      transition: all 0.2s;
 
       &:hover {
         background-color: $hover-color;
@@ -204,6 +207,7 @@ section.category {
   border-radius: 50%;
   box-shadow: 0 0 3px 2px $primary-color;
   cursor: pointer;
+  transition: all 0.2s;
 
   &:hover {
     opacity: 1;
@@ -317,6 +321,7 @@ section.pagination {
       padding: 0 10px;
       cursor: pointer;
       font-size: 14px;
+      transition: all 0.2s;
 
       &:hover {
         color: $sub-color;
@@ -350,6 +355,7 @@ section.pagination {
         color: white;
         margin: 0 20px;
         cursor: pointer;
+        transition: all 0.2s;
 
         &:hover {
           color: $sub-color;
@@ -515,6 +521,7 @@ section.card {
         font-weight: bold;
         margin-left: 10px;
         cursor: pointer;
+        transition: all 0.2s;
 
         &:hover {
           background-color: $hover-color;
@@ -557,7 +564,7 @@ section.drop {
     border: 2px solid #d9d9d9;
     border-radius: 10px;
     color: $disable-color;
-    transition: all 300ms;
+    transition: all 0.3s;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -626,6 +633,7 @@ section.select {
         cursor: pointer;
         background-color: #e7e7e7;
         color: $disable-color;
+        transition: all 0.2s;
       }
 
       div[class*="active"] {

@@ -70,7 +70,7 @@ export default defineComponent({
 
 <template>
   <section class="pagination">
-    <div class="pagination" v-if="viewPage">
+    <div class="pagination" v-if="viewPage.length > 0">
       <div
         :class="currentPage !== 1 ? 'arrow-active' : 'arrow'"
         @click="$emit('changePage', 0)"

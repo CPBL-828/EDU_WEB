@@ -65,7 +65,7 @@ export default defineComponent({
       let data = {
         userKey: teacherKey.value,
         search: "",
-        roomKey: props.roomKey,
+        roomKey: props.roomKey ? props.roomKey : roomKey.value,
       };
 
       const result = await ApiClient(

@@ -70,6 +70,7 @@ section.modal {
             opacity: 1;
             background-color: #9e9e9e;
             z-index: 1;
+            transition: all 0.2s;
 
             &:hover {
               background-color: $sub-color;
@@ -86,6 +87,7 @@ section.modal {
             opacity: 1;
             background-color: $primary-color;
             z-index: 1;
+            transition: all 0.2s;
 
             &:hover {
               background-color: $hover-color;
@@ -108,6 +110,7 @@ section.modal {
           font-size: 15px;
           font-weight: bold;
           color: white;
+          transition: all 0.2s;
 
           &:hover {
             background-color: $hover-color;
@@ -597,6 +600,7 @@ section.modal {
             font-weight: bold;
             color: white;
             cursor: pointer;
+            transition: all 0.2s;
 
             &:hover {
               background-color: $sub-color;

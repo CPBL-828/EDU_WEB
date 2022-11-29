@@ -92,6 +92,7 @@ section.my-info {
               cursor: pointer;
               font-weight: bold;
               font-size: 16px;
+              transition: all 0.2s;
 
               &:hover {
                 outline: 0;
@@ -110,6 +111,7 @@ section.my-info {
               color: $primary-color;
               margin-left: 14px;
               cursor: pointer;
+              transition: all 0.2s;
 
               i {
                 margin-right: 5px;
@@ -306,6 +308,7 @@ section.my-work {
                 border-radius: 10px;
                 border: 0;
                 cursor: pointer;
+                transition: all 0.2s;
 
                 &:hover {
                   background-color: $hover-color;
@@ -437,7 +440,7 @@ section.suggestion {
           top: 105px;
           left: 40px;
           width: 700px;
-          height: calc(100% - 105px);
+          height: calc(95% - 105px);
         }
 
         &-write {
@@ -518,6 +521,7 @@ section.suggestion {
             align-items: center;
             margin: 18px 0 20px 0;
             cursor: pointer;
+            transition: all 0.2s;
 
             &:hover {
               background-color: $hover-color;

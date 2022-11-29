@@ -100,7 +100,6 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          console.log(result);
           allSuggestList.value = result.resultData;
 
           allSuggestList.value?.map((item: suggestInterface) => {

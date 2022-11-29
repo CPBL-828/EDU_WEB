@@ -365,11 +365,10 @@ export default defineComponent({
       </table>
       <div class="data-list-pagination">
         <pagination-component
-          v-if="page !== 0"
-          @changePage="changePage"
-          @selectPage="selectPage"
           :page="page"
           :current-page="currentPage"
+          @selectPage="selectPage"
+          @changePage="changePage"
         ></pagination-component>
       </div>
     </div>

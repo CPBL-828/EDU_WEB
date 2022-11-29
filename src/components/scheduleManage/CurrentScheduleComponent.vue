@@ -50,7 +50,14 @@ export default defineComponent({
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         teacherKey = common.getItem(KEYS.LU).teacherKey;
       }
-      let data = { userKey: teacherKey, search: "", roomKey: "" };
+      let data = {
+        userKey: teacherKey,
+        search: "",
+        roomKey: "",
+        target: "",
+        roomName: "",
+        lectureName: "",
+      };
       const result = await ApiClient(
         "/lectures/getLectureList/",
         common.makeJson(data)

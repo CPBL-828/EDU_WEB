@@ -41,6 +41,7 @@ export default defineComponent({
     const header: defaultInterface[] = [
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
+      { KEY: "WRITEr", VALUE: "작성자명" },
       { KEY: "DETAIL", VALUE: "상세 사항" },
     ];
     const placeholder: string = "건의 유형";
@@ -106,13 +107,11 @@ export default defineComponent({
         writerType: "",
         userKey: userKey.value,
       };
-      console.log(data);
       const result = await ApiClient(
         "/info/getSuggestList/",
         common.makeJson(data)
       );
 
-      console.log(result);
       if (result) {
         if (result.count > 0) {
           allSuggestList.value = result.resultData;

@@ -36,6 +36,7 @@ export default defineComponent({
     ];
     const target = ref<string>("");
     const roomList = ref<Array<defaultInterface>>([]);
+    const roomName = ref<string>("");
     const roomKey = ref<string>("");
     const day: Array<string> = ["월", "화", "수", "목", "금", "토", "일"];
     const lectureList = ref<Array<scheduleInterface>>([]);
@@ -66,6 +67,9 @@ export default defineComponent({
         userKey: teacherKey.value,
         search: "",
         roomKey: props.roomKey ? props.roomKey : roomKey.value,
+        roomName: roomName.value,
+        target: target.value,
+        lectureName: lectureName.value,
       };
 
       const result = await ApiClient(
@@ -97,6 +101,24 @@ export default defineComponent({
         showLectureList.value = lectureList.value;
         page.value = 0;
       }
+    };
+
+    const selectLectureName = (item: defaultInterface) => {
+      lectureName.value = item.VALUE as string;
+    };
+
+    const selectTarget = (item: defaultInterface) => {
+      target.value = item.VALUE as string;
+    };
+
+    const selectRoom = (item: defaultInterface) => {
+      roomName.value = item.VALUE as string;
+    };
+
+    const doSearch = () => {
+      lectureList.value = [];
+      lectureNameList.value = [];
+      setLectureList();
     };
 
     const selectLecture = (item: scheduleInterface) => {
@@ -145,6 +167,10 @@ export default defineComponent({
       lectureInfo,
       page,
       currentPage,
+      selectLectureName,
+      selectTarget,
+      selectRoom,
+      doSearch,
       selectLecture,
       selectPage,
       changePage,
@@ -177,20 +203,23 @@ export default defineComponent({
                 :select-list="lectureNameList"
                 row-width="216px"
                 row-height="28px"
+                @selectValue="selectLectureName"
               ></drop-box-component>
               <drop-box-component
                 placeholder="대상"
                 :select-list="targetList"
                 row-width="130px"
                 row-height="28px"
+                @selectValue="selectTarget"
               ></drop-box-component>
               <drop-box-component
                 placeholder="강의실"
                 :select-list="roomList"
                 row-width="160px"
                 row-height="28px"
+                @selectValue="selectRoom"
               ></drop-box-component>
-              <div class="find-button">강의 찾기</div>
+              <div class="find-button" @click="doSearch">강의 찾기</div>
             </div>
             <div class="lecture-detail-section-body-left-list">
               <div
@@ -244,7 +273,7 @@ export default defineComponent({
                 <span class="label">강의 교재</span>
                 <span class="item">교재를 넣을 수 있나?</span>
                 <span class="label">수강 인원</span>
-                <span class="item">잉</span>
+                <span class="item">명</span>
                 <div class="planner-btn">강의계획서 열람하기</div>
               </div>
             </div>

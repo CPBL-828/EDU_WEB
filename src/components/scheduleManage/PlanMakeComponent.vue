@@ -33,7 +33,14 @@ export default defineComponent({
     const currentPage = ref<number>(1);
 
     const setLectureList = async () => {
-      let data = { userKey: userKey.value, search: "", roomKey: "" };
+      let data = {
+        userKey: userKey.value,
+        search: "",
+        roomKey: "",
+        target: "",
+        roomName: "",
+        lectureName: "",
+      };
 
       const result = await ApiClient(
         "/lectures/getLectureList/",

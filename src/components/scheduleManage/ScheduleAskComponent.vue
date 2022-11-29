@@ -50,7 +50,14 @@ export default defineComponent({
     };
 
     const getScheduleList = async () => {
-      let data = { userKey: userKey.value, search: "", roomKey: roomKey.value };
+      let data = {
+        userKey: userKey.value,
+        search: "",
+        roomKey: roomKey.value,
+        target: "",
+        roomName: "",
+        lectureName: "",
+      };
       const result = await ApiClient(
         "/lectures/getLectureList/",
         common.makeJson(data)

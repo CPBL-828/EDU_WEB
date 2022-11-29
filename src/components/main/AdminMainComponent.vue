@@ -1,10 +1,28 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import ConsultComponent from "../studentManage/ConsultComponent.vue";
+import common from "../../lib/common";
+import { KEYS } from "../../constant";
+import { ApiClient } from "../../axios";
 export default defineComponent({
   name: "AdminMainComponent",
   components: { ConsultComponent },
   setup() {
+    onMounted(async () => {
+      let data = {
+        userType: "ADM",
+        search: "",
+        writerType: "TEA",
+        userKey: common.getItem(KEYS.LU).adminKey,
+      };
+
+      console.log(data);
+      const result = await ApiClient(
+        "/info/getSuggestList/",
+        common.makeJson(data)
+      );
+      console.log(result);
+    });
     return {};
   },
 });

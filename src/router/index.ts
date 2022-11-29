@@ -17,6 +17,11 @@ const routes = [
     component: () => import("../views/main/MainPage.vue"),
   },
   {
+    path: "/room",
+    name: "room",
+    component: () => import("../views/RoomManagePage.vue"),
+  },
+  {
     // 관리자의 전체 공지
     path: "/notice",
     name: "all-notice",

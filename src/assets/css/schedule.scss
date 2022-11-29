@@ -584,6 +584,16 @@ section.lecture-detail {
           color: $sub-color;
         }
 
+        //강의실 관리 (거의 동일한 형태라서 클래스명 같이 사용)
+        &-title {
+          position: absolute;
+          top: 21px;
+          left: 39px;
+          font-size: 15px;
+          font-weight: bold;
+          color: #777777;
+        }
+
         &-left {
           position: absolute;
           width: 740px;
@@ -764,6 +774,67 @@ section.lecture-detail {
                 &:hover {
                   background-color: $sub-color;
                   transition: all 0.3s;
+                }
+              }
+
+              //이 밑으로 강의실 관리
+              &-title {
+                font-size: 14px;
+                font-weight: bold;
+                color: $sub-color;
+                margin-bottom: 29px;
+              }
+
+              input {
+                width: 220px;
+                height: 28px;
+                border: 2px solid #e7e7e7;
+                border-radius: 10px;
+                text-align: center;
+                margin-top: 5px;
+                margin-bottom: 26px;
+                font-weight: bold;
+                font-size: 12px;
+                color: $sub-color;
+                outline: 0;
+
+                &::placeholder {
+                  color: $disable-color;
+                }
+              }
+
+              .page {
+                margin-top: 5px;
+
+                div.drop {
+                  color: $disable-color;
+                  font-size: 12px;
+                  border: 2px solid #e7e7e7;
+
+                  &-list-opened {
+                    height: auto;
+                  }
+                }
+              }
+
+              input.save-btn {
+                width: 140px;
+                height: 28px;
+                background-color: #bdbdbd;
+                border: 0;
+                border-radius: 10px;
+                text-align: center;
+                font-size: 12px;
+                font-weight: bold;
+                color: white;
+                outline: 0;
+                cursor: pointer;
+                transition: all 0.2s;
+                margin-top: 121px;
+                margin-bottom: 0;
+
+                &:hover {
+                  background-color: $sub-color;
                 }
               }
             }

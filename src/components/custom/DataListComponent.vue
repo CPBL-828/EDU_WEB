@@ -282,6 +282,13 @@ export default defineComponent({
               :style="
                 rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
               "
+            >
+              {{ item.writerName }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
               class="go-detail"
               @click="$emit('showSuggestDetail', item)"
             >

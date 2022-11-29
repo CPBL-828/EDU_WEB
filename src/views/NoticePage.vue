@@ -20,6 +20,7 @@ export default defineComponent({
     const store = useStore();
     const route = useRoute();
     const userKey = ref<string | undefined>(undefined);
+    const adminState = ref(false);
     const header: defaultInterface[] = [
       { KEY: "TYPE", VALUE: "공지 유형" },
       { KEY: "TITLE", VALUE: "공지 제목" },
@@ -64,7 +65,6 @@ export default defineComponent({
 
         if (result) {
           if (result?.count > 0) {
-            console.log(result);
             noticeList.value = result.resultData;
           } else {
             noticeList.value = undefined;
@@ -96,12 +96,15 @@ export default defineComponent({
         userKey.value = common.getItem(KEYS.LU).studentKey;
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         userKey.value = common.getItem(KEYS.LU).teacherKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM) {
+        adminState.value = true;
       }
       category.value = common.findCategory();
       await getNoticeList();
     });
 
     return {
+      adminState,
       header,
       category,
       noticeList,
@@ -138,6 +141,12 @@ export default defineComponent({
               @keypress.enter="getNoticeList"
             />
           </div>
+          <input
+            type="button"
+            value="작성하기"
+            class="write-btn"
+            v-if="adminState"
+          />
           <div class="notice-section-body-content">
             <data-list-component
               v-if="noticeList"

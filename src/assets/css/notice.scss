@@ -63,6 +63,29 @@ section.notice {
           }
         }
 
+        .write-btn {
+          position: absolute;
+          top: calc(50% - 330px);
+          transform: translateY(-50%);
+          right: 30px;
+          width: 130px;
+          height: 37px;
+          border-radius: 19px;
+          color: $primary-color;
+          text-align: center;
+          font-weight: bold;
+          background-color: white;
+          //background-color: $primary-color;
+          border: 2px solid $primary-color;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background-color: $primary-color;
+            color: white;
+          }
+        }
+
         &-content {
           position: relative;
           width: 1151px;

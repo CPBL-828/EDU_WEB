@@ -66,8 +66,6 @@ export default defineComponent({
               scheduleList.value.push(item as scheduleInterface);
             }
           });
-
-          console.log("현재 시간표: ", scheduleList.value);
         }
       }
     });

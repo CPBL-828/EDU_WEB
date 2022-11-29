@@ -44,7 +44,14 @@ export default defineComponent({
     const analysisDetail = ref<analysisInterface | undefined>(undefined);
 
     const getLectureList = async () => {
-      let data = { userKey: teacherKey.value, search: "", roomKey: "" };
+      let data = {
+        userKey: teacherKey.value,
+        search: "",
+        roomKey: "",
+        target: "",
+        roomName: "",
+        lectureName: "",
+      };
 
       const result = await ApiClient(
         "/lectures/getLectureList/",

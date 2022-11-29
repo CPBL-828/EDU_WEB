@@ -248,7 +248,7 @@ export const KYO_SUB: categoryInterface[] = [
     VALUE: [
       { KEY: "T-INFO", VALUE: "강사 정보" },
       { KEY: "WORK", VALUE: "출근부" },
-      { KEY: "SUGGESTION", VALUE: "건의사항" },
+      { KEY: "T-SUGGESTION", VALUE: "건의사항" },
     ],
   },
   {
@@ -257,7 +257,7 @@ export const KYO_SUB: categoryInterface[] = [
       { KEY: "S-INFO", VALUE: "학생 정보" },
       { KEY: "CONSULT", VALUE: "상담" },
       { KEY: "ANALYSIS", VALUE: "분석" },
-      { KEY: "SUGGESTION", VALUE: "건의사항" },
+      { KEY: "S-SUGGESTION", VALUE: "건의사항" },
     ],
   },
   {
@@ -336,7 +336,7 @@ export const ETC_SUB: categoryInterface[] = [
     VALUE: [
       { KEY: "T-INFO", VALUE: "강사 정보" },
       { KEY: "WORK", VALUE: "출근부" },
-      { KEY: "SUGGESTION", VALUE: "건의사항" },
+      { KEY: "T-SUGGESTION", VALUE: "건의사항" },
     ],
   },
   {
@@ -345,7 +345,7 @@ export const ETC_SUB: categoryInterface[] = [
       { KEY: "S-INFO", VALUE: "학생 정보" },
       { KEY: "CONSULT", VALUE: "상담" },
       { KEY: "ANALYSIS", VALUE: "분석" },
-      { KEY: "SUGGESTION", VALUE: "건의사항" },
+      { KEY: "S-SUGGESTION", VALUE: "건의사항" },
     ],
   },
   {

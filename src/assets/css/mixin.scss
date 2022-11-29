@@ -29,3 +29,11 @@ $laptop-width: 1200px;
   color: white;
   font-size: 15px;
 }
+
+@mixin ellipsis {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+} ;

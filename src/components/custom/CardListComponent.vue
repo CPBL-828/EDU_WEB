@@ -133,7 +133,7 @@ export default defineComponent({
               </div>
               <div class="card-item-info-phone-section-par">
                 <span class="title">email</span>
-                <span class="number">준비 중입니다.</span>
+                <span class="email">{{ item.email }}</span>
               </div>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default defineComponent({
               </div>
               <div class="sns" v-if="teacherInfo">
                 <span class="sns-label">SNS</span>
-                <span class="sns-item">SNS 주소</span>
+                <span class="sns-item">{{ teacherInfo?.link }}</span>
               </div>
               <div class="sns" v-if="studentInfo">
                 <span class="sns-label">주소</span>

@@ -8,6 +8,7 @@ import { ApiClient } from "../../axios";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
+import { KEYS } from "../../constant";
 /*
 @brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
        교무 관리자는 메인 카테고리 [학생 관리]와 [강사 관리]로 접근하여 각 유저의 건의사항 처리
@@ -31,6 +32,7 @@ export default defineComponent({
   setup: function () {
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const userKey = ref<string | undefined>(undefined);
     const selectState = ref("ok");
     const selectItem = ref<Array<defaultInterface>>([
       { KEY: "ok", VALUE: "처리 완료" },
@@ -92,12 +94,25 @@ export default defineComponent({
     onMounted(async () => {
       category.value = common.findCategory();
 
-      let data = { search: "" };
+      if (common.getItem(KEYS.LU)) {
+        if (common.getItem(KEYS.UK).userKey === "TEA") {
+          userKey.value = common.getItem(KEYS.LU).teacherKey;
+        }
+      }
+
+      let data = {
+        userType: common.getItem(KEYS.UK).userKey,
+        search: "",
+        writerType: "",
+        userKey: userKey.value,
+      };
+      console.log(data);
       const result = await ApiClient(
         "/info/getSuggestList/",
         common.makeJson(data)
       );
 
+      console.log(result);
       if (result) {
         if (result.count > 0) {
           allSuggestList.value = result.resultData;

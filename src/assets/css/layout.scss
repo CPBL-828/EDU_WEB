@@ -779,3 +779,93 @@ section.schedule {
     width: auto;
   }
 }
+
+section.select-lecture {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .select-lecture {
+    height: 100%;
+
+    &-label {
+      display: flex;
+      flex-direction: column;
+
+      &-teacher {
+        font-size: 15px;
+        font-weight: bold;
+        color: #777777;
+      }
+
+      &-tip {
+        font-size: 11px;
+        color: $disable-color;
+      }
+
+      &-button {
+        width: 180px;
+        height: 25px;
+        margin-top: 30px;
+      }
+    }
+
+    .sap {
+      width: 100%;
+      height: 1px;
+      border-bottom: 2px solid #efefef;
+      margin-top: 30px;
+    }
+
+    &-list {
+      position: absolute;
+      margin-top: 42px;
+      left: calc(50% - 9px);
+      transform: translateX(-50%);
+      width: calc(1026px + 19px);
+      height: calc(396px + 16px);
+
+      &-item {
+        position: relative;
+        float: left;
+        color: white;
+        width: 190px;
+        height: 190px;
+        border-radius: 6px;
+        margin-left: 19px;
+        margin-bottom: 16px;
+        cursor: pointer;
+
+        &-name {
+          position: absolute;
+          top: 34px;
+          left: 15px;
+          font-size: 16px;
+          font-weight: bold;
+        }
+
+        &-target {
+          position: absolute;
+          top: 95px;
+          left: 15px;
+          font-size: 12px;
+        }
+
+        &-view {
+          position: absolute;
+          bottom: 16px;
+          right: 15px;
+          font-size: 12px;
+          font-weight: bold;
+          opacity: 0.6;
+        }
+
+        &:hover {
+          .select-lecture-list-item-view {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}

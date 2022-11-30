@@ -6,10 +6,11 @@ import {
   studentInterface,
   teacherInterface,
 } from "../../lib/types";
-import { USER_KEY } from "../../constant";
+import { KEYS, USER_KEY } from "../../constant";
 import common from "../../lib/common";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import { ApiClient } from "../../axios";
 /*
 @brief 강사, 학생, 학부모의 내 정보 표시
 @props 강사/학생/학부모 중 어떤 유저인지에 대한 키 값, 해당 유저의 정보
@@ -62,15 +63,34 @@ export default defineComponent({
       editState.value = true;
     };
 
-    const doEdit = () => {
-      let data = { email: "", sns: "", phone: "" };
+    const doEdit = async () => {
+      let data = {
+        teacherKey: teacherInfo.value?.teacherKey,
+        email: teacherEditInfo.value.email,
+        link: teacherEditInfo.value.link,
+        phone: teacherEditInfo.value.phone,
+      };
       if (teacherInfo.value?.email !== teacherEditInfo.value.email) {
-        data.email = teacherEditInfo.value.email;
       } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
-        data.phone = teacherEditInfo.value.phone;
+      } else if (teacherInfo.value?.link !== teacherEditInfo.value.link) {
       } else {
         if (window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?"))
           editState.value = false;
+      }
+
+      const result = await ApiClient(
+        "/members/editTeacher/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        teacherInfo.value = result as teacherInterface;
+        common.removeItem(KEYS.LU);
+        window.alert("정보 수정을 성공했습니다.");
+        common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
+        editState.value = false;
+      } else {
+        window.alert("정보 수정을 실패했습니다.");
       }
     };
 
@@ -92,6 +112,7 @@ export default defineComponent({
         teacherInfo.value = props.userData as teacherInterface;
         teacherEditInfo.value.email = teacherInfo.value.email;
         teacherEditInfo.value.phone = teacherInfo.value.phone;
+        teacherEditInfo.value.link = teacherInfo.value.link;
       }
     });
 
@@ -267,12 +288,15 @@ export default defineComponent({
                 </div>
                 <div class="sns">
                   <span class="sns-label">SNS</span>
-                  <span class="sns-item" v-if="!editState">SNS 주소</span>
+                  <span class="sns-item" v-if="!editState">{{
+                    teacherInfo?.link
+                  }}</span>
                   <input
                     v-if="editState"
                     type="text"
                     class="sns-item"
                     placeholder="SNS 주소"
+                    v-model="teacherEditInfo.link"
                   />
                 </div>
               </div>

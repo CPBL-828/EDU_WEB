@@ -1,7 +1,12 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
-import { consultInterface, defaultInterface } from "../../lib/types";
+import {
+  adminInterface,
+  consultInterface,
+  defaultInterface,
+  teacherInterface,
+} from "../../lib/types";
 import { ApiClient } from "../../axios";
 import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
@@ -27,7 +32,8 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const selectSection = ref<string | undefined>(undefined);
-    const userKey = ref<string | undefined>(undefined);
+    const teacherInfo = ref<teacherInterface | undefined>(undefined);
+    const adminInfo = ref<adminInterface | undefined>(undefined);
     const student = ref<defaultInterface>({ KEY: "", VALUE: "" });
     //TODO 일정 입력, 상담 예정 나누기
     const consultType = ref<string>("");
@@ -79,7 +85,7 @@ export default defineComponent({
     const listConsultDetail = ref<consultInterface | undefined>(undefined);
 
     const setStudentList = async () => {
-      let data = { userKey: userKey.value, search: "" };
+      let data = { userKey: teacherInfo.value?.teacherKey, search: "" };
       const result = await ApiClient(
         "/members/getStudentList/",
         common.makeJson(data)
@@ -99,7 +105,7 @@ export default defineComponent({
 
     const setConsultList = async () => {
       let data = {
-        userKey: userKey.value,
+        userKey: teacherInfo.value?.teacherKey,
         studentKey: student.value.KEY,
         search: consultType.value,
       };
@@ -111,11 +117,6 @@ export default defineComponent({
       if (result) {
         if (result.count > 0) {
           if (!selectSection.value) {
-            result.resultData = result.resultData.sort(
-              (a: consultInterface, b: consultInterface): number =>
-                +new Date(a.consultDate.substring(0, 10)) -
-                +new Date(b.consultDate.substring(0, 10))
-            );
             result.resultData.map((item: consultInterface) => {
               if (item.content) {
                 listConsultList.value.push(item);
@@ -123,6 +124,18 @@ export default defineComponent({
                 planConsultList.value.push(item);
               }
             });
+
+            planConsultList.value.sort(
+              (a: consultInterface, b: consultInterface): number =>
+                +new Date(a.consultDate.substring(0, 10)) -
+                +new Date(b.consultDate.substring(0, 10))
+            );
+
+            listConsultList.value.sort(
+              (a: consultInterface, b: consultInterface): number =>
+                +new Date(b.consultDate.substring(0, 10)) -
+                +new Date(a.consultDate.substring(0, 10))
+            );
           } else if (selectSection.value === "plan") {
             planConsultList.value = [];
             result.resultData.map((item: consultInterface) => {
@@ -211,12 +224,14 @@ export default defineComponent({
       let data = {
         studentKey: student.value.KEY,
         studentName: student.value.VALUE,
-        targetKey: userKey.value,
+        targetKey: teacherInfo.value?.teacherKey,
+        targetName: teacherInfo.value?.name,
         consultDate:
           date.value && time.value ? date.value + time.value + ":00" : "",
         content: "",
         consultType: inputType.value,
       };
+      console.log(data);
 
       const result = await ApiClient(
         "/info/createConsultPlan/",
@@ -294,9 +309,9 @@ export default defineComponent({
 
     onMounted(async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-        userKey.value = common.getItem(KEYS.LU).teacherKey;
+        teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.ADM) {
-        userKey.value = common.getItem(KEYS.LU).adminKey;
+        adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
       }
 
       await setStudentList();
@@ -498,7 +513,6 @@ export default defineComponent({
           </div>
           <div class="consult-plan-section-body-pagination">
             <pagination-component
-              v-if="planPage !== 0"
               @changePage="changePage"
               @selectPage="selectPage"
               :page="planPage"

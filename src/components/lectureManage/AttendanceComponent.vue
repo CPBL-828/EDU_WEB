@@ -5,6 +5,9 @@ import common from "../../lib/common";
 import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
 import { KEYS, USER_KEY } from "../../constant";
 import DataListComponent from "../custom/DataListComponent.vue";
+/*
+@brief
+ */
 export default defineComponent({
   name: "AttendanceComponent",
   components: { DataListComponent, SelectLectureComponent },

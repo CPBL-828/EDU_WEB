@@ -105,7 +105,12 @@ export default defineComponent({
   <section class="schedule" v-if="viewScheduleList">
     <div class="all">
       <div class="time-label">
-        <span v-for="i in 12">{{ i < 10 ? "0" + i : i }}</span>
+        <span
+          v-for="i in selectType === 'pm'
+            ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            : [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]"
+          >{{ i < 10 ? "0" + i : i }}</span
+        >
       </div>
       <div
         class="one-day"

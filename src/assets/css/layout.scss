@@ -641,7 +641,6 @@ section.select {
       }
 
       div[class*="active"] {
-        border: 2px solid $disable-color;
         background-color: white;
         color: $sub-color;
       }
@@ -652,6 +651,7 @@ section.select {
         border-radius: 19px 0 0 19px;
 
         &-active {
+          border: 2px solid $disable-color;
           border-right: 1px solid $disable-color;
           border-radius: 19px 0 0 19px;
         }
@@ -663,6 +663,7 @@ section.select {
         border-radius: 0 19px 19px 0;
 
         &-active {
+          border: 2px solid $disable-color;
           border-left: 1px solid $disable-color;
           border-radius: 0 19px 19px 0;
         }
@@ -695,6 +696,7 @@ section.schedule {
         font-size: 12px;
         height: 60px;
         border: 1px solid white;
+        border-left: 0;
         border-bottom: 0;
         border-right: 0;
         color: $sub-color;

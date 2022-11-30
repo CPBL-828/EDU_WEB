@@ -227,21 +227,27 @@ export default defineComponent({
           >
             <td
               :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+                rowHeight
+                  ? 'height:' + rowHeight + 'px'
+                  : 'height: 52px; width: 15%;'
               "
             >
               {{ item.type }}
             </td>
             <td
               :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+                rowHeight
+                  ? 'height:' + rowHeight + 'px'
+                  : 'height: 52px; width: 40%;'
               "
             >
               {{ item.title }}
             </td>
             <td
               :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+                rowHeight
+                  ? 'height:' + rowHeight + 'px'
+                  : 'height: 52px; width: 30%;'
               "
             >
               {{ item.createDate.substring(0, 4) }}/{{
@@ -250,7 +256,9 @@ export default defineComponent({
             </td>
             <td
               :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+                rowHeight
+                  ? 'height:' + rowHeight + 'px'
+                  : 'height: 52px; width: 15%;'
               "
             >
               관리자

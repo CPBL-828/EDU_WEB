@@ -1,6 +1,8 @@
 // common
 section.user-info {
   @include section-custom();
+  overflow: visible;
+  left: 128px;
 
   .user-info {
     height: 100%;

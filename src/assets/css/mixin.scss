@@ -15,6 +15,7 @@ $laptop-width: 1200px;
 @mixin section-custom {
   position: relative;
   width: calc(100% - 128px);
+  height: calc(100% - 95px);
   overflow: scroll;
 }
 

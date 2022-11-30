@@ -20,10 +20,11 @@
   margin: 0;
   padding: 0;
   height: 100vh;
-  //overflow: hidden;
+  overflow: hidden;
 }
 
 section {
   width: 100%;
-  height: calc(100% - 95px);
+  //height: calc(100% - 95px);
+  height: 100%;
 }

@@ -58,7 +58,6 @@ export default defineComponent({
 <template>
   <section class="login-page">
     <div class="login-page">
-      <div class="login-page-header">EDU 학원 관리 프로그램</div>
       <div class="login-page-select">
         <div class="login-page-select-hello">반갑습니다!</div>
         <div class="login-page-select-hello-guide">
@@ -78,6 +77,10 @@ export default defineComponent({
             </div>
           </div>
         </div>
+      </div>
+      <div class="login-page-footer">
+        <img src="/assets/image/logo-gray.png" alt="logo" />
+        <span class="label">EDU 학원 관리 프로그램</span>
       </div>
     </div>
   </section>

@@ -5,10 +5,12 @@ import common from "../lib/common";
 import { ApiClient } from "../axios";
 import PaginationComponent from "../components/fixed/PaginationComponent.vue";
 import DropBoxComponent from "../components/custom/DropBoxComponent.vue";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "RoomManagePage",
   components: { DropBoxComponent, PaginationComponent },
   setup() {
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const roomList = ref<Array<roomInterface>>([]);
     const showRoomList = ref<Array<roomInterface>>([]);
@@ -59,7 +61,7 @@ export default defineComponent({
       roomType.value = item.VALUE as string;
     };
 
-    const saveRoom = () => {
+    const saveRoom = async () => {
       if (!roomName.value) {
         window.alert("강의실 명을 입력해주세요.");
         return false;
@@ -72,11 +74,20 @@ export default defineComponent({
       }
 
       let data = {
-        roomName: roomName.value,
+        name: roomName.value,
         totalPeople: totalPeople.value,
-        roomType: roomType.value,
+        type: roomType.value,
       };
-      console.log(data);
+
+      const result = await ApiClient(
+        "/lectures/createRoom/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        window.alert("강의실을 생성했습니다.");
+        router.go(0);
+      }
     };
 
     watch(

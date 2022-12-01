@@ -34,6 +34,9 @@ export default defineComponent({
           adminState.value = true;
       }
       userData.value = common.getItem(KEYS.LU);
+
+      if (common.getItem(KEYS.MR)) common.removeItem(KEYS.MR);
+      if (common.getItem(KEYS.SR)) common.removeItem(KEYS.SR);
     });
 
     return {

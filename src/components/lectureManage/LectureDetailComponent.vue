@@ -271,9 +271,9 @@ export default defineComponent({
                   }}</span
                 >
                 <span class="label">강의 교재</span>
-                <span class="item">교재를 넣을 수 있나?</span>
-                <span class="label">수강 인원</span>
-                <span class="item">명</span>
+                <span class="item">{{ lectureInfo.book }}</span>
+                <!--                <span class="label">수강 인원</span>-->
+                <!--                <span class="item">명</span>-->
                 <div class="planner-btn">강의계획서 열람하기</div>
               </div>
             </div>

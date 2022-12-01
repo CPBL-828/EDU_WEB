@@ -120,6 +120,8 @@ export default defineComponent({
           showAnalysisList.value = props.dataList as analysisInterface[];
           page.value = 0;
         }
+
+        console.log(props.dataList);
       }
     };
 
@@ -193,6 +195,7 @@ export default defineComponent({
         setAnalysisList();
       }
     });
+
     return {
       showNoticeList,
       showSuggestList,

@@ -36,7 +36,7 @@ export default defineComponent({
       { KEY: "writer", VALUE: "작성자" },
       { KEY: "detail", VALUE: "상세 내용" },
     ];
-    const analysisList = ref<Array<analysisInterface> | undefined>(undefined);
+    const analysisList = ref<Array<analysisInterface>>([]);
     const totalCnt = ref<number>(0);
 
     const modalState = ref<string | undefined>(undefined);
@@ -85,7 +85,6 @@ export default defineComponent({
       }
     };
 
-    //TODO
     const getAnalysisList = async () => {
       let data = { userKey: selectedStudent.value?.studentKey };
 
@@ -96,16 +95,16 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          analysisList.value = result.resultData;
+          analysisList.value = result.resultData as analysisInterface[];
           totalCnt.value = analysisList.value?.length as number;
         }
       }
     };
 
     const selectStudent = async (s: studentInterface) => {
-      selectStudentState.value = true;
       selectedStudent.value = s;
       await getAnalysisList();
+      selectStudentState.value = true;
     };
 
     const openModal = (v: string) => {
@@ -231,7 +230,7 @@ export default defineComponent({
               <data-list-component
                 list-type="analysis"
                 :header="headerList"
-                :data-list="analysisList ? analysisList : []"
+                :data-list="analysisList"
                 :total-cnt="totalCnt ? totalCnt : 0"
                 :row-height="39"
                 :list-cnt="13"

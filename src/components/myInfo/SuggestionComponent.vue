@@ -238,7 +238,14 @@ export default defineComponent({
                 관리자 답변<span
                   >(답변일자:
                   {{
-                    suggestDetail?.answerDate ? suggestDetail?.answerDate : ""
+                    suggestDetail?.answerDate
+                      ? suggestDetail?.answerDate.substring(0, 4) +
+                        "년 " +
+                        suggestDetail?.answerDate.substring(5, 7) +
+                        "월 " +
+                        suggestDetail?.answerDate.substring(8, 10) +
+                        "일"
+                      : ""
                   }})</span
                 >
               </div>

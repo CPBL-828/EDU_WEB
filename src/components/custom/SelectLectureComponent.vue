@@ -59,7 +59,8 @@ export default defineComponent({
 
               if (selectState.value === "pm") {
                 if (item.start >= 13) lectureList.value.push(item);
-                else lectureList.value.push(item);
+              } else {
+                if (item.start < 13) lectureList.value.push(item);
               }
             }
           });

@@ -105,7 +105,8 @@ export default defineComponent({
           </div>
         </div>
         <div class="card-item-detail" @click="openModal('STU', item)">
-          상세 조회
+          <span>상세</span>
+          <span>조회</span>
         </div>
       </div>
 
@@ -138,9 +139,7 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <div class="card-item-detail" @click="openModal('TEA', item)">
-          상세 조회
-        </div>
+        <div class="card-item-detail" @click="openModal('TEA', item)"></div>
       </div>
     </div>
   </section>

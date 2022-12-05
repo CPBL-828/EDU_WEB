@@ -40,7 +40,9 @@ export default defineComponent({
           studentSuggest.value = result.resultData as suggestInterface[];
         }
 
-        stuTotal.value = studentSuggest.value?.length as number;
+        if (studentSuggest.value?.length) {
+          stuTotal.value = studentSuggest.value?.length as number;
+        }
       }
     };
 
@@ -62,7 +64,9 @@ export default defineComponent({
           teacherSuggest.value = result.resultData as suggestInterface[];
         }
 
-        teaTotal.value = teacherSuggest.value?.length as number;
+        if (teacherSuggest.value?.length) {
+          teaTotal.value = teacherSuggest.value?.length as number;
+        }
       }
     };
 

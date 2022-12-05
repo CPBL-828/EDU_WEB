@@ -16,7 +16,7 @@ export default defineComponent({
   props: {
     roomKey: {
       type: String as PropType<string>,
-      required: true,
+      required: false,
     },
   },
   setup(props) {

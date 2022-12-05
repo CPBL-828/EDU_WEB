@@ -253,7 +253,26 @@ section.modal {
               left: 119px;
 
               span.sns-item {
+                display: flex;
+                align-items: center;
                 margin-bottom: 0;
+
+                a {
+                  text-decoration: none;
+                  color: #343434;
+
+                  &:visited {
+                    text-decoration: none;
+                  }
+                }
+
+                i {
+                  margin-left: 5px;
+
+                  &:hover {
+                    opacity: 0.8;
+                  }
+                }
               }
 
               .part-item-edit {

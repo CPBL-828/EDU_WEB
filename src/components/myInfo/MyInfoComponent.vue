@@ -288,9 +288,11 @@ export default defineComponent({
                 </div>
                 <div class="sns">
                   <span class="sns-label">SNS</span>
-                  <span class="sns-item" v-if="!editState">{{
-                    teacherInfo?.link
-                  }}</span>
+                  <span class="sns-item" v-if="!editState"
+                    >{{ teacherInfo?.link
+                    }}<a :href="teacherInfo?.link" target="_blank"
+                      ><i class="fa-solid fa-up-right-from-square"></i></a
+                  ></span>
                   <input
                     v-if="editState"
                     type="text"

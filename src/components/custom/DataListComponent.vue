@@ -174,6 +174,8 @@ export default defineComponent({
           setNoticeList();
         } else if (props.listType === "suggest") {
           setSuggestList();
+        } else if (props.listType === "analysis") {
+          setAnalysisList();
         }
       }
     );

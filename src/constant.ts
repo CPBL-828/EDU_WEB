@@ -16,4 +16,5 @@ export const KEYS = {
   UK: "UK",
   MR: "MR",
   SR: "SR",
+  SS: "SS",
 };

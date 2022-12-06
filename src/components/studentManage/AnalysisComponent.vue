@@ -9,10 +9,12 @@ import {
   defaultInterface,
   scheduleInterface,
   studentInterface,
+  teacherInterface,
 } from "../../lib/types";
 import DataListComponent from "../custom/DataListComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import { useRouter } from "vue-router";
 /*
 @brief [강사, 관리자] [Main]학생 관리 [Sub] 분석 접근 시,
        분석 목록 및 상세를 열람할 학생을 먼저 선택한 후, 분석 목록 접근
@@ -22,8 +24,9 @@ export default defineComponent({
   components: { ModalPopupComponent, DataListComponent, DropBoxComponent },
   setup() {
     const store = useStore();
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const teacherKey = ref<string | undefined>(undefined);
+    const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const placeholder = ref<string>("강의 선택");
     const lectureList = ref<defaultInterface[]>([]);
     const studentList = ref<studentInterface[] | undefined>(undefined);
@@ -45,7 +48,7 @@ export default defineComponent({
 
     const getLectureList = async () => {
       let data = {
-        userKey: teacherKey.value,
+        userKey: teacherInfo.value?.teacherKey,
         search: "",
         roomKey: "",
         target: "",
@@ -71,7 +74,7 @@ export default defineComponent({
     };
 
     const getStudentList = async () => {
-      let data = { userKey: teacherKey.value, search: "" };
+      let data = { userKey: teacherInfo.value?.teacherKey, search: "" };
 
       const result = await ApiClient(
         "/members/getStudentList/",
@@ -87,6 +90,7 @@ export default defineComponent({
 
     const getAnalysisList = async () => {
       let data = { userKey: selectedStudent.value?.studentKey };
+      console.log(data);
 
       const result = await ApiClient(
         "/info/getAnalysisList/",
@@ -103,6 +107,8 @@ export default defineComponent({
 
     const selectStudent = async (s: studentInterface) => {
       selectedStudent.value = s;
+      common.setItem(KEYS.SS, common.makeJson(selectedStudent.value));
+
       await getAnalysisList();
       selectStudentState.value = true;
     };
@@ -110,6 +116,28 @@ export default defineComponent({
     const openModal = (v: string) => {
       modalState.value = v;
       store.commit("setModalState", true);
+    };
+
+    const insertAnalysis = async () => {
+      if (!analysisInsertDetail.value) {
+        window.alert("분석 내용을 입력해 주세요.");
+        return false;
+      }
+
+      let data = {
+        studentKey: selectedStudent.value?.studentKey,
+        studentName: selectedStudent.value?.name,
+        writerKey: teacherInfo.value?.teacherKey,
+        writerName: teacherInfo.value?.name,
+        content: analysisInsertDetail.value,
+      };
+
+      const result = await ApiClient(
+        "/info/createAnalysis/",
+        common.makeJson(data)
+      );
+
+      router.go(0);
     };
 
     const showAnalysisDetail = (item: analysisInterface) => {
@@ -121,7 +149,14 @@ export default defineComponent({
       category.value = common.findCategory();
 
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-        teacherKey.value = common.getItem(KEYS.LU).teacherKey;
+        teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+      }
+
+      if (common.getItem(KEYS.SS)) {
+        selectedStudent.value = common.getItem(KEYS.SS);
+        selectStudentState.value = true;
+
+        await getAnalysisList();
       }
 
       await getLectureList();
@@ -134,6 +169,7 @@ export default defineComponent({
       lectureList,
       studentList,
       selectStudentState,
+      selectedStudent,
       date,
       headerList,
       analysisList,
@@ -143,6 +179,7 @@ export default defineComponent({
       analysisDetail,
       selectStudent,
       openModal,
+      insertAnalysis,
       showAnalysisDetail,
     };
   },
@@ -249,11 +286,15 @@ export default defineComponent({
         <div class="analysis-insert">
           <div class="analysis-insert-header">
             <div class="analysis-insert-header-lecture">강의명</div>
-            <div class="analysis-insert-header-student">학생명</div>
+            <div class="analysis-insert-header-student">
+              {{ selectedStudent?.name }}
+            </div>
             <div class="analysis-insert-header-date">
               {{ new Date().toDateString() }}
             </div>
-            <button class="analysis-insert-header-save">저장</button>
+            <button class="analysis-insert-header-save" @click="insertAnalysis">
+              저장
+            </button>
           </div>
           <div class="sap"></div>
           <textarea

@@ -103,21 +103,25 @@ export default defineComponent({
       userData.value = common.getItem(KEYS.LU);
       userKey.value = common.getItem(KEYS.UK);
 
-      if (userKey.value.userKey === USER_KEY.PAR) {
-        mainItem.value = PAR_MAIN;
-        subItem.value = PAR_SUB;
-      } else if (userKey.value.userKey === USER_KEY.STU) {
-        mainItem.value = STU_MAIN;
-        subItem.value = STU_SUB;
-      } else if (userKey.value.userKey === USER_KEY.TEA) {
-        mainItem.value = TEA_MAIN;
-        subItem.value = TEA_SUB;
-      } else if (userKey.value.userKey === USER_KEY.KYO_ADM) {
-        mainItem.value = KYO_MAIN;
-        subItem.value = KYO_SUB;
+      if (userData.value) {
+        if (userKey.value.userKey === USER_KEY.PAR) {
+          mainItem.value = PAR_MAIN;
+          subItem.value = PAR_SUB;
+        } else if (userKey.value.userKey === USER_KEY.STU) {
+          mainItem.value = STU_MAIN;
+          subItem.value = STU_SUB;
+        } else if (userKey.value.userKey === USER_KEY.TEA) {
+          mainItem.value = TEA_MAIN;
+          subItem.value = TEA_SUB;
+        } else if (userKey.value.userKey === USER_KEY.KYO_ADM) {
+          mainItem.value = KYO_MAIN;
+          subItem.value = KYO_SUB;
+        } else {
+          mainItem.value = ETC_MAIN;
+          subItem.value = ETC_SUB;
+        }
       } else {
-        mainItem.value = ETC_MAIN;
-        subItem.value = ETC_SUB;
+        router.push("/");
       }
 
       if (route.path.split("/")[2]) {

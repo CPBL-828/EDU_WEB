@@ -6,6 +6,7 @@ import { ApiClient } from "../axios";
 import PaginationComponent from "../components/fixed/PaginationComponent.vue";
 import DropBoxComponent from "../components/custom/DropBoxComponent.vue";
 import { useRouter } from "vue-router";
+import { KEYS, USER_KEY } from "../constant";
 /*
 @brief [관리자] [Main]강의실 관리
        교무 관리자의 경우 강의실 관리
@@ -17,10 +18,14 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const isKyo = ref(false);
+    const editState = ref(false);
     const roomList = ref<Array<roomInterface>>([]);
     const showRoomList = ref<Array<roomInterface>>([]);
+    const roomInfo = ref<roomInterface | undefined>(undefined);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
+    const typePlaceholder = ref<string>("강의실 유형을 선택해주세요.");
     const typeList: Array<defaultInterface> = [
       { KEY: "basic", VALUE: "일반" },
       { KEY: "self", VALUE: "자습실" },
@@ -95,6 +100,23 @@ export default defineComponent({
       }
     };
 
+    const editRoom = (item: roomInterface) => {
+      editState.value = true;
+
+      roomName.value = item.name;
+      roomType.value = item.type;
+      typePlaceholder.value = item.type;
+      totalPeople.value = item.totalPeople;
+    };
+
+    const doEdit = () => {
+      //TODO 강의실 정보 수정
+    };
+
+    const selectRoom = (item: roomInterface) => {
+      roomInfo.value = item;
+    };
+
     watch(
       () => currentPage.value,
       () => {
@@ -108,14 +130,24 @@ export default defineComponent({
     onMounted(async () => {
       category.value = common.findCategory();
 
+      if (common.getItem(KEYS.UK)) {
+        if (common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM) {
+          isKyo.value = true;
+        }
+      }
+
       await setRoomList();
     });
 
     return {
       category,
+      isKyo,
+      editState,
       showRoomList,
+      roomInfo,
       page,
       currentPage,
+      typePlaceholder,
       typeList,
       roomName,
       totalPeople,
@@ -124,6 +156,9 @@ export default defineComponent({
       changePage,
       selectRoomType,
       saveRoom,
+      editRoom,
+      doEdit,
+      selectRoom,
     };
   },
 });
@@ -150,15 +185,28 @@ export default defineComponent({
           >
             <div class="lecture-detail-section-body-left-list" style="top: 50%">
               <div
-                class="lecture-detail-section-body-left-list-item"
+                :class="
+                  isKyo
+                    ? 'lecture-detail-section-body-left-list-item'
+                    : 'lecture-detail-section-body-left-list-item-etc'
+                "
                 v-for="item in showRoomList"
-                style="cursor: default"
+                @click="selectRoom(item)"
               >
                 <span class="lecture-name">{{ item.name }}</span>
                 <span class="teacher-name"
                   >수용 인원 : {{ item.totalPeople }}명</span
                 >
                 <span class="target">{{ item.type }}</span>
+                <div class="btn" v-if="isKyo">
+                  <input
+                    type="button"
+                    class="btn-edit"
+                    value="수정"
+                    @click="editRoom(item)"
+                  />
+                  <input type="button" class="btn-delete" value="삭제" />
+                </div>
               </div>
               <div class="lecture-detail-section-body-left-list-page">
                 <pagination-component
@@ -170,7 +218,12 @@ export default defineComponent({
               </div>
             </div>
           </div>
-          <div class="lecture-detail-section-body-right" style="height: 514px">
+
+          <div
+            v-if="isKyo"
+            class="lecture-detail-section-body-right"
+            style="height: 514px"
+          >
             <div
               class="lecture-detail-section-body-right-main"
               style="height: 474px"
@@ -197,7 +250,7 @@ export default defineComponent({
                 <span class="label">강의실 유형</span>
                 <div class="page">
                   <drop-box-component
-                    placeholder="강의실 유형을 선택해주세요."
+                    :placeholder="typePlaceholder"
                     :select-list="typeList"
                     row-height="28px"
                     row-width="220px"
@@ -205,11 +258,52 @@ export default defineComponent({
                   ></drop-box-component>
                 </div>
                 <input
+                  v-if="!editState"
                   type="button"
                   class="save-btn"
                   value="생성하기"
                   @click="saveRoom"
                 />
+                <input
+                  v-if="editState"
+                  type="button"
+                  class="save-btn"
+                  value="수정하기"
+                  @click="doEdit"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div v-if="!isKyo" class="lecture-detail-section-body-right">
+            <div class="lecture-detail-section-body-right-main">
+              <div
+                class="lecture-detail-section-body-right-main-tip"
+                v-if="!roomInfo"
+              >
+                <span>강의실 상세 열람을</span
+                ><span>원하는 강의실 선택해 주세요.</span>
+              </div>
+              <div
+                class="lecture-detail-section-body-right-main-detail"
+                v-if="roomInfo"
+              >
+                <span class="title-label">강의실 상세 조회</span>
+                <span class="title-item">{{ roomInfo.name }}</span>
+                <div class="sap"></div>
+                <span class="label">강의실 유형</span>
+                <span class="item">{{ roomInfo.type }}</span>
+                <span class="label">총 수용 인원</span>
+                <span class="item">{{ roomInfo.totalPeople }} 명</span>
+                <span class="label">등록일</span>
+                <span class="item">{{
+                  roomInfo.createDate.substring(0, 4) +
+                  "년 " +
+                  roomInfo.createDate.substring(5, 7) +
+                  "월 " +
+                  roomInfo.createDate.substring(8, 10) +
+                  "일"
+                }}</span>
               </div>
             </div>
           </div>

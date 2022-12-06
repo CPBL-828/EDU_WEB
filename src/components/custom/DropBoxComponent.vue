@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import { defineComponent, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../../lib/types";
 /*
 @brief 기존의 선택 박스와 동일한 기능
@@ -48,6 +48,13 @@ export default defineComponent({
       main.value = v.VALUE as string;
       emit("selectValue", v);
     };
+
+    watch(
+      () => props.placeholder,
+      () => {
+        main.value = props.placeholder as string;
+      }
+    );
 
     return {
       main,

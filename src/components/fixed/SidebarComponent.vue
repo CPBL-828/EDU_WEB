@@ -86,6 +86,7 @@ export default defineComponent({
         common.removeItem(KEYS.UK);
         common.removeItem(KEYS.MR);
         common.removeItem(KEYS.SR);
+        common.removeItem(KEYS.SS);
         router.push("/");
       }
     };

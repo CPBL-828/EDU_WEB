@@ -644,7 +644,8 @@ section.lecture-detail {
             width: calc(694px + 23px);
             height: calc(542px + 26px);
 
-            &-item {
+            &-item,
+            &-item-etc {
               display: flex;
               flex-direction: column;
               align-items: center;
@@ -668,9 +669,54 @@ section.lecture-detail {
                 margin-top: 7px;
               }
 
+              //&:hover {
+              //  background-color: $disable-color;
+              //  transition: all 0.5s;
+              //}
+            }
+
+            &-item-etc {
               &:hover {
                 background-color: $disable-color;
-                transition: all 0.5s;
+                transition: all 0.2s;
+              }
+            }
+
+            .btn {
+              width: 164px;
+              display: flex;
+              justify-content: space-between;
+              margin-top: 10px;
+
+              input[type="button"] {
+                outline: none;
+                border: 0;
+                width: 76px;
+                height: 24px;
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: bold;
+                cursor: pointer;
+              }
+
+              &-edit {
+                background-color: #d9d9d9;
+                color: $sub-color;
+
+                &:hover {
+                  background-color: $disable-color;
+                  transition: all 0.2s;
+                }
+              }
+
+              &-delete {
+                background-color: $primary-color;
+                color: white;
+
+                &:hover {
+                  background-color: $hover-color;
+                  transition: all 0.2s;
+                }
               }
             }
 

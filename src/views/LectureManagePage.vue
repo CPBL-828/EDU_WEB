@@ -2,10 +2,6 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import LectureDetailComponent from "../components/lectureManage/LectureDetailComponent.vue";
-import common from "../lib/common";
-import { KEYS, USER_KEY } from "../constant";
-import { scheduleInterface } from "../lib/types";
-import { ApiClient } from "../axios";
 import AttendanceComponent from "../components/lectureManage/AttendanceComponent.vue";
 /*
 [학생, 학부모, 관리자] [Main]강의 관리

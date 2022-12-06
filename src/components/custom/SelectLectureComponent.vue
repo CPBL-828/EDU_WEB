@@ -1,10 +1,13 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import {
   defaultInterface,
   scheduleInterface,
   teacherInterface,
 } from "../../lib/types";
+/*
+@brief 강의별로 열람해야 하는 데이터를 위해 초기 강의 선택 단계 화면
+ */
 export default defineComponent({
   name: "SelectLectureComponent",
   components: { SelectButtonComponent },

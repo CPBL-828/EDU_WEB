@@ -1,12 +1,5 @@
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  onUnmounted,
-  PropType,
-  ref,
-  watch,
-} from "vue";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { scheduleInterface } from "../../lib/types";
 /*
 @brief 시간표 컴포넌트
@@ -25,8 +18,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const hour = ref<number>(0);
-    const minute = ref<number>(0);
     const blockState = ref(false);
     const viewScheduleList = ref<Array<scheduleInterface>>([]);
     const scheduleInfo = ref<scheduleInterface>();
@@ -63,13 +54,6 @@ export default defineComponent({
       }
     };
 
-    // const clickMinute = (d: string, h: number, m: number) => {
-    //   hour.value = h + 11;
-    //   minute.value = (m - 1) * 10;
-    //
-    //   console.log(d + ": " + hour.value + "-" + minute.value);
-    // };
-
     watch(
       () => props.selectType,
       () => {
@@ -95,7 +79,6 @@ export default defineComponent({
       viewScheduleList,
       scheduleInfo,
       color,
-      // clickMinute,
     };
   },
 });
@@ -122,7 +105,6 @@ export default defineComponent({
         </div>
       </div>
     </div>
-    <!--    <div class="schedule-block" id="block" @click="clickBlock()"></div>-->
     <div class="block">
       <div
         v-if="blockState && selectType === 'pm'"

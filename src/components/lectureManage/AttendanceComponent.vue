@@ -6,7 +6,8 @@ import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
 import { KEYS, USER_KEY } from "../../constant";
 import DataListComponent from "../custom/DataListComponent.vue";
 /*
-@brief
+@brief [강사, 관리자] [Main]강의 관리
+       [Sub]출석부 접근 후, 강의 선택 시 표시되는 페이지
  */
 export default defineComponent({
   name: "AttendanceComponent",

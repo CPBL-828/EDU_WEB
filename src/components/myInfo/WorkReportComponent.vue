@@ -3,8 +3,9 @@ import { defineComponent, onMounted, PropType, ref } from "vue";
 import { defaultInterface, teacherInterface } from "../../lib/types";
 import common from "../../lib/common";
 /*
-@brief 강사의 출근부 입력 및 열람 페이지
-@props 강사/관리자 중 현재 로그인 한 유저의 권한 값
+@brief [강사] [Main]내 공간 [Sub]출근부
+       [관리자] [Main]강사 관리 [Sub]출근부
+@props 강사/관리자 중 현재 로그인 한 유저의 권한 값, 해당 유저의 정보
  */
 export default defineComponent({
   name: "WorkReportComponent",

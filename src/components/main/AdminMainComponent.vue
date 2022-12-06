@@ -6,6 +6,10 @@ import { KEYS, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import { defaultInterface, suggestInterface } from "../../lib/types";
 import DataListComponent from "../custom/DataListComponent.vue";
+/*
+@brief [관리자] 로그인 성공 후 가장 초기 메인 화면
+       강사와 학생의 건의 목록은 양쪽에 표시
+ */
 export default defineComponent({
   name: "AdminMainComponent",
   components: { DataListComponent, ConsultComponent },

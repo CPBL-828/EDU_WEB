@@ -5,6 +5,11 @@ import { defaultInterface, scheduleInterface } from "../../lib/types";
 import { ApiClient } from "../../axios";
 import { KEYS, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
+/*
+@brief [강사, 관리자] [Main]시간표 관리 [Sub]계획서 작성
+       강사는 계획서 작성 및 작성한 계획서 목록 열람
+       관리자는 강사가 작성한 계획서 열람 및 처리
+ */
 export default defineComponent({
   name: "PlanMakeComponent",
   components: { PaginationComponent },

@@ -10,6 +10,11 @@ import { KEYS, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
+/*
+@brief [강사, 관리자] [Main]강의 관리
+       [Sub]강의 상세 접근 시, 강사에게는 본인 담당 강의를
+       관리자에게는 전체 강의를 표시
+ */
 export default defineComponent({
   name: "LectureDetailComponent",
   components: { DropBoxComponent, PaginationComponent },

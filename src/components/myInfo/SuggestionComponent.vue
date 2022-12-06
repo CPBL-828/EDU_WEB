@@ -10,8 +10,9 @@ import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { KEYS } from "../../constant";
 /*
-@brief 학생, 학부모, 강사의 메인 카테고리 [내 공간]의 서브 카테고리 [건의사항]으로 접근하여 건의사항 열람 및 작성
-       교무 관리자는 메인 카테고리 [학생 관리]와 [강사 관리]로 접근하여 각 유저의 건의사항 처리
+@brief [학생, 학부모, 강사] [Main] 내 공간 [Sub]건의사항
+       [관리자] [Main]학생 관리, 강사 관리 [Sub]건의사항
+       교무 관리자는 각 유저의 건의사항 처리
        기타 관리자는 각 유저의 건의사항 열람만 가능
 @props 현재 로그인 한 유저의 권한 값
  */

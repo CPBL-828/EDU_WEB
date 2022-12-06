@@ -6,6 +6,11 @@ import { ApiClient } from "../axios";
 import PaginationComponent from "../components/fixed/PaginationComponent.vue";
 import DropBoxComponent from "../components/custom/DropBoxComponent.vue";
 import { useRouter } from "vue-router";
+/*
+@brief [관리자] [Main]강의실 관리
+       교무 관리자의 경우 강의실 관리
+       기타 관리자의 경우 강의실 목록 열람만
+ */
 export default defineComponent({
   name: "RoomManagePage",
   components: { DropBoxComponent, PaginationComponent },

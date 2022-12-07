@@ -123,8 +123,6 @@ export default defineComponent({
         teacherEditInfo.value.phone = teacherInfo.value.phone;
         teacherEditInfo.value.link = teacherInfo.value.link;
       }
-
-      console.log(teacherInfo.value);
     });
 
     return {

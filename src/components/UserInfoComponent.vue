@@ -2,6 +2,7 @@
 import { defineComponent, onMounted, PropType, ref } from "vue";
 import CardListComponent from "./custom/CardListComponent.vue";
 import {
+  adminInterface,
   defaultInterface,
   studentInterface,
   teacherInterface,
@@ -25,7 +26,9 @@ export default defineComponent({
   components: { CardListComponent },
   setup(props) {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const loginUser = ref<teacherInterface | undefined>(undefined);
+    const loginUser = ref<teacherInterface | adminInterface | undefined>(
+      undefined
+    );
     const userKey = ref<string | undefined>(undefined);
     const userData = ref<
       Array<studentInterface | teacherInterface> | undefined
@@ -48,7 +51,13 @@ export default defineComponent({
         common.getItem(KEYS.UK).userKey.slice(-3) !== USER_KEY.ADM &&
         loginUser.value
       ) {
-        data = Object.assign(data, { userKey: loginUser.value.teacherKey });
+        data = Object.assign(data, {
+          userKey: (loginUser.value as teacherInterface).teacherKey,
+        });
+      } else {
+        data = Object.assign(data, {
+          userKey: (loginUser.value as adminInterface).adminKey,
+        });
       }
 
       if (props.viewUser === USER_KEY.STU) {
@@ -93,7 +102,13 @@ export default defineComponent({
       userKey.value = common.getItem(KEYS.UK).userKey;
 
       if (common.getItem(KEYS.LU)) {
-        loginUser.value = common.getItem(KEYS.LU) as teacherInterface;
+        if (userKey.value === USER_KEY.TEA)
+          loginUser.value = common.getItem(KEYS.LU) as teacherInterface;
+        else if (
+          userKey.value === USER_KEY.KYO_ADM ||
+          userKey.value === USER_KEY.ETC_ADM
+        )
+          loginUser.value = common.getItem(KEYS.LU) as adminInterface;
       }
 
       await getUserList();

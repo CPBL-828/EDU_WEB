@@ -143,7 +143,10 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <div class="card-item-detail" @click="openModal('TEA', item)"></div>
+        <div class="card-item-detail" @click="openModal('TEA', item)">
+          <span>상세</span>
+          <span>조회</span>
+        </div>
       </div>
     </div>
   </section>
@@ -177,12 +180,12 @@ export default defineComponent({
             <div class="user-detail-info-content-left">
               <div class="name">
                 <span class="name-label">이름</span>
-                <span class="name-item" v-if="teacherInfo">{{
-                  teacherInfo?.name
-                }}</span>
-                <span class="name-item" v-if="studentInfo">{{
-                  studentInfo?.name
-                }}</span>
+                <span class="name-item" v-if="teacherInfo"
+                  >{{ teacherInfo?.name }} ({{ teacherInfo?.id }})</span
+                >
+                <span class="name-item" v-if="studentInfo"
+                  >{{ studentInfo?.name }} ({{ studentInfo?.id }})</span
+                >
               </div>
               <div class="part" v-if="teacherInfo">
                 <span class="part-label">담당</span>

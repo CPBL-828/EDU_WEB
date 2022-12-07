@@ -18,6 +18,7 @@ export interface studentInterface {
   birth: string;
   sex: string;
   phone: string;
+  emergency: string;
   school: string;
   grade: string;
   address: string;

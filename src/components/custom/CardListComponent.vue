@@ -99,7 +99,11 @@ export default defineComponent({
               </div>
               <div class="card-item-info-phone-section-par">
                 <span class="title">학부모</span>
-                <span class="number">준비 중입니다</span>
+                <span class="number"
+                  >{{ item.emergency.substring(0, 3) }}-{{
+                    item.emergency.substring(3, 7)
+                  }}-{{ item.emergency.substring(7, 11) }}</span
+                >
               </div>
             </div>
           </div>

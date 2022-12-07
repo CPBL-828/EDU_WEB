@@ -11,6 +11,11 @@ export const USER_KEY = {
   ETC_ADM: "ETC_ADM",
 };
 
+export const RESULT_KEY = {
+  CREATE: "데이터 생성.",
+  EDIT: "데이터 수정.",
+};
+
 export const KEYS = {
   LU: "LU",
   UK: "UK",

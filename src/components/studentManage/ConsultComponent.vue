@@ -9,7 +9,7 @@ import {
 } from "../../lib/types";
 import { ApiClient } from "../../axios";
 import common from "../../lib/common";
-import { KEYS, USER_KEY } from "../../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import DataListComponent from "../custom/DataListComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
@@ -85,7 +85,11 @@ export default defineComponent({
     const listConsultDetail = ref<consultInterface | undefined>(undefined);
 
     const setStudentList = async () => {
-      let data = { userKey: teacherInfo.value?.teacherKey, search: "" };
+      let data = {
+        userKey: teacherInfo.value?.teacherKey,
+        search: "",
+        lectureKey: "",
+      };
       const result = await ApiClient(
         "/members/getStudentList/",
         common.makeJson(data)
@@ -194,7 +198,10 @@ export default defineComponent({
     const selectStudent = (item: defaultInterface) => {
       student.value.KEY = item.KEY;
       student.value.VALUE = item.VALUE;
-      setConsultList();
+
+      if (selectSection.value === "plan" || selectSection.value === "list") {
+        setConsultList();
+      }
     };
 
     const selectPage = (n: number) => {
@@ -231,15 +238,13 @@ export default defineComponent({
         content: "",
         consultType: inputType.value,
       };
-      console.log(data);
 
       const result = await ApiClient(
         "/info/createConsultPlan/",
         common.makeJson(data)
       );
 
-      if (result) {
-        planConsultList.value.push(result);
+      if (result.chunbae === RESULT_KEY.CREATE) {
         router.go(0);
       }
     };
@@ -250,8 +255,21 @@ export default defineComponent({
       store.commit("setModalState", true);
     };
 
-    const doInput = () => {
-      // console.log(planDetailContent.value);
+    const doInput = async () => {
+      let data = {
+        consultKey: planDetailHeader.value?.consultKey,
+        content: planDetailContent.value,
+      };
+
+      const result = await ApiClient(
+        "/info/createConsult/",
+        common.makeJson(data)
+      );
+
+      if (result.chunbae === RESULT_KEY.CREATE) {
+        window.alert("상담 결과를 성공적으로 입력했습니다.");
+        router.go(0);
+      }
     };
 
     const showConsultDetail = (item: consultInterface) => {
@@ -597,13 +615,13 @@ export default defineComponent({
           <div class="consult-detail-section">
             <div class="consult-detail-section-header">
               <div class="date">
-                {{ listConsultDetail?.createDate.substring(0, 4) }}년
-                {{ listConsultDetail?.createDate.substring(5, 7) }}월
-                {{ listConsultDetail?.createDate.substring(8, 10) }}일
+                {{ listConsultDetail?.consultDate.substring(0, 4) }}년
+                {{ listConsultDetail?.consultDate.substring(5, 7) }}월
+                {{ listConsultDetail?.consultDate.substring(8, 10) }}일
               </div>
               <div class="sap"></div>
               <div class="time">
-                {{ listConsultDetail?.createDate.substring(11, 16) }}
+                {{ listConsultDetail?.consultDate.substring(11, 16) }}
               </div>
               <div class="sap"></div>
               <div class="type">
@@ -624,13 +642,13 @@ export default defineComponent({
           <div class="consult-detail-section">
             <div class="consult-detail-section-header">
               <div class="date">
-                {{ planDetailHeader?.createDate.substring(0, 4) }}년
-                {{ planDetailHeader?.createDate.substring(5, 7) }}월
-                {{ planDetailHeader?.createDate.substring(8, 10) }}일
+                {{ planDetailHeader?.consultDate.substring(0, 4) }}년
+                {{ planDetailHeader?.consultDate.substring(5, 7) }}월
+                {{ planDetailHeader?.consultDate.substring(8, 10) }}일
               </div>
               <div class="sap"></div>
               <div class="time">
-                {{ planDetailHeader?.createDate.substring(11, 16) }}
+                {{ planDetailHeader?.consultDate.substring(11, 16) }}
               </div>
               <div class="sap"></div>
               <div class="type">

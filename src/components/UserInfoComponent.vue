@@ -52,6 +52,8 @@ export default defineComponent({
       }
 
       if (props.viewUser === USER_KEY.STU) {
+        data = Object.assign(data, { lectureKey: "" });
+
         const result = await ApiClient(
           "/members/getStudentList/",
           common.makeJson(data)

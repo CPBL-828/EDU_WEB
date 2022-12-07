@@ -6,7 +6,7 @@ import {
   studentInterface,
   teacherInterface,
 } from "../../lib/types";
-import { KEYS, USER_KEY } from "../../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import common from "../../lib/common";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
@@ -53,9 +53,16 @@ export default defineComponent({
       editDate: "",
     });
     const editState = ref(false);
+    const resumeState = ref(false);
 
     const editModal = () => {
       editState.value = false;
+      resumeState.value = false;
+      store.commit("setModalState", true);
+    };
+
+    const resumeModal = () => {
+      resumeState.value = true;
       store.commit("setModalState", true);
     };
 
@@ -74,8 +81,10 @@ export default defineComponent({
       } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
       } else if (teacherInfo.value?.link !== teacherEditInfo.value.link) {
       } else {
-        if (window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?"))
+        if (window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")) {
           editState.value = false;
+          return false;
+        }
       }
 
       const result = await ApiClient(
@@ -83,8 +92,8 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      if (result) {
-        teacherInfo.value = result as teacherInterface;
+      if (result.chunbae === RESULT_KEY.EDIT) {
+        teacherInfo.value = result.resultData as teacherInterface;
         common.removeItem(KEYS.LU);
         window.alert("정보 수정을 성공했습니다.");
         common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
@@ -114,6 +123,8 @@ export default defineComponent({
         teacherEditInfo.value.phone = teacherInfo.value.phone;
         teacherEditInfo.value.link = teacherInfo.value.link;
       }
+
+      console.log(teacherInfo.value);
     });
 
     return {
@@ -123,7 +134,9 @@ export default defineComponent({
       teacherInfo,
       teacherEditInfo,
       editState,
+      resumeState,
       editModal,
+      resumeModal,
       changeEditState,
       doEdit,
     };
@@ -197,6 +210,7 @@ export default defineComponent({
                 type="button"
                 class="view-btn"
                 :value="teacherInfo ? '이력서 보기' : ''"
+                @click="resumeModal"
               />
               <input
                 v-if="studentInfo"
@@ -214,12 +228,12 @@ export default defineComponent({
     </div>
 
     <modal-popup-component
-      title="강사 상세 정보"
+      :title="resumeState ? '이력서 보기' : '상세 정보'"
       btn-state="SAVE"
       modal-height="620px"
       modal-width="1078px"
     >
-      <template v-slot:button>
+      <template v-slot:button v-if="!resumeState">
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"
@@ -239,7 +253,7 @@ export default defineComponent({
         <div v-if="studentInfo">
           <div v-for="item in studentInfo">{{ item }}</div>
         </div>
-        <div class="user-detail" v-if="teacherInfo">
+        <div class="user-detail" v-else-if="!resumeState">
           <div class="sap"></div>
           <div class="user-detail-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
@@ -336,6 +350,8 @@ export default defineComponent({
             </div>
           </div>
         </div>
+
+        <div v-else>파일 서버 어디 감? ㅋㅋ</div>
       </template>
     </modal-popup-component>
   </section>

@@ -120,8 +120,6 @@ export default defineComponent({
           showAnalysisList.value = props.dataList as analysisInterface[];
           page.value = 0;
         }
-
-        console.log(props.dataList);
       }
     };
 
@@ -320,9 +318,9 @@ export default defineComponent({
                 rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
               "
             >
-              {{ item.createDate.substring(0, 4) }}년
-              {{ item.createDate.substring(5, 7) }}월
-              {{ item.createDate.substring(8, 10) }}일
+              {{ item.consultDate.substring(0, 4) }}년
+              {{ item.consultDate.substring(5, 7) }}월
+              {{ item.consultDate.substring(8, 10) }}일
             </td>
             <td
               :style="

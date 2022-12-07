@@ -65,6 +65,7 @@ export default defineComponent({
 
       if (result) {
         scheduleList.value = [];
+
         if (result.count > 0) {
           result.resultData.map((item: scheduleInterface) => {
             item.start = Number(item.startTime?.substring(0, 2));
@@ -102,7 +103,15 @@ export default defineComponent({
     };
 
     const selectDay = (d: defaultInterface) => {
-      // console.log(d);
+      selectedDay.value = d.VALUE as string;
+    };
+
+    const insertAsk = async () => {
+      let data = {
+        roomKey: roomKey.value,
+        teacherKey: userKey.value,
+        adminKey: "",
+      };
     };
 
     onMounted(async () => {
@@ -130,6 +139,7 @@ export default defineComponent({
       changeState,
       selectRoom,
       selectDay,
+      insertAsk,
     };
   },
 });
@@ -237,9 +247,12 @@ export default defineComponent({
                   교재 링크 입력하기
                 </button>
               </div>
-              <button class="schedule-ask-section-body-info-container-submit">
-                건의하기
-              </button>
+              <input
+                type="button"
+                value="건의하기"
+                class="schedule-ask-section-body-info-container-submit"
+                @click="insertAsk"
+              />
             </div>
           </div>
         </div>

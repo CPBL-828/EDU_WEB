@@ -6,7 +6,7 @@ import { ApiClient } from "../axios";
 import PaginationComponent from "../components/fixed/PaginationComponent.vue";
 import DropBoxComponent from "../components/custom/DropBoxComponent.vue";
 import { useRouter } from "vue-router";
-import { KEYS, USER_KEY } from "../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
 /*
 @brief [관리자] [Main]강의실 관리
        교무 관리자의 경우 강의실 관리
@@ -94,7 +94,7 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      if (result) {
+      if (result.chunbae === RESULT_KEY.CREATE) {
         window.alert("강의실을 생성했습니다.");
         router.go(0);
       }

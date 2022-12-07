@@ -1,8 +1,8 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, onUnmounted, ref } from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import common from "../../lib/common";
-import { KEYS, USER_KEY } from "../../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import {
   analysisInterface,
@@ -29,6 +29,7 @@ export default defineComponent({
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const placeholder = ref<string>("강의 선택");
     const lectureList = ref<defaultInterface[]>([]);
+    const lectureKey = ref<string>("");
     const studentList = ref<studentInterface[] | undefined>(undefined);
     const selectStudentState = ref(false);
     const selectedStudent = ref<studentInterface | undefined>(undefined);
@@ -73,8 +74,17 @@ export default defineComponent({
       }
     };
 
+    const selectLecture = async (item: defaultInterface) => {
+      lectureKey.value = item.KEY;
+      await getStudentList();
+    };
+
     const getStudentList = async () => {
-      let data = { userKey: teacherInfo.value?.teacherKey, search: "" };
+      let data = {
+        userKey: teacherInfo.value?.teacherKey,
+        search: "",
+        lectureKey: lectureKey.value,
+      };
 
       const result = await ApiClient(
         "/members/getStudentList/",
@@ -90,7 +100,6 @@ export default defineComponent({
 
     const getAnalysisList = async () => {
       let data = { userKey: selectedStudent.value?.studentKey };
-      console.log(data);
 
       const result = await ApiClient(
         "/info/getAnalysisList/",
@@ -137,7 +146,10 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      router.go(0);
+      if (result.chunbae === RESULT_KEY.CREATE) {
+        window.alert("분석 내용을 성공적으로 입력했습니다.");
+        router.go(0);
+      }
     };
 
     const showAnalysisDetail = (item: analysisInterface) => {
@@ -163,6 +175,10 @@ export default defineComponent({
       await getStudentList();
     });
 
+    onUnmounted(() => {
+      common.removeItem(KEYS.SS);
+    });
+
     return {
       category,
       placeholder,
@@ -177,6 +193,7 @@ export default defineComponent({
       modalState,
       analysisInsertDetail,
       analysisDetail,
+      selectLecture,
       selectStudent,
       openModal,
       insertAnalysis,
@@ -205,6 +222,7 @@ export default defineComponent({
               <drop-box-component
                 :placeholder="placeholder"
                 :select-list="lectureList"
+                @selectValue="selectLecture"
               ></drop-box-component>
             </div>
           </div>
@@ -309,7 +327,9 @@ export default defineComponent({
         <div class="analysis-detail">
           <div class="analysis-detail-header">
             <div class="analysis-detail-header-date">
-              {{ analysisDetail?.createDate }}
+              {{ analysisDetail?.createDate.substring(0, 4) }}년
+              {{ analysisDetail?.createDate.substring(5, 7) }}월
+              {{ analysisDetail?.createDate.substring(8, 10) }}일
             </div>
             <div class="sap"></div>
             <div class="analysis-detail-header-lecture">강의명 어떻게 넣지</div>
@@ -318,7 +338,7 @@ export default defineComponent({
               {{ analysisDetail?.studentName }}
             </div>
           </div>
-          <div class="analysis-detail-body">
+          <div style="white-space: pre" class="analysis-detail-body">
             {{ analysisDetail?.content }}
           </div>
         </div>

@@ -145,3 +145,15 @@ export interface analysisInterface {
   createDate: string;
   editDate: string;
 }
+
+export interface attendInterface {
+  attendKey: string;
+  studentKey_id: string;
+  studentName: string;
+  lectureKey_id: string;
+  lectureName: string;
+  state: string;
+  reason: string;
+  createDate: string;
+  editDate: string;
+}

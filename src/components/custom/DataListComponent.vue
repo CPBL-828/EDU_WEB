@@ -2,6 +2,7 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import {
   analysisInterface,
+  attendInterface,
   consultInterface,
   defaultInterface,
   noticeInterface,
@@ -9,6 +10,7 @@ import {
 } from "../../lib/types";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
+import { showAttendInterface } from "../lectureManage/AttendanceComponent.vue";
 /*
 @brief 글 리스트 형태의 데이터를 표현하기 위한 컴포넌트
 @props 리스트 헤더(항목) 값, 공지 데이터 리스트, 건의 데이터 리스트, 행 높이
@@ -32,6 +34,7 @@ export default defineComponent({
           | suggestInterface
           | consultInterface
           | analysisInterface
+          | showAttendInterface
         >
       >,
       required: true,
@@ -54,6 +57,9 @@ export default defineComponent({
     const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const showConsultList = ref<Array<consultInterface> | undefined>(undefined);
     const showAnalysisList = ref<Array<analysisInterface> | undefined>(
+      undefined
+    );
+    const showAttendList = ref<Array<showAttendInterface> | undefined>(
       undefined
     );
     const page = ref<number>(0);
@@ -123,6 +129,21 @@ export default defineComponent({
       }
     };
 
+    const setAttendList = () => {
+      if (props.dataList) {
+        if (props.totalCnt > listCnt.value) {
+          showAttendList.value = props.dataList.slice(
+            0,
+            listCnt.value
+          ) as showAttendInterface[];
+          page.value = Math.ceil(props.totalCnt / listCnt.value);
+        } else {
+          showAttendList.value = props.dataList as showAttendInterface[];
+          page.value = 0;
+        }
+      }
+    };
+
     const selectPage = (n: number) => {
       currentPage.value = n;
     };
@@ -159,6 +180,11 @@ export default defineComponent({
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as analysisInterface[];
+        } else if (props.listType === "attend") {
+          showAttendList.value = props.dataList?.slice(
+            listCnt.value * currentPage.value - listCnt.value,
+            listCnt.value * currentPage.value
+          ) as showAttendInterface[];
         }
       }
     );
@@ -174,6 +200,8 @@ export default defineComponent({
           setSuggestList();
         } else if (props.listType === "analysis") {
           setAnalysisList();
+        } else if (props.listType === "attend") {
+          setAttendList();
         }
       }
     );
@@ -193,6 +221,8 @@ export default defineComponent({
         setSuggestList();
       } else if (props.listType === "analysis") {
         setAnalysisList();
+      } else if (props.listType === "attend") {
+        setAttendList();
       }
     });
 
@@ -201,6 +231,7 @@ export default defineComponent({
       showSuggestList,
       showConsultList,
       showAnalysisList,
+      showAttendList,
       page,
       currentPage,
       selectPage,
@@ -369,6 +400,43 @@ export default defineComponent({
               "
             >
               {{ item.writerName }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+              class="go-detail"
+            >
+              상세 내용 보러 가기
+            </td>
+          </tr>
+
+          <tr
+            class="data=list=section-body-item"
+            v-if="showAttendList"
+            v-for="item in showAttendList"
+            @click="$emit('showAttendDetail', item)"
+          >
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.studentName }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.totalDay }}
+            </td>
+            <td
+              :style="
+                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
+              "
+            >
+              {{ item.attendDay }}
             </td>
             <td
               :style="

@@ -11,6 +11,8 @@ import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
 import { KEYS, USER_KEY } from "../../constant";
 import DataListComponent from "../custom/DataListComponent.vue";
 import { ApiClient } from "../../axios";
+import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import { useStore } from "vuex";
 /*
 @brief [강사, 관리자] [Main]강의 관리
        [Sub]출석부 접근 후, 강의 선택 시 표시되는 페이지
@@ -23,22 +25,38 @@ export interface showAttendInterface {
 }
 export default defineComponent({
   name: "AttendanceComponent",
-  components: { DataListComponent, SelectLectureComponent },
+  components: {
+    ModalPopupComponent,
+    DataListComponent,
+    SelectLectureComponent,
+  },
   setup() {
+    const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const teacherKey = ref<string>("");
+    const studentInfo = ref<defaultInterface | undefined>(undefined);
     const selectState = ref(false);
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const lectureInfo = ref<scheduleInterface | undefined>(undefined);
     const header: Array<defaultInterface> = [
-      { KEY: "name", VALUE: "이름" },
-      { KEY: "current", VALUE: "현재 수업 일수" },
-      { KEY: "attendance", VALUE: "출석일" },
+      { KEY: "NAME", VALUE: "이름" },
+      { KEY: "CURRENT", VALUE: "현재 수업 일수" },
+      { KEY: "ATTENDANCE", VALUE: "출석일" },
     ];
     const attendList = ref<Array<attendInterface> | undefined>(undefined);
     const totalCnt = ref(0);
     const totalDay = ref(0);
     const showAttendList = ref<Array<showAttendInterface>>([]);
+
+    const detailHeader: defaultInterface[] = [
+      { KEY: "DATE", VALUE: "수업일자" },
+      { KEY: "STATE", VALUE: "출석 상태" },
+      { KEY: "EDIT", VALUE: "수정 여부" },
+      { KEY: "REASON", VALUE: "사유" },
+    ];
+    const studentAttendList = ref<Array<attendInterface> | undefined>(
+      undefined
+    );
 
     const selectLecture = (item: scheduleInterface) => {
       lectureInfo.value = item;
@@ -76,6 +94,7 @@ export default defineComponent({
     const getAttendList = async () => {
       let data = {
         lectureKey: lectureInfo.value?.lectureKey,
+        userKey: studentInfo.value ? studentInfo.value.KEY : "",
       };
 
       const result = await ApiClient(
@@ -84,24 +103,40 @@ export default defineComponent({
       );
 
       if (result) {
+        studentAttendList.value = undefined;
         if (result.count > 0) {
           totalDay.value = result.count / 3;
-          attendList.value = result.resultData as attendInterface[];
 
-          attendList.value.map((item: attendInterface) => {
-            showAttendList.value.map((attend: showAttendInterface) => {
-              attend.totalDay = totalDay.value;
-              if (attend.studentKey === item.studentKey_id) {
-                if (item.state === "출석") {
-                  attend.attendDay += 1;
+          if (!studentInfo.value) {
+            attendList.value = result.resultData as attendInterface[];
+
+            attendList.value.map((item: attendInterface) => {
+              showAttendList.value.map((attend: showAttendInterface) => {
+                attend.totalDay = totalDay.value;
+                if (attend.studentKey === item.studentKey_id) {
+                  if (item.state === "출석") {
+                    attend.attendDay += 1;
+                  }
                 }
-              }
+              });
             });
-          });
 
-          totalCnt.value = showAttendList.value?.length;
+            totalCnt.value = showAttendList.value?.length;
+          } else {
+            studentAttendList.value = result.resultData as attendInterface[];
+          }
         }
       }
+    };
+
+    const showAttendDetail = async (item: showAttendInterface) => {
+      studentInfo.value = {
+        KEY: item.studentKey,
+        VALUE: item.studentName as string,
+      };
+      await getAttendList();
+      store.commit("setModalState", true);
+      console.log(studentAttendList.value);
     };
 
     watch(
@@ -122,14 +157,18 @@ export default defineComponent({
 
     return {
       category,
+      studentInfo,
       selectState,
       studentList,
       attendList,
       lectureInfo,
       header,
-      showAttendList,
       totalCnt,
+      showAttendList,
+      detailHeader,
+      studentAttendList,
       selectLecture,
+      showAttendDetail,
     };
   },
 });
@@ -167,6 +206,7 @@ export default defineComponent({
                 :header="header"
                 :list-cnt="12"
                 :row-height="40"
+                @showAttendDetail="showAttendDetail"
               ></data-list-component>
             </div>
             <div v-else class="no-data">출결 데이터가 없습니다.</div>
@@ -174,5 +214,41 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
+    <modal-popup-component title="출석 현황 상세 보기" modal-height="780px">
+      <template v-slot:body>
+        <div class="attend-detail">
+          <span class="attend-detail-student">{{ studentInfo?.VALUE }}</span>
+          <div class="attend-detail-list">
+            <table v-if="studentAttendList">
+              <thead>
+                <tr>
+                  <td v-for="item in detailHeader">{{ item.VALUE }}</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in studentAttendList">
+                  <td>
+                    {{ item.createDate.substring(0, 4) }}-{{
+                      item.createDate.substring(5, 7)
+                    }}-{{ item.createDate.substring(8, 10) }}
+                  </td>
+                  <td
+                    :style="{
+                      color: item.state === '결석' ? 'red' : '$sub-color',
+                    }"
+                  >
+                    {{ item.state }}
+                  </td>
+                  <td>{{ item.editDate ? "O" : "X" }}</td>
+                  <td>{{ item.reason ? item.reason : "" }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <span v-else class="no-data">출결 데이터가 없습니다.</span>
+          </div>
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 </template>

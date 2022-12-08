@@ -260,40 +260,36 @@ export default defineComponent({
             @click="$emit('showNoticeDetail', item)"
           >
             <td
-              :style="
-                rowHeight
-                  ? 'height:' + rowHeight + 'px'
-                  : 'height: 52px; width: 15%;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '15%',
+              }"
             >
               {{ item.type }}
             </td>
             <td
-              :style="
-                rowHeight
-                  ? 'height:' + rowHeight + 'px'
-                  : 'height: 52px; width: 40%;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '40%',
+              }"
             >
               {{ item.title }}
             </td>
             <td
-              :style="
-                rowHeight
-                  ? 'height:' + rowHeight + 'px'
-                  : 'height: 52px; width: 30%;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '30%',
+              }"
             >
               {{ item.createDate.substring(0, 4) }}/{{
                 item.createDate.substring(5, 7)
               }}/{{ item.createDate.substring(8, 10) }}
             </td>
             <td
-              :style="
-                rowHeight
-                  ? 'height:' + rowHeight + 'px'
-                  : 'height: 52px; width: 15%;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '15%',
+              }"
             >
               관리자
             </td>
@@ -305,32 +301,36 @@ export default defineComponent({
             v-for="item in showSuggestList"
           >
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
             >
               {{ item.createDate.substring(0, 4) }}/{{
                 item.createDate.substring(5, 7)
               }}/{{ item.createDate.substring(8, 10) }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '20%',
+              }"
             >
               {{ item.type }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '20%',
+              }"
             >
               {{ item.writerName }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '35%',
+              }"
               class="go-detail"
               @click="$emit('showSuggestDetail', item)"
             >
@@ -345,35 +345,44 @@ export default defineComponent({
             @click="$emit('showConsultDetail', item)"
           >
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '30%',
+              }"
             >
               {{ item.consultDate.substring(0, 4) }}년
               {{ item.consultDate.substring(5, 7) }}월
               {{ item.consultDate.substring(8, 10) }}일
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '15%',
+              }"
             >
               {{ item.consultDate?.substring(11, 16) }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '20%',
+              }"
             >
               {{ item.consultType }}
             </td>
             <td
-              :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '15%',
+              }"
             >
               {{ item.studentName }}
             </td>
             <td
-              :style="rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px'"
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '20%',
+              }"
             >
               {{ item.targetName }}
             </td>
@@ -383,29 +392,32 @@ export default defineComponent({
             class="data=list=section-body-item"
             v-if="showAnalysisList"
             v-for="item in showAnalysisList"
-            @click="$emit('showAnalysisDetail', item)"
           >
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '40%',
+              }"
             >
               {{ item.createDate.substring(0, 4) }}년
               {{ item.createDate.substring(5, 7) }}월
               {{ item.createDate.substring(8, 10) }}일
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '20%',
+              }"
             >
               {{ item.writerName }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '40%',
+              }"
               class="go-detail"
+              @click="$emit('showAnalysisDetail', item)"
             >
               상세 내용 보러 가기
             </td>
@@ -418,33 +430,41 @@ export default defineComponent({
             @click="$emit('showAttendDetail', item)"
           >
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
             >
               {{ item.studentName }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
             >
               {{ item.totalDay }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
             >
               {{ item.attendDay }}
             </td>
             <td
-              :style="
-                rowHeight ? 'height:' + rowHeight + 'px' : 'height: 52px;'
-              "
-              class="go-detail"
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
             >
-              상세 내용 보러 가기
+              <input
+                type="button"
+                value="상세 정보"
+                class="go-attend-detail"
+                @click="$emit('showAttendDetail', item)"
+              />
             </td>
           </tr>
         </tbody>

@@ -62,11 +62,10 @@ export default defineComponent({
     class="modal"
     v-if="popupState"
     v-click-away="onClickAway"
-    :style="
-      modalWidth && modalHeight
-        ? 'width: ' + modalWidth + '; height: ' + modalHeight + ';'
-        : 'width: 1078px; height: 808px;'
-    "
+    :style="{
+      width: modalWidth ? modalWidth.toString() : '1078px',
+      height: modalHeight ? modalHeight.toString() : '808px',
+    }"
   >
     <div class="modal">
       <div class="modal-button">

@@ -8,24 +8,16 @@ section.current-schedule {
     height: 100%;
 
     &-section {
-      position: absolute;
+      @include inner-section-custom();
       max-width: 1200px;
-      width: 100%;
-      height: auto;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        position: relative;
-        background-color: white;
-        width: 100%;
+        @include body-custom();
         height: 900px;
-        border-radius: 0 15px 15px 15px;
 
         &-today {
           position: absolute;
@@ -174,24 +166,16 @@ section.schedule-ask {
     height: 100%;
 
     &-section {
-      position: absolute;
+      @include inner-section-custom();
       max-width: 1200px;
-      width: 100%;
-      height: auto;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        position: relative;
-        background-color: white;
-        width: 100%;
+        @include body-custom();
         height: 900px;
-        border-radius: 0 15px 15px 15px;
 
         &-today {
           position: absolute;
@@ -438,24 +422,16 @@ section.planner {
     height: 100%;
 
     &-section {
-      position: absolute;
+      @include inner-section-custom();
       max-width: 1200px;
-      width: 100%;
-      height: auto;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        position: relative;
-        background-color: white;
-        width: 100%;
+        @include body-custom();
         height: 700px;
-        border-radius: 0 15px 15px 15px;
         display: flex;
         flex-direction: column;
         align-content: center;
@@ -557,24 +533,16 @@ section.lecture-detail {
     height: 100%;
 
     &-section {
-      position: absolute;
+      @include inner-section-custom();
       max-width: 1200px;
-      width: 100%;
-      height: auto;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        position: relative;
-        background-color: white;
-        width: 100%;
+        @include body-custom();
         height: 765px;
-        border-radius: 0 15px 15px 15px;
 
         &-label {
           position: absolute;
@@ -898,24 +866,108 @@ section.assignment {
     height: 100%;
 
     &-section {
-      position: absolute;
+      @include inner-section-custom();
       max-width: 1200px;
-      width: 100%;
-      height: auto;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        position: relative;
-        background-color: white;
-        width: 100%;
+        @include body-custom();
         height: 780px;
-        border-radius: 0 15px 15px 15px;
+      }
+    }
+  }
+}
+
+section.attendance {
+  @include section-custom();
+
+  .attendance {
+    height: 100%;
+
+    &-section {
+      @include inner-section-custom();
+      max-width: 1200px;
+
+      &-tag {
+        @include tag-custom();
+      }
+
+      &-body {
+        @include body-custom();
+        height: 740px;
+
+        &-lecture {
+          position: relative;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 90%;
+          height: 90%;
+        }
+
+        &-list {
+          position: relative;
+          height: 100%;
+
+          span {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+          }
+
+          &-title {
+            top: 30px;
+            font-size: 17px;
+            color: #9e9e9e;
+          }
+
+          &-lecture {
+            top: 60px;
+            font-size: 16px;
+            color: $sub-color;
+          }
+
+          &-data {
+            position: absolute;
+            top: 131px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 900px;
+          }
+
+          .no-data {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
+    }
+  }
+}
+
+section.check {
+  @include section-custom();
+
+  .check {
+    height: 100%;
+
+    &-section {
+      @include inner-section-custom();
+      max-width: 1200px;
+
+      &-tag {
+        @include tag-custom();
+      }
+
+      &-body {
+        @include body-custom();
+        height: 777px;
       }
     }
   }

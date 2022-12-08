@@ -5,21 +5,16 @@ section.my-info {
     height: 100%;
 
     &-section {
-      position: absolute;
-      width: 858px;
-      flex-direction: column;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
+      @include inner-section-custom();
+      max-width: 858px;
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        width: 100%;
+        @include body-custom();
         height: 300px;
-        background-color: white;
         border-radius: 0 40px 40px 40px;
         display: flex;
         flex-direction: row;
@@ -136,26 +131,18 @@ section.my-work {
     height: 100%;
 
     &-section {
-      position: absolute;
+      @include inner-section-custom();
       max-width: 1200px;
-      width: 100%;
-      height: auto;
       display: flex;
       flex-direction: column;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        position: relative;
-        width: 100%;
+        @include body-custom();
         height: 720px;
-        background-color: white;
-        border-radius: 0 15px 15px 15px;
 
         &-today {
           position: absolute;
@@ -386,24 +373,16 @@ section.suggestion {
     height: 100%;
 
     &-section {
-      position: absolute;
+      @include inner-section-custom();
       max-width: 1200px;
-      width: 100%;
-      height: auto;
-      top: calc(50% - 21px);
-      left: 50%;
-      transform: translate(-50%, -50%);
 
       &-tag {
         @include tag-custom();
       }
 
       &-body {
-        position: relative;
-        width: 100%;
+        @include body-custom();
         height: 750px;
-        background-color: white;
-        border-radius: 0 15px 15px 15px;
 
         &-title {
           position: absolute;

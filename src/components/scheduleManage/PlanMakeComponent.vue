@@ -154,7 +154,9 @@ export default defineComponent({
                   </td>
                   <td
                     class="progress"
-                    :style="item.progress === '반려' ? 'color: red;' : ''"
+                    :style="{
+                      color: item.progress === '반려' ? 'red' : '$sub-color',
+                    }"
                   >
                     {{ item.progress }}
                   </td>

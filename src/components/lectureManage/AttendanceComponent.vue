@@ -193,7 +193,7 @@ export default defineComponent({
               @selectLecture="selectLecture"
             ></select-lecture-component>
           </div>
-          <div class="attendance-section-body-list" v-if="selectState">
+          <div class="attendance-section-body-list" v-else>
             <span class="attendance-section-body-list-title">출석 현황</span>
             <span class="attendance-section-body-list-lecture">{{
               lectureInfo?.lectureName

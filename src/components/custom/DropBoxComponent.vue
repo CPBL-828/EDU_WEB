@@ -74,14 +74,17 @@ export default defineComponent({
     <div
       class="drop"
       @click="changeOpenState"
-      :style="'width: ' + rowWidth + '; height: ' + rowHeight + ';'"
+      :style="{
+        width: rowWidth,
+        height: rowHeight,
+      }"
     >
       {{ main }}
       <i class="fa-solid fa-chevron-down"></i>
     </div>
     <div
       :class="!openState ? 'drop-list' : 'drop-list-opened'"
-      :style="'width: ' + rowWidth"
+      :style="{ width: rowWidth }"
     >
       <div
         v-if="openState"

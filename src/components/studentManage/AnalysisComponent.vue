@@ -47,6 +47,11 @@ export default defineComponent({
     const analysisInsertDetail = ref<string>("");
     const analysisDetail = ref<analysisInterface | undefined>(undefined);
 
+    const goBack = () => {
+      common.removeItem(KEYS.SS);
+      router.go(0);
+    };
+
     const getLectureList = async () => {
       let data = {
         userKey: teacherInfo.value?.teacherKey,
@@ -193,6 +198,7 @@ export default defineComponent({
       modalState,
       analysisInsertDetail,
       analysisDetail,
+      goBack,
       selectLecture,
       selectStudent,
       openModal,
@@ -261,6 +267,9 @@ export default defineComponent({
       <div class="analysis-content-section">
         <div class="analysis-content-section-tag">분석 내용 열람하기</div>
         <div class="analysis-content-section-body">
+          <div class="go-prev" @click="goBack">
+            학생 다시 선택하기 <i class="fa-solid fa-rotate-left"></i>
+          </div>
           <div class="analysis-content-section-body-date">
             <div class="analysis-content-section-body-date-label">
               확인 원하는 일자를 선택해주세요.

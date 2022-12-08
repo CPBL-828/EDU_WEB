@@ -719,6 +719,24 @@ section.analysis-content {
         height: 800px;
         border-radius: 0 15px 15px 15px;
 
+        .go-prev {
+          position: absolute;
+          top: 5px;
+          left: 7px;
+          color: $disable-color;
+          font-weight: bold;
+          font-size: 13px;
+          cursor: pointer;
+
+          i {
+            margin-left: 3px;
+          }
+
+          &:hover {
+            color: $sub-color;
+          }
+        }
+
         &-date {
           display: flex;
           flex-direction: column;

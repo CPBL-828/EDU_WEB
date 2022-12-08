@@ -85,6 +85,19 @@ section.consult {
   .consult {
     height: 100%;
 
+    //초기화 버튼 css 전역 설정
+    i[class$="fa-rotate-left"] {
+      color: $disable-color;
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 14px;
+
+      &:hover {
+        color: $sub-color;
+        transition: all 0.2s;
+      }
+    }
+
     &-input-section {
       position: absolute;
       z-index: 1;

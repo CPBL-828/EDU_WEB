@@ -69,6 +69,8 @@ export default defineComponent({
     const planListCnt: number = 4;
     const planDetailHeader = ref<consultInterface | undefined>(undefined);
     const planDetailContent = ref<string>("");
+    const planTypeHolder = ref<string>("상담 유형");
+    const planNameHolder = ref<string>("학생명");
 
     //상담 목록 조회
     const listDate = ref<Date | undefined>(undefined);
@@ -83,6 +85,8 @@ export default defineComponent({
       { KEY: "teacher", VALUE: "상담 강사" },
     ];
     const listConsultDetail = ref<consultInterface | undefined>(undefined);
+    const listTypeHolder = ref<string>("상담 유형");
+    const listNameHolder = ref<string>("학생명");
 
     const setStudentList = async () => {
       let data = {
@@ -192,12 +196,23 @@ export default defineComponent({
 
     const selectType = (item: defaultInterface) => {
       consultType.value = item.VALUE as string;
+
+      if (selectSection.value === "plan")
+        planTypeHolder.value = item.VALUE as string;
+      if (selectSection.value === "list")
+        listTypeHolder.value = item.VALUE as string;
+
       setConsultList();
     };
 
     const selectStudent = (item: defaultInterface) => {
       student.value.KEY = item.KEY;
       student.value.VALUE = item.VALUE;
+
+      if (selectSection.value === "plan")
+        planNameHolder.value = item.VALUE as string;
+      if (selectSection.value === "list")
+        listNameHolder.value = item.VALUE as string;
 
       if (selectSection.value === "plan" || selectSection.value === "list") {
         setConsultList();
@@ -279,6 +294,32 @@ export default defineComponent({
       document.getElementById("consult")?.scrollTo(0, 0);
     };
 
+    const removeFilter = async (s: string) => {
+      consultType.value = "";
+      student.value = { KEY: "", VALUE: "" };
+
+      if (s === "plan") {
+        selectSection.value = "plan";
+
+        planDate.value = undefined;
+
+        //placeholder 초기화
+        planTypeHolder.value = "상담 유형";
+        planNameHolder.value = "학생명";
+
+        await setConsultList();
+      } else if (s === "list") {
+        selectSection.value = "list";
+
+        listDate.value = undefined;
+
+        listTypeHolder.value = "상담 유형";
+        listNameHolder.value = "학생명";
+
+        await setConsultList();
+      }
+    };
+
     watch(
       () => inputDate.value,
       () => {
@@ -357,12 +398,16 @@ export default defineComponent({
       planCurrentPage,
       planDetailHeader,
       planDetailContent,
+      planTypeHolder,
+      planNameHolder,
       listDate,
       listDateCalendarState,
       listConsultList,
       listTotalCnt,
       listHeader,
       listConsultDetail,
+      listTypeHolder,
+      listNameHolder,
       openCalendar,
       selectInputType,
       selectType,
@@ -373,6 +418,7 @@ export default defineComponent({
       openInsertPopup,
       doInput,
       showConsultDetail,
+      removeFilter,
     };
   },
 });
@@ -476,7 +522,7 @@ export default defineComponent({
               @click="selectSection = 'plan'"
             >
               <drop-box-component
-                placeholder="상담 유형"
+                :placeholder="planTypeHolder"
                 row-width="160px"
                 :select-list="typeList"
                 @selectValue="selectType"
@@ -489,11 +535,15 @@ export default defineComponent({
             >
               <drop-box-component
                 :select-list="studentList"
-                placeholder="학생명"
+                :placeholder="planNameHolder"
                 row-width="160px"
                 @selectValue="selectStudent"
               ></drop-box-component>
             </div>
+            <i
+              class="fa-solid fa-rotate-left"
+              @click="removeFilter('plan')"
+            ></i>
           </div>
           <div class="underline"></div>
           <div v-if="planConsultList" class="consult-plan-section-body-list">
@@ -565,7 +615,7 @@ export default defineComponent({
               @click="selectSection = 'list'"
             >
               <drop-box-component
-                placeholder="상담 유형"
+                :placeholder="listTypeHolder"
                 row-width="160px"
                 :select-list="typeList"
                 @selectValue="selectType"
@@ -578,11 +628,15 @@ export default defineComponent({
             >
               <drop-box-component
                 :select-list="studentList"
-                placeholder="학생명"
+                :placeholder="listNameHolder"
                 row-width="160px"
                 @selectValue="selectStudent"
               ></drop-box-component>
             </div>
+            <i
+              class="fa-solid fa-rotate-left"
+              @click="removeFilter('list')"
+            ></i>
           </div>
           <div class="consult-list-section-body-content">
             <data-list-component

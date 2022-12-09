@@ -272,6 +272,11 @@ export default defineComponent({
     };
 
     const doInput = async () => {
+      if (!planDetailContent.value) {
+        window.alert("상담 내용을 입력해 주세요.");
+        return false;
+      }
+
       let data = {
         consultKey: planDetailHeader.value?.consultKey,
         content: planDetailContent.value,
@@ -662,15 +667,10 @@ export default defineComponent({
     <modal-popup-component
       :title="selectSection === 'list' ? '상담 결과 조회' : '상담 결과 입력'"
     >
-      <template v-slot:button v-if="selectSection === 'plan'">
-        <div class="btn">
-          <div class="btn-insert" @click="doInput">저장하기</div>
-        </div>
-      </template>
       <template v-slot:body v-if="selectSection === 'list'">
         <div class="consult-detail">
           <div class="consult-detail-section">
-            <div class="consult-detail-section-header">
+            <div class="consult-detail-section-header-list">
               <div class="date">
                 {{ listConsultDetail?.consultDate.substring(0, 4) }}년
                 {{ listConsultDetail?.consultDate.substring(5, 7) }}월
@@ -698,21 +698,29 @@ export default defineComponent({
         <div class="consult-detail">
           <div class="consult-detail-section">
             <div class="consult-detail-section-header">
-              <div class="date">
-                {{ planDetailHeader?.consultDate.substring(0, 4) }}년
-                {{ planDetailHeader?.consultDate.substring(5, 7) }}월
-                {{ planDetailHeader?.consultDate.substring(8, 10) }}일
+              <div class="consult-detail-section-header-item">
+                <div class="date">
+                  {{ planDetailHeader?.consultDate.substring(0, 4) }}년
+                  {{ planDetailHeader?.consultDate.substring(5, 7) }}월
+                  {{ planDetailHeader?.consultDate.substring(8, 10) }}일
+                </div>
+                <div class="sap"></div>
+                <div class="time">
+                  {{ planDetailHeader?.consultDate.substring(11, 16) }}
+                </div>
+                <div class="sap"></div>
+                <div class="type">
+                  {{ planDetailHeader?.consultType }}
+                </div>
+                <div class="sap"></div>
+                <div class="name">{{ planDetailHeader?.studentName }}</div>
               </div>
-              <div class="sap"></div>
-              <div class="time">
-                {{ planDetailHeader?.consultDate.substring(11, 16) }}
-              </div>
-              <div class="sap"></div>
-              <div class="type">
-                {{ planDetailHeader?.consultType }}
-              </div>
-              <div class="sap"></div>
-              <div class="name">{{ planDetailHeader?.studentName }}</div>
+              <input
+                type="button"
+                value="상담 결과 작성"
+                class="save-btn"
+                @click="doInput"
+              />
             </div>
             <textarea
               v-model="planDetailContent"

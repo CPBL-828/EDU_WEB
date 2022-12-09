@@ -4,12 +4,14 @@ import CardListComponent from "./custom/CardListComponent.vue";
 import {
   adminInterface,
   defaultInterface,
+  scheduleInterface,
   studentInterface,
   teacherInterface,
 } from "../lib/types";
 import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
 import { ApiClient } from "../axios";
+import DropBoxComponent from "./custom/DropBoxComponent.vue";
 /*
 @brief [강사] [Main]학생 관리, [관리자] [Main]학생 관리, 강사 관리
        [Sub]학생 정보, 강사 정보 접근 시 카드형 컴포넌트를 통해 유저 리스트 표시
@@ -23,12 +25,13 @@ export default defineComponent({
       required: true,
     },
   },
-  components: { CardListComponent },
+  components: { DropBoxComponent, CardListComponent },
   setup(props) {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const loginUser = ref<teacherInterface | adminInterface | undefined>(
       undefined
     );
+    const teacherKey = ref<string>("");
     const userKey = ref<string | undefined>(undefined);
     const userData = ref<
       Array<studentInterface | teacherInterface> | undefined
@@ -38,6 +41,8 @@ export default defineComponent({
     const searchData = ref<
       Array<studentInterface | teacherInterface> | undefined
     >(undefined);
+    const lectureList = ref<Array<defaultInterface>>([]);
+    const lectureKey = ref<string>("");
 
     const getUserList = async () => {
       let data = {
@@ -61,7 +66,7 @@ export default defineComponent({
       }
 
       if (props.viewUser === USER_KEY.STU) {
-        data = Object.assign(data, { lectureKey: "" });
+        data = Object.assign(data, { lectureKey: lectureKey.value });
 
         const result = await ApiClient(
           "/members/getStudentList/",
@@ -97,14 +102,47 @@ export default defineComponent({
       }
     };
 
+    const getScheduleList = async () => {
+      let data = {
+        userKey: teacherKey.value,
+        search: "",
+        roomKey: "",
+        target: "",
+        roomName: "",
+        lectureName: "",
+      };
+
+      const result = await ApiClient(
+        "/lectures/getLectureList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          result.resultData.map((item: scheduleInterface) => {
+            lectureList.value.push({
+              KEY: item.lectureKey,
+              VALUE: item.lectureName,
+            });
+          });
+        }
+      }
+    };
+
+    const selectLecture = async (item: defaultInterface) => {
+      lectureKey.value = item.KEY;
+      await getUserList();
+    };
+
     onMounted(async () => {
       category.value = common.findCategory();
       userKey.value = common.getItem(KEYS.UK).userKey;
 
       if (common.getItem(KEYS.LU)) {
-        if (userKey.value === USER_KEY.TEA)
+        if (userKey.value === USER_KEY.TEA) {
           loginUser.value = common.getItem(KEYS.LU) as teacherInterface;
-        else if (
+          teacherKey.value = common.getItem(KEYS.LU).teacherKey;
+        } else if (
           userKey.value === USER_KEY.KYO_ADM ||
           userKey.value === USER_KEY.ETC_ADM
         )
@@ -112,6 +150,7 @@ export default defineComponent({
       }
 
       await getUserList();
+      await getScheduleList();
     });
 
     return {
@@ -121,7 +160,9 @@ export default defineComponent({
       total,
       search,
       searchData,
+      lectureList,
       getUserList,
+      selectLecture,
     };
   },
 });
@@ -141,14 +182,25 @@ export default defineComponent({
           }}
         </div>
         <div class="user-info-section-body" v-if="viewUser === 'STU'">
-          <div class="search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="text"
-              v-model="search"
-              placeholder="학생명, 학교명으로 검색"
-              @keypress.enter="getUserList"
-            />
+          <div class="filter">
+            <div class="filter-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                v-model="search"
+                placeholder="학생명, 학교명으로 검색"
+                @keypress.enter="getUserList"
+              />
+            </div>
+            <div class="sap"></div>
+            <div class="filter-lecture">
+              <drop-box-component
+                :select-list="lectureList"
+                placeholder="강의 선택"
+                rowWidth="275px"
+                @selectValue="selectLecture"
+              ></drop-box-component>
+            </div>
           </div>
           <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
           <card-list-component

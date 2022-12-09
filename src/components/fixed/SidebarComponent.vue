@@ -54,7 +54,6 @@ export default defineComponent({
     };
 
     const selectMain = (main: categoryInterface) => {
-      if (common.getItem(KEYS.SR)) common.removeItem(KEYS.SR);
       common.setItem(KEYS.MR, common.makeJson({ mr: main.KEY.toLowerCase() }));
 
       if (main.HAS_CHILD) {
@@ -71,10 +70,25 @@ export default defineComponent({
     };
 
     const selectSub = (sub: categoryInterface) => {
-      common.setItem(KEYS.SR, common.makeJson({ sr: sub.KEY.toLowerCase() }));
-      router.push(
-        "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
-      );
+      if (!common.getItem(KEYS.SR)) {
+        common.setItem(KEYS.SR, common.makeJson({ sr: sub.KEY.toLowerCase() }));
+        router.push(
+          "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
+        );
+      } else {
+        if (common.getItem(KEYS.SR).sr === sub.KEY.toLowerCase()) {
+          router.go(0);
+        } else {
+          common.removeItem(KEYS.SR);
+          common.setItem(
+            KEYS.SR,
+            common.makeJson({ sr: sub.KEY.toLowerCase() })
+          );
+          router.push(
+            "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
+          );
+        }
+      }
       // setTimeout(() => {
       //   subState.value = false;
       // }, 3000);

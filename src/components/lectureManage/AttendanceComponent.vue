@@ -80,6 +80,8 @@ export default defineComponent({
           studentList.value = result.resultData as studentInterface[];
 
           studentList.value.map((item: studentInterface) => {
+            totalCnt.value += 1;
+
             showAttendList.value.push({
               studentKey: item.studentKey,
               studentName: item.name,
@@ -105,7 +107,7 @@ export default defineComponent({
       if (result) {
         studentAttendList.value = undefined;
         if (result.count > 0) {
-          totalDay.value = result.count / 3;
+          totalDay.value = result.count / totalCnt.value;
 
           if (!studentInfo.value) {
             attendList.value = result.resultData as attendInterface[];
@@ -136,7 +138,6 @@ export default defineComponent({
       };
       await getAttendList();
       store.commit("setModalState", true);
-      console.log(studentAttendList.value);
     };
 
     watch(

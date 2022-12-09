@@ -427,7 +427,6 @@ export default defineComponent({
             class="data=list=section-body-item"
             v-if="showAttendList"
             v-for="item in showAttendList"
-            @click="$emit('showAttendDetail', item)"
           >
             <td
               :style="{

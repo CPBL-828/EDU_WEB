@@ -53,13 +53,11 @@ export default defineComponent({
     const inputDate = ref<Date | undefined>(undefined);
     const inputTime = ref<Date>(new Date());
     const inputType = ref<string>("");
-    const inputName = ref<string | undefined>(undefined);
     const inputDateCalendarState = ref(false);
     const inputTimeCalendarState = ref(false);
 
     //상담 예정 현황
     const planDate = ref<Date | undefined>(undefined);
-    const planName = ref<string | undefined>(undefined);
     const planDateCalendarState = ref(false);
     const planConsultList = ref<Array<consultInterface>>([]);
     const showPlanConsultList = ref<Array<consultInterface>>([]);
@@ -205,18 +203,21 @@ export default defineComponent({
       setConsultList();
     };
 
+    const selectInputStudent = (item: defaultInterface) => {
+      student.value.KEY = item.KEY;
+      student.value.VALUE = item.VALUE as string;
+    };
+
     const selectStudent = (item: defaultInterface) => {
       student.value.KEY = item.KEY;
-      student.value.VALUE = item.VALUE;
+      student.value.VALUE = item.VALUE as string;
 
       if (selectSection.value === "plan")
         planNameHolder.value = item.VALUE as string;
       if (selectSection.value === "list")
         listNameHolder.value = item.VALUE as string;
 
-      if (selectSection.value === "plan" || selectSection.value === "list") {
-        setConsultList();
-      }
+      setConsultList();
     };
 
     const selectPage = (n: number) => {
@@ -385,11 +386,9 @@ export default defineComponent({
       typeList,
       inputDate,
       inputTime,
-      inputName,
       inputDateCalendarState,
       inputTimeCalendarState,
       planDate,
-      planName,
       planDateCalendarState,
       planConsultList,
       showPlanConsultList,
@@ -411,6 +410,7 @@ export default defineComponent({
       openCalendar,
       selectInputType,
       selectType,
+      selectInputStudent,
       selectStudent,
       selectPage,
       changePage,
@@ -433,7 +433,10 @@ export default defineComponent({
           <span class="consult-input-section-body-title">
             상담 정보를 추가해주세요.
           </span>
-          <div class="consult-input-section-body-item">
+          <div
+            class="consult-input-section-body-item"
+            @click="selectSection === ''"
+          >
             <div class="consult-input-section-body-item-date">
               <i class="fa-solid fa-filter"></i>
               {{ inputDate ? inputDate?.toDateString() : "상담 날짜" }}
@@ -481,7 +484,7 @@ export default defineComponent({
                 :select-list="studentList"
                 placeholder="학생명"
                 row-width="160px"
-                @selectValue="selectStudent"
+                @selectValue="selectInputStudent"
               ></drop-box-component>
             </div>
             <div

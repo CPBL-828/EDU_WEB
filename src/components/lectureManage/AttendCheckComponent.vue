@@ -232,6 +232,7 @@ export default defineComponent({
         </div>
         <div class="check-section-body-lecture" v-if="!selectState">
           <select-lecture-component
+            list-type="LECTURE"
             @selectLecture="selectLecture"
           ></select-lecture-component>
         </div>
@@ -262,7 +263,9 @@ export default defineComponent({
                 <td>{{ item.studentName }}</td>
                 <td
                   :class="
-                    item.state === state.VALUE ? 'check-selected' : 'check'
+                    item.state === state.VALUE
+                      ? 'check-selected-' + state.KEY
+                      : 'check'
                   "
                   :style="{
                     transition: existAttend ? 'all 0.1s' : 'all 0.2s',

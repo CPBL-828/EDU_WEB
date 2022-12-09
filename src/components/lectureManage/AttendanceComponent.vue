@@ -191,6 +191,7 @@ export default defineComponent({
         <div class="attendance-section-body">
           <div class="attendance-section-body-lecture" v-if="!selectState">
             <select-lecture-component
+              list-type="LECTURE"
               @selectLecture="selectLecture"
             ></select-lecture-component>
           </div>

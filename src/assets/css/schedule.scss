@@ -951,6 +951,20 @@ section.attendance {
   }
 }
 
+@mixin radio-custom {
+  color: white;
+  font-weight: bold;
+
+  input[type="radio"] {
+    display: none;
+  }
+  label {
+    cursor: pointer;
+  }
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
 section.check {
   @include section-custom();
 
@@ -1072,14 +1086,9 @@ section.check {
                 }
 
                 td.check {
-                  input[type="radio"] {
-                    display: none;
-                  }
-                  label {
-                    cursor: pointer;
-                  }
-                  cursor: pointer;
-                  transition: all 0.2s;
+                  @include radio-custom();
+                  font-weight: normal;
+                  color: $sub-color;
 
                   &:hover {
                     background-color: $disable-color;
@@ -1088,18 +1097,25 @@ section.check {
                   }
 
                   &-selected {
-                    background-color: $disable-color;
-                    color: white;
-                    font-weight: bold;
+                    &-OK {
+                      background-color: #8FBE61;
+                      @include radio-custom();
+                    }
 
-                    input[type="radio"] {
-                      display: none;
+                    &-NO {
+                      background-color: #DA7E7E;
+                      @include radio-custom();
                     }
-                    label {
-                      cursor: pointer;
+
+                    &-LATE {
+                      background-color: #F3D97C;
+                      @include radio-custom();
                     }
-                    cursor: pointer;
-                    transition: all 0.2s;
+
+                    &-ETC {
+                      background-color: $disable-color;
+                      @include radio-custom();
+                    }
                   }
                 }
               }

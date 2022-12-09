@@ -52,21 +52,20 @@ export default defineComponent({
       if (search.value) {
         data = Object.assign(data, { search: search.value });
       }
-      if (
-        common.getItem(KEYS.UK).userKey.slice(-3) !== USER_KEY.ADM &&
-        loginUser.value
-      ) {
+      if (common.getItem(KEYS.UK).userKey.slice(-3) !== USER_KEY.ADM) {
         data = Object.assign(data, {
-          userKey: (loginUser.value as teacherInterface).teacherKey,
+          userKey: teacherKey.value,
         });
       } else {
         data = Object.assign(data, {
-          userKey: (loginUser.value as adminInterface).adminKey,
+          userKey: "",
+          lectureKey: lectureKey.value,
         });
       }
 
       if (props.viewUser === USER_KEY.STU) {
         data = Object.assign(data, { lectureKey: lectureKey.value });
+        console.log(data);
 
         const result = await ApiClient(
           "/members/getStudentList/",
@@ -104,7 +103,7 @@ export default defineComponent({
 
     const getScheduleList = async () => {
       let data = {
-        userKey: teacherKey.value,
+        userKey: teacherKey.value ? teacherKey.value : "",
         search: "",
         roomKey: "",
         target: "",
@@ -213,14 +212,16 @@ export default defineComponent({
           >
         </div>
         <div class="user-info-section-body" v-if="viewUser === 'TEA'">
-          <div class="search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input
-              type="text"
-              v-model="search"
-              placeholder="강사명, 담당 학년, 담당 과목으로 검색"
-              @keypress.enter="getUserList"
-            />
+          <div class="filter">
+            <div class="filter-search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                v-model="search"
+                placeholder="강사명, 담당 학년, 담당 과목으로 검색"
+                @keypress.enter="getUserList"
+              />
+            </div>
           </div>
           <span v-if="total" class="total">강사 총 원 : {{ total }} 명</span>
           <card-list-component

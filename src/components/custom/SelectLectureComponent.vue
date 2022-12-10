@@ -230,6 +230,7 @@ import SelectButtonComponent from "./SelectButtonComponent.vue";
         <div
           class="select-lecture-list-item"
           v-for="(item, index) in showRoomList"
+          :style="{ backgroundColor: color[index] }"
           @click="$emit('selectLecture', item)"
         >
           <span class="select-lecture-list-item-name">{{ item.name }}</span>

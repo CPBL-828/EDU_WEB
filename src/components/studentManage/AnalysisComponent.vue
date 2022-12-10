@@ -1,5 +1,12 @@
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, PropType, ref } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+  watch,
+} from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import common from "../../lib/common";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
@@ -40,7 +47,8 @@ export default defineComponent({
     const studentList = ref<studentInterface[] | undefined>(undefined);
     const selectStudentState = ref(false);
     const selectedStudent = ref<studentInterface | undefined>(undefined);
-    const date = new Date();
+    const date = ref<Date>(new Date());
+    const selectDate = ref<string>("");
 
     const headerList: defaultInterface[] = [
       { KEY: "date", VALUE: "작성 일자" },
@@ -112,7 +120,10 @@ export default defineComponent({
     };
 
     const getAnalysisList = async () => {
-      let data = { userKey: selectedStudent.value?.studentKey };
+      let data = {
+        userKey: selectedStudent.value?.studentKey,
+        date: selectDate.value,
+      };
 
       const result = await ApiClient(
         "/info/getAnalysisList/",
@@ -120,6 +131,8 @@ export default defineComponent({
       );
 
       if (result) {
+        analysisList.value = [];
+
         if (result.count > 0) {
           analysisList.value = result.resultData as analysisInterface[];
           totalCnt.value = analysisList.value?.length as number;
@@ -130,6 +143,7 @@ export default defineComponent({
     const selectStudent = async (s: studentInterface) => {
       selectedStudent.value = s;
       common.setItem(KEYS.SS, common.makeJson(selectedStudent.value));
+      selectDate.value = date.value.toISOString().substring(0, 10);
 
       await getAnalysisList();
       selectStudentState.value = true;
@@ -170,6 +184,18 @@ export default defineComponent({
       openModal("view");
     };
 
+    watch(
+      () => date.value,
+      async () => {
+        if (date.value) {
+          selectDate.value = date.value?.toISOString().substring(0, 10);
+          await getAnalysisList();
+        } else {
+          window.alert("날짜를 선택해 주세요.");
+        }
+      }
+    );
+
     onMounted(async () => {
       category.value = common.findCategory();
 
@@ -181,6 +207,7 @@ export default defineComponent({
       if (common.getItem(KEYS.SS)) {
         selectedStudent.value = common.getItem(KEYS.SS);
         selectStudentState.value = true;
+        selectDate.value = date.value.toISOString().substring(0, 10);
 
         await getAnalysisList();
       }

@@ -60,8 +60,6 @@ export default defineComponent({
         lectureName: "",
       };
 
-      console.log(data);
-
       const result = await ApiClient(
         "/lectures/getLectureList/",
         common.makeJson(data)
@@ -104,6 +102,8 @@ export default defineComponent({
 
     onMounted(async () => {
       category.value = common.findCategory();
+
+      await getScheduleList();
     });
 
     return {

@@ -170,7 +170,6 @@ export default defineComponent({
             v-if="!adminState || selectLectureState"
           >
             <timetable-component
-              v-if="scheduleList.length > 0"
               :schedule-list="scheduleList"
               :select-type="selectState"
               @clickSchedule="selectSchedule"

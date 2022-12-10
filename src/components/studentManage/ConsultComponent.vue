@@ -39,7 +39,7 @@ export default defineComponent({
     const consultType = ref<string>("");
     const studentList = ref<Array<defaultInterface>>([]);
 
-    const date = ref<string | undefined>(undefined);
+    const date = ref<string>("");
     const time = ref<string | undefined>(undefined);
     const typeList: defaultInterface[] = [
       { KEY: "STUDENT", VALUE: "학생" },
@@ -114,7 +114,9 @@ export default defineComponent({
         userKey: teacherInfo.value?.teacherKey,
         studentKey: student.value.KEY,
         search: consultType.value,
+        date: date.value,
       };
+
       const result = await ApiClient(
         "/info/getConsultList/",
         common.makeJson(data)
@@ -192,7 +194,7 @@ export default defineComponent({
       inputType.value = (item.VALUE as string) + " 상담";
     };
 
-    const selectType = (item: defaultInterface) => {
+    const selectType = async (item: defaultInterface) => {
       consultType.value = item.VALUE as string;
 
       if (selectSection.value === "plan")
@@ -200,7 +202,7 @@ export default defineComponent({
       if (selectSection.value === "list")
         listTypeHolder.value = item.VALUE as string;
 
-      setConsultList();
+      await setConsultList();
     };
 
     const selectInputStudent = (item: defaultInterface) => {
@@ -208,7 +210,7 @@ export default defineComponent({
       student.value.VALUE = item.VALUE as string;
     };
 
-    const selectStudent = (item: defaultInterface) => {
+    const selectStudent = async (item: defaultInterface) => {
       student.value.KEY = item.KEY;
       student.value.VALUE = item.VALUE as string;
 
@@ -217,7 +219,7 @@ export default defineComponent({
       if (selectSection.value === "list")
         listNameHolder.value = item.VALUE as string;
 
-      setConsultList();
+      await setConsultList();
     };
 
     const selectPage = (n: number) => {
@@ -341,15 +343,19 @@ export default defineComponent({
 
     watch(
       () => planDate.value,
-      () => {
-        date.value = planDate.value?.toDateString();
+      async () => {
+        date.value = planDate.value?.toISOString().substring(0, 10) as string;
+        selectSection.value = "plan";
+        await setConsultList();
       }
     );
 
     watch(
       () => listDate.value,
-      () => {
-        date.value = listDate.value?.toDateString();
+      async () => {
+        date.value = listDate.value?.toISOString().substring(0, 10) as string;
+        selectSection.value = "list";
+        await setConsultList();
       }
     );
 

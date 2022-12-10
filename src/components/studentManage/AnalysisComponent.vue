@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from "vue";
+import { defineComponent, onMounted, onUnmounted, PropType, ref } from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import common from "../../lib/common";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
@@ -21,11 +21,18 @@ import { useRouter } from "vue-router";
  */
 export default defineComponent({
   name: "AnalysisComponent",
+  props: {
+    adminState: {
+      types: Boolean as PropType<boolean>,
+      required: true,
+    },
+  },
   components: { ModalPopupComponent, DataListComponent, DropBoxComponent },
-  setup() {
+  setup(props) {
     const store = useStore();
     const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const userKey = ref<string>("");
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const placeholder = ref<string>("강의 선택");
     const lectureList = ref<defaultInterface[]>([]);
@@ -54,7 +61,7 @@ export default defineComponent({
 
     const getLectureList = async () => {
       let data = {
-        userKey: teacherInfo.value?.teacherKey,
+        userKey: userKey.value,
         search: "",
         roomKey: "",
         target: "",
@@ -86,7 +93,7 @@ export default defineComponent({
 
     const getStudentList = async () => {
       let data = {
-        userKey: teacherInfo.value?.teacherKey,
+        userKey: userKey.value,
         search: "",
         lectureKey: lectureKey.value,
       };
@@ -97,6 +104,7 @@ export default defineComponent({
       );
 
       if (result) {
+        studentList.value = undefined;
         if (result.count > 0) {
           studentList.value = result.resultData as studentInterface[];
         }
@@ -165,8 +173,9 @@ export default defineComponent({
     onMounted(async () => {
       category.value = common.findCategory();
 
-      if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
+      if (!props.adminState) {
         teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+        userKey.value = teacherInfo.value.teacherKey;
       }
 
       if (common.getItem(KEYS.SS)) {

@@ -67,6 +67,23 @@ section.user-info {
             border-right: 2px solid $disable-color;
             margin: 0 22px;
           }
+
+          &-create-btn {
+            height: 33px;
+            width: 170px;
+            border-radius: 19px;
+            border: 2px solid $primary-color;
+            background-color: white;
+            color: $primary-color;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+              background-color: $primary-color;
+              color: white;
+            }
+          }
         }
 
         .total {

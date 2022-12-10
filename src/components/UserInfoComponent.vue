@@ -73,6 +73,8 @@ export default defineComponent({
         );
 
         if (result) {
+          userData.value = [];
+
           if (result.count > 0) {
             userData.value = result.resultData as studentInterface[];
             total.value = result.count;
@@ -89,6 +91,8 @@ export default defineComponent({
         );
 
         if (result) {
+          userData.value = [];
+
           if (result.count > 0) {
             userData.value = result.resultData as teacherInterface[];
             total.value = result.count;
@@ -200,6 +204,8 @@ export default defineComponent({
                 @selectValue="selectLecture"
               ></drop-box-component>
             </div>
+            <div class="sap"></div>
+            <input type="button" value="생성하기" class="filter-create-btn" />
           </div>
           <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
           <card-list-component
@@ -222,6 +228,8 @@ export default defineComponent({
                 @keypress.enter="getUserList"
               />
             </div>
+            <div class="sap"></div>
+            <input type="button" value="생성하기" class="filter-create-btn" />
           </div>
           <span v-if="total" class="total">강사 총 원 : {{ total }} 명</span>
           <card-list-component

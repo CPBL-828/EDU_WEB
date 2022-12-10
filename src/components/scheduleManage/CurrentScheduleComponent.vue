@@ -1,13 +1,18 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref } from "vue";
 import common from "../../lib/common";
-import { defaultInterface, scheduleInterface } from "../../lib/types";
+import {
+  defaultInterface,
+  roomInterface,
+  scheduleInterface,
+} from "../../lib/types";
 import TimetableComponent from "../custom/TimetableComponent.vue";
 import { KEYS, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
 /*
 @brief [강사, 학생, 학부모, 관리자] [Main]시간표 관리
        [Sub]현재 시간표 접근 시 해당 유저의 현재 시간표 표시
@@ -16,21 +21,74 @@ import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 export default defineComponent({
   name: "CurrentScheduleComponent.vue",
   components: {
+    SelectLectureComponent,
     ModalPopupComponent,
     SelectButtonComponent,
     TimetableComponent,
   },
-  setup() {
+  props: {
+    adminState: {
+      types: Boolean as PropType<boolean>,
+      required: true,
+    },
+  },
+  setup(props) {
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const teacherKey = ref<string>("");
+    const selectLectureState = ref(false);
+    const roomKey = ref<string>("");
     const scheduleList = ref<Array<scheduleInterface>>([]);
     const scheduleInfo = ref<scheduleInterface | undefined>(undefined);
     const selectItem: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-
     const selectState = ref("pm");
+
+    const getScheduleList = async () => {
+      if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
+        teacherKey.value = common.getItem(KEYS.LU).teacherKey;
+      }
+
+      let data = {
+        userKey: teacherKey.value,
+        // search: "",
+        roomKey: roomKey.value,
+        target: "",
+        roomName: "",
+        lectureName: "",
+      };
+
+      console.log(data);
+
+      const result = await ApiClient(
+        "/lectures/getLectureList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        scheduleList.value = [];
+        if (result.count > 0) {
+          result.resultData.map((item: scheduleInterface) => {
+            item.start = Number(item.startTime?.substring(0, 2));
+            item.minute = Number(item.startTime?.substring(3, 5));
+
+            if (item.progress === "등록") {
+              scheduleList.value.push(item as scheduleInterface);
+            }
+          });
+        }
+      } else {
+        scheduleList.value = [];
+      }
+    };
+
+    const selectLecture = async (item: roomInterface) => {
+      roomKey.value = item.roomKey;
+      await getScheduleList();
+      selectLectureState.value = true;
+    };
 
     const changeState = (v: string) => {
       selectState.value = v;
@@ -46,44 +104,16 @@ export default defineComponent({
 
     onMounted(async () => {
       category.value = common.findCategory();
-
-      let teacherKey = "";
-      if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-        teacherKey = common.getItem(KEYS.LU).teacherKey;
-      }
-      let data = {
-        userKey: teacherKey,
-        search: "",
-        roomKey: "",
-        target: "",
-        roomName: "",
-        lectureName: "",
-      };
-      const result = await ApiClient(
-        "/lectures/getLectureList/",
-        common.makeJson(data)
-      );
-
-      if (result) {
-        if (result.count > 0) {
-          result.resultData.map((item: scheduleInterface) => {
-            item.start = Number(item.startTime?.substring(0, 2));
-            item.minute = Number(item.startTime?.substring(3, 5));
-
-            if (item.progress === "등록") {
-              scheduleList.value.push(item as scheduleInterface);
-            }
-          });
-        }
-      }
     });
 
     return {
       category,
+      selectLectureState,
       scheduleList,
       scheduleInfo,
       selectItem,
       selectState,
+      selectLecture,
       changeState,
       selectSchedule,
       openModal,
@@ -113,7 +143,10 @@ export default defineComponent({
             {{ new Date().toISOString().substring(8, 10) }}일
             {{ new Date().toString().substring(0, 4) }}
           </div>
-          <div class="current-schedule-section-body-button">
+          <div
+            class="current-schedule-section-body-button"
+            v-if="!adminState || selectLectureState"
+          >
             <div class="current-schedule-section-body-button-state">
               <select-button-component
                 :state-value="selectItem"
@@ -125,7 +158,17 @@ export default defineComponent({
               이전 시간표 조회
             </div>
           </div>
-          <div class="current-schedule-section-body-timetable">
+          <div class="current-schedule-section-body-lecture" v-if="adminState">
+            <select-lecture-component
+              v-if="!selectLectureState"
+              list-type="ROOM"
+              @selectLecture="selectLecture"
+            ></select-lecture-component>
+          </div>
+          <div
+            class="current-schedule-section-body-timetable"
+            v-if="!adminState || selectLectureState"
+          >
             <timetable-component
               v-if="scheduleList.length > 0"
               :schedule-list="scheduleList"
@@ -133,7 +176,11 @@ export default defineComponent({
               @clickSchedule="selectSchedule"
             ></timetable-component>
           </div>
-          <div class="current-schedule-section-body-info">
+
+          <div
+            class="current-schedule-section-body-info"
+            v-if="!adminState || selectLectureState"
+          >
             <div class="current-schedule-section-body-info-container">
               <div class="info" v-if="!scheduleInfo">
                 <div class="info-no-data">강의를 선택해 주세요</div>

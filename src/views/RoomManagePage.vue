@@ -94,9 +94,14 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      if (result.chunbae === RESULT_KEY.CREATE) {
-        window.alert("강의실을 생성했습니다.");
-        router.go(0);
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          window.alert("강의실을 생성했습니다.");
+          router.go(0);
+        }
+      } else {
+        window.alert("강의실 생성에 실패했습니다.");
+        return false;
       }
     };
 

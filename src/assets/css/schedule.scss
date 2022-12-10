@@ -19,6 +19,15 @@ section.current-schedule {
         @include body-custom();
         height: 900px;
 
+        &-lecture {
+          position: relative;
+          top: 100%;
+          left: 50%;
+          transform: translate(-50%, -100%);
+          width: 90%;
+          height: 90%;
+        }
+
         &-today {
           position: absolute;
           top: 20px;
@@ -1098,17 +1107,17 @@ section.check {
 
                   &-selected {
                     &-OK {
-                      background-color: #8FBE61;
+                      background-color: #8fbe61;
                       @include radio-custom();
                     }
 
                     &-NO {
-                      background-color: #DA7E7E;
+                      background-color: #da7e7e;
                       @include radio-custom();
                     }
 
                     &-LATE {
-                      background-color: #F3D97C;
+                      background-color: #f3d97c;
                       @include radio-custom();
                     }
 

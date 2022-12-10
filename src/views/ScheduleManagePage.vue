@@ -4,6 +4,8 @@ import { useRoute } from "vue-router";
 import CurrentScheduleComponent from "../components/scheduleManage/CurrentScheduleComponent.vue";
 import ScheduleAskComponent from "../components/scheduleManage/ScheduleAskComponent.vue";
 import PlanMakeComponent from "../components/scheduleManage/PlanMakeComponent.vue";
+import common from "../lib/common";
+import { KEYS, USER_KEY } from "../constant";
 /*
 @brief [강사, 관리자] [Main]시간표 관리
        선택한 [Sub]에 따라 페이지를 표시
@@ -18,6 +20,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const currentCategory = ref<string | undefined>(undefined);
+    const adminState = ref(false);
 
     watch(
       () => route.path,
@@ -28,10 +31,18 @@ export default defineComponent({
 
     onMounted(async () => {
       currentCategory.value = route.path.split("/")[2]?.toUpperCase();
+
+      if (
+        common.getItem(KEYS.UK).userKey ===
+        (USER_KEY.KYO_ADM || USER_KEY.ETC_ADM)
+      ) {
+        adminState.value = true;
+      }
     });
 
     return {
       currentCategory,
+      adminState,
     };
   },
 });
@@ -39,7 +50,8 @@ export default defineComponent({
 
 <template>
   <current-schedule-component
-    v-if="currentCategory === 'CURRENT'"
+    :admin-state="adminState"
+    v-if="currentCategory === 'CURRENT' || currentCategory === 'ALL'"
   ></current-schedule-component>
   <schedule-ask-component
     v-if="currentCategory === 'ASK'"

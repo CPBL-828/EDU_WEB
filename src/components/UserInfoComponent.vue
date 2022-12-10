@@ -158,6 +158,7 @@ export default defineComponent({
 
     return {
       category,
+      teacherKey,
       userKey,
       userData,
       total,
@@ -204,8 +205,13 @@ export default defineComponent({
                 @selectValue="selectLecture"
               ></drop-box-component>
             </div>
-            <div class="sap"></div>
-            <input type="button" value="생성하기" class="filter-create-btn" />
+            <div class="sap" v-if="!teacherKey"></div>
+            <input
+              type="button"
+              value="생성하기"
+              class="filter-create-btn"
+              v-if="!teacherKey"
+            />
           </div>
           <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
           <card-list-component

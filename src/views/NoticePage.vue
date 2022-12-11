@@ -19,7 +19,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
-    const userKey = ref<string | undefined>(undefined);
+    const userKey = ref<string>("");
     const adminState = ref(false);
     const header: defaultInterface[] = [
       { KEY: "TYPE", VALUE: "공지 유형" },
@@ -31,14 +31,11 @@ export default defineComponent({
     const noticeList = ref<Array<noticeInterface> | undefined>(undefined);
     const noticeInfo = ref<noticeInterface | undefined>(undefined);
     const totalCnt = ref<number | undefined>(undefined);
-    const search = ref<string | undefined>(undefined);
+    const search = ref<string>("");
 
     const getNoticeList = async () => {
       //TODO getNoticeList parameter: type, readerKey, year 추가
-      let data = { userKey: "", search: "" };
-      if (search.value) {
-        data = Object.assign(data, { search: search.value });
-      }
+      let data = { userKey: "", search: search.value, date: "" };
 
       if (route.path === "/notice" || route.path === "/notice/all") {
         const result = await ApiClient(
@@ -48,15 +45,22 @@ export default defineComponent({
 
         if (result) {
           if (result?.count > 0) {
-            noticeList.value = result.resultData;
+            if (adminState.value) {
+              noticeList.value = result.resultData;
+            } else {
+              noticeList.value = [];
+              result.resultData.map((item: noticeInterface) => {
+                if (item.type === "전체") {
+                  noticeList.value?.push(item);
+                }
+              });
+            }
           } else {
             noticeList.value = undefined;
           }
         }
       } else {
-        if (userKey.value) {
-          data = Object.assign(data, { userKey: userKey.value, search: "" });
-        }
+        data = Object.assign(data, { userKey: userKey.value });
 
         const result = await ApiClient(
           "/info/getNoticeList/",

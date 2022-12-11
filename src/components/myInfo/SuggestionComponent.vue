@@ -1,6 +1,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref } from "vue";
-import { defaultInterface, suggestInterface } from "../../lib/types";
+import {
+  defaultInterface,
+  suggestInterface,
+  teacherInterface,
+} from "../../lib/types";
 import common from "../../lib/common";
 import DataListComponent from "../custom/DataListComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
@@ -8,7 +12,8 @@ import { ApiClient } from "../../axios";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
-import { KEYS } from "../../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
+import { useRouter } from "vue-router";
 /*
 @brief [학생, 학부모, 강사] [Main] 내 공간 [Sub]건의사항
        [관리자] [Main]학생 관리, 강사 관리 [Sub]건의사항
@@ -31,9 +36,12 @@ export default defineComponent({
     },
   },
   setup: function () {
+    const router = useRouter();
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const userKey = ref<string | undefined>(undefined);
+    const userKey = ref<string>("");
+    const userType = ref<string>("");
+    const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const selectState = ref("ok");
     const selectItem = ref<Array<defaultInterface>>([
       { KEY: "ok", VALUE: "처리 완료" },
@@ -53,12 +61,39 @@ export default defineComponent({
       { KEY: "FACILITY", VALUE: "시설물" },
       { KEY: "ETC", VALUE: "기타" },
     ];
+    const consultType = ref<string>("");
+    const content = ref<string>("");
     const width: string = "280px";
     const datetime = ref<string>(new Date().toLocaleString().slice(0, -3));
     const allSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const viewSuggestList = ref<Array<suggestInterface>>([]);
     const suggestDetail = ref<suggestInterface | undefined>(undefined);
     const totalCnt = ref<number | undefined>(undefined);
+
+    const setSuggestList = async () => {
+      let data = {
+        userType: common.getItem(KEYS.UK).userKey,
+        search: "",
+        writerType: "",
+        userKey: userKey.value,
+      };
+      const result = await ApiClient(
+        "/info/getSuggestList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          allSuggestList.value = result.resultData;
+
+          allSuggestList.value?.map((item: suggestInterface) => {
+            if (item.state === "Y") {
+              viewSuggestList.value.push(item);
+            }
+          });
+        }
+      }
+    };
 
     const changeState = (v: string) => {
       selectState.value = v;
@@ -85,7 +120,40 @@ export default defineComponent({
     };
 
     const selectType = (item: defaultInterface) => {
-      // console.log("건의 유형: ", item);
+      consultType.value = item.VALUE as string;
+    };
+
+    const insertSuggest = async () => {
+      if (!consultType.value) {
+        window.alert("건의 유형을 선택해 주세요.");
+        return false;
+      } else if (!content.value) {
+        window.alert("건의 내용을 입력해 주세요.");
+        return false;
+      }
+
+      let data = {
+        writerKey: userKey.value,
+        writerName: teacherInfo.value?.name,
+        writerType: userType.value,
+        type: consultType.value,
+        content: content.value,
+      };
+
+      const result = await ApiClient(
+        "/info/createSuggestPlan/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          window.alert("건의사항을 성공적으로 작성했습니다.");
+          consultType.value = "";
+          content.value = "";
+          await setSuggestList();
+          changeState("wait");
+        }
+      }
     };
 
     const showSuggestDetail = (item: suggestInterface) => {
@@ -99,31 +167,12 @@ export default defineComponent({
       if (common.getItem(KEYS.LU)) {
         if (common.getItem(KEYS.UK).userKey === "TEA") {
           userKey.value = common.getItem(KEYS.LU).teacherKey;
+          userType.value = USER_KEY.TEA;
+          teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
         }
       }
 
-      let data = {
-        userType: common.getItem(KEYS.UK).userKey,
-        search: "",
-        writerType: "",
-        userKey: userKey.value,
-      };
-      const result = await ApiClient(
-        "/info/getSuggestList/",
-        common.makeJson(data)
-      );
-
-      if (result) {
-        if (result.count > 0) {
-          allSuggestList.value = result.resultData;
-
-          allSuggestList.value?.map((item: suggestInterface) => {
-            if (item.state === "Y") {
-              viewSuggestList.value.push(item);
-            }
-          });
-        }
-      }
+      await setSuggestList();
     });
 
     return {
@@ -133,6 +182,7 @@ export default defineComponent({
       header,
       placeholder,
       typeList,
+      content,
       width,
       datetime,
       viewSuggestList,
@@ -140,6 +190,7 @@ export default defineComponent({
       totalCnt,
       changeState,
       selectType,
+      insertSuggest,
       showSuggestDetail,
     };
   },
@@ -200,8 +251,14 @@ export default defineComponent({
             <textarea
               placeholder="내용을 입력해주세요."
               class="suggestion-section-body-write-context"
+              v-model="content"
             />
-            <div class="suggestion-section-body-write-btn">건의하기</div>
+            <div
+              class="suggestion-section-body-write-btn"
+              @click="insertSuggest"
+            >
+              건의하기
+            </div>
           </div>
         </div>
       </div>

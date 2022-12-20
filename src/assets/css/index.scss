@@ -1,12 +1,11 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import "mixin";
 @import "main";
+@import "layout";
+@import "modal";
 @import "myPlace";
 @import "userManage";
-@import "layout";
-@import "notice";
 @import "schedule";
-@import "modal";
 
 * {
   font-family: "Noto Sans CJK KR", Noto Sans KR, sans-serif;

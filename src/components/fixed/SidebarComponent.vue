@@ -47,18 +47,18 @@ export default defineComponent({
       router.push("/main");
     };
 
-    const onClickAway = (event: Event) => {
-      if (event.isTrusted) {
+    const onClickAway = (e: Event) => {
+      if (e.isTrusted) {
         subState.value = false;
       }
     };
 
-    const selectMain = (main: categoryInterface) => {
-      common.setItem(KEYS.MR, common.makeJson({ mr: main.KEY.toLowerCase() }));
+    const selectMain = (m: categoryInterface) => {
+      common.setItem(KEYS.MR, common.makeJson({ mr: m.KEY.toLowerCase() }));
 
-      if (main.HAS_CHILD) {
+      if (m.HAS_CHILD) {
         subItem.value?.map((item: categoryInterface) => {
-          if (main.KEY === item.KEY)
+          if (m.KEY === item.KEY)
             resultItem.value = item.VALUE as defaultInterface[];
         });
         subState.value = true;
@@ -70,29 +70,23 @@ export default defineComponent({
       }
     };
 
-    const selectSub = (sub: categoryInterface) => {
+    const selectSub = (s: categoryInterface) => {
       if (!common.getItem(KEYS.SR)) {
-        common.setItem(KEYS.SR, common.makeJson({ sr: sub.KEY.toLowerCase() }));
+        common.setItem(KEYS.SR, common.makeJson({ sr: s.KEY.toLowerCase() }));
         router.push(
-          "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
+          "/" + common.getItem(KEYS.MR).mr + "/" + s.KEY.toLowerCase()
         );
       } else {
-        if (common.getItem(KEYS.SR).sr === sub.KEY.toLowerCase()) {
+        if (common.getItem(KEYS.SR).sr === s.KEY.toLowerCase()) {
           router.go(0);
         } else {
           common.removeItem(KEYS.SR);
-          common.setItem(
-            KEYS.SR,
-            common.makeJson({ sr: sub.KEY.toLowerCase() })
-          );
+          common.setItem(KEYS.SR, common.makeJson({ sr: s.KEY.toLowerCase() }));
           router.push(
-            "/" + common.getItem(KEYS.MR).mr + "/" + sub.KEY.toLowerCase()
+            "/" + common.getItem(KEYS.MR).mr + "/" + s.KEY.toLowerCase()
           );
         }
       }
-      // setTimeout(() => {
-      //   subState.value = false;
-      // }, 3000);
     };
 
     const doLogout = () => {

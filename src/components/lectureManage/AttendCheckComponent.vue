@@ -112,10 +112,10 @@ export default defineComponent({
       }
     };
 
-    const checkState = (stu: string, state: defaultInterface) => {
+    const checkState = (s: string, i: defaultInterface) => {
       attendList.value.map((item: sendingAttendInterface) => {
-        if (item.studentKey === stu) {
-          item.state = state.VALUE as string;
+        if (item.studentKey === s) {
+          item.state = i.VALUE as string;
         }
       });
     };

@@ -3,7 +3,6 @@ import { defineComponent, PropType } from "vue";
 import { categoryInterface } from "../../lib/types";
 /*
 @brief 메인 카테고리
-@props 유저에 따른 메인 카테고리 리스트
  */
 export default defineComponent({
   name: "CategoryItem",

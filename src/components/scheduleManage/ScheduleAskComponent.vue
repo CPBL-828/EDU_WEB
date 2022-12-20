@@ -45,8 +45,8 @@ export default defineComponent({
     ];
     const selectState = ref("pm");
 
-    const changeState = (v: string) => {
-      selectState.value = v;
+    const changeState = (s: string) => {
+      selectState.value = s;
     };
 
     const getScheduleList = async () => {
@@ -58,6 +58,7 @@ export default defineComponent({
         roomName: "",
         lectureName: "",
       };
+
       const result = await ApiClient(
         "/lectures/getLectureList/",
         common.makeJson(data)
@@ -97,8 +98,8 @@ export default defineComponent({
       }
     };
 
-    const selectRoom = async (room: defaultInterface) => {
-      roomKey.value = room.KEY;
+    const selectRoom = async (r: defaultInterface) => {
+      roomKey.value = r.KEY;
       await getScheduleList();
     };
 

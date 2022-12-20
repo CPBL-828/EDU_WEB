@@ -35,11 +35,11 @@ export default defineComponent({
       }
     };
 
-    const openCalendar = (v: string) => {
+    const openCalendar = (s: string) => {
       if (calendarState.value !== undefined) {
         calendarState.value = undefined;
       } else {
-        if (v === "come") {
+        if (s === "come") {
           calendarState.value = "come";
         } else {
           calendarState.value = "out";

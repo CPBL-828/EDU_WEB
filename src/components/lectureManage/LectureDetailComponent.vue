@@ -108,16 +108,16 @@ export default defineComponent({
       }
     };
 
-    const selectLectureName = (item: defaultInterface) => {
-      lectureName.value = item.VALUE as string;
+    const selectLectureName = (n: defaultInterface) => {
+      lectureName.value = n.VALUE as string;
     };
 
-    const selectTarget = (item: defaultInterface) => {
-      target.value = item.VALUE as string;
+    const selectTarget = (t: defaultInterface) => {
+      target.value = t.VALUE as string;
     };
 
-    const selectRoom = (item: defaultInterface) => {
-      roomName.value = item.VALUE as string;
+    const selectRoom = (r: defaultInterface) => {
+      roomName.value = r.VALUE as string;
     };
 
     const doSearch = () => {
@@ -126,16 +126,16 @@ export default defineComponent({
       setLectureList();
     };
 
-    const selectLecture = (item: scheduleInterface) => {
-      lectureInfo.value = item;
+    const selectLecture = (i: scheduleInterface) => {
+      lectureInfo.value = i;
     };
 
-    const selectPage = (n: number) => {
-      currentPage.value = n;
+    const selectPage = (p: number) => {
+      currentPage.value = p;
     };
 
-    const changePage = (n: number) => {
-      if (n === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (p: number) => {
+      if (p === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 

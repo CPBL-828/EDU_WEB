@@ -176,58 +176,58 @@ export default defineComponent({
       }
     };
 
-    const openCalendar = (m: string, n: string) => {
-      if (m === "input") {
-        if (n === "date") {
+    const openCalendar = (s: string, t: string) => {
+      if (s === "input") {
+        if (t === "date") {
           inputDateCalendarState.value = !inputDateCalendarState.value;
         } else {
           inputTimeCalendarState.value = !inputTimeCalendarState.value;
         }
-      } else if (m === "plan") {
+      } else if (s === "plan") {
         planDateCalendarState.value = !planDateCalendarState.value;
       } else {
         listDateCalendarState.value = !listDateCalendarState.value;
       }
     };
 
-    const selectInputType = (item: defaultInterface) => {
-      inputType.value = (item.VALUE as string) + " 상담";
+    const selectInputType = (t: defaultInterface) => {
+      inputType.value = (t.VALUE as string) + " 상담";
     };
 
-    const selectType = async (item: defaultInterface) => {
-      consultType.value = item.VALUE as string;
+    const selectType = async (t: defaultInterface) => {
+      consultType.value = t.VALUE as string;
 
       if (selectSection.value === "plan")
-        planTypeHolder.value = item.VALUE as string;
+        planTypeHolder.value = t.VALUE as string;
       if (selectSection.value === "list")
-        listTypeHolder.value = item.VALUE as string;
+        listTypeHolder.value = t.VALUE as string;
 
       await setConsultList();
     };
 
-    const selectInputStudent = (item: defaultInterface) => {
-      student.value.KEY = item.KEY;
-      student.value.VALUE = item.VALUE as string;
+    const selectInputStudent = (s: defaultInterface) => {
+      student.value.KEY = s.KEY;
+      student.value.VALUE = s.VALUE as string;
     };
 
-    const selectStudent = async (item: defaultInterface) => {
-      student.value.KEY = item.KEY;
-      student.value.VALUE = item.VALUE as string;
+    const selectStudent = async (s: defaultInterface) => {
+      student.value.KEY = s.KEY;
+      student.value.VALUE = s.VALUE as string;
 
       if (selectSection.value === "plan")
-        planNameHolder.value = item.VALUE as string;
+        planNameHolder.value = s.VALUE as string;
       if (selectSection.value === "list")
-        listNameHolder.value = item.VALUE as string;
+        listNameHolder.value = s.VALUE as string;
 
       await setConsultList();
     };
 
-    const selectPage = (n: number) => {
-      planCurrentPage.value = n;
+    const selectPage = (p: number) => {
+      planCurrentPage.value = p;
     };
 
-    const changePage = (n: number) => {
-      if (n === 1) planCurrentPage.value = planCurrentPage.value + 1;
+    const changePage = (p: number) => {
+      if (p === 1) planCurrentPage.value = planCurrentPage.value + 1;
       else planCurrentPage.value = planCurrentPage.value - 1;
     };
 
@@ -267,9 +267,9 @@ export default defineComponent({
       }
     };
 
-    const openInsertPopup = (item: consultInterface) => {
+    const openInsertPopup = (h: consultInterface) => {
       selectSection.value = "plan";
-      planDetailHeader.value = item;
+      planDetailHeader.value = h;
       store.commit("setModalState", true);
     };
 
@@ -295,9 +295,9 @@ export default defineComponent({
       }
     };
 
-    const showConsultDetail = (item: consultInterface) => {
+    const showConsultDetail = (i: consultInterface) => {
       selectSection.value = "list";
-      listConsultDetail.value = item;
+      listConsultDetail.value = i;
       store.commit("setModalState", true);
       document.getElementById("consult")?.scrollTo(0, 0);
     };

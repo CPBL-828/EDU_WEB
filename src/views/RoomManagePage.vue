@@ -58,17 +58,17 @@ export default defineComponent({
       }
     };
 
-    const selectPage = (n: number) => {
-      currentPage.value = n;
+    const selectPage = (p: number) => {
+      currentPage.value = p;
     };
 
-    const changePage = (n: number) => {
-      if (n === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (p: number) => {
+      if (p === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 
-    const selectRoomType = (item: defaultInterface) => {
-      roomType.value = item.VALUE as string;
+    const selectRoomType = (t: defaultInterface) => {
+      roomType.value = t.VALUE as string;
     };
 
     const saveRoom = async () => {
@@ -105,21 +105,21 @@ export default defineComponent({
       }
     };
 
-    const editRoom = (item: roomInterface) => {
+    const editRoom = (i: roomInterface) => {
       editState.value = true;
 
-      roomName.value = item.name;
-      roomType.value = item.type;
-      typePlaceholder.value = item.type;
-      totalPeople.value = item.totalPeople;
+      roomName.value = i.name;
+      roomType.value = i.type;
+      typePlaceholder.value = i.type;
+      totalPeople.value = i.totalPeople;
     };
 
     const doEdit = () => {
       //TODO 강의실 정보 수정
     };
 
-    const selectRoom = (item: roomInterface) => {
-      roomInfo.value = item;
+    const selectRoom = (i: roomInterface) => {
+      roomInfo.value = i;
     };
 
     watch(

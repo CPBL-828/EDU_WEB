@@ -82,18 +82,18 @@ export default defineComponent({
       }
     };
 
-    const selectLecture = async (item: roomInterface) => {
-      roomKey.value = item.roomKey;
+    const selectLecture = async (r: roomInterface) => {
+      roomKey.value = r.roomKey;
       await getScheduleList();
       selectLectureState.value = true;
     };
 
-    const changeState = (v: string) => {
-      selectState.value = v;
+    const changeState = (s: string) => {
+      selectState.value = s;
     };
 
-    const selectSchedule = (item: scheduleInterface) => {
-      scheduleInfo.value = item;
+    const selectSchedule = (i: scheduleInterface) => {
+      scheduleInfo.value = i;
     };
 
     const openModal = () => {

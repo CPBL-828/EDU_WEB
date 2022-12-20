@@ -132,8 +132,8 @@ export default defineComponent({
       }
     };
 
-    const selectLecture = async (item: defaultInterface) => {
-      lectureKey.value = item.KEY;
+    const selectLecture = async (l: defaultInterface) => {
+      lectureKey.value = l.KEY;
       await getUserList();
     };
 

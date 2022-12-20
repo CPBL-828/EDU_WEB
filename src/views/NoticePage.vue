@@ -79,8 +79,8 @@ export default defineComponent({
       totalCnt.value = noticeList.value?.length;
     };
 
-    const showDetail = (item: noticeInterface) => {
-      noticeInfo.value = item;
+    const showDetail = (i: noticeInterface) => {
+      noticeInfo.value = i;
       store.commit("setModalState", true);
     };
 

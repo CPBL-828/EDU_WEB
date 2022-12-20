@@ -37,12 +37,12 @@ export default defineComponent({
     @date 22/10/06
     @param 로그인 유저를 표시할 userType의 key 값
      */
-    const goLogin = (key: string) => {
+    const goLogin = (k: string) => {
       let user: string = "";
-      if (key === USER_KEY.STU) user = "student";
-      else if (key === USER_KEY.PAR) user = "parent";
-      else if (key === USER_KEY.TEA) user = "teacher";
-      else if (key === USER_KEY.ADM) user = "admin";
+      if (k === USER_KEY.STU) user = "student";
+      else if (k === USER_KEY.PAR) user = "parent";
+      else if (k === USER_KEY.TEA) user = "teacher";
+      else if (k === USER_KEY.ADM) user = "admin";
 
       router.push("/" + user + "/login");
     };

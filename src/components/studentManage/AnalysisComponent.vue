@@ -94,8 +94,8 @@ export default defineComponent({
       }
     };
 
-    const selectLecture = async (item: defaultInterface) => {
-      lectureKey.value = item.KEY;
+    const selectLecture = async (l: defaultInterface) => {
+      lectureKey.value = l.KEY;
       await getStudentList();
     };
 
@@ -149,8 +149,8 @@ export default defineComponent({
       selectStudentState.value = true;
     };
 
-    const openModal = (v: string) => {
-      modalState.value = v;
+    const openModal = (s: string) => {
+      modalState.value = s;
       store.commit("setModalState", true);
     };
 

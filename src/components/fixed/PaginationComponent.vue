@@ -2,7 +2,6 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 /*
 @brief 페이징 처리
-@props 전체 페이지 수, 현재 선택된 페이지 값
  */
 export default defineComponent({
   name: "PaginationComponent",

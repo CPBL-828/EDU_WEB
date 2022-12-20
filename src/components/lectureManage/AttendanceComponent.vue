@@ -58,8 +58,8 @@ export default defineComponent({
       undefined
     );
 
-    const selectLecture = (item: scheduleInterface) => {
-      lectureInfo.value = item;
+    const selectLecture = (i: scheduleInterface) => {
+      lectureInfo.value = i;
       selectState.value = true;
     };
 
@@ -131,10 +131,10 @@ export default defineComponent({
       }
     };
 
-    const showAttendDetail = async (item: showAttendInterface) => {
+    const showAttendDetail = async (i: showAttendInterface) => {
       studentInfo.value = {
-        KEY: item.studentKey,
-        VALUE: item.studentName as string,
+        KEY: i.studentKey,
+        VALUE: i.studentName as string,
       };
       await getAttendList();
       store.commit("setModalState", true);

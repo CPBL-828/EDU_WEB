@@ -95,13 +95,13 @@ export default defineComponent({
       }
     };
 
-    const changeState = (v: string) => {
-      selectState.value = v;
+    const changeState = (s: string) => {
+      selectState.value = s;
 
       if (allSuggestList.value) {
         viewSuggestList.value = [];
 
-        if (v === "ok") {
+        if (s === "ok") {
           allSuggestList.value.map((item: suggestInterface) => {
             if (item.state === "Y") {
               viewSuggestList.value.push(item);
@@ -119,8 +119,8 @@ export default defineComponent({
       }
     };
 
-    const selectType = (item: defaultInterface) => {
-      consultType.value = item.VALUE as string;
+    const selectType = (t: defaultInterface) => {
+      consultType.value = t.VALUE as string;
     };
 
     const insertSuggest = async () => {
@@ -156,8 +156,8 @@ export default defineComponent({
       }
     };
 
-    const showSuggestDetail = (item: suggestInterface) => {
-      suggestDetail.value = item;
+    const showSuggestDetail = (i: suggestInterface) => {
+      suggestDetail.value = i;
       store.commit("setModalState", true);
     };
 

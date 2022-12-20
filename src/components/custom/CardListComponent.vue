@@ -6,7 +6,6 @@ import ModalPopupComponent from "./ModalPopupComponent.vue";
 import { useStore } from "vuex";
 /*
 @brief 전체 학생 및 강사의 요약적 정보를 표시할 카드형 리스트
-@props 학생과 강사중 보여주고자 하는 유저 값, 해당 유저의 리스트
  */
 export default defineComponent({
   name: "CardListComponent",
@@ -36,10 +35,10 @@ export default defineComponent({
       }
     };
 
-    const openModal = (v: string, i: studentInterface | teacherInterface) => {
+    const openModal = (u: string, i: studentInterface | teacherInterface) => {
       store.state.modalState = true;
 
-      if (v === USER_KEY.STU) {
+      if (u === USER_KEY.STU) {
         studentInfo.value = i as studentInterface;
       } else {
         teacherInfo.value = i as teacherInterface;
@@ -52,8 +51,8 @@ export default defineComponent({
      */
     watch(
       () => props.userList,
-      () => {
-        setUserList();
+      async () => {
+        await setUserList();
       }
     );
 
@@ -75,10 +74,12 @@ export default defineComponent({
 <template>
   <section class="card">
     <div class="card">
+      <!--      학생 리스트 표시 -->
       <div v-if="studentList" v-for="item in studentList" class="card-item">
         <div v-if="!item.profileImg" class="card-item-profile">
           <i class="fa-solid fa-user"></i>
         </div>
+        <!--        TODO [파일 서버] 프로필 사진 삽입 수정 -->
         <img v-if="item.profileImg" :src="item.profileImg" alt="profile" />
         <div class="card-item-info">
           <div class="card-item-info-name">
@@ -114,10 +115,12 @@ export default defineComponent({
         </div>
       </div>
 
+      <!--      강사 리스트 표시 -->
       <div v-if="teacherList" v-for="item in teacherList" class="card-item">
         <div v-if="!item.profileImg" class="card-item-profile">
           <i class="fa-solid fa-user"></i>
         </div>
+        <!--        TODO [파일 서버] 프로필 사진 삽입 수정 -->
         <img v-if="item.profileImg" :src="item.profileImg" alt="profile" />
         <div class="card-item-info">
           <div class="card-item-info-name">
@@ -162,17 +165,17 @@ export default defineComponent({
         <div class="user-detail-profile">
           <i
             class="fa-solid fa-user"
-            v-if="teacherInfo && !teacherInfo?.profileImg"
+            v-if="studentInfo && !studentInfo?.profileImg"
           ></i>
+          <div v-if="studentInfo" class="user-detail-profile-name">
+            <span>{{ studentInfo?.name }}</span> 학생
+          </div>
           <i
             class="fa-solid fa-user"
-            v-if="studentInfo && !studentInfo?.profileImg"
+            v-if="teacherInfo && !teacherInfo?.profileImg"
           ></i>
           <div v-if="teacherInfo" class="user-detail-profile-name">
             <span>{{ teacherInfo?.name }}</span> 강사님
-          </div>
-          <div v-if="studentInfo" class="user-detail-profile-name">
-            <span>{{ studentInfo?.name }}</span> 학생
           </div>
         </div>
         <div class="user-detail-info">
@@ -180,52 +183,59 @@ export default defineComponent({
             <div class="user-detail-info-content-left">
               <div class="name">
                 <span class="name-label">이름</span>
-                <span class="name-item" v-if="teacherInfo"
-                  >{{ teacherInfo?.name }} ({{ teacherInfo?.id }})</span
-                >
                 <span class="name-item" v-if="studentInfo"
                   >{{ studentInfo?.name }} ({{ studentInfo?.id }})</span
                 >
+                <span class="name-item" v-if="teacherInfo"
+                  >{{ teacherInfo?.name }} ({{ teacherInfo?.id }})</span
+                >
               </div>
+              <!--              학생 -->
+              <div class="part" v-if="studentInfo">
+                <span class="part-label">생년월일</span>
+                <span class="part-item">{{ studentInfo?.birth }}</span>
+              </div>
+              <div class="email" v-if="studentInfo">
+                <span class="email-label">학교</span>
+                <span class="email-item">{{ studentInfo?.school }}</span>
+              </div>
+              <div class="sns" v-if="studentInfo">
+                <span class="sns-label">주소</span>
+                <span class="sns-item">{{ studentInfo?.address }}</span>
+              </div>
+              <!--              강사 -->
               <div class="part" v-if="teacherInfo">
                 <span class="part-label">담당</span>
                 <span class="part-item"
                   >{{ teacherInfo?.part }} {{ teacherInfo?.resSubject }}</span
                 >
               </div>
-              <div class="part" v-if="studentInfo">
-                <span class="part-label">생년월일</span>
-                <span class="part-item">{{ studentInfo?.birth }}</span>
-              </div>
               <div class="email" v-if="teacherInfo">
                 <span class="email-label">이메일</span>
                 <span class="email-item">{{ teacherInfo?.email }}</span>
-              </div>
-              <div class="email" v-if="studentInfo">
-                <span class="email-label">학교</span>
-                <span class="email-item">{{ studentInfo?.school }}</span>
               </div>
               <div class="sns" v-if="teacherInfo">
                 <span class="sns-label">SNS</span>
                 <span class="sns-item">{{ teacherInfo?.link }}</span>
               </div>
-              <div class="sns" v-if="studentInfo">
-                <span class="sns-label">주소</span>
-                <span class="sns-item">{{ studentInfo?.address }}</span>
-              </div>
             </div>
             <div class="user-detail-info-content-right">
               <div class="phone">
                 <span class="phone-label">연락처</span>
-                <span class="phone-item" v-if="teacherInfo">
-                  {{ teacherInfo?.phone.substring(0, 3) }}-{{
-                    teacherInfo?.phone.substring(3, 7)
-                  }}-{{ teacherInfo?.phone.substring(7, 11) }} </span
-                ><span class="phone-item" v-if="studentInfo">
+                <span class="phone-item" v-if="studentInfo">
                   {{ studentInfo?.phone.substring(0, 3) }}-{{
                     studentInfo?.phone.substring(3, 7)
                   }}-{{ studentInfo?.phone.substring(7, 11) }}
                 </span>
+                <span class="phone-item" v-if="teacherInfo">
+                  {{ teacherInfo?.phone.substring(0, 3) }}-{{
+                    teacherInfo?.phone.substring(3, 7)
+                  }}-{{ teacherInfo?.phone.substring(7, 11) }}
+                </span>
+              </div>
+              <div class="join" v-if="studentInfo">
+                <span class="join-label">학년</span>
+                <span class="join-item">{{ studentInfo?.grade }} 학년</span>
               </div>
               <div class="join" v-if="teacherInfo">
                 <span class="join-label">입사일</span>
@@ -234,10 +244,6 @@ export default defineComponent({
                   {{ teacherInfo?.joinDate.substring(5, 7) }}.
                   {{ teacherInfo?.joinDate.substring(8, 10) }}</span
                 >
-              </div>
-              <div class="join" v-if="studentInfo">
-                <span class="join-label">학년</span>
-                <span class="join-item">{{ studentInfo?.grade }} 학년</span>
               </div>
             </div>
           </div>

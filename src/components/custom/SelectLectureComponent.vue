@@ -1,4 +1,8 @@
 <script lang="ts">
+import common from "../../lib/common";
+import { KEYS, USER_KEY } from "../../constant";
+import { ApiClient } from "../../axios";
+import SelectButtonComponent from "./SelectButtonComponent.vue";
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import {
   defaultInterface,
@@ -7,7 +11,8 @@ import {
   teacherInterface,
 } from "../../lib/types";
 /*
-@brief 강의별로 열람해야 하는 데이터를 위해 초기 강의 선택 단계 화면
+@brief 강의, 강의실 선택 화면
+       데이터 열람 기준 선정
  */
 export default defineComponent({
   name: "SelectLectureComponent",
@@ -116,16 +121,16 @@ export default defineComponent({
       }
     };
 
-    const changeState = (v: string) => {
-      selectState.value = v;
+    const changeState = (s: string) => {
+      selectState.value = s;
     };
 
-    const selectPage = (n: number) => {
-      currentLecturePage.value = n;
+    const selectPage = (p: number) => {
+      currentLecturePage.value = p;
     };
 
-    const changePage = (n: number) => {
-      if (n === 1) currentLecturePage.value = currentLecturePage.value + 1;
+    const changePage = (p: number) => {
+      if (p === 1) currentLecturePage.value = currentLecturePage.value + 1;
       else currentLecturePage.value = currentLecturePage.value - 1;
     };
 
@@ -175,14 +180,11 @@ export default defineComponent({
     };
   },
 });
-import common from "../../lib/common";
-import { KEYS, USER_KEY } from "../../constant";
-import { ApiClient } from "../../axios";
-import SelectButtonComponent from "./SelectButtonComponent.vue";
 </script>
 
 <template>
   <section class="select-lecture">
+    <!--    강의 선택 -->
     <div class="select-lecture" v-if="listType === 'LECTURE'">
       <div class="select-lecture-label">
         <span class="select-lecture-label-teacher">
@@ -218,6 +220,7 @@ import SelectButtonComponent from "./SelectButtonComponent.vue";
       </div>
     </div>
 
+    <!--    강의실 선택 -->
     <div class="select-lecture" v-else-if="listType === 'ROOM'">
       <div class="select-lecture-label">
         <span class="select-lecture-label-teacher"> 강의실 현황 </span>

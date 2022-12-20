@@ -4,7 +4,7 @@ import { useStore } from "vuex";
 /*
 @brief v-slot을 활용한 모달 팝업 창
        학생 상세, 공지 상세 등 팝업으로 표시할 내용을 위한 모달 창
-@props 팝업에 표시할 내용의 제목, 버튼이 필요한 경우 어떤 버튼인지에 대한 상태 값
+       store 활용해 열고 닫기
  */
 export default defineComponent({
   name: "ModalPopupComponent",

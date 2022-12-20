@@ -3,7 +3,6 @@ import { defineComponent, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../../lib/types";
 /*
 @brief 이지선다 선택 버튼
-@props 선택 항목 값과 선택된 항목 값
  */
 export default defineComponent({
   name: "SelectButtonComponent",

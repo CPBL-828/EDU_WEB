@@ -2,7 +2,6 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import {
   analysisInterface,
-  attendInterface,
   consultInterface,
   defaultInterface,
   noticeInterface,
@@ -13,7 +12,6 @@ import PaginationComponent from "../fixed/PaginationComponent.vue";
 import { showAttendInterface } from "../lectureManage/AttendanceComponent.vue";
 /*
 @brief 글 리스트 형태의 데이터를 표현하기 위한 컴포넌트
-@props 리스트 헤더(항목) 값, 공지 데이터 리스트, 건의 데이터 리스트, 행 높이
  */
 export default defineComponent({
   name: "DataListComponent",
@@ -69,6 +67,7 @@ export default defineComponent({
     /*
     props에 존재하는 데이터 리스트의 종류에 따라 현재 컴포넌트에서 보여줄 데이터 리스트를 set
      */
+    // 공지사항
     const setNoticeList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
@@ -84,6 +83,7 @@ export default defineComponent({
       }
     };
 
+    // 건의사항
     const setSuggestList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
@@ -99,6 +99,7 @@ export default defineComponent({
       }
     };
 
+    // 상담
     const setConsultList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
@@ -114,6 +115,7 @@ export default defineComponent({
       }
     };
 
+    // 분석
     const setAnalysisList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
@@ -129,6 +131,7 @@ export default defineComponent({
       }
     };
 
+    // 출석 현황
     const setAttendList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
@@ -144,12 +147,12 @@ export default defineComponent({
       }
     };
 
-    const selectPage = (n: number) => {
-      currentPage.value = n;
+    const selectPage = (p: number) => {
+      currentPage.value = p;
     };
 
-    const changePage = (n: number) => {
-      if (n === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (p: number) => {
+      if (p === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 
@@ -190,23 +193,26 @@ export default defineComponent({
     );
 
     watch(
+      /*
+        검색, 필터링 등으로 props의 dataList가 바뀌면 setXXXList() 재호출
+         */
       () => props.dataList,
-      () => {
+      async () => {
         if (props.listType === "consult") {
-          setConsultList();
+          await setConsultList();
         } else if (props.listType === "notice") {
-          setNoticeList();
+          await setNoticeList();
         } else if (props.listType === "suggest") {
-          setSuggestList();
+          await setSuggestList();
         } else if (props.listType === "analysis") {
-          setAnalysisList();
+          await setAnalysisList();
         } else if (props.listType === "attend") {
-          setAttendList();
+          await setAttendList();
         }
       }
     );
 
-    onMounted(() => {
+    onMounted(async () => {
       if (props.listCnt) {
         listCnt.value = props.listCnt;
       } else {
@@ -214,15 +220,15 @@ export default defineComponent({
       }
 
       if (props.listType === "consult") {
-        setConsultList();
+        await setConsultList();
       } else if (props.listType === "notice") {
-        setNoticeList();
+        await setNoticeList();
       } else if (props.listType === "suggest") {
-        setSuggestList();
+        await setSuggestList();
       } else if (props.listType === "analysis") {
-        setAnalysisList();
+        await setAnalysisList();
       } else if (props.listType === "attend") {
-        setAttendList();
+        await setAttendList();
       }
     });
 
@@ -253,6 +259,7 @@ export default defineComponent({
           </tr>
         </thead>
         <tbody class="data-list-section-body">
+          <!--        공지 -->
           <tr
             class="data=list=section-body-item"
             v-if="showNoticeList"
@@ -295,6 +302,7 @@ export default defineComponent({
             </td>
           </tr>
 
+          <!--          건의사항 -->
           <tr
             class="data=list=section-body-item"
             v-if="showSuggestList"
@@ -338,6 +346,7 @@ export default defineComponent({
             </td>
           </tr>
 
+          <!--          상담 목록 -->
           <tr
             class="data=list=section-body-item"
             v-if="showConsultList"
@@ -388,6 +397,7 @@ export default defineComponent({
             </td>
           </tr>
 
+          <!--          분석 -->
           <tr
             class="data=list=section-body-item"
             v-if="showAnalysisList"
@@ -423,6 +433,7 @@ export default defineComponent({
             </td>
           </tr>
 
+          <!--          출결 현황 -->
           <tr
             class="data=list=section-body-item"
             v-if="showAttendList"

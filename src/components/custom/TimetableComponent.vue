@@ -3,7 +3,6 @@ import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { scheduleInterface } from "../../lib/types";
 /*
 @brief 시간표 컴포넌트
-@props 강의 리스트, 오후/오전 중 선택된 상태 값
  */
 export default defineComponent({
   name: "TimetableComponent",
@@ -105,6 +104,8 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
+    <!--    시간표 블록들 -->
     <div class="block">
       <div
         v-if="blockState && selectType === 'pm'"

@@ -106,11 +106,23 @@ export default defineComponent({
       selectedDay.value = d.VALUE as string;
     };
 
+    //TODO...
     const insertAsk = async () => {
       let data = {
         roomKey: roomKey.value,
         teacherKey: userKey.value,
-        adminKey: "",
+        lectureName: "",
+        roomName: "",
+        teacherName: "",
+        type: "",
+        subject: "",
+        book: "",
+        target: "",
+        day: "",
+        startTime: "",
+        duration: "",
+        progress: "",
+        reason: "",
       };
     };
 

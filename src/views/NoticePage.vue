@@ -1,13 +1,18 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
 import DataListComponent from "../components/custom/DataListComponent.vue";
-import { defaultInterface, noticeInterface } from "../lib/types";
+import {
+  defaultInterface,
+  noticeInterface,
+  teacherInterface,
+} from "../lib/types";
 import { useRoute } from "vue-router";
 import common from "../lib/common";
 import { ApiClient } from "../axios";
 import { KEYS, USER_KEY } from "../constant";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../components/custom/ModalPopupComponent.vue";
+import DropBoxComponent from "../components/custom/DropBoxComponent.vue";
 /*
 @brief [강사, 학생, 학부모, 관리자] [Main]공지
        [Sub]전체 공지: 공지 데이터의 type이 '전체'인 것만 표시
@@ -15,10 +20,11 @@ import ModalPopupComponent from "../components/custom/ModalPopupComponent.vue";
  */
 export default defineComponent({
   name: "NoticePage",
-  components: { ModalPopupComponent, DataListComponent },
+  components: { DropBoxComponent, ModalPopupComponent, DataListComponent },
   setup() {
     const store = useStore();
     const route = useRoute();
+    const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
     const adminState = ref(false);
     const header: defaultInterface[] = [
@@ -27,11 +33,22 @@ export default defineComponent({
       { KEY: "DATE", VALUE: "작성일자" },
       { KEY: "WRITER", VALUE: "작성자" },
     ];
-    const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const noticeType: defaultInterface[] = [
+      { KEY: "ALL", VALUE: "전체" },
+      { KEY: USER_KEY.TEA, VALUE: "강사" },
+      { KEY: USER_KEY.STU, VALUE: "학생" },
+      { KEY: USER_KEY.PAR, VALUE: "학부모" },
+    ];
     const noticeList = ref<Array<noticeInterface> | undefined>(undefined);
     const noticeInfo = ref<noticeInterface | undefined>(undefined);
+    const writeState = ref(false);
     const totalCnt = ref<number | undefined>(undefined);
     const search = ref<string>("");
+    const teacherList = ref<Array<defaultInterface> | undefined>(undefined);
+    const readerKey = ref<string>("");
+    const inputType = ref<string>("");
+    const inputTitle = ref<string>("");
+    const inputContent = ref<string>("");
 
     const getNoticeList = async () => {
       //TODO getNoticeList parameter: type, readerKey, year 추가
@@ -79,8 +96,64 @@ export default defineComponent({
       totalCnt.value = noticeList.value?.length;
     };
 
+    const getTeacherList = async () => {
+      let data = { search: "" };
+
+      const result = await ApiClient(
+        "/members/getTeacherList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          teacherList.value = [];
+          result.resultData.map((item: teacherInterface) => {
+            teacherList.value?.push({ KEY: item.teacherKey, VALUE: item.name });
+          });
+        }
+      }
+    };
+
+    const writeNotice = async () => {
+      await getTeacherList();
+      writeState.value = true;
+      store.commit("setModalState", true);
+    };
+
+    const changeType = (t: defaultInterface) => {
+      inputType.value = t.VALUE as string;
+    };
+
+    const changeReader = (r: defaultInterface) => {
+      readerKey.value = r.KEY;
+    };
+
+    const insertNotice = async () => {
+      if (!inputType.value) {
+        window.alert("공지 유형을 선택해주세요.");
+        return false;
+      } else if (!inputTitle.value) {
+        window.alert("공지 제목을 작성해주세요.");
+        return false;
+      } else if (!inputContent.value) {
+        window.alert("공지 내용을 작성해주세요.");
+        return false;
+      }
+
+      let data = {
+        writerKey: userKey.value,
+        readerKey: readerKey.value,
+        type: inputType.value,
+        title: inputTitle.value,
+        content: inputContent.value,
+      };
+
+      console.log(data);
+    };
+
     const showDetail = (i: noticeInterface) => {
       noticeInfo.value = i;
+      writeState.value = false;
       store.commit("setModalState", true);
     };
 
@@ -101,6 +174,7 @@ export default defineComponent({
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         userKey.value = common.getItem(KEYS.LU).teacherKey;
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM) {
+        userKey.value = common.getItem(KEYS.LU).adminKey;
         adminState.value = true;
       }
       category.value = common.findCategory();
@@ -108,14 +182,24 @@ export default defineComponent({
     });
 
     return {
+      category,
       adminState,
       header,
-      category,
+      noticeType,
       noticeList,
       noticeInfo,
+      writeState,
       totalCnt,
       search,
+      teacherList,
+      inputType,
+      inputTitle,
+      inputContent,
       getNoticeList,
+      writeNotice,
+      changeType,
+      changeReader,
+      insertNotice,
       showDetail,
     };
   },
@@ -150,6 +234,7 @@ export default defineComponent({
             value="작성하기"
             class="write-btn"
             v-if="adminState"
+            @click="writeNotice"
           />
           <div class="notice-section-body-content">
             <data-list-component
@@ -168,9 +253,9 @@ export default defineComponent({
       </div>
     </div>
 
-    <modal-popup-component title="공지 상세">
+    <modal-popup-component :title="writeState ? '공지 작성' : '공지 상세'">
       <template v-slot:body>
-        <div class="notice-detail">
+        <div class="notice-detail" v-if="!writeState">
           <div class="notice-detail-container">
             <div class="notice-detail-container-header">
               <div class="notice-detail-container-header-type">
@@ -192,6 +277,60 @@ export default defineComponent({
             </div>
             <div class="notice-detail-container-body">
               {{ noticeInfo?.content }}
+            </div>
+          </div>
+        </div>
+
+        <input
+          type="button"
+          class="write-btn"
+          value="작성하기"
+          @click="insertNotice"
+        />
+        <div class="notice-write" v-if="writeState">
+          <div class="notice-write-container">
+            <div class="notice-write-container-header">
+              <div class="notice-write-type">
+                <drop-box-component
+                  placeholder="공지 유형"
+                  :select-list="noticeType"
+                  row-width="160px"
+                  row-height="28px"
+                  @selectValue="changeType"
+                ></drop-box-component>
+              </div>
+              <div class="notice-write-type">
+                <drop-box-component
+                  placeholder="강사명"
+                  :select-list="teacherList"
+                  row-width="110px"
+                  row-height="28px"
+                  @selectValue="changeReader"
+                ></drop-box-component>
+              </div>
+              <div class="notice-write-container-header-title">
+                <div class="title-label">공지 제목</div>
+                <div class="title-item">
+                  <input
+                    type="text"
+                    placeholder="제목을 입력해주세요."
+                    v-model="inputTitle"
+                  />
+                </div>
+              </div>
+              <div class="notice-write-container-header-date">
+                <div class="date-label">작성 일자</div>
+                <div class="date-item">
+                  {{ new Date().toISOString().substring(0, 10) }}
+                </div>
+              </div>
+            </div>
+            <div class="notice-write-container-body">
+              <textarea
+                placeholder="내용을 입력해주세요."
+                class="suggestion-section-body-write-context"
+                v-model="inputContent"
+              />
             </div>
           </div>
         </div>

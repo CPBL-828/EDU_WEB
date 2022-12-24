@@ -286,6 +286,7 @@ export default defineComponent({
           class="write-btn"
           value="작성하기"
           @click="insertNotice"
+          v-if="writeState"
         />
         <div class="notice-write" v-if="writeState">
           <div class="notice-write-container">

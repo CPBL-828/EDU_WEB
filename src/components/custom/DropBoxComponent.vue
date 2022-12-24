@@ -78,7 +78,10 @@ export default defineComponent({
       }"
     >
       {{ main }}
-      <i class="fa-solid fa-chevron-down"></i>
+      <i
+        class="fa-solid fa-chevron-down"
+        v-if="Number(rowWidth.substring(-3, 0)) > 100"
+      ></i>
     </div>
     <div
       :class="!openState ? 'drop-list' : 'drop-list-opened'"

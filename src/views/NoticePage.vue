@@ -6,10 +6,10 @@ import {
   noticeInterface,
   teacherInterface,
 } from "../lib/types";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import common from "../lib/common";
 import { ApiClient } from "../axios";
-import { KEYS, USER_KEY } from "../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../components/custom/ModalPopupComponent.vue";
 import DropBoxComponent from "../components/custom/DropBoxComponent.vue";
@@ -23,6 +23,7 @@ export default defineComponent({
   components: { DropBoxComponent, ModalPopupComponent, DataListComponent },
   setup() {
     const store = useStore();
+    const router = useRouter();
     const route = useRoute();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
@@ -45,7 +46,7 @@ export default defineComponent({
     const totalCnt = ref<number | undefined>(undefined);
     const search = ref<string>("");
     const teacherList = ref<Array<defaultInterface> | undefined>(undefined);
-    const readerKey = ref<string>("");
+    const reader = ref<defaultInterface | undefined>(undefined);
     const inputType = ref<string>("");
     const inputTitle = ref<string>("");
     const inputContent = ref<string>("");
@@ -125,7 +126,7 @@ export default defineComponent({
     };
 
     const changeReader = (r: defaultInterface) => {
-      readerKey.value = r.KEY;
+      reader.value = { KEY: r.KEY, VALUE: r.VALUE as string };
     };
 
     const insertNotice = async () => {
@@ -140,15 +141,32 @@ export default defineComponent({
         return false;
       }
 
+      if (inputType.value !== "전체" && !reader.value) {
+        window.alert("공지 유형에 맞춰 열람 대상을 선택해주세요.");
+        return false;
+      }
+
       let data = {
         writerKey: userKey.value,
-        readerKey: readerKey.value,
+        readerKey: reader.value ? reader.value.KEY : "",
+        readerNAme: reader.value ? reader.value.VALUE : "",
         type: inputType.value,
         title: inputTitle.value,
         content: inputContent.value,
+        delState: "N",
       };
 
-      console.log(data);
+      const result = await ApiClient(
+        "/info/createNotice/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          window.alert("공지를 작성했습니다.");
+          router.go(0);
+        }
+      }
     };
 
     const showDetail = (i: noticeInterface) => {
@@ -301,6 +319,7 @@ export default defineComponent({
                 ></drop-box-component>
               </div>
               <div class="notice-write-type">
+                <!--                TODO 열람대상 강사만 있는 거 아님!!!-->
                 <drop-box-component
                   placeholder="강사명"
                   :select-list="teacherList"

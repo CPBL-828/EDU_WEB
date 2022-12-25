@@ -15,7 +15,7 @@ import {
        데이터 열람 기준 선정
  */
 export default defineComponent({
-  name: "SelectLectureComponent",
+  name: "SelectListComponent",
   components: { SelectButtonComponent },
   props: {
     listType: {
@@ -53,6 +53,11 @@ export default defineComponent({
     const showRoomList = ref<Array<roomInterface>>([]);
     const roomPage = ref<number>(0);
     const currentRoomPage = ref<number>(1);
+
+    const teacherList = ref<Array<teacherInterface>>([]);
+    const showTeacherList = ref<Array<teacherInterface>>([]);
+    const teacherPage = ref<number>(0);
+    const currentTeacherPage = ref<number>(1);
 
     const setLectureList = async () => {
       lectureList.value = [];
@@ -121,6 +126,29 @@ export default defineComponent({
       }
     };
 
+    const setTeacherList = async () => {
+      let data = { search: "", lectureKey: "" };
+
+      const result = await ApiClient(
+        "/members/getTeacherList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          teacherList.value = result.resultData as teacherInterface[];
+        }
+      }
+
+      if (teacherList.value.length > 10) {
+        showTeacherList.value = teacherList.value.slice(0, 10);
+        teacherPage.value = Math.ceil(teacherList.value.length / 10);
+      } else {
+        showTeacherList.value = teacherList.value;
+        teacherPage.value = 0;
+      }
+    };
+
     const changeState = (s: string) => {
       selectState.value = s;
     };
@@ -146,8 +174,8 @@ export default defineComponent({
 
     watch(
       () => selectState.value,
-      () => {
-        setLectureList();
+      async () => {
+        await setLectureList();
       }
     );
 
@@ -158,6 +186,7 @@ export default defineComponent({
 
       if (props.listType === "LECTURE") await setLectureList();
       else if (props.listType === "ROOM") await setRoomList();
+      else if (props.listType === "TEA") await setTeacherList();
 
       color.value = color.value.sort(() => Math.random() - 0.5);
     });
@@ -170,10 +199,12 @@ export default defineComponent({
       currentLecturePage,
       selectItem,
       selectState,
-      roomList,
       showRoomList,
       roomPage,
       currentRoomPage,
+      showTeacherList,
+      teacherPage,
+      currentTeacherPage,
       changeState,
       selectPage,
       changePage,
@@ -234,10 +265,35 @@ export default defineComponent({
           class="select-lecture-list-item"
           v-for="(item, index) in showRoomList"
           :style="{ backgroundColor: color[index] }"
-          @click="$emit('selectLecture', item)"
+          @click="$emit('selectRoom', item)"
         >
           <span class="select-lecture-list-item-name">{{ item.name }}</span>
           <span class="select-lecture-list-item-target">{{ item.type }}</span>
+          <span class="select-lecture-list-item-view"
+            >열람하기 <i class="fa-solid fa-angles-right"></i
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <!--    강사 선택 -->
+    <div class="select-lecture" v-else-if="listType === 'TEA'">
+      <div class="select-lecture-label">
+        <span class="select-lecture-label-teacher"> 강사 목록 </span>
+        <span class="select-lecture-label-tip"
+          >열람할 강사를 선택해주세요.</span
+        >
+      </div>
+      <div class="sap"></div>
+      <div class="select-lecture-list">
+        <div
+          class="select-lecture-list-item"
+          v-for="(item, index) in showTeacherList"
+          :style="{ backgroundColor: color[index] }"
+          @click="$emit('selectLecture', item)"
+        >
+          <span class="select-lecture-list-item-name">{{ item.name }}</span>
+          <span class="select-lecture-list-item-target">{{ item.part }}</span>
           <span class="select-lecture-list-item-view"
             >열람하기 <i class="fa-solid fa-angles-right"></i
           ></span>

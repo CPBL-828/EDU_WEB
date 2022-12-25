@@ -12,7 +12,7 @@ import { ApiClient } from "../../axios";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
-import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
+import SelectListComponent from "../custom/SelectListComponent.vue";
 /*
 @brief [강사, 학생, 학부모, 관리자] [Main]시간표 관리
        [Sub]현재 시간표 접근 시 해당 유저의 현재 시간표 표시
@@ -21,7 +21,7 @@ import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
 export default defineComponent({
   name: "CurrentScheduleComponent.vue",
   components: {
-    SelectLectureComponent,
+    SelectListComponent,
     ModalPopupComponent,
     SelectButtonComponent,
     TimetableComponent,
@@ -159,11 +159,11 @@ export default defineComponent({
             </div>
           </div>
           <div class="current-schedule-section-body-lecture" v-if="adminState">
-            <select-lecture-component
+            <select-list-component
               v-if="!selectLectureState"
               list-type="ROOM"
-              @selectLecture="selectLecture"
-            ></select-lecture-component>
+              @selectRoom="selectLecture"
+            ></select-list-component>
           </div>
           <div
             class="current-schedule-section-body-timetable"

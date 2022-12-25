@@ -2,10 +2,10 @@
 import { defineComponent, onMounted, ref } from "vue";
 import { defaultInterface, scheduleInterface } from "../../lib/types";
 import common from "../../lib/common";
-import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
+import SelectListComponent from "../custom/SelectListComponent.vue";
 export default defineComponent({
   name: "AssignmentComponent",
-  components: { SelectLectureComponent },
+  components: { SelectListComponent },
   setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectState = ref(false);
@@ -41,10 +41,10 @@ export default defineComponent({
       </div>
       <div class="assignment-section-body">
         <div class="assignment-section-body-lecture" v-if="!selectState">
-          <select-lecture-component
+          <select-list-component
             list-type="LECTURE"
             @selectLecture="selectLecture"
-          ></select-lecture-component>
+          ></select-list-component>
         </div>
       </div>
     </div>

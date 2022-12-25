@@ -7,7 +7,7 @@ import {
   studentInterface,
 } from "../../lib/types";
 import common from "../../lib/common";
-import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
+import SelectListComponent from "../custom/SelectListComponent.vue";
 import { ApiClient } from "../../axios";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 interface sendingAttendInterface {
@@ -25,7 +25,7 @@ interface sendingAttendInterface {
  */
 export default defineComponent({
   name: "AttendCheckComponent",
-  components: { SelectLectureComponent },
+  components: { SelectListComponent },
   setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const today = ref<Date>(new Date());
@@ -231,10 +231,10 @@ export default defineComponent({
           {{ today.toString().substring(0, 4) }}
         </div>
         <div class="check-section-body-lecture" v-if="!selectState">
-          <select-lecture-component
+          <select-list-component
             list-type="LECTURE"
             @selectLecture="selectLecture"
-          ></select-lecture-component>
+          ></select-list-component>
         </div>
         <div class="check-section-body-list" v-else>
           <div class="check-section-body-list-btn">

@@ -7,7 +7,7 @@ import {
   studentInterface,
 } from "../../lib/types";
 import common from "../../lib/common";
-import SelectLectureComponent from "../custom/SelectLectureComponent.vue";
+import SelectListComponent from "../custom/SelectListComponent.vue";
 import { KEYS, USER_KEY } from "../../constant";
 import DataListComponent from "../custom/DataListComponent.vue";
 import { ApiClient } from "../../axios";
@@ -28,7 +28,7 @@ export default defineComponent({
   components: {
     ModalPopupComponent,
     DataListComponent,
-    SelectLectureComponent,
+    SelectListComponent,
   },
   setup() {
     const store = useStore();
@@ -190,10 +190,10 @@ export default defineComponent({
         </div>
         <div class="attendance-section-body">
           <div class="attendance-section-body-lecture" v-if="!selectState">
-            <select-lecture-component
+            <select-list-component
               list-type="LECTURE"
               @selectLecture="selectLecture"
-            ></select-lecture-component>
+            ></select-list-component>
           </div>
           <div class="attendance-section-body-list" v-else>
             <span class="attendance-section-body-list-title">출석 현황</span>

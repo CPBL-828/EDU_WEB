@@ -19,13 +19,13 @@ const routes = [
   {
     path: "/room",
     name: "room",
-    component: () => import("../views/RoomManagePage.vue"),
+    component: () => import("../views/singleCategory/RoomManagePage.vue"),
   },
   {
     // 관리자의 전체 공지
     path: "/notice",
     name: "all-notice",
-    component: () => import("../views/NoticePage.vue"),
+    component: () => import("../views/singleCategory/NoticePage.vue"),
   },
   // 관리자의 강사 관리
   {
@@ -36,7 +36,7 @@ const routes = [
   {
     path: "/notice/:noticeType",
     name: "notice",
-    component: () => import("../views/NoticePage.vue"),
+    component: () => import("../views/singleCategory/NoticePage.vue"),
   },
   {
     path: "/m-place/:subCategory",
@@ -57,6 +57,11 @@ const routes = [
     path: "/lecture/:subCategory",
     name: "lecture",
     component: () => import("../views/LectureManagePage.vue"),
+  },
+  {
+    path: "/test",
+    name: "test",
+    component: () => import("../views/TestManagePage.vue"),
   },
 ];
 

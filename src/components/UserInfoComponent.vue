@@ -9,11 +9,12 @@ import {
   teacherInterface,
 } from "../lib/types";
 import common from "../lib/common";
-import { KEYS, USER_KEY } from "../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
 import { ApiClient } from "../axios";
 import DropBoxComponent from "./custom/DropBoxComponent.vue";
 import ModalPopupComponent from "./custom/ModalPopupComponent.vue";
 import SelectButtonComponent from "./custom/SelectButtonComponent.vue";
+import { useRouter } from "vue-router";
 /*
 @brief [강사] [Main]학생 관리, [관리자] [Main]학생 관리, 강사 관리
        [Sub]학생 정보, 강사 정보 접근 시 카드형 컴포넌트를 통해 유저 리스트 표시
@@ -34,6 +35,7 @@ export default defineComponent({
     CardListComponent,
   },
   setup(props) {
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const loginUser = ref<teacherInterface | adminInterface | undefined>(
       undefined
@@ -99,7 +101,7 @@ export default defineComponent({
       part: "",
       resSubject: "",
       joinDate: "",
-      leaveDate: "",
+      leaveDate: "1111-11-11",
       resume: "이력서 파일",
       profileImg: "",
     });
@@ -288,6 +290,18 @@ export default defineComponent({
         "/members/createTeacher/",
         common.makeJson(insertTeacherData.value)
       );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          window.alert("강사 정보가 저장되었습니다.");
+          router.go(0);
+        }
+      } else {
+        window.alert(
+          "강사 정보를 저장하지 못했습니다.\n입력 값을 다시 확인해주세요."
+        );
+        return false;
+      }
     };
 
     onMounted(async () => {

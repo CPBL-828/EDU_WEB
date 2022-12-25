@@ -8,7 +8,7 @@ import {
 } from "../../lib/types";
 import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
-import NoticePage from "../NoticePage.vue";
+import NoticePage from "../singleCategory/NoticePage.vue";
 import AdminMainComponent from "../../components/main/AdminMainComponent.vue";
 /*
 @brief 각 유저가 로그인 후, 가장 처음 표시되는 메인 화면

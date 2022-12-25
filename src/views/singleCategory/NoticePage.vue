@@ -1,19 +1,19 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from "vue";
-import DataListComponent from "../components/custom/DataListComponent.vue";
+import DataListComponent from "../../components/custom/DataListComponent.vue";
 import {
   defaultInterface,
   noticeInterface,
   studentInterface,
   teacherInterface,
-} from "../lib/types";
+} from "../../lib/types";
 import { useRoute, useRouter } from "vue-router";
-import common from "../lib/common";
-import { ApiClient } from "../axios";
-import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
+import common from "../../lib/common";
+import { ApiClient } from "../../axios";
+import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import { useStore } from "vuex";
-import ModalPopupComponent from "../components/custom/ModalPopupComponent.vue";
-import DropBoxComponent from "../components/custom/DropBoxComponent.vue";
+import ModalPopupComponent from "../../components/custom/ModalPopupComponent.vue";
+import DropBoxComponent from "../../components/custom/DropBoxComponent.vue";
 /*
 @brief [강사, 학생, 학부모, 관리자] [Main]공지
        [Sub]전체 공지: 공지 데이터의 type이 '전체'인 것만 표시

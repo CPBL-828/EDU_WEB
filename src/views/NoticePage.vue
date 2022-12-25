@@ -4,6 +4,7 @@ import DataListComponent from "../components/custom/DataListComponent.vue";
 import {
   defaultInterface,
   noticeInterface,
+  studentInterface,
   teacherInterface,
 } from "../lib/types";
 import { useRoute, useRouter } from "vue-router";
@@ -34,18 +35,21 @@ export default defineComponent({
       { KEY: "DATE", VALUE: "작성일자" },
       { KEY: "WRITER", VALUE: "작성자" },
     ];
+    const typePlaceholder = ref<string>("해당 없음");
     const noticeType: defaultInterface[] = [
       { KEY: "ALL", VALUE: "전체" },
       { KEY: USER_KEY.TEA, VALUE: "강사" },
       { KEY: USER_KEY.STU, VALUE: "학생" },
-      { KEY: USER_KEY.PAR, VALUE: "학부모" },
+      // { KEY: USER_KEY.PAR, VALUE: "학부모" },
     ];
+    const userList = ref<Array<defaultInterface> | undefined>(undefined);
     const noticeList = ref<Array<noticeInterface> | undefined>(undefined);
     const noticeInfo = ref<noticeInterface | undefined>(undefined);
     const writeState = ref(false);
     const totalCnt = ref<number | undefined>(undefined);
     const search = ref<string>("");
     const teacherList = ref<Array<defaultInterface> | undefined>(undefined);
+    const studentList = ref<Array<defaultInterface> | undefined>(undefined);
     const reader = ref<defaultInterface | undefined>(undefined);
     const inputType = ref<string>("");
     const inputTitle = ref<string>("");
@@ -115,8 +119,27 @@ export default defineComponent({
       }
     };
 
+    const getStudentList = async () => {
+      let data = { userKey: userKey.value, search: "", lectureKey: "" };
+
+      const result = await ApiClient(
+        "/members/getStudentList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          studentList.value = [];
+          result.resultData.map((item: studentInterface) => {
+            studentList.value?.push({ KEY: item.studentKey, VALUE: item.name });
+          });
+        }
+      }
+    };
+
     const writeNotice = async () => {
       await getTeacherList();
+      await getStudentList();
       writeState.value = true;
       store.commit("setModalState", true);
     };
@@ -184,6 +207,25 @@ export default defineComponent({
       }
     );
 
+    watch(
+      () => inputType.value,
+      () => {
+        if (inputType.value === "전체") {
+          typePlaceholder.value = "해당 없음";
+        } else {
+          typePlaceholder.value = inputType.value + "명";
+
+          if (inputType.value === "강사") {
+            userList.value = teacherList.value;
+          } else if (inputType.value === "학생") {
+            userList.value = studentList.value;
+          } else {
+            userList.value = undefined;
+          }
+        }
+      }
+    );
+
     onMounted(async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
         userKey.value = common.getItem(KEYS.LU).parentKey;
@@ -203,13 +245,14 @@ export default defineComponent({
       category,
       adminState,
       header,
+      typePlaceholder,
       noticeType,
+      userList,
       noticeList,
       noticeInfo,
       writeState,
       totalCnt,
       search,
-      teacherList,
       inputType,
       inputTitle,
       inputContent,
@@ -313,17 +356,16 @@ export default defineComponent({
                 <drop-box-component
                   placeholder="공지 유형"
                   :select-list="noticeType"
-                  row-width="160px"
+                  row-width="120px"
                   row-height="28px"
                   @selectValue="changeType"
                 ></drop-box-component>
               </div>
               <div class="notice-write-type">
-                <!--                TODO 열람대상 강사만 있는 거 아님!!!-->
                 <drop-box-component
-                  placeholder="강사명"
-                  :select-list="teacherList"
-                  row-width="110px"
+                  :placeholder="typePlaceholder"
+                  :select-list="userList"
+                  row-width="130px"
                   row-height="28px"
                   @selectValue="changeReader"
                 ></drop-box-component>

@@ -582,6 +582,8 @@ section.drop {
     position: absolute;
     z-index: 289;
     height: auto;
+    max-height: 200px;
+    overflow: scroll;
     border: 2px solid #d9d9d9;
     border-radius: 10px;
     color: $disable-color;

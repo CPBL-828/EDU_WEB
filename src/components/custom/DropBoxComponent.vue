@@ -28,7 +28,9 @@ export default defineComponent({
     const { emit } = context;
     const main = ref<string>(props.placeholder as string);
     const openState = ref(false);
-    const itemList: defaultInterface[] = props.selectList as defaultInterface[];
+    const itemList = ref<Array<defaultInterface>>(
+      props.selectList as defaultInterface[]
+    );
     const selectItem = ref<string | undefined>(undefined);
 
     const onClickAway = (event: Event) => {
@@ -51,6 +53,13 @@ export default defineComponent({
       () => props.placeholder,
       () => {
         main.value = props.placeholder as string;
+      }
+    );
+
+    watch(
+      () => props.selectList,
+      () => {
+        itemList.value = props.selectList as defaultInterface[];
       }
     );
 

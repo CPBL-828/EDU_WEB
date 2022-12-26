@@ -12,6 +12,7 @@ import common from "../../lib/common";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import {
+  adminInterface,
   analysisInterface,
   defaultInterface,
   scheduleInterface,
@@ -69,7 +70,7 @@ export default defineComponent({
 
     const getLectureList = async () => {
       let data = {
-        userKey: userKey.value,
+        userKey: props.adminState ? "" : userKey.value,
         search: "",
         roomKey: "",
         target: "",
@@ -163,8 +164,8 @@ export default defineComponent({
       let data = {
         studentKey: selectedStudent.value?.studentKey,
         studentName: selectedStudent.value?.name,
-        writerKey: teacherInfo.value?.teacherKey,
-        writerName: teacherInfo.value?.name,
+        writerKey: userKey.value,
+        writerName: props.adminState ? "관리자" : teacherInfo.value?.name,
         content: analysisInsertDetail.value,
       };
 
@@ -202,6 +203,8 @@ export default defineComponent({
       if (!props.adminState) {
         teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
         userKey.value = teacherInfo.value.teacherKey;
+      } else {
+        userKey.value = (common.getItem(KEYS.LU) as adminInterface).adminKey;
       }
 
       if (common.getItem(KEYS.SS)) {

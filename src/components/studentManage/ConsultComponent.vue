@@ -1,5 +1,12 @@
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+  watch,
+} from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import {
   adminInterface,
@@ -23,6 +30,12 @@ import SelectListComponent from "../custom/SelectListComponent.vue";
  */
 export default defineComponent({
   name: "ConsultComponent",
+  props: {
+    adminState: {
+      types: Boolean as PropType<boolean>,
+      required: true,
+    },
+  },
   components: {
     SelectListComponent,
     ModalPopupComponent,
@@ -30,12 +43,11 @@ export default defineComponent({
     PaginationComponent,
     DropBoxComponent,
   },
-  setup() {
+  setup(props) {
     const router = useRouter();
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectTeacherState = ref(false);
-    const adminState = ref(false);
     const selectSection = ref<string | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const adminInfo = ref<adminInterface | undefined>(undefined);
@@ -290,7 +302,7 @@ export default defineComponent({
         targetKey: teacherInfo.value
           ? teacherInfo.value?.teacherKey
           : adminInfo.value?.adminKey,
-        targetName: adminState.value ? "관리자" : teacherInfo.value?.name,
+        targetName: props.adminState ? "관리자" : teacherInfo.value?.name,
         consultDate:
           date.value && time.value ? date.value + time.value + ":00" : "",
         content: "",
@@ -426,11 +438,7 @@ export default defineComponent({
 
         await setStudentList();
         await setConsultList();
-      } else if (
-        common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM ||
-        common.getItem(KEYS.UK).userKey === USER_KEY.ETC_ADM
-      ) {
-        adminState.value = true;
+      } else if (props.adminState) {
         adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
       }
 
@@ -458,7 +466,6 @@ export default defineComponent({
     return {
       category,
       selectTeacherState,
-      adminState,
       selectSection,
       studentList,
       date,

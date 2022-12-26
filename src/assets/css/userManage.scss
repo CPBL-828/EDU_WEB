@@ -284,6 +284,20 @@ section.consult {
   .consult {
     height: 100%;
 
+    .go-back {
+      font-size: 14px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: $disable-color;
+      cursor: pointer;
+      transition: all 200ms;
+
+      &:hover {
+        color: $sub-color;
+      }
+    }
+
     //초기화 버튼 css 전역 설정
     i[class$="fa-rotate-left"] {
       color: $disable-color;
@@ -420,7 +434,10 @@ section.consult {
 
           &-type {
             width: 164px;
-            height: 33px;
+            height: 34px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
 
           &-name {

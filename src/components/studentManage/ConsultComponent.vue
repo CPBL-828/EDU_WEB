@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import {
   adminInterface,
@@ -15,6 +15,7 @@ import DataListComponent from "../custom/DataListComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import SelectListComponent from "../custom/SelectListComponent.vue";
 /*
 @brief [강사, 관리자] [Main]학생 관리, [학부모] [Main]상담 및 분석
        [Sub]상담 접근 시, 강사는 본인이 담당하는 학생과의 상담 정보를, 관리자는 선택한 강사의 담당 학생 상담 정보를,
@@ -23,6 +24,7 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   name: "ConsultComponent",
   components: {
+    SelectListComponent,
     ModalPopupComponent,
     DataListComponent,
     PaginationComponent,
@@ -31,6 +33,9 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
+    const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const selectTeacherState = ref(false);
+    const adminState = ref(false);
     const selectSection = ref<string | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const adminInfo = ref<adminInterface | undefined>(undefined);
@@ -86,12 +91,39 @@ export default defineComponent({
     const listTypeHolder = ref<string>("상담 유형");
     const listNameHolder = ref<string>("학생명");
 
+    const goBack = () => {
+      common.removeItem(KEYS.ST);
+      router.go(0);
+    };
+
+    const selectMe = async () => {
+      selectTeacherState.value = true;
+
+      let data = { teacherKey: "" };
+      common.setItem(KEYS.ST, common.makeJson(data));
+
+      await setStudentList();
+      await setConsultList();
+    };
+
+    const selectTeacher = async (t: teacherInterface) => {
+      selectTeacherState.value = true;
+      teacherInfo.value = t;
+      common.setItem(KEYS.ST, common.makeJson(teacherInfo.value));
+
+      await setStudentList();
+      await setConsultList();
+    };
+
     const setStudentList = async () => {
       let data = {
-        userKey: teacherInfo.value?.teacherKey,
+        userKey: teacherInfo.value
+          ? teacherInfo.value?.teacherKey
+          : adminInfo.value?.adminKey,
         search: "",
         lectureKey: "",
       };
+
       const result = await ApiClient(
         "/members/getStudentList/",
         common.makeJson(data)
@@ -111,7 +143,9 @@ export default defineComponent({
 
     const setConsultList = async () => {
       let data = {
-        userKey: teacherInfo.value?.teacherKey,
+        userKey: teacherInfo.value
+          ? teacherInfo.value?.teacherKey
+          : adminInfo.value?.adminKey,
         studentKey: student.value.KEY,
         search: consultType.value,
         date: date.value,
@@ -121,6 +155,8 @@ export default defineComponent({
         "/info/getConsultList/",
         common.makeJson(data)
       );
+
+      console.log(result.resultData);
 
       if (result) {
         if (result.count > 0) {
@@ -179,11 +215,13 @@ export default defineComponent({
     const openCalendar = (s: string, t: string) => {
       if (s === "input") {
         if (t === "date") {
+          inputDate.value = new Date();
           inputDateCalendarState.value = !inputDateCalendarState.value;
         } else {
           inputTimeCalendarState.value = !inputTimeCalendarState.value;
         }
       } else if (s === "plan") {
+        planDate.value = new Date();
         planDateCalendarState.value = !planDateCalendarState.value;
       } else {
         listDateCalendarState.value = !listDateCalendarState.value;
@@ -249,8 +287,10 @@ export default defineComponent({
       let data = {
         studentKey: student.value.KEY,
         studentName: student.value.VALUE,
-        targetKey: teacherInfo.value?.teacherKey,
-        targetName: teacherInfo.value?.name,
+        targetKey: teacherInfo.value
+          ? teacherInfo.value?.teacherKey
+          : adminInfo.value?.adminKey,
+        targetName: adminState.value ? "관리자" : teacherInfo.value?.name,
         consultDate:
           date.value && time.value ? date.value + time.value + ":00" : "",
         content: "",
@@ -379,17 +419,46 @@ export default defineComponent({
     );
 
     onMounted(async () => {
+      category.value = common.findCategory();
+
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
-      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.ADM) {
+
+        await setStudentList();
+        await setConsultList();
+      } else if (
+        common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM ||
+        common.getItem(KEYS.UK).userKey === USER_KEY.ETC_ADM
+      ) {
+        adminState.value = true;
         adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
       }
 
-      await setStudentList();
-      await setConsultList();
+      if (common.getItem(KEYS.ST)) {
+        if (common.getItem(KEYS.ST).teacherKey) {
+          teacherInfo.value = common.getItem(KEYS.ST);
+          selectTeacherState.value = true;
+
+          await setStudentList();
+          await setConsultList();
+        } else {
+          adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
+          selectTeacherState.value = true;
+
+          await setStudentList();
+          await setConsultList();
+        }
+      }
+    });
+
+    onUnmounted(() => {
+      common.removeItem(KEYS.ST);
     });
 
     return {
+      category,
+      selectTeacherState,
+      adminState,
       selectSection,
       studentList,
       date,
@@ -418,6 +487,9 @@ export default defineComponent({
       listConsultDetail,
       listTypeHolder,
       listNameHolder,
+      goBack,
+      selectMe,
+      selectTeacher,
       openCalendar,
       selectInputType,
       selectType,
@@ -436,8 +508,45 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="consult" id="consult">
+  <section class="current-schedule" v-if="!selectTeacherState">
+    <div class="current-schedule">
+      <div class="current-schedule-section">
+        <div class="current-schedule-section-tag">
+          {{
+            category
+              ? category[1]["VALUE"]
+                ? category[1]["VALUE"]
+                : category[0]["VALUE"]
+              : ""
+          }}
+        </div>
+        <div class="current-schedule-section-body" :style="{ height: '800px' }">
+          <div class="current-schedule-section-body-today">
+            <i class="fa-regular fa-calendar"></i> TODAY :
+            {{ new Date().toISOString().substring(0, 4) }}년
+            {{ new Date().toISOString().substring(5, 7) }}월
+            {{ new Date().toISOString().substring(8, 10) }}일
+            {{ new Date().toString().substring(0, 4) }}
+          </div>
+          <div class="current-schedule-section-body-lecture" v-if="adminState">
+            <select-list-component
+              v-if="!selectTeacherState"
+              list-type="TEA"
+              @selectTeacher="selectTeacher"
+              @selectMe="selectMe"
+            ></select-list-component>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section
+    class="consult"
+    id="consult"
+    v-if="!adminState || selectTeacherState"
+  >
     <div class="consult">
+      <span class="go-back" @click="goBack">강사 다시 선택하기</span>
       <div class="consult-input-section">
         <div class="consult-input-section-tag">상담 일정 입력</div>
         <div class="consult-input-section-body">

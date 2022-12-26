@@ -19,7 +19,8 @@ export const RESULT_KEY = {
 export const KEYS = {
   LU: "LU",
   UK: "UK",
-  MR: "MR",
-  SR: "SR",
-  SS: "SS",
+  MR: "MR", // main route
+  SR: "SR", // sub route
+  SS: "SS", // select student
+  ST: "ST", // select teacher
 };

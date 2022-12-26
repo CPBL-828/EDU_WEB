@@ -78,6 +78,8 @@ export default defineComponent({
         );
       } else {
         if (common.getItem(KEYS.SR).sr === s.KEY.toLowerCase()) {
+          common.removeItem(KEYS.SS);
+          common.removeItem(KEYS.ST);
           router.go(0);
         } else {
           common.removeItem(KEYS.SR);
@@ -96,6 +98,7 @@ export default defineComponent({
         common.removeItem(KEYS.MR);
         common.removeItem(KEYS.SR);
         common.removeItem(KEYS.SS);
+        common.removeItem(KEYS.ST);
         router.push("/");
       }
     };

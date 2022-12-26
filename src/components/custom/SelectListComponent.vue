@@ -288,9 +288,19 @@ export default defineComponent({
       <div class="select-lecture-list">
         <div
           class="select-lecture-list-item"
+          :style="{ backgroundColor: '#cccccc' }"
+          @click="$emit('selectMe')"
+        >
+          <span class="select-lecture-list-item-name">나의 내역</span>
+          <span class="select-lecture-list-item-view"
+            >열람하기 <i class="fa-solid fa-angles-right"></i
+          ></span>
+        </div>
+        <div
+          class="select-lecture-list-item"
           v-for="(item, index) in showTeacherList"
           :style="{ backgroundColor: color[index] }"
-          @click="$emit('selectLecture', item)"
+          @click="$emit('selectTeacher', item)"
         >
           <span class="select-lecture-list-item-name">{{ item.name }}</span>
           <span class="select-lecture-list-item-target">{{ item.part }}</span>

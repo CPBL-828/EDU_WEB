@@ -168,8 +168,6 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      console.log(result.resultData);
-
       if (result) {
         if (result.count > 0) {
           if (!selectSection.value) {
@@ -515,7 +513,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <section class="current-schedule" v-if="!selectTeacherState">
+  <section class="current-schedule" v-if="adminState && !selectTeacherState">
     <div class="current-schedule">
       <div class="current-schedule-section">
         <div class="current-schedule-section-tag">
@@ -547,11 +545,7 @@ export default defineComponent({
       </div>
     </div>
   </section>
-  <section
-    class="consult"
-    id="consult"
-    v-if="!adminState || selectTeacherState"
-  >
+  <section class="consult" id="consult" v-else>
     <div class="consult">
       <span class="go-back" @click="goBack">강사 다시 선택하기</span>
       <div class="consult-input-section">

@@ -17,6 +17,10 @@ export default defineComponent({
   name: "DataListComponent",
   components: { PaginationComponent, ModalPopupComponent },
   props: {
+    adminState: {
+      type: String as PropType<string>,
+      required: false,
+    },
     header: {
       type: Array as PropType<Array<defaultInterface>>,
       required: true,
@@ -335,6 +339,7 @@ export default defineComponent({
               {{ item.writerName }}
             </td>
             <td
+              v-if="adminState !== 'Y'"
               :style="{
                 height: rowHeight ? rowHeight + 'px' : '52px;',
                 width: '35%',

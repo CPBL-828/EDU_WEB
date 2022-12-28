@@ -218,7 +218,7 @@ export default defineComponent({
     <!--    강의 선택 -->
     <div class="select-lecture" v-if="listType === 'LECTURE'">
       <div class="select-lecture-label">
-        <span class="select-lecture-label-teacher">
+        <span class="select-lecture-label-teacher" v-if="teacherInfo">
           {{ teacherInfo?.name }} 강사님의 강의 현황
         </span>
         <span class="select-lecture-label-tip"

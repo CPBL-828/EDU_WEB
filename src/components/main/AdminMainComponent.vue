@@ -19,7 +19,6 @@ export default defineComponent({
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
       { KEY: "WRITER", VALUE: "작성자명" },
-      { KEY: "DETAIL", VALUE: "상세 사항" },
     ];
     const studentSuggest = ref<Array<suggestInterface> | undefined>(undefined);
     const stuTotal = ref<number>(0);
@@ -109,6 +108,7 @@ export default defineComponent({
                 :row-height="39"
                 :total-cnt="stuTotal"
                 :list-cnt="8"
+                admin-state="Y"
               >
               </data-list-component>
             </div>
@@ -125,6 +125,7 @@ export default defineComponent({
                 :row-height="39"
                 :total-cnt="teaTotal"
                 :list-cnt="8"
+                admin-state="Y"
               >
               </data-list-component>
             </div>

@@ -4,14 +4,15 @@ import {
   adminInterface,
   defaultInterface,
   suggestInterface,
-} from "../../lib/types";
-import common from "../../lib/common";
-import DataListComponent from "../custom/DataListComponent.vue";
-import DropBoxComponent from "../custom/DropBoxComponent.vue";
-import { ApiClient } from "../../axios";
-import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
-import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
-import { KEYS, USER_KEY } from "../../constant";
+} from "../lib/types";
+import common from "../lib/common";
+import DataListComponent from "./custom/DataListComponent.vue";
+import DropBoxComponent from "./custom/DropBoxComponent.vue";
+import { ApiClient } from "../axios";
+import SelectButtonComponent from "./custom/SelectButtonComponent.vue";
+import ModalPopupComponent from "./custom/ModalPopupComponent.vue";
+import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
+import { useRouter } from "vue-router";
 /*
 @brief [학생, 학부모, 강사] [Main] 내 공간 [Sub]건의사항
        [관리자] [Main]학생 관리, 강사 관리 [Sub]건의사항
@@ -33,10 +34,11 @@ export default defineComponent({
     DataListComponent,
   },
   setup: function (props) {
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
     const userType = ref<string>("");
-    const selectState = ref("ok");
+    const selectState = ref("wait");
     const selectItem = ref<Array<defaultInterface>>([
       { KEY: "ok", VALUE: "처리 완료" },
       { KEY: "wait", VALUE: "대기중" },
@@ -59,6 +61,7 @@ export default defineComponent({
     const viewSuggestList = ref<Array<suggestInterface>>([]);
     const suggestDetail = ref<suggestInterface | undefined>(undefined);
     const totalCnt = ref<number | undefined>(undefined);
+    const answer = ref<string>("");
 
     const setSuggestList = async () => {
       let data = {
@@ -78,7 +81,7 @@ export default defineComponent({
           allSuggestList.value = result.resultData;
 
           allSuggestList.value?.map((item: suggestInterface) => {
-            if (item.state === "Y") {
+            if (item.state === "N") {
               viewSuggestList.value.push(item);
             }
           });
@@ -114,8 +117,45 @@ export default defineComponent({
       consultType.value = t.VALUE as string;
     };
 
-    const showSuggestDetail = (i: suggestInterface) => {
+    const saveSuggestDetail = (i: suggestInterface) => {
       suggestDetail.value = i;
+    };
+
+    const clickAnswer = () => {
+      if (!suggestDetail.value) {
+        window.alert("처리할 건의사항을 먼저 선택해주세요.");
+        return false;
+      }
+    };
+
+    const insertAnswer = async () => {
+      if (!suggestDetail.value) {
+        window.alert("처리할 건의사항을 먼저 선택해주세요.");
+      } else if (!answer.value) {
+        window.alert("답변을 작성해주세요.");
+      }
+
+      let data = {
+        adminKey: userKey.value,
+        suggestKey: suggestDetail.value?.suggestKey,
+        answer: answer.value,
+      };
+
+      const result = await ApiClient(
+        "/info/createSuggestReply/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          window.alert("답변을 성공적으로 작성했습니다.");
+          router.go(0);
+        } else {
+          window.alert("실패했습니다.");
+        }
+      } else {
+        window.alert("실패했습니다.");
+      }
     };
 
     onMounted(async () => {
@@ -139,9 +179,12 @@ export default defineComponent({
       viewSuggestList,
       suggestDetail,
       totalCnt,
+      answer,
       changeState,
       selectType,
-      showSuggestDetail,
+      saveSuggestDetail,
+      clickAnswer,
+      insertAnswer,
     };
   },
 });
@@ -180,7 +223,7 @@ export default defineComponent({
               :row-height="39"
               :total-cnt="totalCnt ? totalCnt : 0"
               :list-cnt="13"
-              @showSuggestDetail="showSuggestDetail"
+              @saveSuggestDetail="saveSuggestDetail"
               admin-state="Y"
             ></data-list-component>
           </div>
@@ -189,8 +232,45 @@ export default defineComponent({
             <span class="suggestion-section-body-write-title">
               건의사항 답변
             </span>
-
-            <div class="suggestion-section-body-write-btn">처리</div>
+            <div class="suggestion-section-body-write-date">
+              {{ suggestDetail ? suggestDetail?.type : "건의 유형" }}
+            </div>
+            <div class="suggestion-section-body-write-date">
+              {{
+                suggestDetail
+                  ? suggestDetail?.createDate.substring(0, 10)
+                  : "건의 날짜"
+              }}
+            </div>
+            <div class="suggestion-section-body-write-content">
+              {{ suggestDetail ? suggestDetail?.content : "건의 내용" }}
+            </div>
+            <div
+              class="suggestion-section-body-write-answer"
+              v-if="suggestDetail?.answer"
+            >
+              {{ suggestDetail?.answer }}
+            </div>
+            <textarea
+              v-else
+              placeholder="답변을 입력해주세요."
+              class="answer"
+              v-model="answer"
+              @click="clickAnswer"
+            />
+            <input
+              v-if="!suggestDetail?.answer"
+              type="button"
+              class="suggestion-section-body-write-btn"
+              value="처리"
+              @click="insertAnswer"
+            />
+            <input
+              v-else
+              type="button"
+              class="suggestion-section-body-write-btn"
+              value="수정"
+            />
           </div>
         </div>
       </div>

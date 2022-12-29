@@ -26,6 +26,6 @@ export const ApiClient = async (url: string, data: string) => {
       return res.data;
     })
     .catch((res) => {
-      console.log(res);
+      console.log(res.response.data);
     });
 };

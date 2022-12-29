@@ -242,7 +242,7 @@ export default defineComponent({
             </div>
             <textarea
               placeholder="내용을 입력해주세요."
-              class="suggestion-section-body-write-context"
+              class="context"
               v-model="content"
             />
             <div

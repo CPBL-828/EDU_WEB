@@ -311,6 +311,7 @@ export default defineComponent({
             class="data=list=section-body-item"
             v-if="showSuggestList"
             v-for="item in showSuggestList"
+            @click="$emit('saveSuggestDetail', item)"
           >
             <td
               :style="{

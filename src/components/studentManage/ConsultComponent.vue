@@ -465,6 +465,8 @@ export default defineComponent({
       category,
       selectTeacherState,
       selectSection,
+      teacherInfo,
+      adminInfo,
       studentList,
       date,
       time,
@@ -548,7 +550,10 @@ export default defineComponent({
   <section class="consult" id="consult" v-else>
     <div class="consult">
       <span class="go-back" @click="goBack">강사 다시 선택하기</span>
-      <div class="consult-input-section">
+      <div
+        class="consult-input-section"
+        v-if="(adminInfo && !teacherInfo) || !adminInfo"
+      >
         <div class="consult-input-section-tag">상담 일정 입력</div>
         <div class="consult-input-section-body">
           <span class="consult-input-section-body-title">
@@ -618,7 +623,12 @@ export default defineComponent({
         </div>
       </div>
 
-      <div class="consult-plan-section">
+      <div
+        class="consult-plan-section"
+        :style="{
+          top: adminInfo && teacherInfo ? '39px' : '',
+        }"
+      >
         <div class="consult-plan-section-tag">상담 예정 현황</div>
         <div class="consult-plan-section-body">
           <span class="consult-plan-section-body-title">
@@ -714,7 +724,12 @@ export default defineComponent({
         </div>
       </div>
 
-      <div class="consult-list-section">
+      <div
+        class="consult-list-section"
+        :style="{
+          top: adminInfo && teacherInfo ? '510px' : '',
+        }"
+      >
         <div class="consult-list-section-tag">상담 목록 조회</div>
         <div class="consult-list-section-body">
           <div class="consult-list-section-body-item">

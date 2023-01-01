@@ -144,6 +144,15 @@ section.my-work {
         @include body-custom();
         height: 720px;
 
+        &-teacher {
+          position: relative;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 90%;
+          height: 90%;
+        }
+
         &-today {
           position: absolute;
           top: 20px;

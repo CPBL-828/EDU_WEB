@@ -68,9 +68,7 @@ export default defineComponent({
     :user-data="myInfoUser"
   ></my-info-component>
   <work-report-component
-    v-if="userKey && workUser && currentCategory === 'WORK'"
-    :user-key="userKey"
-    :user-data="workUser"
+    v-if="currentCategory === 'WORK'"
   ></work-report-component>
   <suggestion-component
     v-if="userKey && currentCategory === 'SUGGESTION'"

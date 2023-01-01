@@ -541,6 +541,7 @@ export default defineComponent({
               list-type="TEA"
               @selectTeacher="selectTeacher"
               @selectMe="selectMe"
+              is-consult="Y"
             ></select-list-component>
           </div>
         </div>

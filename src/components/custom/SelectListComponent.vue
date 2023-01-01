@@ -22,6 +22,10 @@ export default defineComponent({
       types: String as PropType<string>,
       required: true,
     },
+    isConsult: {
+      type: String as PropType<string>,
+      required: false,
+    },
   },
   setup(props) {
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
@@ -290,6 +294,7 @@ export default defineComponent({
           class="select-lecture-list-item"
           :style="{ backgroundColor: '#cccccc' }"
           @click="$emit('selectMe')"
+          v-if="isConsult === 'Y'"
         >
           <span class="select-lecture-list-item-name">나의 내역</span>
           <span class="select-lecture-list-item-view"

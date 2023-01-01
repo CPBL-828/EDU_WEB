@@ -336,7 +336,7 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <div class="notice-detail-container-body">
+            <div style="white-space: pre" class="notice-detail-container-body">
               {{ noticeInfo?.content }}
             </div>
           </div>

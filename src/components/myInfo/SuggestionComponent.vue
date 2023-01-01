@@ -278,7 +278,10 @@ export default defineComponent({
             <div class="top-sap"></div>
             <div class="suggest-detail-section-content">
               <div class="suggest-detail-section-content-label">건의내용</div>
-              <div class="suggest-detail-section-content-item">
+              <div
+                style="white-space: pre"
+                class="suggest-detail-section-content-item"
+              >
                 {{ suggestDetail?.content }}
               </div>
             </div>
@@ -299,7 +302,10 @@ export default defineComponent({
                   }})</span
                 >
               </div>
-              <div class="suggest-detail-section-answer-item">
+              <div
+                style="white-space: pre"
+                class="suggest-detail-section-answer-item"
+              >
                 {{
                   suggestDetail?.answer
                     ? suggestDetail?.answer

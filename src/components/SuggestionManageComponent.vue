@@ -242,10 +242,14 @@ export default defineComponent({
                   : "건의 날짜"
               }}
             </div>
-            <div class="suggestion-section-body-write-content">
+            <div
+              style="white-space: pre"
+              class="suggestion-section-body-write-content"
+            >
               {{ suggestDetail ? suggestDetail?.content : "건의 내용" }}
             </div>
             <div
+              style="white-space: pre"
               class="suggestion-section-body-write-answer"
               v-if="suggestDetail?.answer"
             >

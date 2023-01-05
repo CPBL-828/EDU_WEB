@@ -54,6 +54,8 @@ export default defineComponent({
     const lectureList = ref<Array<defaultInterface>>([]);
     const lectureKey = ref<string>("");
     const createMode = ref<string | undefined>(undefined);
+    const existParent = ref(true);
+    const selectParent = ref(false);
     const gradeList: defaultInterface[] = [
       { KEY: "elementary", VALUE: "초등" },
       { KEY: "middle", VALUE: "중등" },
@@ -333,6 +335,8 @@ export default defineComponent({
       searchData,
       lectureList,
       createMode,
+      existParent,
+      selectParent,
       gradeList,
       teacherGrade,
       subjectList,
@@ -445,12 +449,36 @@ export default defineComponent({
         <div class="student-insert-section-body" v-if="createMode === 'STU'">
           <span class="back" @click="$router.go(0)">목록으로 돌아가기</span>
           <input
+            v-if="selectParent"
             type="button"
             class="insert-btn"
             value="저장하기"
             @click="insertStudent"
           />
-          <div class="student-insert-section-body-container">
+
+          <div class="student-insert-section-body-parent" v-if="!selectParent">
+            <div
+              class="student-insert-section-body-parent-existed"
+              v-if="existParent"
+            >
+              <div class="student-insert-section-body-parent-search">
+                <input
+                  type="text"
+                  class="parent-name"
+                  placeholder="학부모명 검색"
+                />
+              </div>
+              <div class="student-insert-section-body-container-parent">
+                학부모 리스트
+                <span @click="existParent = false">신규 학부모 등록</span>
+              </div>
+            </div>
+            <div class="student-insert-section-body-parent-new" v-else>
+              으악!!!!!!!!!!!!!!!!
+            </div>
+          </div>
+
+          <div class="student-insert-section-body-container" v-else>
             <div class="student-insert-section-body-container-profile">
               <span>증명사진을</span>
               <span>첨부해주세요.</span>

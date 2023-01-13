@@ -333,6 +333,18 @@ section.notice {
           }
         }
 
+        &-adm-filter {
+          position: absolute;
+          z-index: 3;
+          width: 360px;
+          height: auto;
+          top: calc(33px + 21px);
+          transform: translate(-50%, -50%);
+          left: 47%;
+          display: flex;
+          justify-content: space-between;
+        }
+
         .write-btn {
           position: absolute;
           top: calc(33px + 21px);
@@ -387,4 +399,3 @@ section.notice {
     }
   }
 }
-

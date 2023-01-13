@@ -48,6 +48,9 @@ export default defineComponent({
     const writeState = ref(false);
     const totalCnt = ref<number | undefined>(undefined);
     const search = ref<string>("");
+    const selectedType = ref<string>("");
+    const selectedYear = ref<string>("");
+    const yearList = ref<Array<defaultInterface> | undefined>(undefined);
     const teacherList = ref<Array<defaultInterface> | undefined>(undefined);
     const studentList = ref<Array<defaultInterface> | undefined>(undefined);
     const reader = ref<defaultInterface | undefined>(undefined);
@@ -57,7 +60,12 @@ export default defineComponent({
 
     const getNoticeList = async () => {
       //TODO getNoticeList parameter: type, readerKey, year 추가
-      let data = { userKey: "", search: search.value, date: "" };
+      let data = {
+        userKey: "",
+        type: selectedType.value,
+        search: search.value,
+        date: selectedYear.value,
+      };
 
       if (route.path === "/notice" || route.path === "/notice/all") {
         const result = await ApiClient(
@@ -137,6 +145,16 @@ export default defineComponent({
       }
     };
 
+    const selectType = async (t: defaultInterface) => {
+      selectedType.value = t.VALUE as string;
+      await getNoticeList();
+    };
+
+    const selectYear = async (y: defaultInterface) => {
+      selectedYear.value = y.KEY;
+      await getNoticeList();
+    };
+
     const writeNotice = async () => {
       await getTeacherList();
       await getStudentList();
@@ -203,6 +221,8 @@ export default defineComponent({
       async () => {
         category.value = common.findCategory();
         noticeList.value = undefined;
+        search.value = "";
+
         await getNoticeList();
       }
     );
@@ -237,7 +257,15 @@ export default defineComponent({
         userKey.value = common.getItem(KEYS.LU).adminKey;
         adminState.value = true;
       }
+
       category.value = common.findCategory();
+
+      yearList.value = [];
+
+      for (let i = 2010; i <= new Date().getFullYear(); i++) {
+        yearList.value.push({ KEY: i.toString(), VALUE: i.toString() });
+      }
+
       await getNoticeList();
     });
 
@@ -253,10 +281,13 @@ export default defineComponent({
       writeState,
       totalCnt,
       search,
+      yearList,
       inputType,
       inputTitle,
       inputContent,
       getNoticeList,
+      selectType,
+      selectYear,
       writeNotice,
       changeType,
       changeReader,
@@ -289,6 +320,26 @@ export default defineComponent({
               placeholder="공지 제목 / 내용 검색"
               @keypress.enter="getNoticeList"
             />
+          </div>
+          <div class="notice-section-body-adm-filter" v-if="adminState">
+            <div class="notice-section-body-adm-filter-type">
+              <drop-box-component
+                :select-list="noticeType"
+                placeholder="공지 유형"
+                row-width="180px"
+                row-height="33px"
+                @selectValue="selectType"
+              ></drop-box-component>
+            </div>
+            <div class="notice-section-body-adm-filter-year">
+              <drop-box-component
+                :select-list="yearList ? yearList : []"
+                placeholder="연도별"
+                row-height="33px"
+                row-width="160px"
+                @selectValue="selectYear"
+              ></drop-box-component>
+            </div>
           </div>
           <input
             type="button"

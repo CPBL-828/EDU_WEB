@@ -266,9 +266,9 @@ export default defineComponent({
               <div class="user-detail-info-content-left">
                 <div class="name">
                   <span class="name-label">이름</span>
-                  <span class="name-item" v-if="!editState">{{
-                    teacherInfo?.name
-                  }}</span>
+                  <span class="name-item" v-if="!editState">
+                    {{ teacherInfo?.name }} ({{ teacherInfo?.id }})</span
+                  >
                   <input
                     v-if="editState"
                     type="text"
@@ -349,7 +349,7 @@ export default defineComponent({
           </div>
         </div>
 
-        <div v-else>파일 서버 어디 감? ㅋㅋ</div>
+        <div v-else class="ready">준비 중입니다.</div>
       </template>
     </modal-popup-component>
   </section>

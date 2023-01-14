@@ -550,7 +550,9 @@ export default defineComponent({
   </section>
   <section class="consult" id="consult" v-else>
     <div class="consult">
-      <span class="go-back" @click="goBack">강사 다시 선택하기</span>
+      <span class="go-back" @click="goBack" v-if="adminState"
+        >강사 다시 선택하기</span
+      >
       <div
         class="consult-input-section"
         v-if="(adminInfo && !teacherInfo) || !adminInfo"

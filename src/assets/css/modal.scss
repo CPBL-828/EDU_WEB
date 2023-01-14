@@ -312,7 +312,6 @@ section.modal {
 
         &-remark {
           margin-top: 50px;
-          margin-bottom: 30px;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -332,6 +331,30 @@ section.modal {
             border-radius: 10px;
             padding: 10px 10px;
             color: #363636;
+          }
+
+          &-btn {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            height: 35px;
+
+            input[type="button"] {
+              width: 420px;
+              height: 100%;
+              border: 0;
+              border-radius: 15px;
+              background-color: $primary-color;
+              color: white;
+              font-size: 14px;
+              font-weight: bold;
+              cursor: pointer;
+              transition: all 200ms;
+
+              &:hover {
+                background-color: $hover-color;
+              }
+            }
           }
         }
       }

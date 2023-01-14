@@ -1,9 +1,11 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { studentInterface, teacherInterface } from "../../lib/types";
-import { USER_KEY } from "../../constant";
+import { KEYS, USER_KEY } from "../../constant";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import common from "../../lib/common";
 /*
 @brief 전체 학생 및 강사의 요약적 정보를 표시할 카드형 리스트
  */
@@ -22,6 +24,7 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore();
+    const router = useRouter();
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const teacherList = ref<Array<teacherInterface> | undefined>(undefined);
@@ -42,6 +45,21 @@ export default defineComponent({
         studentInfo.value = i as studentInterface;
       } else {
         teacherInfo.value = i as teacherInterface;
+      }
+    };
+
+    const goOther = (w: string) => {
+      store.state.modalState = false;
+
+      if (w === "ANALYSIS") {
+        common.removeItem(KEYS.SR);
+        common.setItem(KEYS.SR, common.makeJson({ sr: w.toLowerCase() }));
+        router.push("/s-manage/analysis");
+      } else if (w === "TEST") {
+        common.removeItem(KEYS.MR);
+        common.removeItem(KEYS.SR);
+        common.setItem(KEYS.MR, common.makeJson({ mr: w.toLowerCase() }));
+        router.push("/test");
       }
     };
 
@@ -66,6 +84,7 @@ export default defineComponent({
       teacherList,
       teacherInfo,
       openModal,
+      goOther,
     };
   },
 });
@@ -259,6 +278,21 @@ export default defineComponent({
                 ? studentInfo?.remark
                 : "작성된 특이사항이 없습니다."
             }}
+          </div>
+
+          <div class="user-remark-btn">
+            <input
+              type="button"
+              value="분석 내용 열람하러 가기"
+              class="go-analysis"
+              @click="goOther('ANALYSIS')"
+            />
+            <input
+              type="button"
+              value="성적 열람하러 가기"
+              class="go-test"
+              @click="goOther('TEST')"
+            />
           </div>
         </div>
       </div>

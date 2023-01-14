@@ -89,7 +89,7 @@ export default defineComponent({
       {{ main }}
       <i
         class="fa-solid fa-chevron-down"
-        v-if="Number(rowWidth.substring(-3, 0)) > 100"
+        v-if="!rowWidth || Number(rowWidth.split('px')[0]) > 150"
       ></i>
     </div>
     <div

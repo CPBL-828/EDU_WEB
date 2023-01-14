@@ -186,10 +186,12 @@ export default defineComponent({
       if (result) {
         if (result.count > 0) {
           result.resultData.map((item: scheduleInterface) => {
-            lectureList.value.push({
-              KEY: item.lectureKey,
-              VALUE: item.lectureName,
-            });
+            if (item.progress === "등록") {
+              lectureList.value.push({
+                KEY: item.lectureKey,
+                VALUE: item.lectureName,
+              });
+            }
           });
         }
       }

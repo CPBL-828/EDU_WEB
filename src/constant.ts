@@ -1,5 +1,6 @@
 export const CONSTANT = {
-  BASE_URL: "http://43.201.64.65:8000",
+  // BASE_URL: "http://43.201.64.65:8000",
+  BASE_URL: "http://52.78.111.175:8000",
 };
 
 export const USER_KEY = {

@@ -6,6 +6,7 @@ import {
   defaultInterface,
   noticeInterface,
   suggestInterface,
+  testInterface,
 } from "../../lib/types";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
@@ -37,6 +38,7 @@ export default defineComponent({
           | consultInterface
           | analysisInterface
           | showAttendInterface
+          | testInterface
         >
       >,
       required: true,
@@ -64,6 +66,7 @@ export default defineComponent({
     const showAttendList = ref<Array<showAttendInterface> | undefined>(
       undefined
     );
+    const showTestList = ref<Array<testInterface> | undefined>(undefined);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
@@ -151,6 +154,22 @@ export default defineComponent({
       }
     };
 
+    // 시험 목록
+    const setTestList = () => {
+      if (props.dataList) {
+        if (props.totalCnt > listCnt.value) {
+          showTestList.value = props.dataList.slice(
+            0,
+            listCnt.value
+          ) as testInterface[];
+          page.value = Math.ceil(props.totalCnt / listCnt.value);
+        } else {
+          showTestList.value = props.dataList as testInterface[];
+          page.value = 0;
+        }
+      }
+    };
+
     const selectPage = (p: number) => {
       currentPage.value = p;
     };
@@ -192,6 +211,11 @@ export default defineComponent({
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as showAttendInterface[];
+        } else if (props.listType == "test") {
+          showTestList.value = props.dataList?.slice(
+            listCnt.value * currentPage.value - listCnt.value,
+            listCnt.value * currentPage.value
+          ) as testInterface[];
         }
       }
     );
@@ -212,6 +236,8 @@ export default defineComponent({
           await setAnalysisList();
         } else if (props.listType === "attend") {
           await setAttendList();
+        } else if (props.listType === "test") {
+          await setTestList();
         }
       }
     );
@@ -233,6 +259,8 @@ export default defineComponent({
         await setAnalysisList();
       } else if (props.listType === "attend") {
         await setAttendList();
+      } else if (props.listType === "test") {
+        await setTestList();
       }
     });
 
@@ -242,6 +270,7 @@ export default defineComponent({
       showConsultList,
       showAnalysisList,
       showAttendList,
+      showTestList,
       page,
       currentPage,
       selectPage,
@@ -480,6 +509,51 @@ export default defineComponent({
                 value="상세 정보"
                 class="go-attend-detail"
                 @click="$emit('showAttendDetail', item)"
+              />
+            </td>
+          </tr>
+
+          <!--        시험 목록 -->
+          <tr
+            class="data=list=section-body-item"
+            v-if="showTestList"
+            v-for="item in showTestList"
+          >
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+            >
+              {{ item.testDate }}
+            </td>
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+            >
+              {{ item.testType }}
+            </td>
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+            >
+              드롭박스
+            </td>
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+            >
+              <input
+                type="button"
+                value="상세 조회"
+                class="go-attend-detail"
+                @click="$emit('showTestDetail', item)"
               />
             </td>
           </tr>

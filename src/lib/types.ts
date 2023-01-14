@@ -157,3 +157,14 @@ export interface attendInterface {
   createDate: string;
   editDate: string;
 }
+
+export interface testInterface {
+  testKey: string;
+  lectureKey_id: string;
+  lectureName: string;
+  testDate: string;
+  testType: string;
+  testSheet: string;
+  createDate: string;
+  editDate: string;
+}

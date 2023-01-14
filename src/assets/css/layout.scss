@@ -61,9 +61,8 @@ div.away {
         transform: translateX(-50%);
         cursor: pointer;
         transition: all 0.2s;
-
-        &:hover {
-          font-weight: 600;
+        z &:hover {
+          font-weight: bold;
         }
       }
     }

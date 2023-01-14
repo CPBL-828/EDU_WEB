@@ -136,170 +136,218 @@ section.modal {
       height: 100%; // 강사의 내 정보 상세
 
       //teacher myInfo detail
-      .user-detail {
+      span.tip {
         position: absolute;
-        width: 100%;
-        height: 340px;
-        bottom: 123px;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 40px;
+        font-size: 13px;
+        color: $disable-color;
+        margin-top: 10px;
+      }
+
+      .user {
+        position: relative;
+        top: 55%;
+        transform: translateY(-50%);
         display: flex;
+        height: 300px;
+        overflow: scroll;
+        flex-direction: column;
         align-items: center;
 
-        .sap {
-          position: absolute;
-          left: 438px;
-          width: 1px;
-          height: 100%;
-          border-right: 3px solid #efefef;
-        }
-
-        &-profile {
-          position: absolute;
-          left: 130px;
+        .user-detail {
+          width: 90%;
+          height: 500px;
+          margin-top: 20px;
           display: flex;
-          flex-direction: column;
+          justify-content: space-evenly;
           align-items: center;
 
-          i {
+          .sap {
+            margin: 0 30px;
+            width: 1px;
+            height: 100%;
+            border-right: 3px solid #efefef;
+          }
+
+          &-profile {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            width: 190px;
-            height: 190px;
-            font-size: 110px;
-            color: white;
-            border-radius: 50%;
-            background-color: $disable-color;
-          }
 
-          i[class$="camera"] {
-            position: absolute;
-            left: 143px;
-            bottom: 35px;
-            font-size: 25px;
-            width: 50px;
-            height: 50px;
-            background-color: #777777;
-            border: 4px solid white;
-          }
-
-          input[type="file"] {
-            opacity: 0;
-            position: absolute;
-            left: 143px;
-            bottom: 30px;
-            width: 50px;
-            height: 50px;
-          }
-
-          &-name {
-            font-size: 15px;
-            color: $sub-color;
-            margin-top: 20px;
-
-            > span {
-              font-weight: bold;
-            }
-          }
-        }
-
-        &-info {
-          position: absolute;
-          left: 442px;
-          width: 636px;
-          height: 100%;
-          display: flex;
-          align-items: center;
-
-          &-content {
-            position: absolute;
-            top: 40px;
-            display: flex;
-            width: 100%;
-            height: calc(100% - 40px);
-
-            span {
-              display: block;
-              font-size: 13px;
-              font-weight: bold;
+            i {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 190px;
+              height: 190px;
+              font-size: 110px;
+              color: white;
+              border-radius: 50%;
+              background-color: $disable-color;
             }
 
-            span[class*="label"] {
-              color: #777777;
-            }
-
-            span[class*="item"] {
-              color: #343434;
-              margin-bottom: 35px;
-            }
-
-            input {
-              width: 169px;
-              height: 30px;
-              border: 2px solid #d9d9d9;
-              border-radius: 8px;
-              color: #9c9c9c;
-              outline: none;
-              margin-top: 5px;
-              margin-bottom: 17px;
-              padding-left: 11px;
-            }
-
-            input.sns-item {
-              width: 357px;
-            }
-
-            &-left {
+            i[class$="camera"] {
               position: absolute;
-              left: 119px;
+              left: 143px;
+              bottom: 35px;
+              font-size: 25px;
+              width: 50px;
+              height: 50px;
+              background-color: #777777;
+              border: 4px solid white;
+            }
 
-              span.sns-item {
-                display: flex;
-                align-items: center;
-                margin-bottom: 0;
+            input[type="file"] {
+              opacity: 0;
+              position: absolute;
+              left: 143px;
+              bottom: 30px;
+              width: 50px;
+              height: 50px;
+            }
 
-                a {
-                  text-decoration: none;
-                  color: #343434;
+            &-name {
+              font-size: 15px;
+              color: $sub-color;
+              margin-top: 20px;
 
-                  &:visited {
-                    text-decoration: none;
-                  }
-                }
+              > span {
+                font-weight: bold;
+              }
+            }
+          }
 
-                i {
-                  margin-left: 5px;
+          &-info {
+            width: 300px;
+            height: 100%;
+            display: flex;
+            align-items: center;
 
-                  &:hover {
-                    opacity: 0.8;
-                  }
-                }
+            &-content {
+              display: flex;
+              justify-content: space-between;
+              width: 100%;
+
+              span {
+                display: block;
+                font-size: 13px;
+                font-weight: bold;
               }
 
-              .part-item-edit {
-                font-size: 13px;
-                color: #9c9c9c;
+              span[class*="label"] {
+                color: #777777;
+              }
+
+              span[class*="item"] {
+                color: #343434;
+                margin-bottom: 35px;
+              }
+
+              input {
                 width: 169px;
                 height: 30px;
                 border: 2px solid #d9d9d9;
                 border-radius: 8px;
+                color: #9c9c9c;
+                outline: none;
                 margin-top: 5px;
                 margin-bottom: 17px;
-                display: flex;
-                align-items: center;
                 padding-left: 11px;
-                cursor: default;
               }
-            }
 
-            &-right {
-              position: absolute;
-              left: 372px;
+              input.sns-item {
+                width: 357px;
+              }
 
-              span.join-item {
-                margin-bottom: 0;
+              &-left {
+                span.sns-item {
+                  display: flex;
+                  align-items: center;
+                  margin-bottom: 0;
+
+                  a {
+                    text-decoration: none;
+                    color: #343434;
+
+                    &:visited {
+                      text-decoration: none;
+                    }
+                  }
+
+                  i {
+                    margin-left: 5px;
+
+                    &:hover {
+                      opacity: 0.8;
+                    }
+                  }
+                }
+
+                .part-item-edit {
+                  font-size: 13px;
+                  color: #9c9c9c;
+                  width: 169px;
+                  height: 30px;
+                  border: 2px solid #d9d9d9;
+                  border-radius: 8px;
+                  margin-top: 5px;
+                  margin-bottom: 17px;
+                  display: flex;
+                  align-items: center;
+                  padding-left: 11px;
+                  cursor: default;
+                }
+              }
+
+              &-right {
+                span.join-item {
+                  margin-bottom: 0;
+                }
               }
             }
           }
+        }
+
+        &-remark {
+          margin-top: 50px;
+          margin-bottom: 30px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 80%;
+          height: 100%;
+
+          span.label {
+            color: $sub-color;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+
+          &-content {
+            height: 200px;
+            border: 2px solid $disable-color;
+            border-radius: 10px;
+            padding: 10px 10px;
+            color: #363636;
+          }
+        }
+      }
+
+      i[class*="caret"] {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 60px;
+        font-size: 30px;
+        color: $disable-color;
+        cursor: pointer;
+        transition: all 200ms;
+
+        &:hover {
+          color: $sub-color;
         }
       }
 

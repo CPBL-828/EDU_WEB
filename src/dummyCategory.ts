@@ -238,7 +238,7 @@ export const KYO_MAIN: categoryInterface[] = [
     KEY: "TEST",
     VALUE: "시험 관리",
     ICON: "fa-solid fa-highlighter",
-    HAS_CHILD: true,
+    HAS_CHILD: false,
   },
 ];
 
@@ -274,13 +274,6 @@ export const KYO_SUB: categoryInterface[] = [
       { KEY: "ATTENDANCE", VALUE: "출결 현황" },
       { KEY: "ASSIGNMENT", VALUE: "과제" },
       { KEY: "REPORT", VALUE: "일지" },
-    ],
-  },
-  {
-    KEY: "TEST",
-    VALUE: [
-      { KEY: "SCHEDULE", VALUE: "시험 일정" },
-      { KEY: "SCORE", VALUE: "성적" },
     ],
   },
 ];
@@ -326,7 +319,7 @@ export const ETC_MAIN: categoryInterface[] = [
     KEY: "TEST",
     VALUE: "시험 관리",
     ICON: "fa-solid fa-highlighter",
-    HAS_CHILD: true,
+    HAS_CHILD: false,
   },
 ];
 
@@ -355,13 +348,6 @@ export const ETC_SUB: categoryInterface[] = [
       { KEY: "ATTENDANCE", VALUE: "출결 현황" },
       { KEY: "ASSIGNMENT", VALUE: "과제" },
       { KEY: "REPORT", VALUE: "일지" },
-    ],
-  },
-  {
-    KEY: "TEST",
-    VALUE: [
-      { KEY: "SCHEDULE", VALUE: "시험 일정" },
-      { KEY: "SCORE", VALUE: "성적" },
     ],
   },
 ];

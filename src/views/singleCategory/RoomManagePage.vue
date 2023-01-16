@@ -32,9 +32,13 @@ export default defineComponent({
       { KEY: "reference", VALUE: "자료실" },
       { KEY: "etc", VALUE: "기타" },
     ];
+    const roomKey = ref<string>("");
     const roomName = ref<string | undefined>(undefined);
     const totalPeople = ref<number | undefined>(undefined);
     const roomType = ref<string | undefined>(undefined);
+    const beforeName = ref<string>("");
+    const beforeTotal = ref<number>(0);
+    const beforeType = ref<string>("");
 
     const setRoomList = async () => {
       let data = { search: "" };
@@ -108,14 +112,72 @@ export default defineComponent({
     const editRoom = (i: roomInterface) => {
       editState.value = true;
 
+      roomKey.value = i.roomKey;
       roomName.value = i.name;
+      beforeName.value = i.name;
       roomType.value = i.type;
+      beforeType.value = i.type;
       typePlaceholder.value = i.type;
       totalPeople.value = i.totalPeople;
+      beforeTotal.value = i.totalPeople;
     };
 
-    const doEdit = () => {
-      //TODO 강의실 정보 수정
+    const removeRoom = async (i: roomInterface) => {
+      if (window.confirm(i.name + " 강의실을 삭제하시겠습니까?")) {
+        let data = {
+          roomKey: i.roomKey,
+        };
+
+        const result = await ApiClient(
+          "/lectures/deleteRoom/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.DELETE) {
+            window.alert("강의실을 삭제했습니다.");
+            router.go(0);
+          } else {
+            window.alert("삭제를 실패하였습니다.");
+            return false;
+          }
+        }
+      }
+    };
+
+    const doEdit = async () => {
+      if (
+        beforeName.value !== roomName.value ||
+        beforeTotal.value !== totalPeople.value ||
+        beforeType.value !== roomType.value
+      ) {
+        if (window.confirm("강의실 정보를 수정하시겠습니까?")) {
+          let data = {
+            roomKey: roomKey.value,
+            name: roomName.value,
+            type: roomType.value,
+            totalPeople: totalPeople.value,
+          };
+
+          const result = await ApiClient(
+            "/lectures/editRoom/",
+            common.makeJson(data)
+          );
+
+          if (result) {
+            if (result.chunbae === RESULT_KEY.EDIT) {
+              window.alert("수정을 완료하였습니다.");
+              router.go(0);
+            } else {
+              window.alert("수정에 실패하였습니다.");
+              return false;
+            }
+          }
+        }
+      } else {
+        window.alert("변경된 내용이 없습니다.");
+        return false;
+      }
     };
 
     const selectRoom = (i: roomInterface) => {
@@ -162,6 +224,7 @@ export default defineComponent({
       selectRoomType,
       saveRoom,
       editRoom,
+      removeRoom,
       doEdit,
       selectRoom,
     };
@@ -210,7 +273,12 @@ export default defineComponent({
                     value="수정"
                     @click="editRoom(item)"
                   />
-                  <input type="button" class="btn-delete" value="삭제" />
+                  <input
+                    type="button"
+                    class="btn-delete"
+                    value="삭제"
+                    @click="removeRoom(item)"
+                  />
                 </div>
               </div>
               <div class="lecture-detail-section-body-left-list-page">

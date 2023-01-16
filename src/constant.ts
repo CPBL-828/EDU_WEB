@@ -15,6 +15,7 @@ export const USER_KEY = {
 export const RESULT_KEY = {
   CREATE: "데이터 생성.",
   EDIT: "데이터 수정.",
+  DELETE: "데이터 삭제.",
 };
 
 export const KEYS = {

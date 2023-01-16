@@ -29,6 +29,7 @@ export default defineComponent({
   setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const today = ref<Date>(new Date());
+    const isLectureDay = ref(false);
     const teacherKey = ref<string>("");
     const selectState = ref(false);
     const lectureInfo = ref<scheduleInterface | undefined>(undefined);
@@ -45,6 +46,16 @@ export default defineComponent({
     const selectLecture = (item: scheduleInterface) => {
       lectureInfo.value = item;
       selectState.value = true;
+
+      if (today.value.getDay() !== 0) {
+        if (today.value.getDay() === lectureInfo.value.day) {
+          isLectureDay.value = true;
+        }
+      } else {
+        if (lectureInfo.value.day === 7) {
+          isLectureDay.value = true;
+        }
+      }
     };
 
     const getStudentList = async () => {
@@ -195,6 +206,7 @@ export default defineComponent({
     return {
       category,
       today,
+      isLectureDay,
       selectState,
       lectureInfo,
       studentList,
@@ -237,7 +249,10 @@ export default defineComponent({
           ></select-list-component>
         </div>
         <div class="check-section-body-list" v-else>
-          <div class="check-section-body-list-btn">
+          <div class="check-section-body-list-btn" v-if="!isLectureDay">
+            오늘은 강의 날짜가 아닙니다.
+          </div>
+          <div class="check-section-body-list-btn" v-if="isLectureDay">
             <input
               type="button"
               value="전체 출석"
@@ -286,7 +301,7 @@ export default defineComponent({
               </tr>
             </tbody>
           </table>
-          <div class="block-check" v-if="existAttend"></div>
+          <div class="block-check" v-if="existAttend || !isLectureDay"></div>
         </div>
         <div class="no-data" v-if="selectState && !studentList">
           수강하는 학생이 없습니다.

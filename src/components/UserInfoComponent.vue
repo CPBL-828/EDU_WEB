@@ -4,6 +4,7 @@ import CardListComponent from "./custom/CardListComponent.vue";
 import {
   adminInterface,
   defaultInterface,
+  parentInterface,
   scheduleInterface,
   studentInterface,
   teacherInterface,
@@ -54,7 +55,14 @@ export default defineComponent({
     const lectureList = ref<Array<defaultInterface>>([]);
     const lectureKey = ref<string>("");
     const createMode = ref<string | undefined>(undefined);
-    const existParent = ref(true);
+    const parentData = ref<parentInterface>({
+      parentKey: "",
+      name: "",
+      id: "",
+      phone: "",
+      createDate: "",
+      editDate: "",
+    });
     const selectParent = ref(false);
     const gradeList: defaultInterface[] = [
       { KEY: "elementary", VALUE: "초등" },
@@ -214,6 +222,42 @@ export default defineComponent({
       insertTeacherData.value.resSubject = s.VALUE as string;
     };
 
+    const insertParent = async () => {
+      if (!parentData.value.name) {
+        window.alert("학부모 이름을 작성해 주세요.");
+        return false;
+      } else if (!parentData.value.phone) {
+        window.alert("학부모 연락처를 작성해 주세요.");
+        return false;
+      }
+
+      if (
+        window.confirm(
+          "학부모 정보를 저장하고, 학생 정보 입력 단계로 넘어가시겠습니까?\n이후 학부모 정보 수정은 불가합니다."
+        )
+      ) {
+        let data = {
+          name: parentData.value.name,
+          phone: parentData.value.phone,
+        };
+
+        const result = await ApiClient(
+          "/members/createParent/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.CREATE) {
+            window.alert(
+              "학부모 정보를 성공적으로 저장하였습니다.\n학생 정보 입력 단계로 넘어갑니다."
+            );
+            parentData.value = result.resultData;
+            selectParent.value = true;
+          }
+        }
+      }
+    };
+
     const insertStudent = async () => {
       if (!insertStudentData.value.name) {
         window.alert("학생명을 입력해주세요.");
@@ -337,7 +381,7 @@ export default defineComponent({
       searchData,
       lectureList,
       createMode,
-      existParent,
+      parentData,
       selectParent,
       gradeList,
       teacherGrade,
@@ -350,6 +394,7 @@ export default defineComponent({
       changeCreateMode,
       selectGrade,
       selectSubject,
+      insertParent,
       insertStudent,
       insertTeacher,
     };
@@ -370,6 +415,7 @@ export default defineComponent({
               : ""
           }}
         </div>
+        <!-- 학생 정보-->
         <div class="user-info-section-body" v-if="viewUser === 'STU'">
           <div class="filter">
             <div class="filter-search">
@@ -409,7 +455,9 @@ export default defineComponent({
             >등록된 학생 정보가 없습니다.</span
           >
         </div>
-        <div class="user-info-section-body" v-if="viewUser === 'TEA'">
+
+        <!-- 강사 정보-->
+        <div class="user-info-section-body" v-else>
           <div class="filter">
             <div class="filter-search">
               <i class="fa-solid fa-magnifying-glass"></i>
@@ -458,11 +506,33 @@ export default defineComponent({
             @click="insertStudent"
           />
 
+          <!-- 학부모 입력-->
           <div class="student-insert-section-body-parent" v-if="!selectParent">
-            <div
-              class="student-insert-section-body-parent-existed"
-              v-if="existParent"
-            >
+            <div class="student-insert-section-body-parent-new">
+              <span class="tip">기존 학부모 정보가 존재하지 않나요?</span>
+              <div class="student-insert-section-body-parent-new-input">
+                <span class="label">이름</span>
+                <input
+                  type="text"
+                  placeholder="이름"
+                  v-model="parentData.name"
+                />
+                <span class="label">연락처</span>
+                <input
+                  type="text"
+                  placeholder="번호 11자리"
+                  v-model="parentData.phone"
+                />
+              </div>
+              <input
+                type="button"
+                value="저장하고 다음 단계로"
+                class="student-insert-section-body-parent-new-save"
+                @click="insertParent"
+              />
+            </div>
+            <div class="student-insert-section-body-parent-existed">
+              <span class="tip">기존 학부모 정보가 존재하나요?</span>
               <div class="student-insert-section-body-parent-search">
                 <input
                   type="text"
@@ -472,14 +542,11 @@ export default defineComponent({
               </div>
               <div class="student-insert-section-body-container-parent">
                 학부모 리스트
-                <span @click="existParent = false">신규 학부모 등록</span>
               </div>
-            </div>
-            <div class="student-insert-section-body-parent-new" v-else>
-              으악!!!!!!!!!!!!!!!!
             </div>
           </div>
 
+          <!-- 학생 입력-->
           <div class="student-insert-section-body-container" v-else>
             <div class="student-insert-section-body-container-profile">
               <span>증명사진을</span>
@@ -565,6 +632,7 @@ export default defineComponent({
           </div>
         </div>
 
+        <!-- 강사 입력-->
         <div class="student-insert-section-body" v-if="createMode === 'TEA'">
           <span class="back" @click="$router.go(0)">목록으로 돌아가기</span>
           <input

@@ -145,6 +145,71 @@ section.student-insert {
           }
         }
 
+        &-parent {
+          width: 100%;
+          height: auto;
+          display: flex;
+          justify-content: space-evenly;
+
+          span.tip {
+            font-size: 16px;
+            font-weight: bold;
+            color: $sub-color;
+          }
+
+          span.label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #777777;
+          }
+
+          input[type="text"] {
+            width: 175px;
+            height: 30px;
+            border: 2px solid $disable-color;
+            border-radius: 8px;
+            padding-left: 5px;
+            margin: 5px 0 25px 0;
+            outline: 0;
+          }
+
+          &-new,
+          &-existed {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
+
+          &-new {
+            &-input {
+              display: flex;
+              flex-direction: column;
+              margin-top: 30px;
+            }
+
+            &-save {
+              width: 180px;
+              height: 30px;
+              background-color: $primary-color;
+              border: 2px solid $primary-color;
+              border-radius: 8px;
+              color: white;
+              font-size: 14px;
+              font-weight: bold;
+              cursor: pointer;
+              transition: all 200ms;
+
+              &:hover {
+                background-color: $hover-color;
+              }
+            }
+          }
+
+          &-existed {
+          }
+        }
+
         input.insert-btn {
           position: absolute;
           top: 10px;

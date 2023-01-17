@@ -150,6 +150,7 @@ section.student-insert {
           height: auto;
           display: flex;
           justify-content: space-evenly;
+          align-items: center;
 
           span.tip {
             font-size: 16px;
@@ -185,7 +186,7 @@ section.student-insert {
             &-input {
               display: flex;
               flex-direction: column;
-              margin-top: 30px;
+              margin: 30px 0 10px 0;
             }
 
             &-save {
@@ -206,7 +207,86 @@ section.student-insert {
             }
           }
 
+          .sap {
+            opacity: 0.4;
+            width: 1px;
+            height: 500px;
+            border-left: solid 2px $disable-color;
+          }
+
           &-existed {
+            &-search {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: 300px;
+              height: 30px;
+              border: 2px solid $disable-color;
+              border-radius: 8px;
+              margin: 30px 0;
+
+              input[type="text"] {
+                margin: 0;
+                border: 0;
+                width: 270px;
+                height: 30px;
+              }
+
+              i {
+                color: white;
+                background-color: $disable-color;
+                width: 21px;
+                height: 21px;
+                border-radius: 25%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 5px;
+                cursor: pointer;
+              }
+            }
+
+            &-list {
+              height: 400px;
+              overflow: scroll;
+
+              table {
+                thead {
+                  position: sticky;
+                  top: 0;
+                  background-color: $disable-color;
+                  color: white;
+
+                  tr {
+                    height: 30px;
+
+                    th {
+                      border-radius: 8px;
+                    }
+                  }
+                }
+
+                tbody {
+                  text-align: center;
+
+                  tr {
+                    cursor: pointer;
+                    transition: all 150ms;
+
+                    &:hover {
+                      background-color: $background-color;
+                      font-size: 17px;
+                      font-weight: bold;
+                    }
+
+                    td {
+                      width: 200px;
+                      height: 35px;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
 

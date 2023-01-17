@@ -55,6 +55,8 @@ export default defineComponent({
     const lectureList = ref<Array<defaultInterface>>([]);
     const lectureKey = ref<string>("");
     const createMode = ref<string | undefined>(undefined);
+    const parentList = ref<Array<parentInterface> | undefined>(undefined);
+    const searchParentName = ref<string>("");
     const parentData = ref<parentInterface>({
       parentKey: "",
       name: "",
@@ -63,7 +65,7 @@ export default defineComponent({
       createDate: "",
       editDate: "",
     });
-    const selectParent = ref(false);
+    const selectedParent = ref(false);
     const gradeList: defaultInterface[] = [
       { KEY: "elementary", VALUE: "초등" },
       { KEY: "middle", VALUE: "중등" },
@@ -205,12 +207,31 @@ export default defineComponent({
       }
     };
 
+    const getParentList = async () => {
+      let data = { search: searchParentName.value };
+
+      const result = await ApiClient(
+        "/members/getParentList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          parentList.value = result.resultData;
+        }
+      }
+    };
+
     const selectLecture = async (l: defaultInterface) => {
       lectureKey.value = l.KEY;
       await getUserList();
     };
 
-    const changeCreateMode = (u: string) => {
+    const changeCreateMode = async (u: string) => {
+      if (u === USER_KEY.STU) {
+        await getParentList();
+      }
+
       createMode.value = u;
     };
 
@@ -220,6 +241,11 @@ export default defineComponent({
 
     const selectSubject = (s: defaultInterface) => {
       insertTeacherData.value.resSubject = s.VALUE as string;
+    };
+
+    const selectParent = (p: parentInterface) => {
+      parentData.value = p;
+      selectedParent.value = true;
     };
 
     const insertParent = async () => {
@@ -252,7 +278,7 @@ export default defineComponent({
               "학부모 정보를 성공적으로 저장하였습니다.\n학생 정보 입력 단계로 넘어갑니다."
             );
             parentData.value = result.resultData;
-            selectParent.value = true;
+            selectedParent.value = true;
           }
         }
       }
@@ -381,8 +407,10 @@ export default defineComponent({
       searchData,
       lectureList,
       createMode,
+      parentList,
+      searchParentName,
       parentData,
-      selectParent,
+      selectedParent,
       gradeList,
       teacherGrade,
       subjectList,
@@ -390,10 +418,12 @@ export default defineComponent({
       insertStudentData,
       insertTeacherData,
       getUserList,
+      getParentList,
       selectLecture,
       changeCreateMode,
       selectGrade,
       selectSubject,
+      selectParent,
       insertParent,
       insertStudent,
       insertTeacher,
@@ -499,7 +529,7 @@ export default defineComponent({
         <div class="student-insert-section-body" v-if="createMode === 'STU'">
           <span class="back" @click="$router.go(0)">목록으로 돌아가기</span>
           <input
-            v-if="selectParent"
+            v-if="selectedParent"
             type="button"
             class="insert-btn"
             value="저장하기"
@@ -507,7 +537,10 @@ export default defineComponent({
           />
 
           <!-- 학부모 입력-->
-          <div class="student-insert-section-body-parent" v-if="!selectParent">
+          <div
+            class="student-insert-section-body-parent"
+            v-if="!selectedParent"
+          >
             <div class="student-insert-section-body-parent-new">
               <span class="tip">기존 학부모 정보가 존재하지 않나요?</span>
               <div class="student-insert-section-body-parent-new-input">
@@ -531,17 +564,42 @@ export default defineComponent({
                 @click="insertParent"
               />
             </div>
+            <div class="sap"></div>
             <div class="student-insert-section-body-parent-existed">
               <span class="tip">기존 학부모 정보가 존재하나요?</span>
-              <div class="student-insert-section-body-parent-search">
+              <div
+                class="student-insert-section-body-parent-existed-search"
+                @keypress.enter="getParentList"
+              >
                 <input
                   type="text"
                   class="parent-name"
                   placeholder="학부모명 검색"
+                  v-model="searchParentName"
                 />
+                <i
+                  class="fa-solid fa-magnifying-glass"
+                  @click="getParentList"
+                ></i>
               </div>
-              <div class="student-insert-section-body-container-parent">
-                학부모 리스트
+              <div class="student-insert-section-body-parent-existed-list">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>이름 (아이디)</th>
+                      <th>연락처</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in parentList" @click="selectParent(item)">
+                      <td>{{ item.name }} ({{ item.id }})</td>
+                      <td>
+                        {{ item.phone.substring(0, 3) }} - **** -
+                        {{ item.phone.substring(7, 12) }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

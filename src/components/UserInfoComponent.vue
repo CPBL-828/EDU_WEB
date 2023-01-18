@@ -91,11 +91,12 @@ export default defineComponent({
     ];
     const birthNum = ref<string | undefined>(undefined);
     const insertStudentData = ref({
+      parentKey: "",
       name: "",
       birth: "",
       sex: "",
       phone: "",
-      emergency: "01011911211",
+      emergency: "",
       school: "",
       grade: "",
       address: "",
@@ -245,6 +246,8 @@ export default defineComponent({
 
     const selectParent = (p: parentInterface) => {
       parentData.value = p;
+      insertStudentData.value.parentKey = p.parentKey;
+      insertStudentData.value.emergency = p.phone;
       selectedParent.value = true;
     };
 
@@ -278,6 +281,9 @@ export default defineComponent({
               "학부모 정보를 성공적으로 저장하였습니다.\n학생 정보 입력 단계로 넘어갑니다."
             );
             parentData.value = result.resultData;
+            insertStudentData.value.parentKey = result.resultData.parentKey;
+            insertStudentData.value.emergency = result.resultData.phone;
+
             selectedParent.value = true;
           }
         }
@@ -330,6 +336,22 @@ export default defineComponent({
         "/members/createStudent/",
         common.makeJson(insertStudentData.value)
       );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          window.alert(
+            "학생을 성공적으로 등록했습니다.\n" +
+              result.resultData.name +
+              " (" +
+              result.resultData.id +
+              ")"
+          );
+
+          router.go(0);
+        } else {
+          window.alert("학생 등록에 실패했습니다.");
+        }
+      }
     };
 
     const insertTeacher = async () => {

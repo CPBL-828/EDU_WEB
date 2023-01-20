@@ -281,18 +281,28 @@ section.data-list {
             text-decoration: underline;
           }
 
+          td.file-name {
+            text-decoration: underline;
+            transition: all 200ms;
+
+            &:hover {
+              font-weight: bold;
+            }
+          }
+
           .go-attend-detail {
             width: 130px;
             height: 24px;
             border: 0;
             border-radius: 10px;
-            background-color: $primary-color;
+            background-color: #b6b6b6;
             color: white;
             font-weight: bold;
             cursor: pointer;
+            transition: all 200ms;
 
             &:hover {
-              background-color: $hover-color;
+              background-color: $sub-color;
             }
           }
         }

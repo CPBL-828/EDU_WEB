@@ -17,6 +17,7 @@ export default defineComponent({
       { KEY: "STATE", VALUE: "상태" },
       { KEY: "FILE", VALUE: "시험 파일" },
     ];
+    // const testList;
 
     const selectLecture = (i: scheduleInterface) => {
       lectureInfo.value = i;

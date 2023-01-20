@@ -168,3 +168,15 @@ export interface testInterface {
   createDate: string;
   editDate: string;
 }
+
+export interface assignInterface {
+  assignKey: string;
+  lectureKey_id: string;
+  lectureName: string;
+  assignment: string;
+  content: string;
+  deadLine: string;
+  type: string;
+  createDate: string;
+  editDate: string;
+}

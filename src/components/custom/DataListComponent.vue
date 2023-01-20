@@ -2,6 +2,7 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import {
   analysisInterface,
+  assignInterface,
   consultInterface,
   defaultInterface,
   noticeInterface,
@@ -11,6 +12,7 @@ import {
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import { showAttendInterface } from "../lectureManage/AttendanceComponent.vue";
+import AssignmentComponent from "../lectureManage/AssignmentComponent.vue";
 /*
 @brief 글 리스트 형태의 데이터를 표현하기 위한 컴포넌트
  */
@@ -39,6 +41,7 @@ export default defineComponent({
           | analysisInterface
           | showAttendInterface
           | testInterface
+          | assignInterface
         >
       >,
       required: true,
@@ -67,6 +70,7 @@ export default defineComponent({
       undefined
     );
     const showTestList = ref<Array<testInterface> | undefined>(undefined);
+    const showAssignList = ref<Array<assignInterface> | undefined>(undefined);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
@@ -170,6 +174,22 @@ export default defineComponent({
       }
     };
 
+    // 과제 목록
+    const setAssignList = () => {
+      if (props.dataList) {
+        if (props.totalCnt > listCnt.value) {
+          showAssignList.value = props.dataList.slice(
+            0,
+            listCnt.value
+          ) as assignInterface[];
+          page.value = Math.ceil(props.totalCnt / listCnt.value);
+        } else {
+          showAssignList.value = props.dataList as assignInterface[];
+          page.value = 0;
+        }
+      }
+    };
+
     const selectPage = (p: number) => {
       currentPage.value = p;
     };
@@ -216,6 +236,11 @@ export default defineComponent({
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as testInterface[];
+        } else if (props.listType == "assign") {
+          showAssignList.value = props.dataList?.slice(
+            listCnt.value * currentPage.value - listCnt.value,
+            listCnt.value * currentPage.value
+          ) as assignInterface[];
         }
       }
     );
@@ -238,6 +263,8 @@ export default defineComponent({
           await setAttendList();
         } else if (props.listType === "test") {
           await setTestList();
+        } else if (props.listType === "assign") {
+          await setAssignList();
         }
       }
     );
@@ -261,6 +288,8 @@ export default defineComponent({
         await setAttendList();
       } else if (props.listType === "test") {
         await setTestList();
+      } else if (props.listType === "assign") {
+        await setAssignList();
       }
     });
 
@@ -271,6 +300,7 @@ export default defineComponent({
       showAnalysisList,
       showAttendList,
       showTestList,
+      showAssignList,
       page,
       currentPage,
       selectPage,
@@ -542,6 +572,52 @@ export default defineComponent({
               }"
             >
               드롭박스
+            </td>
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+            >
+              <input
+                type="button"
+                value="상세 조회"
+                class="go-attend-detail"
+                @click="$emit('showTestDetail', item)"
+              />
+            </td>
+          </tr>
+
+          <!--          과제 목록 -->
+          <tr
+            class="data=list=section-body-item"
+            v-if="showAssignList"
+            v-for="item in showAssignList"
+          >
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+            >
+              {{ item.createDate.substring(0, 10) }}
+            </td>
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+            >
+              {{ item.deadLine.substring(0, 10) }}
+            </td>
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '25%',
+              }"
+              class="file-name"
+            >
+              {{ item.assignment }}
             </td>
             <td
               :style="{

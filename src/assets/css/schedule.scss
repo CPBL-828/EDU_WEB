@@ -894,6 +894,68 @@ section.assignment {
           width: 90%;
           height: 90%;
         }
+
+        &-content {
+          position: relative;
+          height: 100%;
+
+          &-title {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 45px;
+            left: 96px;
+            font-size: 15px;
+            font-weight: bold;
+
+            .lecture-name {
+              color: $sub-color;
+            }
+
+            .subject-name {
+              color: #b6b6b6;
+            }
+
+            &-btn {
+              width: 1000px;
+              display: flex;
+              justify-content: space-between;
+              margin-top: 15px;
+
+              &-type {
+                position: relative;
+                width: 180px;
+                height: 25px;
+              }
+
+              &-upload {
+                width: 130px;
+                height: 25px;
+                border: 0;
+                border-radius: 10px;
+                background-color: $primary-color;
+                font-size: 12px;
+                font-weight: bold;
+                color: white;
+                cursor: pointer;
+                transition: all 200ms;
+
+                &:hover {
+                  background-color: $hover-color;
+                }
+              }
+            }
+          }
+
+          &-list {
+            position: absolute;
+            bottom: 107px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 524px;
+          }
+        }
       }
     }
   }

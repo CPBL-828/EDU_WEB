@@ -1,13 +1,22 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
-import { defaultInterface, scheduleInterface } from "../../lib/types";
+import { defineComponent, onMounted, ref, watch } from "vue";
+import {
+  defaultInterface,
+  scheduleInterface,
+  testInterface,
+  testStatusInterface,
+} from "../../lib/types";
 import common from "../../lib/common";
 import SelectListComponent from "../../components/custom/SelectListComponent.vue";
 import DataListComponent from "../../components/custom/DataListComponent.vue";
+import { ApiClient } from "../../axios";
+import { useStore } from "vuex";
+import ModalPopupComponent from "../../components/custom/ModalPopupComponent.vue";
 export default defineComponent({
   name: "TestManagePage",
-  components: { DataListComponent, SelectListComponent },
+  components: { ModalPopupComponent, DataListComponent, SelectListComponent },
   setup() {
+    const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectState = ref(false);
     const lectureInfo = ref<scheduleInterface | undefined>(undefined);
@@ -17,12 +26,73 @@ export default defineComponent({
       { KEY: "STATE", VALUE: "상태" },
       { KEY: "FILE", VALUE: "시험 파일" },
     ];
-    // const testList;
+    const testList = ref<Array<testInterface> | undefined>(undefined);
+    const totalCnt = ref(0);
+    const testInfo = ref<testInterface | undefined>(undefined);
+    const testStatus = ref<Array<testStatusInterface> | undefined>(undefined);
+    const scoreMode = ref(false);
 
-    const selectLecture = (i: scheduleInterface) => {
+    const getTestList = async () => {
+      let data = {
+        lectureKey: lectureInfo.value?.lectureKey,
+        type: "",
+        testDate: "",
+      };
+
+      const result = await ApiClient(
+        "/lectures/getTestList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          totalCnt.value = result.count;
+          testList.value = result.resultData;
+        }
+      }
+    };
+
+    const getTestStatusList = async () => {
+      let data = {
+        testKey: testInfo.value?.testKey,
+      };
+
+      const result = await ApiClient(
+        "/lectures/getTestStatusList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          testStatus.value = result.resultData;
+        }
+      }
+    };
+
+    const selectLecture = async (i: scheduleInterface) => {
       lectureInfo.value = i;
+      await getTestList();
       selectState.value = true;
     };
+
+    const showTestDetail = async (t: testInterface) => {
+      testInfo.value = t;
+      await getTestStatusList();
+      store.commit("setModalState", true);
+    };
+
+    const showScore = () => {
+      scoreMode.value = true;
+    };
+
+    watch(
+      () => store.state.modalState,
+      () => {
+        if (!store.state.modalState) {
+          scoreMode.value = false;
+        }
+      }
+    );
 
     onMounted(() => {
       category.value = common.findCategory();
@@ -33,7 +103,14 @@ export default defineComponent({
       selectState,
       lectureInfo,
       testHeader,
+      testList,
+      testInfo,
+      testStatus,
+      totalCnt,
+      scoreMode,
       selectLecture,
+      showTestDetail,
+      showScore,
     };
   },
 });
@@ -68,13 +145,46 @@ export default defineComponent({
               <data-list-component
                 :header="testHeader"
                 list-type="test"
-                :data-list="[]"
-                :total-cnt="0"
+                :data-list="testList ? testList : []"
+                :total-cnt="totalCnt"
+                @showTestDetail="showTestDetail"
               ></data-list-component>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <modal-popup-component
+      title="시험 상세 조회"
+      modal-width="1078px"
+      modal-height="750px"
+    >
+      <template v-slot:body>
+        <div class="test-status">
+          <div class="test-status-lecture">{{ testInfo?.lectureName }}</div>
+          <div class="test-status-list" v-if="!scoreMode">
+            <table>
+              <thead>
+                <tr>
+                  <th>이름</th>
+                  <th>응시 여부</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in testStatus">
+                  <td>{{ item.studentName }}</td>
+                  <td>{{ item.state === "Y" ? "응시" : "미응시" }}</td>
+                  <td>
+                    <input type="button" value="성적 조회" @click="showScore" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 </template>

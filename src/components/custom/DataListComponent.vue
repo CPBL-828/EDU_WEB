@@ -552,15 +552,15 @@ export default defineComponent({
             <td
               :style="{
                 height: rowHeight ? rowHeight + 'px' : '52px;',
-                width: '25%',
+                width: '20%',
               }"
             >
-              {{ item.testDate }}
+              {{ item.testDate.substring(0, 10) }}
             </td>
             <td
               :style="{
                 height: rowHeight ? rowHeight + 'px' : '52px;',
-                width: '25%',
+                width: '20%',
               }"
             >
               {{ item.testType }}
@@ -568,15 +568,29 @@ export default defineComponent({
             <td
               :style="{
                 height: rowHeight ? rowHeight + 'px' : '52px;',
-                width: '25%',
+                width: '20%',
               }"
             >
-              드롭박스
+              {{
+                new Date(new Date().toISOString().substring(0, 10)) >
+                new Date(item.testDate.substring(0, 10))
+                  ? "완료"
+                  : "예정"
+              }}
             </td>
             <td
               :style="{
                 height: rowHeight ? rowHeight + 'px' : '52px;',
-                width: '25%',
+                width: '20%',
+              }"
+              class="file-name"
+            >
+              시험지 파일 조회
+            </td>
+            <td
+              :style="{
+                height: rowHeight ? rowHeight + 'px' : '52px;',
+                width: '20%',
               }"
             >
               <input

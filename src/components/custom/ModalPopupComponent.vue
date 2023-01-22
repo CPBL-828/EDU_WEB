@@ -61,11 +61,11 @@ export default defineComponent({
   <section
     class="modal"
     v-if="popupState"
-    v-click-away="onClickAway"
     :style="{
       width: modalWidth ? modalWidth.toString() : '1078px',
       height: modalHeight ? modalHeight.toString() : '808px',
     }"
+    v-click-away="onClickAway"
   >
     <div class="modal">
       <div class="modal-button">

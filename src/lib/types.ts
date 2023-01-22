@@ -169,6 +169,18 @@ export interface testInterface {
   editDate: string;
 }
 
+export interface testStatusInterface {
+  testStatusKey: string;
+  testKey_id: string;
+  studentKey_id: string;
+  studentName: string;
+  state: string;
+  reason: string;
+  progress: string;
+  createDate: string;
+  editDate: string;
+}
+
 export interface assignInterface {
   assignKey: string;
   lectureKey_id: string;

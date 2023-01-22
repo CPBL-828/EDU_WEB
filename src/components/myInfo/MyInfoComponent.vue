@@ -251,19 +251,19 @@ export default defineComponent({
         <div v-if="studentInfo">
           <div v-for="item in studentInfo">{{ item }}</div>
         </div>
-        <div class="user-detail" v-else-if="!resumeState">
+        <div class="my-info" v-else-if="!resumeState">
           <div class="sap"></div>
-          <div class="user-detail-profile">
+          <div class="my-info-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
-            <div class="user-detail-profile-name">
+            <div class="my-info-profile-name">
               <span>{{ teacherInfo?.name }}</span> 강사님
             </div>
           </div>
-          <div class="user-detail-info">
-            <div class="user-detail-info-content">
-              <div class="user-detail-info-content-left">
+          <div class="my-info-info">
+            <div class="my-info-info-content">
+              <div class="my-info-info-content-left">
                 <div class="name">
                   <span class="name-label">이름</span>
                   <span class="name-item" v-if="!editState">
@@ -314,7 +314,7 @@ export default defineComponent({
                   />
                 </div>
               </div>
-              <div class="user-detail-info-content-right">
+              <div class="my-info-info-content-right">
                 <div class="phone">
                   <span class="phone-label">연락처</span>
                   <span class="phone-item" v-if="!editState">

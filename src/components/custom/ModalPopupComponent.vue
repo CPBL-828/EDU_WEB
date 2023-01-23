@@ -26,12 +26,12 @@ export default defineComponent({
     const store = useStore();
     const popupState = ref(false);
 
-    const onClickAway = (e: Event) => {
-      if (e.isTrusted) {
-        store.commit("setModalState", false);
-        popupState.value = false;
-      }
-    };
+    // const onClickAway = (e: Event) => {
+    //   if (e.isTrusted) {
+    //     store.commit("setModalState", false);
+    //     popupState.value = false;
+    //   }
+    // };
 
     const closeModal = () => {
       store.commit("setModalState", false);
@@ -50,7 +50,7 @@ export default defineComponent({
 
     return {
       popupState,
-      onClickAway,
+      // onClickAway,
       closeModal,
     };
   },
@@ -65,7 +65,6 @@ export default defineComponent({
       width: modalWidth ? modalWidth.toString() : '1078px',
       height: modalHeight ? modalHeight.toString() : '808px',
     }"
-    v-click-away="onClickAway"
   >
     <div class="modal">
       <div class="modal-button">

@@ -132,7 +132,7 @@ export default defineComponent({
           <div class="assignment-section-body-content-list">
             <data-list-component
               :header="assignHeader"
-              :data-list="assignList"
+              :data-list="assignList ? assignList : []"
               admin-state="N"
               :list-cnt="12"
               :total-cnt="totalCnt"

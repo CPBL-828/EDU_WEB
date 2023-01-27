@@ -100,6 +100,10 @@ export default defineComponent({
       await getStudentList();
     };
 
+    const refreshPage = () => {
+      router.go(0);
+    };
+
     const getStudentList = async () => {
       let data = {
         userKey: userKey.value,
@@ -227,6 +231,7 @@ export default defineComponent({
       category,
       placeholder,
       lectureList,
+      lectureKey,
       studentList,
       selectStudentState,
       selectedStudent,
@@ -239,6 +244,7 @@ export default defineComponent({
       analysisDetail,
       goBack,
       selectLecture,
+      refreshPage,
       selectStudent,
       openModal,
       insertAnalysis,
@@ -262,6 +268,9 @@ export default defineComponent({
           }}
         </div>
         <div class="analysis-component-section-body">
+          <span class="refresh-btn" v-if="lectureKey" @click="refreshPage"
+            >강의 다시 선택하기</span
+          >
           <div class="analysis-component-section-body-select">
             <div class="analysis-component-section-body-select-drop">
               <drop-box-component

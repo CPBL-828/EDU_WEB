@@ -95,6 +95,18 @@ section.user-info {
               color: white;
             }
           }
+
+          i[class*="rotate"] {
+            color: $disable-color;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 14px;
+
+            &:hover {
+              color: $sub-color;
+              transition: all 0.2s;
+            }
+          }
         }
 
         .total {
@@ -946,6 +958,20 @@ section.analysis-component {
         height: 800px;
         display: flex;
         flex-direction: row;
+
+        .refresh-btn {
+          position: absolute;
+          top: 50px;
+          left: 80px;
+          color: $disable-color;
+          transition: all 200ms;
+          cursor: pointer;
+          font-weight: bold;
+
+          &:hover {
+            color: $sub-color;
+          }
+        }
 
         &-select {
           position: absolute;

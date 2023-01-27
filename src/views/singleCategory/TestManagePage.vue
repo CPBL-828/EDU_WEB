@@ -12,11 +12,13 @@ import DataListComponent from "../../components/custom/DataListComponent.vue";
 import { ApiClient } from "../../axios";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../../components/custom/ModalPopupComponent.vue";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "TestManagePage",
   components: { ModalPopupComponent, DataListComponent, SelectListComponent },
   setup() {
     const store = useStore();
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectState = ref(false);
     const lectureInfo = ref<scheduleInterface | undefined>(undefined);
@@ -82,7 +84,9 @@ export default defineComponent({
     };
 
     const showScore = () => {
-      scoreMode.value = true;
+      // scoreMode.value = true;
+      store.commit("setModalState", false);
+      router.push("/main");
     };
 
     watch(

@@ -228,6 +228,10 @@ export default defineComponent({
       await getUserList();
     };
 
+    const removeFilter = () => {
+      router.go(0);
+    };
+
     const changeCreateMode = async (u: string) => {
       if (u === USER_KEY.STU) {
         await getParentList();
@@ -442,6 +446,7 @@ export default defineComponent({
       getUserList,
       getParentList,
       selectLecture,
+      removeFilter,
       changeCreateMode,
       selectGrade,
       selectSubject,
@@ -496,6 +501,7 @@ export default defineComponent({
               v-if="adminState"
               @click="changeCreateMode('STU')"
             />
+            <i class="fa-solid fa-rotate-left" @click="removeFilter"></i>
           </div>
           <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
           <card-list-component

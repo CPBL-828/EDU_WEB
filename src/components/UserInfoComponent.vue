@@ -16,6 +16,7 @@ import DropBoxComponent from "./custom/DropBoxComponent.vue";
 import ModalPopupComponent from "./custom/ModalPopupComponent.vue";
 import SelectButtonComponent from "./custom/SelectButtonComponent.vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 /*
 @brief [강사] [Main]학생 관리, [관리자] [Main]학생 관리, 강사 관리
        [Sub]학생 정보, 강사 정보 접근 시 카드형 컴포넌트를 통해 유저 리스트 표시
@@ -404,6 +405,19 @@ export default defineComponent({
       }
     };
 
+    const store = useStore();
+    const studentInfo = ref<studentInterface | undefined>(undefined);
+    const showStudentDetail = (s: studentInterface) => {
+      studentInfo.value = s;
+      store.commit("setModalState", true);
+    };
+
+    const teacherInfo = ref<teacherInterface | undefined>(undefined);
+    const showTeacherDetail = (t: teacherInterface) => {
+      teacherInfo.value = t;
+      store.commit("setModalState", true);
+    };
+
     onMounted(async () => {
       category.value = common.findCategory();
       userKey.value = common.getItem(KEYS.UK).userKey;
@@ -454,6 +468,11 @@ export default defineComponent({
       insertParent,
       insertStudent,
       insertTeacher,
+      // 모달 옮기는 중
+      studentInfo,
+      showStudentDetail,
+      teacherInfo,
+      showTeacherDetail,
     };
   },
 });
@@ -508,6 +527,7 @@ export default defineComponent({
             v-if="userData && viewUser"
             :view-user="viewUser"
             :user-list="userData"
+            @showStudentDetail="showStudentDetail"
           ></card-list-component>
           <span v-if="!userData" class="total"
             >등록된 학생 정보가 없습니다.</span
@@ -539,6 +559,7 @@ export default defineComponent({
             v-if="userData && viewUser"
             :view-user="viewUser"
             :user-list="userData"
+            @showTeacherDetail="showTeacherDetail"
           ></card-list-component>
           <span v-if="!userData" class="total">
             등록된 강사 정보가 없습니다.
@@ -546,6 +567,127 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
+    <modal-popup-component
+      :title="studentInfo ? '학생 정보 상세 조회' : '강사 정보 상세 조회'"
+      modal-height="620px"
+      modal-width="1078px"
+    >
+      <template v-slot:body>
+        <span class="tip">특이사항을 열람하려면 아래로 스크롤 하세요.</span>
+        <div class="user">
+          <div class="user-detail">
+            <div class="user-detail-profile">
+              <i
+                class="fa-solid fa-user"
+                v-if="studentInfo && !studentInfo?.profileImg"
+              ></i>
+              <div v-if="studentInfo" class="user-detail-profile-name">
+                <span>{{ studentInfo?.name }}</span> 학생
+              </div>
+              <i
+                class="fa-solid fa-user"
+                v-if="teacherInfo && !teacherInfo?.profileImg"
+              ></i>
+              <div v-if="teacherInfo" class="user-detail-profile-name">
+                <span>{{ teacherInfo?.name }}</span> 강사님
+              </div>
+            </div>
+            <div class="sap"></div>
+            <div class="user-detail-info">
+              <div class="user-detail-info-content">
+                <div class="user-detail-info-content-left">
+                  <div class="name">
+                    <span class="name-label">이름</span>
+                    <span class="name-item" v-if="studentInfo"
+                      >{{ studentInfo?.name }} ({{ studentInfo?.id }})</span
+                    >
+                    <span class="name-item" v-if="teacherInfo"
+                      >{{ teacherInfo?.name }} ({{ teacherInfo?.id }})</span
+                    >
+                  </div>
+                  <!--              학생 -->
+                  <div class="part" v-if="studentInfo">
+                    <span class="part-label">생년월일</span>
+                    <span class="part-item">{{ studentInfo?.birth }}</span>
+                  </div>
+                  <div class="email" v-if="studentInfo">
+                    <span class="email-label">학교</span>
+                    <span class="email-item">{{ studentInfo?.school }}</span>
+                  </div>
+                  <div class="sns" v-if="studentInfo">
+                    <span class="sns-label">주소</span>
+                    <span class="sns-item">{{ studentInfo?.address }}</span>
+                  </div>
+                  <!--              강사 -->
+                  <div class="part" v-if="teacherInfo">
+                    <span class="part-label">담당</span>
+                    <span class="part-item"
+                      >{{ teacherInfo?.part }}
+                      {{ teacherInfo?.resSubject }}</span
+                    >
+                  </div>
+                  <div class="email" v-if="teacherInfo">
+                    <span class="email-label">이메일</span>
+                    <span class="email-item">{{ teacherInfo?.email }}</span>
+                  </div>
+                  <div class="sns" v-if="teacherInfo">
+                    <span class="sns-label">SNS</span>
+                    <span class="sns-item">{{ teacherInfo?.link }}</span>
+                  </div>
+                </div>
+                <div class="user-detail-info-content-right">
+                  <div class="phone">
+                    <span class="phone-label">연락처</span>
+                    <span class="phone-item" v-if="studentInfo">
+                      {{ studentInfo?.phone.substring(0, 3) }}-{{
+                        studentInfo?.phone.substring(3, 7)
+                      }}-{{ studentInfo?.phone.substring(7, 11) }}
+                    </span>
+                    <span class="phone-item" v-if="teacherInfo">
+                      {{ teacherInfo?.phone.substring(0, 3) }}-{{
+                        teacherInfo?.phone.substring(3, 7)
+                      }}-{{ teacherInfo?.phone.substring(7, 11) }}
+                    </span>
+                  </div>
+                  <div class="join" v-if="studentInfo">
+                    <span class="join-label">학년</span>
+                    <span class="join-item">{{ studentInfo?.grade }} 학년</span>
+                  </div>
+                  <div class="join" v-if="teacherInfo">
+                    <span class="join-label">입사일</span>
+                    <span class="join-item"
+                      >{{ teacherInfo?.joinDate.substring(0, 4) }}.
+                      {{ teacherInfo?.joinDate.substring(5, 7) }}.
+                      {{ teacherInfo?.joinDate.substring(8, 10) }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="user-remark">
+            <span class="label">특이사항</span>
+            <div class="user-remark-content">
+              {{
+                studentInfo?.remark
+                  ? studentInfo?.remark
+                  : "작성된 특이사항이 없습니다."
+              }}
+            </div>
+
+            <div class="user-remark-btn">
+              <input
+                type="button"
+                value="분석 내용 열람하러 가기"
+                class="go-analysis"
+              />
+              <input type="button" value="성적 열람하러 가기" class="go-test" />
+            </div>
+          </div>
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 
   <section class="student-insert" v-else>

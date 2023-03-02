@@ -46,7 +46,7 @@ export const STU_SUB: defaultInterface[] = [
     KEY: "TEST",
     VALUE: [
       { KEY: "SCHEDULE", VALUE: "시험 일정" },
-      { KEY: "SCORE", VALUE: "성적 입력" },
+      { KEY: "SCORE", VALUE: "성적" },
     ],
   },
 ];

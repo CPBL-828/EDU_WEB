@@ -23,33 +23,14 @@ export default defineComponent({
     // const fixCome = ref<Date | undefined>(undefined);
     const fixCome = ref<string>(new Date().toLocaleString());
     const outTime = ref<Date>(new Date());
-    const fixOut = ref<Date | undefined>(undefined);
-    const calendarState = ref<string | undefined>(undefined);
-
-    const onClickAway = (event: Event) => {
-      if (event.isTrusted) {
-        calendarState.value = undefined;
-      }
-    };
+    // const fixOut = ref<Date | undefined>(undefined);
+    const fixOut = ref<string>(new Date().toLocaleString());
 
     const selectTeacher = (t: teacherInterface) => {
       teacherData.value = t;
     };
 
-    const openCalendar = (s: string) => {
-      if (calendarState.value !== undefined) {
-        calendarState.value = undefined;
-      } else {
-        if (s === "come") {
-          calendarState.value = "come";
-        } else {
-          calendarState.value = "out";
-        }
-      }
-    };
-
     const saveComeTime = async (t: Date) => {
-      calendarState.value = undefined;
       // fixCome.value = t;
 
       if (window.confirm(fixCome.value + "로 출근 시간을 저장하시겠습니까?")) {
@@ -68,9 +49,23 @@ export default defineComponent({
       }
     };
 
-    const saveOutTime = (t: Date) => {
-      calendarState.value = undefined;
-      fixOut.value = t;
+    const saveOutTime = async (t: Date) => {
+      // fixOut.value = t;
+
+      if (window.confirm(fixOut.value + "로 퇴근 시간을 저장하시겠습니까?")) {
+        let data = {
+          teacherKey: teacherData.value?.teacherKey,
+          state: "퇴근",
+          reason: "",
+        };
+
+        const result = await ApiClient(
+            "/info/createWork/",
+            common.makeJson(data)
+        );
+      } else {
+        return false;
+      }
     };
 
     onMounted(() => {
@@ -94,10 +89,7 @@ export default defineComponent({
       fixCome,
       outTime,
       fixOut,
-      calendarState,
-      onClickAway,
       selectTeacher,
-      openCalendar,
       saveComeTime,
       saveOutTime,
     };
@@ -169,19 +161,11 @@ export default defineComponent({
                   <div
                     class="my-work-section-body-section-input-section-out-datetime"
                   >
-                    <input
-                      type="text"
-                      :value="
-                        fixOut
-                          ? fixOut.toLocaleString().slice(0, -3)
-                          : '날짜 및 현재 시간 선택'
-                      "
-                      :disabled="true"
-                    />
-                    <i
-                      class="fa-solid fa-chevron-down"
-                      @click="openCalendar('out')"
-                    ></i>
+                    <input type="text" :value="fixOut" :disabled="true" />
+                    <!--                    <i-->
+                    <!--                      class="fa-solid fa-chevron-down"-->
+                    <!--                      @click="openCalendar('out')"-->
+                    <!--                    ></i>-->
                   </div>
                   <input
                     type="button"
@@ -189,14 +173,14 @@ export default defineComponent({
                     value="퇴근"
                     @click="saveOutTime(outTime)"
                   />
-                  <v-date-picker
-                    :class="
-                      calendarState === 'out' ? 'calendar-out' : 'calendar'
-                    "
-                    mode="time"
-                    v-model="outTime"
-                    :minute-increment="10"
-                  />
+                  <!--                  <v-date-picker-->
+                  <!--                    :class="-->
+                  <!--                      calendarState === 'out' ? 'calendar-out' : 'calendar'-->
+                  <!--                    "-->
+                  <!--                    mode="time"-->
+                  <!--                    v-model="outTime"-->
+                  <!--                    :minute-increment="10"-->
+                  <!--                  />-->
                 </div>
               </div>
             </div>

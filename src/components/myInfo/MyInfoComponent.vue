@@ -34,6 +34,7 @@ export default defineComponent({
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const studentInfo = ref<studentInterface | undefined>(undefined);
+    const studentEditInfo = ref<studentInterface | undefined>(undefined);
     const parentInfo = ref<parentInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const teacherEditInfo = ref<teacherInterface>({
@@ -128,6 +129,7 @@ export default defineComponent({
     return {
       category,
       studentInfo,
+      studentEditInfo,
       parentInfo,
       teacherInfo,
       teacherEditInfo,

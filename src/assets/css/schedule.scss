@@ -1285,3 +1285,52 @@ section.test {
     }
   }
 }
+
+section.lecture-report {
+  @include section-custom();
+
+  .lecture-report {
+    height: 100%;
+
+    &-section {
+      @include inner-section-custom();
+      max-width: 1200px;
+
+      &-tag {
+        @include tag-custom();
+      }
+
+      &-body {
+        @include body-custom();
+        height: 777px;
+
+        &-room {
+          position: relative;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 90%;
+          height: 90%;
+        }
+
+        &-content {
+          width: 100%;
+          height: 100%;
+
+          &-today {
+            position: absolute;
+            top: 20px;
+            left: 32px;
+            width: 100%;
+            font-size: 13px;
+            color: $sub-color;
+
+            i {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

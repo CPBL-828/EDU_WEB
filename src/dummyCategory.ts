@@ -270,7 +270,7 @@ export const KYO_SUB: categoryInterface[] = [
   {
     KEY: "LECTURE",
     VALUE: [
-      { KEY: "L-INFO", VALUE: "강의 조회" },
+      { KEY: "DETAIL", VALUE: "강의 조회" },
       { KEY: "ATTENDANCE", VALUE: "출결 현황" },
       { KEY: "ASSIGNMENT", VALUE: "과제" },
       { KEY: "REPORT", VALUE: "일지" },

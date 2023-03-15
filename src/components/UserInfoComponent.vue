@@ -542,7 +542,7 @@ export default defineComponent({
               <input
                 type="text"
                 v-model="search"
-                placeholder="강사명, 담당 학년, 담당 과목으로 검색"
+                placeholder="강사명, 담당 학년, 담당 과목 검색"
                 @keypress.enter="getUserList"
               />
             </div>

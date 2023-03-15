@@ -326,7 +326,7 @@ export default defineComponent({
                     :placeholder="typePlaceholder"
                     :select-list="typeList"
                     row-height="28px"
-                    row-width="220px"
+                    row-width="240px"
                     @selectValue="selectRoomType"
                   ></drop-box-component>
                 </div>

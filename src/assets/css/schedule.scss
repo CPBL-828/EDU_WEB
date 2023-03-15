@@ -33,7 +33,7 @@ section.current-schedule {
           top: 20px;
           left: 32px;
           width: 100%;
-          font-size: 13px;
+          font-size: 16px;
           color: $sub-color;
 
           i {
@@ -59,7 +59,7 @@ section.current-schedule {
             width: 200px;
             height: 100%;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             color: $sub-color;
             display: flex;
@@ -104,14 +104,16 @@ section.current-schedule {
 
             .info {
               width: 100%;
+              height: 90%;
               position: absolute;
-              top: 40px;
+              top: 20px;
               display: flex;
               flex-direction: column;
+              justify-content: space-between;
               align-items: center;
 
               &-no-data {
-                font-size: 14px;
+                font-size: 16px;
                 font-weight: bold;
                 color: #9e9e9e;
               }
@@ -121,8 +123,8 @@ section.current-schedule {
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-                margin-top: 26px;
-                font-size: 14px;
+                //margin-top: 26px;
+                font-size: 18px;
                 font-weight: bold;
                 color: $sub-color;
               }
@@ -131,11 +133,11 @@ section.current-schedule {
                 width: 114px;
                 height: 1px;
                 border-bottom: 2px solid $disable-color;
-                margin-top: 22px;
+                //margin-top: 22px;
               }
 
               div[class*="label"] {
-                font-size: 10px;
+                font-size: 16px;
                 font-weight: bold;
                 color: #9c9c9c;
               }
@@ -191,7 +193,7 @@ section.schedule-ask {
           top: 20px;
           left: 32px;
           width: 100%;
-          font-size: 13px;
+          font-size: 16px;
           color: $sub-color;
 
           i {
@@ -246,7 +248,7 @@ section.schedule-ask {
               top: 47px;
               left: 50%;
               transform: translateX(-50%);
-              font-size: 13px;
+              font-size: 16px;
               font-weight: bold;
               color: #a7a7a7;
             }
@@ -267,7 +269,7 @@ section.schedule-ask {
                 border: 2px solid $disable-color;
                 border-radius: 10px;
                 outline: 0;
-                font-size: 14px;
+                font-size: 16px;
                 font-weight: bold;
                 color: $sub-color;
                 text-align: center;
@@ -278,7 +280,7 @@ section.schedule-ask {
                 height: 28px;
                 background-color: #efefef;
                 border-radius: 8px;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: bold;
                 color: #9e9e9e;
                 display: flex;
@@ -317,7 +319,7 @@ section.schedule-ask {
                     select {
                       width: 48px;
                       height: 23px;
-                      font-size: 13px;
+                      font-size: 14px;
                       font-weight: bold;
                       background-color: $background-color;
                       border: 0;
@@ -358,7 +360,7 @@ section.schedule-ask {
 
                   > span {
                     position: absolute;
-                    font-size: 13px;
+                    font-size: 14px;
                     font-weight: bold;
                     color: $disable-color;
                     right: 10px;
@@ -381,7 +383,7 @@ section.schedule-ask {
                 border-radius: 10px;
                 background-color: #bdbdbd;
                 color: white;
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: bold;
                 border: 0;
                 cursor: pointer;
@@ -407,7 +409,7 @@ section.schedule-ask {
               border-radius: 10px;
               background-color: $primary-color;
               color: white;
-              font-size: 12px;
+              font-size: 16px;
               font-weight: bold;
               border: 0;
               cursor: pointer;
@@ -462,7 +464,7 @@ section.planner {
             thead {
               width: 100%;
               height: 43px;
-              font-size: 14px;
+              font-size: 20px;
               font-weight: bold;
               color: #343434;
               background-color: #eaeaea;
@@ -489,7 +491,7 @@ section.planner {
             tbody {
               tr {
                 height: 45px;
-                font-size: 14px;
+                font-size: 18px;
                 font-weight: normal;
                 color: $sub-color;
 
@@ -557,7 +559,7 @@ section.lecture-detail {
           position: absolute;
           top: 15px;
           left: 65px;
-          font-size: 12px;
+          font-size: 16px;
           color: $sub-color;
         }
 
@@ -566,7 +568,7 @@ section.lecture-detail {
           position: absolute;
           top: 21px;
           left: 39px;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: bold;
           color: #777777;
         }
@@ -601,7 +603,7 @@ section.lecture-detail {
               border-radius: 10px;
               background-color: #bdbdbd;
               color: white;
-              font-size: 12px;
+              font-size: 16px;
               font-weight: bold;
               cursor: pointer;
               transition: all 0.3s;
@@ -637,10 +639,15 @@ section.lecture-detail {
               cursor: pointer;
 
               span {
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: bold;
+                color: #9c9c9c;
+              }
+
+              span.lecture-name {
                 color: $sub-color;
               }
+
               span.room-name {
                 font-weight: normal;
                 margin-top: 7px;
@@ -671,7 +678,7 @@ section.lecture-detail {
                 width: 76px;
                 height: 24px;
                 border-radius: 10px;
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: bold;
                 cursor: pointer;
               }
@@ -735,7 +742,7 @@ section.lecture-detail {
 
               span {
                 display: block;
-                font-size: 13px;
+                font-size: 16px;
                 font-weight: bold;
                 color: #9c9c9c;
               }
@@ -752,11 +759,11 @@ section.lecture-detail {
               }
               span.title-label {
                 color: #9c9c9c;
-                font-size: 13px;
+                font-size: 16px;
               }
               span.title-item {
                 color: $sub-color;
-                font-size: 14px;
+                font-size: 16px;
               }
 
               .sap {
@@ -768,13 +775,13 @@ section.lecture-detail {
 
               span.label {
                 color: #9c9c9c;
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: bold;
               }
 
               span.item {
                 color: $sub-color;
-                font-size: 14px;
+                font-size: 18px;
                 font-weight: bold;
                 margin-bottom: 27px;
               }
@@ -789,7 +796,7 @@ section.lecture-detail {
                 border-radius: 10px;
                 background-color: #bdbdbd;
                 color: white;
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: bold;
                 transition: all 0.3s;
                 cursor: pointer;
@@ -802,14 +809,14 @@ section.lecture-detail {
 
               //이 밑으로 강의실 관리
               &-title {
-                font-size: 14px;
+                font-size: 16px;
                 font-weight: bold;
                 color: $sub-color;
                 margin-bottom: 29px;
               }
 
               input {
-                width: 220px;
+                width: 240px;
                 height: 28px;
                 border: 2px solid #e7e7e7;
                 border-radius: 10px;
@@ -817,7 +824,7 @@ section.lecture-detail {
                 margin-top: 5px;
                 margin-bottom: 26px;
                 font-weight: bold;
-                font-size: 12px;
+                font-size: 16px;
                 color: $sub-color;
                 outline: 0;
 
@@ -831,7 +838,7 @@ section.lecture-detail {
 
                 div.drop {
                   color: $disable-color;
-                  font-size: 12px;
+                  font-size: 16px;
                   border: 2px solid #e7e7e7;
 
                   &-list-opened {
@@ -847,7 +854,7 @@ section.lecture-detail {
                 border: 0;
                 border-radius: 10px;
                 text-align: center;
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: bold;
                 color: white;
                 outline: 0;
@@ -905,7 +912,7 @@ section.assignment {
             position: absolute;
             top: 45px;
             left: 96px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
 
             .lecture-name {
@@ -934,7 +941,7 @@ section.assignment {
                 border: 0;
                 border-radius: 10px;
                 background-color: $primary-color;
-                font-size: 12px;
+                font-size: 16px;
                 font-weight: bold;
                 color: white;
                 cursor: pointer;
@@ -1001,13 +1008,13 @@ section.attendance {
 
           &-title {
             top: 30px;
-            font-size: 17px;
+            font-size: 16px;
             color: #9e9e9e;
           }
 
           &-lecture {
             top: 60px;
-            font-size: 16px;
+            font-size: 18px;
             color: $sub-color;
           }
 
@@ -1068,7 +1075,7 @@ section.check {
           top: 20px;
           left: 32px;
           width: 100%;
-          font-size: 13px;
+          font-size: 16px;
           color: $sub-color;
 
           i {
@@ -1105,7 +1112,7 @@ section.check {
               border: 0;
               border-radius: 19px;
               color: white;
-              font-size: 13px;
+              font-size: 16px;
               font-weight: bold;
               cursor: pointer;
               transition: all 0.2s;
@@ -1136,14 +1143,14 @@ section.check {
             text-align: center;
             border-spacing: 0;
             width: 100%;
-            font-size: 14px;
+            font-size: 18px;
             font-weight: bold;
             color: #343434;
 
             thead {
               tr {
                 width: 100%;
-                height: 40px;
+                height: 50px;
 
                 td {
                   background-color: #eaeaea;
@@ -1156,7 +1163,7 @@ section.check {
 
               tr {
                 width: 100%;
-                height: 40px;
+                height: 60px;
 
                 td {
                   width: 20%;
@@ -1260,7 +1267,7 @@ section.test {
             position: absolute;
             top: 45px;
             left: 96px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
 
             .lecture-name {
@@ -1322,7 +1329,7 @@ section.lecture-report {
             top: 20px;
             left: 32px;
             width: 100%;
-            font-size: 13px;
+            font-size: 16px;
             color: $sub-color;
 
             i {

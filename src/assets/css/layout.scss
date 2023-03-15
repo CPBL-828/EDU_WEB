@@ -12,7 +12,7 @@ section.header {
       position: absolute;
       right: 10%;
       bottom: 10%;
-      font-size: 15px;
+      font-size: 16px;
       color: $sub-color;
 
       i {
@@ -54,13 +54,14 @@ div.away {
 
       &-logout {
         color: white;
-        font-size: 12px;
+        font-size: 14px;
         position: absolute;
         bottom: 5%;
         left: 50%;
         transform: translateX(-50%);
         cursor: pointer;
         transition: all 0.2s;
+
         z &:hover {
           font-weight: bold;
         }
@@ -108,6 +109,7 @@ div.away {
             border: 2px solid white;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 18px;
 
             &:hover {
               border: 2px solid rgba(204, 204, 204, 0.2);
@@ -171,8 +173,9 @@ section.category {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      margin-bottom: 5px;
       height: 88px;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s;
@@ -182,8 +185,8 @@ section.category {
       }
 
       i {
-        font-size: 26px;
-        margin-bottom: 8px;
+        font-size: 28px;
+        margin-bottom: 5px;
       }
     }
   }
@@ -247,7 +250,7 @@ section.data-list {
       border-spacing: 0;
 
       thead {
-        font-size: 16px;
+        font-size: 20px;
         font-weight: bold;
         width: 100%;
 
@@ -260,6 +263,7 @@ section.data-list {
 
       tbody {
         width: 700px;
+        font-size: 18px;
 
         tr {
           width: 100%;
@@ -339,7 +343,7 @@ section.pagination {
       color: $disable-color;
       padding: 0 10px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       transition: all 0.2s;
 
       &:hover {
@@ -435,7 +439,7 @@ section.card {
 
         &-name {
           display: flex;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: bold;
           color: $sub-color;
           height: 30px;
@@ -469,7 +473,7 @@ section.card {
 
         &-phone {
           display: flex;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: bold;
           color: $sub-color;
           margin-top: 14px;
@@ -546,7 +550,7 @@ section.card {
         border-radius: 10px;
         background-color: $primary-color;
         color: white;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: bold;
         margin-left: 10px;
         cursor: pointer;
@@ -573,7 +577,7 @@ section.drop {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     color: $sub-color;
     background-color: white;
@@ -600,7 +604,7 @@ section.drop {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
     background-color: white;
     box-shadow: 4px 4px 5px 0 rgba(86, 86, 86, 0.15);
@@ -651,13 +655,13 @@ section.select {
       height: 100%;
       display: flex;
       align-items: center;
-      font-size: 12px;
+      font-size: 16px;
       color: $sub-color;
 
       > div {
         width: calc(100% / 2);
         height: 100%;
-        font-size: 11px;
+        font-size: 16px;
         font-weight: bold;
         display: flex;
         justify-content: center;
@@ -721,7 +725,7 @@ section.schedule {
 
       > span {
         width: 30px;
-        font-size: 12px;
+        font-size: 16px;
         height: 60px;
         border: 1px solid white;
         border-left: 0;
@@ -743,7 +747,7 @@ section.schedule {
         width: 115px;
         background-color: rgba(217, 217, 217, 0.3);
         height: 30px;
-        font-size: 13px;
+        font-size: 16px;
         font-weight: bold;
         display: flex;
         justify-content: center;
@@ -760,7 +764,6 @@ section.schedule {
         .ten-minute {
           height: 10px;
           width: 80px;
-          font-size: 10px;
         }
       }
     }
@@ -785,7 +788,7 @@ section.schedule {
       height: 0;
       background-color: #32adff;
       color: white;
-      font-size: 12px;
+      font-size: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -818,13 +821,13 @@ section.select-lecture {
       flex-direction: column;
 
       &-teacher {
-        font-size: 15px;
+        font-size: 20px;
         font-weight: bold;
         color: #777777;
       }
 
       &-tip {
-        font-size: 11px;
+        font-size: 16px;
         color: $disable-color;
       }
 
@@ -866,7 +869,7 @@ section.select-lecture {
           position: absolute;
           top: 34px;
           left: 15px;
-          font-size: 16px;
+          font-size: 20px;
           font-weight: bold;
         }
 
@@ -874,14 +877,14 @@ section.select-lecture {
           position: absolute;
           top: 95px;
           left: 15px;
-          font-size: 12px;
+          font-size: 20px;
         }
 
         &-view {
           position: absolute;
           bottom: 16px;
           right: 15px;
-          font-size: 12px;
+          font-size: 16px;
           font-weight: bold;
           opacity: 0.6;
           transition: all 200ms;
@@ -890,7 +893,7 @@ section.select-lecture {
         &:hover {
           .select-lecture-list-item-view {
             opacity: 1;
-            font-size: 13px;
+            font-size: 18px;
           }
         }
       }

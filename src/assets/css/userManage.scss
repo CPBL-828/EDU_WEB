@@ -20,7 +20,7 @@ section.user-info {
         height: 800px;
 
         span.back {
-          font-size: 14px;
+          font-size: 16px;
           color: $disable-color;
           cursor: pointer;
           margin-left: 7px;
@@ -64,6 +64,7 @@ section.user-info {
               border: 0;
               outline: 0;
               margin-left: 13px;
+              font-size: 16px;
               font-weight: bold;
 
               &::placeholder {
@@ -86,6 +87,7 @@ section.user-info {
             border: 2px solid $primary-color;
             background-color: white;
             color: $primary-color;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
@@ -114,7 +116,7 @@ section.user-info {
           top: 27px;
           right: 31px;
           color: $sub-color;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: bold;
         }
       }
@@ -147,7 +149,7 @@ section.student-insert {
           position: absolute;
           top: 5px;
           left: 10px;
-          font-size: 14px;
+          font-size: 16px;
           color: $disable-color;
           cursor: pointer;
           transition: all 100ms;
@@ -165,13 +167,13 @@ section.student-insert {
           align-items: center;
 
           span.tip {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             color: $sub-color;
           }
 
           span.label {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             color: #777777;
           }
@@ -184,6 +186,7 @@ section.student-insert {
             padding-left: 5px;
             margin: 5px 0 25px 0;
             outline: 0;
+            font-size: 16px;
           }
 
           &-new,
@@ -208,7 +211,7 @@ section.student-insert {
               border: 2px solid $primary-color;
               border-radius: 8px;
               color: white;
-              font-size: 14px;
+              font-size: 16px;
               font-weight: bold;
               cursor: pointer;
               transition: all 200ms;
@@ -268,7 +271,7 @@ section.student-insert {
                   top: 0;
                   background-color: $disable-color;
                   color: white;
-
+                  font-size: 16px;
                   tr {
                     height: 30px;
 
@@ -284,10 +287,11 @@ section.student-insert {
                   tr {
                     cursor: pointer;
                     transition: all 150ms;
+                    font-size: 16px;
 
                     &:hover {
                       background-color: $background-color;
-                      font-size: 17px;
+                      font-size: 18px;
                       font-weight: bold;
                     }
 
@@ -312,6 +316,7 @@ section.student-insert {
           border: 2px solid $primary-color;
           background-color: white;
           color: $primary-color;
+          font-size: 16px;
           font-weight: bold;
           cursor: pointer;
           transition: all 0.2s;
@@ -327,7 +332,7 @@ section.student-insert {
           top: 50%;
           transform: translateY(-50%);
           height: 300px;
-          width: 700px;
+          width: 830px;
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
@@ -347,7 +352,7 @@ section.student-insert {
             span {
               display: block;
               text-align: center;
-              font-size: 13px;
+              font-size: 16px;
               color: $sub-color;
               cursor: default;
             }
@@ -371,11 +376,15 @@ section.student-insert {
 
           &-info {
             height: 300px;
-            font-size: 13px;
+            font-size: 16px;
             color: $sub-color;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+
+            span {
+              margin-bottom: 5px;
+            }
 
             div[class*="info-"] {
               display: flex;
@@ -406,6 +415,7 @@ section.student-insert {
               outline: 0;
               color: #363636;
               padding-left: 5px;
+              font-size: 16px;
 
               &::placeholder {
                 font-weight: bold;
@@ -442,7 +452,7 @@ section.consult {
     height: 100%;
 
     .go-back {
-      font-size: 14px;
+      font-size: 16px;
       position: absolute;
       top: 10px;
       right: 10px;
@@ -496,7 +506,7 @@ section.consult {
           position: absolute;
           top: 11px;
           left: 47px;
-          font-size: 13px;
+          font-size: 16px;
           font-weight: bold;
           color: $disable-color;
         }
@@ -520,7 +530,7 @@ section.consult {
             border-radius: 10px;
             color: $sub-color;
             background-color: white;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             cursor: default;
 
@@ -551,7 +561,7 @@ section.consult {
             border-radius: 10px;
             color: $sub-color;
             background-color: white;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             cursor: default;
 
@@ -605,7 +615,7 @@ section.consult {
             height: 34px;
             border-radius: 10px;
             background-color: white;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
 
             i[class*="user"],
@@ -627,7 +637,7 @@ section.consult {
               border: 0;
               outline: 0;
               padding: 0 5px;
-              font-size: 14px;
+              font-size: 16px;
               color: $sub-color;
               font-weight: bold;
 
@@ -684,7 +694,7 @@ section.consult {
           position: absolute;
           top: 16px;
           left: 47px;
-          font-size: 13px;
+          font-size: 16px;
           font-weight: bold;
           color: $disable-color;
         }
@@ -708,7 +718,7 @@ section.consult {
             border-radius: 10px;
             color: $sub-color;
             background-color: white;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             cursor: default;
 
@@ -767,7 +777,7 @@ section.consult {
           &-item {
             display: flex;
             height: 34px;
-            font-size: 16px;
+            font-size: 18px;
             color: $sub-color;
             margin-bottom: 17px;
             cursor: default;
@@ -889,7 +899,7 @@ section.consult {
             border-radius: 10px;
             color: $sub-color;
             background-color: white;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             cursor: default;
 
@@ -1007,7 +1017,7 @@ section.analysis-component {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            font-size: 14px;
+            font-size: 18px;
             font-weight: bold;
             color: #343434;
 
@@ -1035,7 +1045,7 @@ section.analysis-component {
               border-bottom: 2px solid #efefef;
               align-items: center;
               color: $sub-color;
-              font-size: 13px;
+              font-size: 18px;
 
               &:hover {
                 background-color: $background-color;
@@ -1090,7 +1100,7 @@ section.analysis-content {
           left: 7px;
           color: $disable-color;
           font-weight: bold;
-          font-size: 13px;
+          font-size: 16px;
           cursor: pointer;
 
           i {
@@ -1112,7 +1122,7 @@ section.analysis-content {
           left: 67px;
 
           &-label {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             color: $disable-color;
             margin-bottom: 10px;
@@ -1147,14 +1157,14 @@ section.analysis-content {
           &-write {
             position: absolute;
             right: 0;
-            font-size: 13px;
+            font-size: 16px;
             font-weight: bold;
             color: $sub-color;
             cursor: pointer;
 
             i {
               margin-right: 5px;
-              font-size: 15px;
+              font-size: 18px;
               color: $primary-color;
             }
 

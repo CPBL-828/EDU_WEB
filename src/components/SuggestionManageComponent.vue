@@ -243,13 +243,13 @@ export default defineComponent({
               }}
             </div>
             <div
-              style="white-space: pre"
+              style="word-break: break-all; word-wrap: break-word"
               class="suggestion-section-body-write-content"
             >
               {{ suggestDetail ? suggestDetail?.content : "건의 내용" }}
             </div>
             <div
-              style="white-space: pre"
+              style="word-break: break-all; word-wrap: break-word"
               class="suggestion-section-body-write-answer"
               v-if="suggestDetail?.answer"
             >

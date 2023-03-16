@@ -117,6 +117,7 @@ div.away {
             }
 
             &-active {
+              font-size: 18px;
               font-weight: bold;
               display: flex;
               align-content: center;
@@ -175,7 +176,7 @@ section.category {
       justify-content: center;
       margin-bottom: 5px;
       height: 88px;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s;

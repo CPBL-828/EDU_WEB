@@ -2,6 +2,7 @@
 import { defineComponent, onMounted, ref } from "vue";
 import {
   defaultInterface,
+  studentInterface,
   suggestInterface,
   teacherInterface,
 } from "../../lib/types";
@@ -34,6 +35,7 @@ export default defineComponent({
     const userKey = ref<string>("");
     const userType = ref<string>("");
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
+    const studentInfo = ref<studentInterface | undefined>(undefined);
     const selectState = ref("ok");
     const selectItem = ref<Array<defaultInterface>>([
       { KEY: "ok", VALUE: "처리 완료" },
@@ -126,7 +128,9 @@ export default defineComponent({
 
       let data = {
         writerKey: userKey.value,
-        writerName: teacherInfo.value?.name,
+        writerName: teacherInfo.value
+          ? teacherInfo.value.name
+          : studentInfo.value?.name,
         writerType: userType.value,
         type: consultType.value,
         content: content.value,
@@ -157,10 +161,14 @@ export default defineComponent({
       category.value = common.findCategory();
 
       if (common.getItem(KEYS.LU)) {
-        if (common.getItem(KEYS.UK).userKey === "TEA") {
+        if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
           userKey.value = common.getItem(KEYS.LU).teacherKey;
           userType.value = USER_KEY.TEA;
           teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+        } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
+          userKey.value = common.getItem(KEYS.LU).studentKey;
+          userType.value = USER_KEY.STU;
+          studentInfo.value = common.getItem(KEYS.LU) as studentInterface;
         }
       }
 

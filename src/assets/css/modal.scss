@@ -420,7 +420,7 @@ section.modal {
 
               input {
                 width: 169px;
-                height: 30px;
+                height: 25px;
                 border: 2px solid #d9d9d9;
                 border-radius: 8px;
                 color: #9c9c9c;
@@ -428,13 +428,12 @@ section.modal {
                 margin-top: 5px;
                 margin-bottom: 17px;
                 padding-left: 11px;
-              }
-
-              input.sns-item {
-                width: 357px;
+                font-size: 16px;
               }
 
               &-left {
+                width: 169px;
+
                 span.sns-item {
                   display: flex;
                   align-items: center;
@@ -475,6 +474,8 @@ section.modal {
               }
 
               &-right {
+                width: 169px;
+
                 span.join-item {
                   margin-bottom: 0;
                 }

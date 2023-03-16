@@ -78,6 +78,7 @@ export default defineComponent({
         link: teacherEditInfo.value.link,
         phone: teacherEditInfo.value.phone,
       };
+
       if (teacherInfo.value?.email !== teacherEditInfo.value.email) {
       } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
       } else if (teacherInfo.value?.link !== teacherEditInfo.value.link) {

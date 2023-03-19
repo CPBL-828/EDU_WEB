@@ -310,6 +310,19 @@ section.modal {
       }
 
       // user-detail
+      span.del-btn {
+        position: absolute;
+        top: 50px;
+        right: 20px;
+        font-size: 14px;
+        color: red;
+        cursor: pointer;
+        opacity: 0.5;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
       span.tip {
         position: absolute;
         left: 50%;

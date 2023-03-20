@@ -773,7 +773,7 @@ export default defineComponent({
         </div>
       </template>
       <template v-slot:body>
-        <span class="del-btn" @click="deleteUser"
+        <span class="del-btn" @click="deleteUser" v-if="adminState"
           >{{ teacherInfo ? "강사" : "학생" }} 정보 삭제하기</span
         >
         <span class="tip">특이사항을 열람하려면 아래로 스크롤 하세요.</span>

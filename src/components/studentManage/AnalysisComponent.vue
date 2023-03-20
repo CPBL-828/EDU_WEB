@@ -193,7 +193,7 @@ export default defineComponent({
       () => date.value,
       async () => {
         if (date.value) {
-          selectDate.value = date.value?.toISOString().substring(0, 10);
+          selectDate.value = date.value?.toLocaleDateString().split('/')[2] + '-' + date.value?.toLocaleDateString().split('/')[1] + '-' + date.value?.toLocaleDateString().split('/')[0];
           await getAnalysisList();
         } else {
           window.alert("날짜를 선택해 주세요.");
@@ -214,7 +214,7 @@ export default defineComponent({
       if (common.getItem(KEYS.SS)) {
         selectedStudent.value = common.getItem(KEYS.SS);
         selectStudentState.value = true;
-        selectDate.value = date.value.toISOString().substring(0, 10);
+        selectDate.value = date.value.toLocaleDateString().split('/')[2] + '-' + date.value.toLocaleDateString().split('/')[1] + '-' + date.value.toLocaleDateString().split('/')[0];
 
         await getAnalysisList();
       }

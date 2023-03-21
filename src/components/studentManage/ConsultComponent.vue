@@ -352,6 +352,30 @@ export default defineComponent({
       document.getElementById("consult")?.scrollTo(0, 0);
     };
 
+    const deleteConsult = async () => {
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        let data = {
+          consultKey: listConsultDetail.value?.consultKey,
+        };
+
+        const result = await ApiClient(
+          "/info/deleteConsult/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.DELETE) {
+            window.alert("성공적으로 삭제했습니다.");
+            router.go(0);
+          }
+        } else {
+          window.alert("삭제를 실패했습니다.");
+        }
+      } else {
+        return false;
+      }
+    };
+
     const removeFilter = async (s: string) => {
       consultType.value = "";
       student.value = { KEY: "", VALUE: "" };
@@ -508,6 +532,7 @@ export default defineComponent({
       openInsertPopup,
       doInput,
       showConsultDetail,
+      deleteConsult,
       removeFilter,
     };
   },
@@ -802,6 +827,7 @@ export default defineComponent({
       :title="selectSection === 'list' ? '상담 결과 조회' : '상담 결과 입력'"
     >
       <template v-slot:body v-if="selectSection === 'list'">
+        <span class="del-btn" @click="deleteConsult">상담 내용 삭제하기</span>
         <div class="consult-detail">
           <div class="consult-detail-section">
             <div class="consult-detail-section-header-list">

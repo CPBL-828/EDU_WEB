@@ -48,7 +48,13 @@ export default defineComponent({
     const studentList = ref<studentInterface[] | undefined>(undefined);
     const selectStudentState = ref(false);
     const selectedStudent = ref<studentInterface | undefined>(undefined);
-    const date = ref<Date>(new Date());
+    const date = ref<string>(
+      new Date().toLocaleDateString().split("/")[2] +
+        "-" +
+        new Date().toLocaleDateString().split("/")[1] +
+        "-" +
+        new Date().toLocaleDateString().split("/")[0]
+    );
     const selectDate = ref<string>("");
 
     const headerList: defaultInterface[] = [
@@ -148,7 +154,7 @@ export default defineComponent({
     const selectStudent = async (s: studentInterface) => {
       selectedStudent.value = s;
       common.setItem(KEYS.SS, common.makeJson(selectedStudent.value));
-      selectDate.value = date.value.toISOString().substring(0, 10);
+      selectDate.value = date.value.substring(0, 10);
 
       await getAnalysisList();
       selectStudentState.value = true;
@@ -189,11 +195,40 @@ export default defineComponent({
       openModal("view");
     };
 
+    const deleteAnalysis = async () => {
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        let data = {
+          analysisKey: analysisDetail.value?.analysisKey,
+        };
+
+        const result = await ApiClient(
+          "/info/deleteAnalysis/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.DELETE) {
+            window.alert("성공적으로 삭제했습니다.");
+            router.go(0);
+          }
+        } else {
+          window.alert("삭제를 실패했습니다.");
+        }
+      } else {
+        return false;
+      }
+    };
+
     watch(
       () => date.value,
       async () => {
         if (date.value) {
-          selectDate.value = date.value?.toISOString().substring(0, 10);
+          selectDate.value =
+            date.value?.split("/")[2] +
+            "-" +
+            date.value?.split("/")[1] +
+            "-" +
+            date.value?.split("/")[0];
           await getAnalysisList();
         } else {
           window.alert("날짜를 선택해 주세요.");
@@ -214,7 +249,6 @@ export default defineComponent({
       if (common.getItem(KEYS.SS)) {
         selectedStudent.value = common.getItem(KEYS.SS);
         selectStudentState.value = true;
-        selectDate.value = date.value.toISOString().substring(0, 10);
 
         await getAnalysisList();
       }
@@ -249,6 +283,7 @@ export default defineComponent({
       openModal,
       insertAnalysis,
       showAnalysisDetail,
+      deleteAnalysis,
     };
   },
 });
@@ -381,6 +416,7 @@ export default defineComponent({
       </template>
 
       <template v-slot:body v-if="modalState === 'view'">
+        <span class="del-btn" @click="deleteAnalysis">분석 내용 삭제하기</span>
         <div class="analysis-detail">
           <div class="analysis-detail-header">
             <div class="analysis-detail-header-date">

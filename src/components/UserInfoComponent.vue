@@ -463,8 +463,6 @@ export default defineComponent({
       teacherEditInfo.value.link = t.link;
 
       store.commit("setModalState", true);
-
-      // console.log(teacherInfo.value);
     };
 
     const changeEditState = () => {
@@ -554,32 +552,46 @@ export default defineComponent({
     };
 
     const deleteUser = async () => {
-      if (studentInfo.value) {
-        let data = {
-          studentKey: studentInfo.value?.studentKey,
-        };
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        if (studentInfo.value) {
+          let data = {
+            studentKey: studentInfo.value?.studentKey,
+          };
 
-        // console.log(data);
+          const result = await ApiClient(
+              "/members/deleteStudent/",
+              common.makeJson(data)
+          );
 
-        const result = await ApiClient(
-          "/members/deleteStudent",
-          common.makeJson(data)
-        );
+          if (result) {
+            if (result.chunbae === RESULT_KEY.DELETE) {
+              window.alert("성공적으로 삭제했습니다.");
+              router.go(0);
+            }
+          } else {
+            window.alert("삭제를 실패했습니다.");
+          }
+        } else {
+          let data = {
+            teacherKey: teacherInfo.value?.teacherKey,
+          };
 
-        // console.log(result);
+          const result = await ApiClient(
+              "/members/deleteTeacher/",
+              common.makeJson(data)
+          );
+
+          if (result) {
+            if (result.chunbae === RESULT_KEY.DELETE) {
+              window.alert("성공적으로 삭제했습니다.");
+              router.go(0);
+            }
+          } else {
+            window.alert("삭제를 실패했습니다.");
+          }
+        }
       } else {
-        let data = {
-          teacherKey: teacherInfo.value?.teacherKey,
-        };
-
-        // console.log(data);
-
-        const result = await ApiClient(
-          "/members/deleteTeacher",
-          common.makeJson(data)
-        );
-
-        // console.log(data);
+        return false;
       }
     };
 
@@ -761,7 +773,7 @@ export default defineComponent({
         </div>
       </template>
       <template v-slot:body>
-        <span class="del-btn" @click="deleteUser"
+        <span class="del-btn" @click="deleteUser" v-if="adminState"
           >{{ teacherInfo ? "강사" : "학생" }} 정보 삭제하기</span
         >
         <span class="tip">특이사항을 열람하려면 아래로 스크롤 하세요.</span>

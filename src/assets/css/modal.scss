@@ -1065,8 +1065,23 @@ section.modal {
       }
 
       //analysis detail
+      span.del-btn {
+        position: absolute;
+        top: 20px;
+        right: 60px;
+        font-size: 14px;
+        color: red;
+        cursor: pointer;
+        opacity: 0.5;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+
       .analysis-detail {
         @include detail-custom();
+
 
         &-header {
           position: absolute;

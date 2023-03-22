@@ -7,10 +7,13 @@ import {
   scheduleInterface,
 } from "../../lib/types";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
-import { KEYS, USER_KEY } from "../../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import TimetableComponent from "../custom/TimetableComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
+import { useStore } from "vuex";
+import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import { useRouter } from "vue-router";
 /*
 @brief [강사] [Main]시간표 관리 [Sub]시간표 건의
        강의실 선택 시, 해당 강의실을 시간표 표시
@@ -18,17 +21,27 @@ import DropBoxComponent from "../custom/DropBoxComponent.vue";
  */
 export default defineComponent({
   name: "ScheduleAskComponent",
-  components: { DropBoxComponent, SelectButtonComponent, TimetableComponent },
+  components: {
+    ModalPopupComponent,
+    DropBoxComponent,
+    SelectButtonComponent,
+    TimetableComponent,
+  },
   setup() {
+    const router = useRouter();
+    const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const roomKey = ref<string | undefined>(undefined);
+    const roomName = ref<string>("");
     const scheduleName = ref<string>("");
     const selectedDay = ref<string>("");
     const time = ref<Date>(new Date());
     const duration = ref<number>();
+    const book = ref<string>("");
     const roomList = ref<Array<roomInterface> | undefined>(undefined);
     const selectRoomList = ref<Array<defaultInterface>>([]);
+    const days: Array<string> = ["월", "화", "수", "목", "금", "토", "일"];
     const selectDayList = ref<Array<defaultInterface>>([
       { KEY: "mon", VALUE: "월" },
       { KEY: "tue", VALUE: "화" },
@@ -100,6 +113,7 @@ export default defineComponent({
 
     const selectRoom = async (r: defaultInterface) => {
       roomKey.value = r.KEY;
+      roomName.value = r.VALUE as string;
       await getScheduleList();
     };
 
@@ -107,24 +121,95 @@ export default defineComponent({
       selectedDay.value = d.VALUE as string;
     };
 
+    const openBookModal = () => {
+      store.commit("setModalState", true);
+    };
+
+    const insertBook = () => {
+      if (!book.value) {
+        if (
+          window.confirm("입력된 교재명이 없습니다.\n입력을 취소하시겠어요?")
+        ) {
+          store.commit("setModalState", false);
+        } else {
+          return false;
+        }
+      } else {
+        window.alert("성공적으로 입력했습니다.");
+        store.commit("setModalState", false);
+      }
+    };
+
     //TODO...
     const insertAsk = async () => {
-      let data = {
-        roomKey: roomKey.value,
-        teacherKey: userKey.value,
-        lectureName: "",
-        roomName: "",
-        teacherName: "",
-        type: "",
-        subject: "",
-        book: "",
-        target: "",
-        day: "",
-        startTime: "",
-        duration: "",
-        progress: "",
-        reason: "",
-      };
+      if (!roomKey.value) {
+        window.alert("강의실을 선택해 주세요.");
+        return false;
+      } else if (!scheduleName.value) {
+        window.alert("강의명을 입력해 주세요.");
+        return false;
+      } else if (!selectedDay.value) {
+        window.alert("요일을 선택해 주세요.");
+        return false;
+      } else if (!duration.value) {
+        window.alert("수업 진행 시간을 입력해 주세요.");
+        return false;
+      } else if (!book.value) {
+        window.alert("교재명을 입력해 주세요.");
+        return false;
+      }
+
+      if (
+        window.confirm(
+          "한 번 등록된 건의사항은 수정 및 삭제가 불가합니다.\n시간표 건의를 최종 등록하시겠습니까?"
+        )
+      ) {
+        let data = {
+          roomKey: roomKey.value,
+          teacherKey: userKey.value,
+          lectureName: scheduleName.value,
+          roomName: roomName.value,
+          teacherName: common.getItem(KEYS.LU).name,
+          type: "1인", //TODO 강의유형 selectBox 만들어야 함
+          subject: common.getItem(KEYS.LU).resSubject,
+          book: book.value,
+          target: common.getItem(KEYS.LU).part,
+          day: days.indexOf(selectedDay.value),
+          startTime: time.value
+            .toLocaleTimeString()
+            .replace(":", "-")
+            .split(":")[0],
+          duration: duration.value,
+          reason: "",
+        };
+
+        const result = await ApiClient(
+          "/lectures/createLecturePlan/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.CREATE) {
+            if (
+              window.confirm(
+                scheduleName.value +
+                  " 강의가 성공적으로 건의 목록에 등록되었습니다.\n계획서를 작성하시겠습니까?"
+              )
+            ) {
+              common.removeItem(KEYS.SR);
+              common.setItem(KEYS.SR, common.makeJson({ sr: "plan" }));
+              await router.push("/schedule/plan");
+            } else {
+              return false;
+            }
+          }
+        } else {
+          window.alert("시간표 건의에 실패했습니다.");
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     onMounted(async () => {
@@ -143,6 +228,7 @@ export default defineComponent({
       selectedDay,
       time,
       duration,
+      book,
       roomList,
       selectRoomList,
       selectDayList,
@@ -152,6 +238,8 @@ export default defineComponent({
       changeState,
       selectRoom,
       selectDay,
+      openBookModal,
+      insertBook,
       insertAsk,
     };
   },
@@ -256,6 +344,7 @@ export default defineComponent({
                 </button>
                 <button
                   class="schedule-ask-section-body-info-container-etc-book"
+                  @click="openBookModal"
                 >
                   교재 링크 입력하기
                 </button>
@@ -271,5 +360,23 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
+    <modal-popup-component
+      title="교재 입력하기"
+      modal-height="200px"
+      modal-width="700px"
+    >
+      <template v-slot:button>
+        <div class="btn">
+          <div class="btn-save-active" @click="insertBook">저장하기</div>
+        </div>
+      </template>
+      <template v-slot:body>
+        <div class="insert-book">
+          <span class="tip">교재명을 입력해 주세요.</span>
+          <input type="text" class="insert-book-input" v-model="book" />
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 </template>

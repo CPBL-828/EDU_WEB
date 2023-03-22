@@ -183,7 +183,7 @@ export default defineComponent({
             <div class="current-schedule-section-body-info-container">
               <div class="info" v-if="!scheduleInfo">
                 <div class="info-no-data">강의를 선택해 주세요</div>
-                <div class="info-underline"></div>
+                <div class="info-underline" v-if="scheduleInfo"></div>
               </div>
               <div class="info" v-if="scheduleInfo">
                 <div class="info-name">{{ scheduleInfo.lectureName }}</div>

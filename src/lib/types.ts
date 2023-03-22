@@ -99,6 +99,7 @@ export interface scheduleInterface {
   roomName: string;
   type: string;
   subject: string;
+  color: string;
   book: string;
   target: string;
   day: number;

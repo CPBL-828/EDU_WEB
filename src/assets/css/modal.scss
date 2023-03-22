@@ -1082,7 +1082,6 @@ section.modal {
       .analysis-detail {
         @include detail-custom();
 
-
         &-header {
           position: absolute;
           top: 25px;
@@ -1266,6 +1265,27 @@ section.modal {
                 }
               }
             }
+          }
+        }
+      }
+
+      // insert-book
+      .insert-book {
+        input {
+          position: absolute;
+          top: 55%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 500px;
+          height: 40px;
+          outline: 2px solid $disable-color;
+          border: 0;
+          border-radius: 18px;
+          padding-left: 10px;
+          font-size: 16px;
+
+          &:focus {
+            outline: 2px solid $sub-color;
           }
         }
       }

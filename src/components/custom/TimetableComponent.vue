@@ -20,20 +20,6 @@ export default defineComponent({
     const blockState = ref(false);
     const viewScheduleList = ref<Array<scheduleInterface>>([]);
     const scheduleInfo = ref<scheduleInterface>();
-    const color = ref<Array<string>>([
-      "#d57a7b",
-      "#e39177",
-      "#eeb958",
-      "#80bdca",
-      "#678cbf",
-      "#a4a6d2",
-      "#cc6699",
-      "#e55c65",
-      "#e58a4e",
-      "#74c29a",
-      "#5db7ad",
-      "#98b6cd",
-    ]);
 
     const setViewList = () => {
       if (props.scheduleList) {
@@ -69,15 +55,12 @@ export default defineComponent({
 
     onMounted(() => {
       setViewList();
-
-      color.value = color.value.sort(() => Math.random() - 0.5);
     });
 
     return {
       blockState,
       viewScheduleList,
       scheduleInfo,
-      color,
     };
   },
 });
@@ -111,14 +94,15 @@ export default defineComponent({
         v-if="blockState && selectType === 'pm'"
         class="schedule-block"
         id="block"
-        v-for="(item, index) in viewScheduleList"
+        v-for="item in viewScheduleList"
         :style="{
-          backgroundColor: color[index],
+          backgroundColor: item.color,
           position: 'absolute',
           height: item.duration + 'px',
           top:
             (item.start - 12) * 6 * 10 +
-            (item.start - 12 + 1) -
+            (item.start - 12) -
+            1 -
             60 +
             item.minute +
             'px',
@@ -133,9 +117,9 @@ export default defineComponent({
         v-if="blockState && selectType === 'am'"
         class="schedule-block"
         id="block"
-        v-for="(item, index) in viewScheduleList"
+        v-for="item in viewScheduleList"
         :style="{
-          backgroundColor: color[index],
+          backgroundColor: item.color,
           position: 'absolute',
           height: item.duration + 'px',
           top: item.start * 6 * 10 + (item.start + 1) - 60 + item.minute + 'px',

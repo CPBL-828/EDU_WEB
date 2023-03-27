@@ -30,7 +30,7 @@ export default defineComponent({
       { KEY: "day", VALUE: "요일" },
       { KEY: "time", VALUE: "시작 시간" },
       { KEY: "progress", VALUE: "처리 상태" },
-      { KEY: "planner", VALUE: "강의 계획서 작성" },
+      { KEY: "planner", VALUE: "강의 계획서" },
     ];
     const scheduleList = ref<Array<scheduleInterface>>([]);
     const showScheduleList = ref<Array<scheduleInterface>>([]);
@@ -160,7 +160,18 @@ export default defineComponent({
                   >
                     {{ item.progress }}
                   </td>
-                  <td class="planner">강의 계획서 작성하러 가기</td>
+                  <td class="planner">
+                    <label
+                      :for="item.lectureKey + 'input-file'"
+                      class="btn-input"
+                      >첨부하기</label
+                    >
+                    <input
+                      type="file"
+                      :id="item.lectureKey + 'input-file'"
+                      :style="{ display: 'none' }"
+                    />
+                  </td>
                 </tr>
               </tbody>
             </table>

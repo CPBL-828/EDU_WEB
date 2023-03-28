@@ -2,7 +2,7 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import common from "../../lib/common";
 import { defaultInterface, scheduleInterface } from "../../lib/types";
-import { ApiClient } from "../../axios";
+import { ApiClient, downloadWithAxios } from "../../axios";
 import { KEYS, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 /*
@@ -14,7 +14,8 @@ export default defineComponent({
   name: "PlanMakeComponent",
   components: { PaginationComponent },
   setup() {
-    const userKey = ref<string | undefined>(undefined);
+    const userKey = ref<string>("");
+    const adminState = ref(false);
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const day: Array<string> = [
       "월요일",
@@ -82,6 +83,10 @@ export default defineComponent({
       else currentPage.value = currentPage.value - 1;
     };
 
+    const downloadPlanner = () => {
+      window.alert("준비 중인 기능입니다.");
+    };
+
     watch(
       () => currentPage.value,
       () => {
@@ -98,6 +103,11 @@ export default defineComponent({
       if (common.getItem(KEYS.LU)) {
         if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
           userKey.value = common.getItem(KEYS.LU).teacherKey;
+        } else if (
+          common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM ||
+          common.getItem(KEYS.UK).userKey === USER_KEY.ETC_ADM
+        ) {
+          adminState.value = true;
         }
       }
 
@@ -106,6 +116,7 @@ export default defineComponent({
 
     return {
       category,
+      adminState,
       day,
       header,
       showScheduleList,
@@ -113,6 +124,7 @@ export default defineComponent({
       currentPage,
       selectPage,
       changePage,
+      downloadPlanner,
     };
   },
 });
@@ -136,6 +148,7 @@ export default defineComponent({
             <table>
               <thead>
                 <tr>
+                  <th v-if="adminState" class="teacher">강사명</th>
                   <th class="name">{{ header[0].VALUE }}</th>
                   <th class="day">{{ header[1].VALUE }}</th>
                   <th class="time">{{ header[2].VALUE }}</th>
@@ -145,7 +158,19 @@ export default defineComponent({
               </thead>
               <tbody>
                 <tr v-for="item in showScheduleList">
-                  <td class="name">{{ item.lectureName }}</td>
+                  <td
+                    class="teacher"
+                    v-if="adminState"
+                    :style="{ width: '10%' }"
+                  >
+                    {{ item.teacherName }}
+                  </td>
+                  <td
+                    class="name"
+                    :style="{ width: adminState ? '25%' : '30%' }"
+                  >
+                    {{ item.lectureName }}
+                  </td>
                   <td class="day">{{ day[item.day - 1] }}</td>
                   <td class="time">
                     {{ item.start }}:{{
@@ -161,16 +186,26 @@ export default defineComponent({
                     {{ item.progress }}
                   </td>
                   <td class="planner">
-                    <label
-                      :for="item.lectureKey + 'input-file'"
-                      class="btn-input"
-                      >첨부하기</label
-                    >
-                    <input
-                      type="file"
-                      :id="item.lectureKey + 'input-file'"
-                      :style="{ display: 'none' }"
-                    />
+                    <div v-if="!adminState">
+                      <label
+                        :for="item.lectureKey + 'input-file'"
+                        class="btn-input"
+                        >첨부하기</label
+                      >
+                      <input
+                        type="file"
+                        :id="item.lectureKey + 'input-file'"
+                        :style="{ display: 'none' }"
+                      />
+                    </div>
+                    <div v-else>
+                      <input
+                        type="button"
+                        :value="item.lectureName + '의 강의 계획서'"
+                        class="btn-input"
+                        @click="downloadPlanner"
+                      />
+                    </div>
                   </td>
                 </tr>
               </tbody>

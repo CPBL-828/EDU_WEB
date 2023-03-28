@@ -470,9 +470,6 @@ section.planner {
               background-color: #eaeaea;
 
               tr {
-                th.name {
-                  width: 30%;
-                }
                 th.day {
                   width: 10%;
                 }
@@ -518,6 +515,7 @@ section.planner {
                   .btn-input {
                     text-decoration: underline;
                     background-color: #f4f4f4;
+                    border: 0;
                     font-size: 18px;
                     cursor: pointer;
 

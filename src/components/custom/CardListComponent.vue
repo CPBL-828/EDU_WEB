@@ -104,7 +104,11 @@ export default defineComponent({
           <div class="card-item-info-name">
             <span class="title">이름</span>
             <span class="name">{{ item.name }}</span>
-            <span class="school">{{ item.school }} ({{ item.grade }}학년)</span>
+            <span class="school">{{
+              item.school
+                ? `${item.school} (${item.grade}학년)`
+                : "학교 정보 없음"
+            }}</span>
           </div>
           <div class="card-item-info-phone">
             <span class="title">연락처</span>

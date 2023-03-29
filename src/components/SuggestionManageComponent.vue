@@ -246,7 +246,11 @@ export default defineComponent({
               style="word-break: break-all; word-wrap: break-word"
               class="suggestion-section-body-write-content"
             >
-              {{ suggestDetail ? suggestDetail?.content : "건의 내용" }}
+              {{
+                suggestDetail
+                  ? suggestDetail?.content
+                  : "선택한 건의 내용이 표시됩니다."
+              }}
             </div>
             <div
               style="word-break: break-all; word-wrap: break-word"

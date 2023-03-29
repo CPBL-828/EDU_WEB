@@ -303,15 +303,17 @@ export default defineComponent({
       } else if (!insertStudentData.value.phone) {
         window.alert("연락처를 입력해주세요.");
         return false;
-      } else if (!insertStudentData.value.school) {
-        window.alert("학교명을 입력해주세요.");
-        return false;
-      } else if (!insertStudentData.value.grade) {
-        window.alert("학년을 입력해주세요.");
-        return false;
       } else if (!insertStudentData.value.address) {
         window.alert("주소를 입력해주세요.");
         return false;
+      } else if (!insertStudentData.value.school) {
+        if (
+          !window.confirm(
+            "학생의 학교 정보가 입력되지 않았습니다.\n재학 중인 학교 정보가 존재하지 않는 것이 확실한가요?"
+          )
+        ) {
+          return false;
+        }
       }
 
       if (!birthNum.value) {
@@ -559,8 +561,8 @@ export default defineComponent({
           };
 
           const result = await ApiClient(
-              "/members/deleteStudent/",
-              common.makeJson(data)
+            "/members/deleteStudent/",
+            common.makeJson(data)
           );
 
           if (result) {
@@ -577,8 +579,8 @@ export default defineComponent({
           };
 
           const result = await ApiClient(
-              "/members/deleteTeacher/",
-              common.makeJson(data)
+            "/members/deleteTeacher/",
+            common.makeJson(data)
           );
 
           if (result) {

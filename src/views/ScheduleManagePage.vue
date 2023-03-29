@@ -56,5 +56,7 @@ export default defineComponent({
   <schedule-ask-component
     v-if="currentCategory === 'ASK'"
   ></schedule-ask-component>
-  <plan-make-component v-if="currentCategory === 'PLAN'"></plan-make-component>
+  <plan-make-component
+    v-if="currentCategory === 'PLAN' || currentCategory === 'WRITE'"
+  ></plan-make-component>
 </template>

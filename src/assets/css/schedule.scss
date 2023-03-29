@@ -514,12 +514,17 @@ section.planner {
 
                 td.planner {
                   border-right: 0;
-                  text-decoration: underline;
-                  cursor: pointer;
-                  transition: all 0.2s;
 
-                  &:hover {
-                    font-weight: bold;
+                  .btn-input {
+                    text-decoration: underline;
+                    background-color: #f4f4f4;
+                    border: 0;
+                    font-size: 18px;
+                    cursor: pointer;
+
+                    &:hover {
+                      font-weight: bold;
+                    }
                   }
                 }
               }

@@ -470,6 +470,9 @@ section.planner {
               background-color: #eaeaea;
 
               tr {
+                th.name {
+                  width: 30%;
+                }
                 th.day {
                   width: 10%;
                 }

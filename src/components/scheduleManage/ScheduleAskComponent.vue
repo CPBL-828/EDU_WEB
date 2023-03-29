@@ -174,13 +174,12 @@ export default defineComponent({
           subject: common.getItem(KEYS.LU).resSubject,
           book: book.value,
           target: common.getItem(KEYS.LU).part,
-          day: days.indexOf(selectedDay.value),
+          day: days.indexOf(selectedDay.value) + 1,
           startTime: time.value
             .toLocaleTimeString()
             .replace(":", "-")
             .split(":")[0],
           duration: duration.value,
-          reason: "",
         };
 
         const result = await ApiClient(

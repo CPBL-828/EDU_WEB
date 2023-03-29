@@ -3,8 +3,13 @@ import { defineComponent, onMounted, ref, watch } from "vue";
 import common from "../../lib/common";
 import { defaultInterface, scheduleInterface } from "../../lib/types";
 import { ApiClient, downloadWithAxios } from "../../axios";
-import { KEYS, USER_KEY } from "../../constant";
+import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
+import { useStore } from "vuex";
+import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
+import TimetableComponent from "../custom/TimetableComponent.vue";
+import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
+import { useRouter } from "vue-router";
 /*
 @brief [강사, 관리자] [Main]시간표 관리 [Sub]계획서 작성
        강사는 계획서 작성 및 작성한 계획서 목록 열람
@@ -12,8 +17,15 @@ import PaginationComponent from "../fixed/PaginationComponent.vue";
  */
 export default defineComponent({
   name: "PlanMakeComponent",
-  components: { PaginationComponent },
+  components: {
+    SelectButtonComponent,
+    TimetableComponent,
+    ModalPopupComponent,
+    PaginationComponent,
+  },
   setup() {
+    const router = useRouter();
+    const store = useStore();
     const userKey = ref<string>("");
     const adminState = ref(false);
     const category = ref<Array<defaultInterface> | undefined>(undefined);
@@ -33,11 +45,19 @@ export default defineComponent({
       { KEY: "progress", VALUE: "처리 상태" },
       { KEY: "planner", VALUE: "강의 계획서" },
     ];
+    const selectItem: defaultInterface[] = [
+      { KEY: "pm", VALUE: "오후" },
+      { KEY: "am", VALUE: "오전" },
+    ];
+    const selectState = ref("pm");
+    const previewSchedule = ref<scheduleInterface | undefined>(undefined);
+    const previewScheduleList = ref<Array<scheduleInterface>>([]);
+    const rejectMode = ref(false);
+    const rejectReason = ref<string>("");
     const scheduleList = ref<Array<scheduleInterface>>([]);
     const showScheduleList = ref<Array<scheduleInterface>>([]);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
-
     const setLectureList = async () => {
       let data = {
         userKey: userKey.value,
@@ -53,11 +73,18 @@ export default defineComponent({
         common.makeJson(data)
       );
 
+      scheduleList.value = [];
+      previewScheduleList.value = [];
+
       if (result) {
         if (result.count > 0) {
           result.resultData.map((item: scheduleInterface) => {
             if (item.progress !== "등록") {
               scheduleList.value.push(item as scheduleInterface);
+              item.start = Number(item.startTime?.substring(0, 2));
+              item.minute = Number(item.startTime?.substring(3, 5));
+            } else if (item.progress === "등록") {
+              previewScheduleList.value.push(item as scheduleInterface);
               item.start = Number(item.startTime?.substring(0, 2));
               item.minute = Number(item.startTime?.substring(3, 5));
             }
@@ -81,6 +108,60 @@ export default defineComponent({
     const changePage = (p: number) => {
       if (p === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
+    };
+
+    const showDetail = async (l: scheduleInterface) => {
+      previewSchedule.value = l;
+      await setLectureList();
+      previewScheduleList.value.push(l);
+      store.commit("setModalState", true);
+    };
+
+    const changeState = (s: string) => {
+      selectState.value = s;
+    };
+
+    const doInsert = async () => {
+      let data = {
+        lectureKey: previewSchedule.value?.lectureKey,
+        adminKey: common.getItem(KEYS.LU).adminKey,
+        progress: "등록",
+        reason: rejectReason.value,
+      };
+
+      const result = await ApiClient(
+        "/lectures/createLecture/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          if (rejectMode.value) {
+            window.alert(
+              previewSchedule.value + " 강의 편성 건의를 반려하였습니다."
+            );
+          } else {
+            window.alert(
+              previewSchedule.value +
+                " 강의 편성을 승인하였습니다.\n이제 강의실 시간표를 통해 해당 강의를 확인하실 수 있습니다."
+            );
+          }
+          router.go(0);
+        }
+      }
+    };
+
+    const doReject = async () => {
+      if (!rejectMode.value) {
+        rejectMode.value = true;
+      } else {
+        if (!rejectReason.value) {
+          window.alert("반려 사유를 입력해 주세요.");
+          return false;
+        }
+
+        await doInsert();
+      }
     };
 
     const downloadPlanner = () => {
@@ -119,11 +200,21 @@ export default defineComponent({
       adminState,
       day,
       header,
+      selectItem,
+      selectState,
+      previewSchedule,
+      previewScheduleList,
+      rejectMode,
+      rejectReason,
       showScheduleList,
       page,
       currentPage,
       selectPage,
       changePage,
+      showDetail,
+      changeState,
+      doInsert,
+      doReject,
       downloadPlanner,
     };
   },
@@ -153,7 +244,9 @@ export default defineComponent({
                   <th class="day">{{ header[1].VALUE }}</th>
                   <th class="time">{{ header[2].VALUE }}</th>
                   <th class="progress">{{ header[3].VALUE }}</th>
-                  <th class="planner">{{ header[4].VALUE }}</th>
+                  <th class="planner">
+                    {{ !adminState ? header[4].VALUE : "상세 보기" }}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -161,7 +254,7 @@ export default defineComponent({
                   <td
                     class="teacher"
                     v-if="adminState"
-                    :style="{ width: '10%' }"
+                    :style="{ width: '15%' }"
                   >
                     {{ item.teacherName }}
                   </td>
@@ -201,9 +294,9 @@ export default defineComponent({
                     <div v-else>
                       <input
                         type="button"
-                        :value="item.lectureName + '의 강의 계획서'"
+                        value="상세 보기"
                         class="btn-input"
-                        @click="downloadPlanner"
+                        @click="showDetail(item)"
                       />
                     </div>
                   </td>
@@ -222,5 +315,88 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <modal-popup-component
+      title="강의 미리보기"
+      modal-height="950px"
+      modal-width="1300px"
+    >
+      <template v-slot:body>
+        <div class="preview">
+          <div class="preview-section">
+            <div class="preview-section-schedule">
+              <div class="preview-section-schedule-btn">
+                <div class="preview-section-schedule-btn-select">
+                  <select-button-component
+                    :state-value="selectItem"
+                    :select-value="selectState"
+                    @changeState="changeState"
+                  ></select-button-component>
+                </div>
+                <div class="preview-section-schedule-btn-adm">
+                  <input
+                    type="button"
+                    value="등록"
+                    class="preview-section-schedule-btn-adm-insert"
+                    @click="doInsert"
+                  />
+                  <input
+                    type="button"
+                    value="반려"
+                    class="preview-section-schedule-btn-adm-reject"
+                    @click="doReject"
+                  />
+                </div>
+              </div>
+              <div class="preview-section-schedule-timetable">
+                <timetable-component
+                  :schedule-list="previewScheduleList"
+                  :select-type="selectState"
+                ></timetable-component>
+              </div>
+            </div>
+            <div class="preview-section-detail">
+              <textarea
+                v-if="rejectMode"
+                class="preview-section-detail-reason"
+                placeholder="반려 사유를 입력하고, 반려 버튼을 한 번 더 눌러주세요."
+                v-model="rejectReason"
+              ></textarea>
+              <div class="preview-section-detail-info" v-if="previewSchedule">
+                <div class="preview-section-detail-info-container">
+                  <div class="preview-section-detail-info-container-name">
+                    <div class="label">미리 볼 강의명</div>
+                    {{ previewSchedule.lectureName }}
+                  </div>
+                  <div
+                    class="preview-section-detail-info-container-underline"
+                  ></div>
+                  <div class="preview-section-detail-info-container-teacher">
+                    <div class="label">강사명</div>
+                    {{ previewSchedule.teacherName }}
+                  </div>
+                  <div class="preview-section-detail-info-container-book">
+                    <div class="label">교재</div>
+                    {{ previewSchedule.book }}
+                  </div>
+                  <div class="preview-section-detail-info-container-grade">
+                    <div class="label">학년</div>
+                    {{ previewSchedule.target }}
+                  </div>
+                  <div class="preview-section-detail-info-container-room">
+                    <div class="label">강의실</div>
+                    {{ previewSchedule.roomName }}
+                  </div>
+                  <input
+                    type="button"
+                    value="강의 계획서 다운로드"
+                    @click="downloadPlanner"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </modal-popup-component>
   </section>
 </template>

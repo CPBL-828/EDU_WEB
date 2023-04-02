@@ -130,7 +130,7 @@ export default defineComponent({
       let data = {
         lectureKey: previewSchedule.value?.lectureKey,
         adminKey: common.getItem(KEYS.LU).adminKey,
-        progress: "등록",
+        progress: rejectReason.value ? "반려" : "등록",
         reason: rejectReason.value,
       };
 
@@ -374,6 +374,18 @@ export default defineComponent({
                 placeholder="반려 사유를 입력하고, 반려 버튼을 한 번 더 눌러주세요."
                 v-model="rejectReason"
               ></textarea>
+              <div
+                v-if="previewSchedule?.reason"
+                class="preview-section-detail-reject"
+              >
+                <p>현재 강의는 <span>반려</span>되었습니다.</p>
+                <span class="preview-section-detail-reject-tip"
+                  >반려 사유는 다음과 같습니다.</span
+                >
+                <div class="preview-section-detail-reject-reason">
+                  {{ previewSchedule?.reason }}
+                </div>
+              </div>
               <div class="preview-section-detail-info" v-if="previewSchedule">
                 <div class="preview-section-detail-info-container">
                   <div class="preview-section-detail-info-container-name">

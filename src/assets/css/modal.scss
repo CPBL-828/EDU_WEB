@@ -1360,7 +1360,7 @@ section.modal {
           &-detail {
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
+            justify-content: space-between;
             width: 270px;
             height: 100%;
 
@@ -1382,6 +1382,30 @@ section.modal {
 
               &:valid {
                 padding: 10px 10px;
+              }
+            }
+
+            &-reject {
+              width: 100%;
+              height: 270px;
+              font-size: 16px;
+
+              p {
+                span {
+                  font-size: 20px;
+                  color: red;
+                }
+              }
+
+              &-tip {
+                display: block;
+                color: $disable-color;
+              }
+
+              &-reason {
+                height: 218px;
+                overflow: scroll;
+                font-size: 20px;
               }
             }
 
@@ -1413,6 +1437,23 @@ section.modal {
                   font-size: 16px;
                   font-weight: bold;
                   color: #9c9c9c;
+                }
+
+                input {
+                  width: 170px;
+                  height: 40px;
+                  border: 0;
+                  border-radius: 248px;
+                  background-color: $primary-color;
+                  color: white;
+                  font-size: 16px;
+                  font-weight: bold;
+                  cursor: pointer;
+                  transition: all 0.2s;
+
+                  &:hover {
+                    background-color: $hover-color;
+                  }
                 }
               }
             }

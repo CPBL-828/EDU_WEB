@@ -109,7 +109,12 @@ export default defineComponent({
       if (p === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
-
+    
+    const viewProgress = (l: scheduleInterface) => {
+      previewSchedule.value = l;
+      store.commit("setModalState", true);
+    };
+    
     const showDetail = async (l: scheduleInterface) => {
       previewSchedule.value = l;
       await setLectureList();
@@ -211,6 +216,7 @@ export default defineComponent({
       currentPage,
       selectPage,
       changePage,
+      viewProgress,
       showDetail,
       changeState,
       doInsert,
@@ -235,6 +241,9 @@ export default defineComponent({
           }}
         </div>
         <div class="planner-section-body">
+          <span class="planner-section-body-tip"
+            >반려 사유를 확인하려면 강의명을 클릭해 주세요.</span
+          >
           <div class="planner-section-body-list">
             <table>
               <thead>
@@ -261,6 +270,7 @@ export default defineComponent({
                   <td
                     class="name"
                     :style="{ width: adminState ? '25%' : '30%' }"
+                    @click="viewProgress(item)"
                   >
                     {{ item.lectureName }}
                   </td>
@@ -316,11 +326,11 @@ export default defineComponent({
       </div>
     </div>
     <modal-popup-component
-      title="강의 미리보기"
-      modal-height="950px"
-      modal-width="1300px"
+      :title="adminState ? '강의 미리보기' : '반려 사유'"
+      :modal-height="adminState ? '950px' : '300px'"
+      :modal-width="adminState ? '1300px' : '900px'"
     >
-      <template v-slot:body>
+      <template v-slot:body v-if="adminState">
         <div class="preview">
           <div class="preview-section">
             <div class="preview-section-schedule">
@@ -332,7 +342,10 @@ export default defineComponent({
                     @changeState="changeState"
                   ></select-button-component>
                 </div>
-                <div class="preview-section-schedule-btn-adm">
+                <div
+                  class="preview-section-schedule-btn-adm"
+                  v-if="previewSchedule?.progress === '등록 대기 중'"
+                >
                   <input
                     type="button"
                     value="등록"
@@ -394,6 +407,30 @@ export default defineComponent({
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </template>
+      
+      <template v-else v-slot:body>
+        <div class="reason" v-if="previewSchedule">
+          <div class="reason-detail">
+            현재
+            <span>{{ previewSchedule.lectureName }}</span>
+            강의는
+            <span
+              :style="{
+                color: previewSchedule.progress === '반려' ? 'red' : '#cccccc',
+              }"
+              >{{ previewSchedule.progress }}</span
+            >
+            상태입니다.
+          </div>
+          <div class="sap"></div>
+          <div class="reason-reject" v-if="previewSchedule.progress === '반려'">
+            <span class="reason-reject-tip">반려 사유는 다음과 같습니다.</span
+            ><span class="reason-reject-detail">{{
+              previewSchedule.reason
+            }}</span>
           </div>
         </div>
       </template>

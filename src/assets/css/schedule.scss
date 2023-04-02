@@ -449,6 +449,14 @@ section.planner {
         justify-content: center;
         align-items: center;
 
+        &-tip {
+          position: absolute;
+          top: 15px;
+          left: 40px;
+          color: $sub-color;
+          font-size: 16px;
+        }
+
         &-list {
           position: absolute;
           top: 56px;
@@ -504,6 +512,14 @@ section.planner {
                   border-top: 2px solid #d9d9d9;
                   border-right: 2px solid #d9d9d9;
                   cursor: default;
+                }
+
+                td.name {
+                  cursor: pointer;
+
+                  &:hover {
+                    font-weight: bold;
+                  }
                 }
 
                 td.name,

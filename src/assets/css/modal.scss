@@ -223,6 +223,14 @@ section.modal {
             width: 100%;
             height: calc(100% - 40px);
 
+            input {
+              font-size: 16px;
+            }
+
+            input[type="text"]:disabled {
+              background: rgba(217, 217, 217, 0.4);
+            }
+
             span {
               display: block;
               font-size: 16px;
@@ -282,6 +290,7 @@ section.modal {
               }
 
               .part-item-edit {
+                background: rgba(217, 217, 217, 0.4);
                 font-size: 16px;
                 color: #9c9c9c;
                 width: 169px;
@@ -1289,7 +1298,7 @@ section.modal {
           }
         }
       }
-      
+
       // preview-schedule
       .preview {
         @include detail-custom();

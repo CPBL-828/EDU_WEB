@@ -34,7 +34,24 @@ export default defineComponent({
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const studentInfo = ref<studentInterface | undefined>(undefined);
-    const studentEditInfo = ref<studentInterface | undefined>(undefined);
+    const studentEditInfo = ref<studentInterface>({
+      studentKey: "",
+      parentKey: "",
+      name: "",
+      id: "",
+      birth: "",
+      sex: "",
+      phone: "",
+      emergency: "",
+      school: "",
+      grade: "",
+      address: "",
+      remark: "",
+      delState: "",
+      profileImg: "",
+      createDate: "",
+      editDate: "",
+    });
     const parentInfo = ref<parentInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const teacherEditInfo = ref<teacherInterface>({
@@ -72,36 +89,41 @@ export default defineComponent({
     };
 
     const doEdit = async () => {
-      let data = {
-        teacherKey: teacherInfo.value?.teacherKey,
-        email: teacherEditInfo.value.email,
-        link: teacherEditInfo.value.link,
-        phone: teacherEditInfo.value.phone,
-      };
+      if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
+        let data = {
+          teacherKey: teacherInfo.value?.teacherKey,
+          email: teacherEditInfo.value.email,
+          link: teacherEditInfo.value.link,
+          phone: teacherEditInfo.value.phone,
+        };
 
-      if (teacherInfo.value?.email !== teacherEditInfo.value.email) {
-      } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
-      } else if (teacherInfo.value?.link !== teacherEditInfo.value.link) {
-      } else {
-        if (window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")) {
-          editState.value = false;
-          return false;
+        if (teacherInfo.value?.email !== teacherEditInfo.value.email) {
+        } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
+        } else if (teacherInfo.value?.link !== teacherEditInfo.value.link) {
+        } else {
+          if (
+            window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")
+          ) {
+            editState.value = false;
+            return false;
+          }
         }
-      }
 
-      const result = await ApiClient(
-        "/members/editTeacher/",
-        common.makeJson(data)
-      );
+        const result = await ApiClient(
+          "/members/editTeacher/",
+          common.makeJson(data)
+        );
 
-      if (result.chunbae === RESULT_KEY.EDIT) {
-        teacherInfo.value = result.resultData as teacherInterface;
-        common.removeItem(KEYS.LU);
-        window.alert("정보 수정을 성공했습니다.");
-        common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
-        editState.value = false;
+        if (result.chunbae === RESULT_KEY.EDIT) {
+          teacherInfo.value = result.resultData as teacherInterface;
+          common.removeItem(KEYS.LU);
+          window.alert("정보 수정을 성공했습니다.");
+          common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
+          editState.value = false;
+        } else {
+          window.alert("정보 수정을 실패했습니다.");
+        }
       } else {
-        window.alert("정보 수정을 실패했습니다.");
       }
     };
 
@@ -119,6 +141,10 @@ export default defineComponent({
         parentInfo.value = props.userData as parentInterface;
       } else if (props.userKey === USER_KEY.STU) {
         studentInfo.value = props.userData as studentInterface;
+        studentEditInfo.value.school = studentInfo.value.school;
+        studentEditInfo.value.grade = studentInfo.value.grade;
+        studentEditInfo.value.address = studentInfo.value.address;
+        studentEditInfo.value.phone = studentInfo.value.phone;
       } else if (props.userKey === USER_KEY.TEA) {
         teacherInfo.value = props.userData as teacherInterface;
         teacherEditInfo.value.email = teacherInfo.value.email;
@@ -218,8 +244,9 @@ export default defineComponent({
                 type="button"
                 class="view-btn"
                 :value="studentInfo ? '세부 정보' : ''"
+                @click="editModal"
               />
-              <div class="edit-btn" @click="editModal">
+              <div class="edit-btn" @click="editModal" v-else>
                 <i class="fa-solid fa-pen"></i>정보 수정
               </div>
             </div>
@@ -251,8 +278,115 @@ export default defineComponent({
         </div>
       </template>
       <template v-slot:body>
-        <div v-if="studentInfo">
-          <div v-for="item in studentInfo">{{ item }}</div>
+        <div class="my-info" v-if="studentInfo">
+          <div class="sap"></div>
+          <div class="my-info-profile">
+            <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
+            <i class="fa-solid fa-camera" v-if="editState"></i>
+            <input type="file" accept="image/*" v-if="editState" />
+            <div class="my-info-profile-name">
+              <span>{{ studentInfo?.name }}</span> 학생
+            </div>
+          </div>
+          <div class="my-info-info">
+            <div class="my-info-info-content">
+              <div class="my-info-info-content-left">
+                <div class="name">
+                  <span class="name-label">이름</span>
+                  <span class="name-item" v-if="!editState">
+                    {{ studentInfo?.name }} ({{ studentInfo?.id }})</span
+                  >
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="name-item"
+                    :disabled="true"
+                    :value="studentInfo?.name"
+                  />
+                </div>
+                <div class="part">
+                  <span class="part-label">학교</span>
+                  <span class="part-item" v-if="!editState"
+                    >{{ studentInfo?.school }}
+                    {{ studentInfo?.grade }}학년</span
+                  >
+                  <div class="school-item-edit" v-if="editState">
+                    <input
+                      v-if="editState"
+                      type="text"
+                      class="school-item"
+                      placeholder="SNS 주소"
+                      v-model="studentEditInfo.school"
+                    />
+                    <input
+                      v-if="editState"
+                      type="text"
+                      class="grade-item"
+                      placeholder="SNS 주소"
+                      v-model="studentEditInfo.grade"
+                    />
+                  </div>
+                </div>
+                <div class="email">
+                  <span class="email-label">생년월일</span>
+                  <span class="email-item" v-if="!editState">{{
+                    studentInfo?.birth
+                  }}</span>
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="name-item"
+                    :disabled="true"
+                    :value="studentInfo?.birth"
+                  />
+                </div>
+                <div class="sns">
+                  <span class="sns-label">주소</span>
+                  <span class="sns-item" v-if="!editState">{{
+                    studentInfo?.address
+                  }}</span>
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="sns-item"
+                    placeholder="SNS 주소"
+                    v-model="studentEditInfo.address"
+                  />
+                </div>
+              </div>
+              <div class="my-info-info-content-right">
+                <div class="phone">
+                  <span class="phone-label">연락처</span>
+                  <span class="phone-item" v-if="!editState">
+                    {{ studentInfo?.phone.substring(0, 3) }}-{{
+                      studentInfo?.phone.substring(3, 7)
+                    }}-{{ studentInfo?.phone.substring(7, 11) }}
+                  </span>
+                  <input
+                    v-if="editState"
+                    class="phone-item"
+                    type="text"
+                    v-model="studentEditInfo.phone"
+                  />
+                </div>
+                <div class="join">
+                  <span class="join-label">비상연락망</span>
+                  <span class="join-item" v-if="!editState"
+                    >{{ studentInfo?.emergency.substring(0, 3) }}-{{
+                      studentInfo?.emergency.substring(3, 7)
+                    }}-{{ studentInfo?.emergency.substring(7, 11) }}</span
+                  >
+                  <input
+                    v-if="editState"
+                    type="text"
+                    class="join-item"
+                    :disabled="true"
+                    :value="studentInfo?.emergency"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="my-info" v-else-if="!resumeState">
           <div class="sap"></div>

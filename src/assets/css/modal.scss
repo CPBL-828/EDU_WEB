@@ -223,6 +223,14 @@ section.modal {
             width: 100%;
             height: calc(100% - 40px);
 
+            input {
+              font-size: 16px;
+            }
+
+            input[type="text"]:disabled {
+              background: rgba(217, 217, 217, 0.4);
+            }
+
             span {
               display: block;
               font-size: 16px;
@@ -294,6 +302,19 @@ section.modal {
                 align-items: center;
                 padding-left: 11px;
                 cursor: default;
+              }
+
+              .school-item-edit {
+                display: flex;
+
+                input.school-item {
+                  width: 125px;
+                  margin-right: 10px;
+                }
+
+                input.grade-item {
+                  width: 20px;
+                }
               }
             }
 
@@ -1289,7 +1310,7 @@ section.modal {
           }
         }
       }
-      
+
       // preview-schedule
       .preview {
         @include detail-custom();

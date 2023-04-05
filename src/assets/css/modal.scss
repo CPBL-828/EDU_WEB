@@ -290,6 +290,7 @@ section.modal {
               }
 
               .part-item-edit {
+                background: rgba(217, 217, 217, 0.4);
                 font-size: 16px;
                 color: #9c9c9c;
                 width: 169px;
@@ -302,19 +303,6 @@ section.modal {
                 align-items: center;
                 padding-left: 11px;
                 cursor: default;
-              }
-
-              .school-item-edit {
-                display: flex;
-
-                input.school-item {
-                  width: 125px;
-                  margin-right: 10px;
-                }
-
-                input.grade-item {
-                  width: 20px;
-                }
               }
             }
 

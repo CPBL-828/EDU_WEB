@@ -124,6 +124,43 @@ export default defineComponent({
           window.alert("정보 수정을 실패했습니다.");
         }
       } else {
+        let data = {
+          studentKey: studentInfo.value?.studentKey,
+          phone: studentEditInfo.value.phone,
+          school: studentEditInfo.value.school,
+          grade: studentEditInfo.value.grade,
+          address: studentEditInfo.value.address,
+        };
+
+        if (studentInfo.value?.phone !== studentEditInfo.value.phone) {
+        } else if (studentInfo.value?.school !== studentEditInfo.value.phone) {
+        } else if (studentInfo.value?.grade !== studentEditInfo.value.grade) {
+        } else if (
+          studentInfo.value?.address !== studentEditInfo.value.address
+        ) {
+        } else {
+          if (
+            window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")
+          ) {
+            editState.value = false;
+            return false;
+          }
+        }
+
+        const result = await ApiClient(
+          "/members/editStudent/",
+          common.makeJson(data)
+        );
+
+        if (result.chunbae === RESULT_KEY.EDIT) {
+          studentInfo.value = result.resultData as studentInterface;
+          common.removeItem(KEYS.LU);
+          window.alert("정보 수정을 성공했습니다.");
+          common.setItem(KEYS.LU, common.makeJson(studentInfo.value));
+          editState.value = false;
+        } else {
+          window.alert("정보 수정을 실패했습니다.");
+        }
       }
     };
 
@@ -310,21 +347,8 @@ export default defineComponent({
                     >{{ studentInfo?.school }}
                     {{ studentInfo?.grade }}학년</span
                   >
-                  <div class="school-item-edit" v-if="editState">
-                    <input
-                      v-if="editState"
-                      type="text"
-                      class="school-item"
-                      placeholder="SNS 주소"
-                      v-model="studentEditInfo.school"
-                    />
-                    <input
-                      v-if="editState"
-                      type="text"
-                      class="grade-item"
-                      placeholder="SNS 주소"
-                      v-model="studentEditInfo.grade"
-                    />
+                  <div class="part-item-edit" v-if="editState">
+                    {{ studentInfo?.school }} {{ studentInfo?.grade }}
                   </div>
                 </div>
                 <div class="email">
@@ -349,7 +373,7 @@ export default defineComponent({
                     v-if="editState"
                     type="text"
                     class="sns-item"
-                    placeholder="SNS 주소"
+                    placeholder="주소"
                     v-model="studentEditInfo.address"
                   />
                 </div>
@@ -366,6 +390,7 @@ export default defineComponent({
                     v-if="editState"
                     class="phone-item"
                     type="text"
+                    placeholder="연락처"
                     v-model="studentEditInfo.phone"
                   />
                 </div>

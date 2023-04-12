@@ -10,8 +10,8 @@ import {
   teacherInterface,
 } from "../lib/types";
 import common from "../lib/common";
-import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
-import { ApiClient } from "../axios";
+import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../constant";
+import { ApiClient, FileClient } from "../axios";
 import DropBoxComponent from "./custom/DropBoxComponent.vue";
 import ModalPopupComponent from "./custom/ModalPopupComponent.vue";
 import SelectButtonComponent from "./custom/SelectButtonComponent.vue";
@@ -429,13 +429,21 @@ export default defineComponent({
       editDate: "",
     });
 
+    const profileURL = ref<string>("");
     const showStudentDetail = (s: studentInterface) => {
+      profileURL.value = "";
+
       studentInfo.value = s;
       studentEditInfo.value.studentKey = s.studentKey;
       studentEditInfo.value.phone = s.phone;
       studentEditInfo.value.school = s.school;
       studentEditInfo.value.grade = s.grade;
       studentEditInfo.value.address = s.address;
+
+      if (studentInfo.value.profileImg) {
+        profileURL.value = CONSTANT.FILE_URL + studentInfo.value.profileImg;
+      }
+
       store.commit("setModalState", true);
     };
 
@@ -471,6 +479,38 @@ export default defineComponent({
       editState.value = true;
     };
 
+    const uploadImg = async () => {
+      const profileData = ref<FormData>(new FormData());
+      const photoFile: HTMLInputElement = document.getElementById(
+        "profile-img-edit"
+      ) as HTMLInputElement;
+
+      if (photoFile.files) {
+        profileData.value.append(
+          "studentKey",
+          studentInfo.value?.studentKey as string
+        );
+        profileData.value.append("profileImg", photoFile.files[0]);
+      }
+
+      const result = await FileClient(
+        "/members/editStudentProfile/",
+        profileData.value
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.EDIT) {
+          studentInfo.value = result.resultData as studentInterface;
+          window.alert("사진을 성공적으로 수정했습니다.");
+          profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
+          editState.value = false;
+        }
+      } else {
+        window.alert("프로필 이미지를 수정하는 데 실패했습니다.");
+        return false;
+      }
+    };
+
     const doEdit = async () => {
       let data = {};
 
@@ -494,6 +534,8 @@ export default defineComponent({
             window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")
           ) {
             editState.value = false;
+            return false;
+          } else {
             return false;
           }
         }
@@ -597,6 +639,23 @@ export default defineComponent({
       }
     };
 
+    const deleteImg = async () => {
+      let data = new FormData();
+
+      data.append("studentKey", studentInfo.value?.studentKey as string);
+
+      const result = await FileClient("/members/editStudentProfile/", data);
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.EDIT) {
+          studentInfo.value = result.resultData as studentInterface;
+          window.alert("프로필 이미지를 정상적으로 삭제했습니다.");
+          profileURL.value = "";
+          editState.value = false;
+        }
+      }
+    };
+
     onMounted(async () => {
       category.value = common.findCategory();
       userKey.value = common.getItem(KEYS.UK).userKey;
@@ -654,10 +713,13 @@ export default defineComponent({
       // 모달 옮기는 중
       studentInfo,
       studentEditInfo,
+      profileURL,
       showStudentDetail,
+      uploadImg,
       teacherInfo,
       teacherEditInfo,
       showTeacherDetail,
+      deleteImg,
     };
   },
 });
@@ -782,10 +844,35 @@ export default defineComponent({
         <div class="user">
           <div class="user-detail">
             <div class="user-detail-profile">
+              <div :style="{ position: 'relative' }">
+                <i
+                  class="fa-solid fa-xmark"
+                  @click="deleteImg"
+                  v-if="editState && profileURL"
+                ></i>
+                <img
+                  v-if="studentInfo && profileURL"
+                  :src="profileURL"
+                  alt="stu-profile"
+                  class="user-detail-profile-img"
+                  id="profile-img"
+                />
+              </div>
               <i
                 class="fa-solid fa-user"
-                v-if="studentInfo && !studentInfo?.profileImg"
+                v-if="studentInfo && !studentInfo.profileImg"
               ></i>
+              <form>
+                <input
+                  type="file"
+                  id="profile-img-edit"
+                  accept="image/*"
+                  @change="uploadImg"
+                  :style="{ bottom: '60px', zIndex: 10 }"
+                  v-if="editState"
+                />
+              </form>
+              <i class="fa-solid fa-camera" v-if="editState"></i>
               <div v-if="studentInfo" class="user-detail-profile-name">
                 <span>{{ studentInfo?.name }}</span> 학생
               </div>

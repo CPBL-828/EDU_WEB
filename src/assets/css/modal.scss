@@ -415,7 +415,9 @@ section.modal {
             }
 
             &-img {
+              width: 170px;
               height: 230px;
+              object-fit: cover;
               border-radius: 20px;
             }
 

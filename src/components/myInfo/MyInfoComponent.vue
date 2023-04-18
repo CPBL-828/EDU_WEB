@@ -127,8 +127,6 @@ export default defineComponent({
         let data = {
           studentKey: studentInfo.value?.studentKey,
           phone: studentEditInfo.value.phone,
-          school: studentEditInfo.value.school,
-          grade: studentEditInfo.value.grade,
           address: studentEditInfo.value.address,
         };
 

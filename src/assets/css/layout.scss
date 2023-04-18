@@ -430,8 +430,10 @@ section.card {
       }
 
       > img {
+        border-radius: 10px;
         width: 113px;
         height: 113px;
+        object-fit: cover;
         margin-right: 10px;
       }
 

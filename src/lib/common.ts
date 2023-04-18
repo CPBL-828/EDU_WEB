@@ -1,4 +1,4 @@
-import { KEYS, USER_KEY } from "../constant";
+import { CONSTANT, KEYS, USER_KEY } from "../constant";
 import {
   KYO_MAIN,
   KYO_SUB,
@@ -140,6 +140,10 @@ const findCategory = () => {
   }
 };
 
+const getImg = (f: string) => {
+  return CONSTANT.FILE_URL + f;
+};
+
 export default {
   makeJson,
   parseJson,
@@ -147,4 +151,5 @@ export default {
   getItem,
   removeItem,
   findCategory,
+  getImg,
 };

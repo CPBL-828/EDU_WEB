@@ -2,7 +2,7 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import common from "../../lib/common";
 import { defaultInterface, scheduleInterface } from "../../lib/types";
-import { ApiClient, downloadWithAxios } from "../../axios";
+import { ApiClient } from "../../axios";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import { useStore } from "vuex";
@@ -109,12 +109,12 @@ export default defineComponent({
       if (p === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
-    
+
     const viewProgress = (l: scheduleInterface) => {
       previewSchedule.value = l;
       store.commit("setModalState", true);
     };
-    
+
     const showDetail = async (l: scheduleInterface) => {
       previewSchedule.value = l;
       await setLectureList();
@@ -422,7 +422,7 @@ export default defineComponent({
           </div>
         </div>
       </template>
-      
+
       <template v-else v-slot:body>
         <div class="reason" v-if="previewSchedule">
           <div class="reason-detail">

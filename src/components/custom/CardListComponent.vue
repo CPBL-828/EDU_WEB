@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { studentInterface, teacherInterface } from "../../lib/types";
-import { KEYS, USER_KEY } from "../../constant";
+import { CONSTANT, KEYS, USER_KEY } from "../../constant";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -25,6 +25,7 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const router = useRouter();
+    const fileURL: string = CONSTANT.FILE_URL;
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const teacherList = ref<Array<teacherInterface> | undefined>(undefined);
@@ -79,6 +80,7 @@ export default defineComponent({
     });
 
     return {
+      fileURL,
       studentList,
       studentInfo,
       teacherList,
@@ -95,11 +97,15 @@ export default defineComponent({
     <div class="card">
       <!--      학생 리스트 표시 -->
       <div v-if="studentList" v-for="item in studentList" class="card-item">
-        <div v-if="!item.profileImg" class="card-item-profile">
+        <div class="card-item-profile" v-if="!item.profileImg">
           <i class="fa-solid fa-user"></i>
         </div>
         <!--        TODO [파일 서버] 프로필 사진 삽입 수정 -->
-        <img v-if="item.profileImg" :src="item.profileImg" alt="profile" />
+        <img
+          v-if="item.profileImg"
+          :src="fileURL + item.profileImg"
+          alt="profile"
+        />
         <div class="card-item-info">
           <div class="card-item-info-name">
             <span class="title">이름</span>
@@ -145,7 +151,11 @@ export default defineComponent({
           <i class="fa-solid fa-user"></i>
         </div>
         <!--        TODO [파일 서버] 프로필 사진 삽입 수정 -->
-        <img v-if="item.profileImg" :src="item.profileImg" alt="profile" />
+        <img
+          v-if="item.profileImg"
+          :src="fileURL + item.profileImg"
+          alt="profile"
+        />
         <div class="card-item-info">
           <div class="card-item-info-name">
             <span class="title">이름</span>

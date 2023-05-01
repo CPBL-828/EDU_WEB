@@ -9,7 +9,7 @@ import {
 } from "vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import common from "../../lib/common";
-import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
+import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import {
   adminInterface,
@@ -40,6 +40,7 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const fileURL: string = CONSTANT.FILE_URL;
     const userKey = ref<string>("");
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const placeholder = ref<string>("강의 선택");
@@ -263,6 +264,7 @@ export default defineComponent({
 
     return {
       category,
+      fileURL,
       placeholder,
       lectureList,
       lectureKey,
@@ -326,6 +328,11 @@ export default defineComponent({
                 v-for="item in studentList"
               >
                 <i class="fa-solid fa-user" v-if="!item.profileImg"></i>
+                <img
+                  v-if="item.profileImg"
+                  :src="fileURL + item.profileImg"
+                  alt="profile"
+                />
                 <div
                   class="analysis-component-section-body-list-student-item-name"
                 >

@@ -53,6 +53,13 @@ section.my-info {
             color: white;
             font-size: 109px;
           }
+
+          > img {
+            border-radius: 10px;
+            width: 190px;
+            height: 190px;
+            object-fit: cover;
+          }
         }
 
         &-content {

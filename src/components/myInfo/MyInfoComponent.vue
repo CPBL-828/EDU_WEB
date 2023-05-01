@@ -6,7 +6,7 @@ import {
   studentInterface,
   teacherInterface,
 } from "../../lib/types";
-import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
+import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import common from "../../lib/common";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
@@ -33,6 +33,7 @@ export default defineComponent({
   setup: function (props) {
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const fileURL: string = "http://52.78.111.175:8000/";
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const studentEditInfo = ref<studentInterface>({
       studentKey: "",
@@ -190,6 +191,7 @@ export default defineComponent({
 
     return {
       category,
+      fileURL,
       studentInfo,
       studentEditInfo,
       parentInfo,
@@ -220,12 +222,23 @@ export default defineComponent({
           }}
         </div>
         <div class="my-info-section-body" v-if="teacherInfo || studentInfo">
-          <div class="my-info-section-body-img">
+          <div class="my-info-section-body-img" v-if="teacherInfo">
             <i class="fa-solid fa-camera"></i>
-            <i
-              class="fa-solid fa-user"
-              v-if="!teacherInfo?.profileImg || !studentInfo?.profileImg"
-            ></i>
+            <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <img
+              v-if="teacherInfo"
+              :src="fileURL + teacherInfo.profileImg"
+              alt="profile"
+            />
+          </div>
+          <div class="my-info-section-body-img" v-if="studentInfo">
+            <i class="fa-solid fa-camera"></i>
+            <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
+            <img
+              v-if="studentInfo"
+              :src="fileURL + studentInfo.profileImg"
+              alt="profile"
+            />
             <input type="file" accept="image/*" />
           </div>
           <div class="my-info-section-body-content">
@@ -317,6 +330,7 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="my-info-profile">
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
+            <img :src="fileURL + studentInfo?.profileImg" alt="profile" />
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
             <div class="my-info-profile-name">
@@ -415,6 +429,7 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="my-info-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+            <img :src="fileURL + teacherInfo?.profileImg" alt="profile" />
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
             <div class="my-info-profile-name">

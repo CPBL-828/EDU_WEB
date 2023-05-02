@@ -100,7 +100,6 @@ export default defineComponent({
         <div class="card-item-profile" v-if="!item.profileImg">
           <i class="fa-solid fa-user"></i>
         </div>
-        <!--        TODO [파일 서버] 프로필 사진 삽입 수정 -->
         <img
           v-if="item.profileImg"
           :src="fileURL + item.profileImg"
@@ -147,10 +146,9 @@ export default defineComponent({
 
       <!--      강사 리스트 표시 -->
       <div v-if="teacherList" v-for="item in teacherList" class="card-item">
-        <div v-if="!item.profileImg" class="card-item-profile">
+        <div class="card-item-profile" v-if="!item.profileImg">
           <i class="fa-solid fa-user"></i>
         </div>
-        <!--        TODO [파일 서버] 프로필 사진 삽입 수정 -->
         <img
           v-if="item.profileImg"
           :src="fileURL + item.profileImg"

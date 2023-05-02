@@ -103,7 +103,6 @@ export default defineComponent({
       address: "",
       remark: "",
       delState: "N",
-      profileImg: "",
     });
     const teacherLevel = ref<string | undefined>(undefined);
     const teacherGrade = ref<number | undefined>(undefined);
@@ -117,9 +116,10 @@ export default defineComponent({
       joinDate: "",
       leaveDate: "1111-11-11",
       resume: "이력서 파일",
-      profileImg: "",
     });
     const editState = ref(false);
+    const filePreview = ref<Blob | null>(null);
+    const profileURL = ref<string>("");
 
     const getUserList = async () => {
       let data = {
@@ -347,6 +347,12 @@ export default defineComponent({
 
       if (result) {
         if (result.chunbae === RESULT_KEY.CREATE) {
+          if (profileURL.value) {
+            studentInfo.value = result.resultData as studentInterface;
+
+            await uploadImg(USER_KEY.STU, "profile-img-insert");
+          }
+
           window.alert(
             "학생을 성공적으로 등록했습니다.\n" +
               result.resultData.name +
@@ -354,7 +360,6 @@ export default defineComponent({
               result.resultData.id +
               ")"
           );
-
           router.go(0);
         } else {
           window.alert("학생 등록에 실패했습니다.");
@@ -429,7 +434,6 @@ export default defineComponent({
       editDate: "",
     });
 
-    const profileURL = ref<string>("");
     const showStudentDetail = (s: studentInterface) => {
       profileURL.value = "";
 
@@ -439,6 +443,7 @@ export default defineComponent({
       studentEditInfo.value.school = s.school;
       studentEditInfo.value.grade = s.grade;
       studentEditInfo.value.address = s.address;
+      studentEditInfo.value.remark = s.remark;
 
       if (studentInfo.value.profileImg) {
         profileURL.value = CONSTANT.FILE_URL + studentInfo.value.profileImg;
@@ -483,13 +488,25 @@ export default defineComponent({
       editState.value = true;
     };
 
-    const uploadImg = async (u: string) => {
+    const changeProfile = (e: Event) => {
+      const v = e.target as HTMLInputElement;
+      filePreview.value = URL.createObjectURL(v.files![0]) as unknown as Blob;
+      profileURL.value = filePreview.value as unknown as string;
+    };
+
+    const uploadImg = async (u: string, i: string) => {
       const profileData = ref<FormData>(new FormData());
       const photoFile: HTMLInputElement = document.getElementById(
-        "profile-img-edit"
+        i
       ) as HTMLInputElement;
+      const maxSize = 3 * 1024 * 1024;
 
       if (photoFile.files) {
+        if (photoFile.files[0].size > maxSize) {
+          window.alert("파일 사이즈는 3MB 이하로 등록 가능합니다.");
+          editState.value = false;
+          return false;
+        }
         if (u === USER_KEY.STU) {
           profileData.value.append(
             "studentKey",
@@ -513,12 +530,12 @@ export default defineComponent({
         if (result) {
           if (result.chunbae === RESULT_KEY.EDIT) {
             studentInfo.value = result.resultData as studentInterface;
-            window.alert("사진을 성공적으로 수정했습니다.");
+            window.alert("사진을 성공적으로 저장했습니다.");
             profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
             editState.value = false;
           }
         } else {
-          window.alert("프로필 이미지를 수정하는 데 실패했습니다.");
+          window.alert("프로필 이미지를 저장하는 데 실패했습니다.");
           return false;
         }
       } else {
@@ -551,6 +568,7 @@ export default defineComponent({
           school: studentEditInfo.value.school,
           grade: studentEditInfo.value.grade,
           address: studentEditInfo.value.address,
+          remark: studentEditInfo.value.remark,
         });
 
         if (studentInfo.value?.school !== studentEditInfo.value.school) {
@@ -559,6 +577,7 @@ export default defineComponent({
         } else if (
           studentInfo.value?.address !== studentEditInfo.value.address
         ) {
+        } else if (studentInfo.value?.remark !== studentEditInfo.value.remark) {
         } else {
           if (
             window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")
@@ -762,6 +781,7 @@ export default defineComponent({
       studentEditInfo,
       profileURL,
       showStudentDetail,
+      changeProfile,
       uploadImg,
       teacherInfo,
       teacherEditInfo,
@@ -911,7 +931,7 @@ export default defineComponent({
                   type="file"
                   id="profile-img-edit"
                   accept="image/*"
-                  @change="uploadImg('STU')"
+                  @change="uploadImg('STU', 'profile-img-edit')"
                   :style="{ bottom: '60px', zIndex: 10 }"
                   v-if="editState"
                 />
@@ -942,7 +962,7 @@ export default defineComponent({
                   type="file"
                   id="profile-img-edit"
                   accept="image/*"
-                  @change="uploadImg('TEA')"
+                  @change="uploadImg('TEA', 'profile-img-edit')"
                   :style="{ bottom: '60px', zIndex: 10 }"
                   v-if="editState"
                 />
@@ -1110,13 +1130,19 @@ export default defineComponent({
           </div>
           <div class="user-remark" v-if="studentInfo">
             <span class="label">특이사항</span>
-            <div class="user-remark-content">
+            <div class="user-remark-content" v-if="!editState">
               {{
                 studentInfo?.remark
                   ? studentInfo?.remark
                   : "작성된 특이사항이 없습니다."
               }}
             </div>
+            <textarea
+              v-else
+              :placeholder="studentInfo?.remark"
+              class="user-remark-content"
+              v-model="studentEditInfo.remark"
+            />
 
             <div class="user-remark-btn">
               <input
@@ -1219,10 +1245,19 @@ export default defineComponent({
           <!-- 학생 입력-->
           <div class="student-insert-section-body-container" v-else>
             <div class="student-insert-section-body-container-profile">
-              <span>증명사진을</span>
-              <span>첨부해주세요.</span>
+              <div v-if="!profileURL">
+                <span>증명사진을</span>
+                <span>첨부해주세요.</span>
+              </div>
+              <img v-else :src="profileURL" alt="profile-prev" />
               <i class="fa-solid fa-camera"></i>
-              <input type="file" />
+              <form>
+                <input
+                  type="file"
+                  @change="changeProfile"
+                  id="profile-img-insert"
+                />
+              </form>
             </div>
 
             <div class="student-insert-section-body-container-info">
@@ -1292,7 +1327,6 @@ export default defineComponent({
               <div class="student-insert-section-body-container-info-remark">
                 <span>특이사항</span>
                 <textarea
-                  type="text"
                   placeholder="특이사항"
                   class="input-remark"
                   v-model="insertStudentData.remark"

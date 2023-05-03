@@ -653,7 +653,7 @@ section.modal {
           }
 
           &-body {
-            width: 892px;
+            width: 940px;
             height: 592px;
             border: 2px solid #d9d9d9;
             border-radius: 10px;
@@ -680,6 +680,8 @@ section.modal {
         border: 0;
         border-radius: 10px;
         color: white;
+        font-weight: bold;
+        font-size: 16px;
 
         &:hover {
           background-color: $hover-color;
@@ -709,7 +711,7 @@ section.modal {
 
           &-header {
             width: 956px;
-            height: 32px;
+            height: 31px;
             display: flex;
             justify-content: space-between;
 
@@ -1540,7 +1542,8 @@ section.modal {
           &-detail {
             font-size: 20px;
             width: 700px;
-            height: 50px;
+            height: 200px;
+            margin-top: 20px;
             overflow: scroll;
           }
         }

@@ -327,7 +327,7 @@ export default defineComponent({
     </div>
     <modal-popup-component
       :title="adminState ? '강의 미리보기' : '반려 사유'"
-      :modal-height="adminState ? '950px' : '300px'"
+      :modal-height="adminState ? '950px' : '600px'"
       :modal-width="adminState ? '1300px' : '900px'"
     >
       <template v-slot:body v-if="adminState">

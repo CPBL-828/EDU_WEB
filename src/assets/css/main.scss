@@ -300,7 +300,7 @@ section.notice {
           top: calc(33px + 21px);
           transform: translateY(-50%);
           left: 30px;
-          width: 275px;
+          width: 290px;
           height: 33px;
           display: flex;
           align-items: center;
@@ -321,7 +321,7 @@ section.notice {
 
           input {
             width: 230px;
-            height: 33px;
+            height: 30px;
             border: 0;
             outline: 0;
             margin-left: 13px;
@@ -352,7 +352,7 @@ section.notice {
           transform: translateY(-50%);
           right: 30px;
           width: 130px;
-          height: 37px;
+          height: 33px;
           border-radius: 19px;
           color: $primary-color;
           text-align: center;

@@ -189,6 +189,21 @@ export default defineComponent({
       }
     });
 
+    const test = async () => {
+      const resumeUrl = CONSTANT.BASE_URL + teacherInfo.value?.resume;
+
+      const response = await fetch(resumeUrl);
+      const blob = await response.blob();
+      const filename = `${new Date().toLocaleDateString()}_이력서_${
+        teacherInfo.value?.name
+      }.xlsx`;
+
+      let element = document.getElementById("resume-download") as HTMLElement;
+      element.setAttribute("href", URL.createObjectURL(blob));
+
+      element.setAttribute("download", filename);
+    };
+
     return {
       category,
       fileURL,
@@ -203,6 +218,7 @@ export default defineComponent({
       resumeModal,
       changeEditState,
       doEdit,
+      test,
     };
   },
 });
@@ -223,23 +239,16 @@ export default defineComponent({
         </div>
         <div class="my-info-section-body" v-if="teacherInfo || studentInfo">
           <div class="my-info-section-body-img" v-if="teacherInfo">
-            <i class="fa-solid fa-camera"></i>
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
-            <img
-              v-if="teacherInfo"
-              :src="fileURL + teacherInfo.profileImg"
-              alt="profile"
-            />
+            <img v-else :src="fileURL + teacherInfo.profileImg" alt="profile" />
           </div>
           <div class="my-info-section-body-img" v-if="studentInfo">
-            <i class="fa-solid fa-camera"></i>
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
             <img
               v-if="studentInfo"
               :src="fileURL + studentInfo.profileImg"
               alt="profile"
             />
-            <input type="file" accept="image/*" />
           </div>
           <div class="my-info-section-body-content">
             <div
@@ -429,7 +438,11 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="my-info-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
-            <img :src="fileURL + teacherInfo?.profileImg" alt="profile" />
+            <img
+              v-else
+              :src="fileURL + teacherInfo?.profileImg"
+              alt="profile"
+            />
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
             <div class="my-info-profile-name">
@@ -524,7 +537,11 @@ export default defineComponent({
           </div>
         </div>
 
-        <div v-else class="ready">준비 중입니다.</div>
+        <div v-else class="ready">
+          <p>
+            <a id="resume-download" @click="test"> 이력서 다운로드 </a>
+          </p>
+        </div>
       </template>
     </modal-popup-component>
   </section>

@@ -378,10 +378,7 @@ export default defineComponent({
                 v-if="previewSchedule?.reason"
                 class="preview-section-detail-reject"
               >
-                <p>현재 강의는 <span>반려</span>되었습니다.</p>
-                <span class="preview-section-detail-reject-tip"
-                  >반려 사유는 다음과 같습니다.</span
-                >
+                <span>반려</span>
                 <div class="preview-section-detail-reject-reason">
                   {{ previewSchedule?.reason }}
                 </div>

@@ -1431,11 +1431,10 @@ section.modal {
               height: 270px;
               font-size: 16px;
 
-              p {
-                span {
-                  font-size: 20px;
-                  color: red;
-                }
+              span {
+                font-size: 24px;
+                font-weight: bold;
+                color: red;
               }
 
               &-tip {
@@ -1445,6 +1444,7 @@ section.modal {
 
               &-reason {
                 white-space: pre-wrap;
+                margin-top: 10px;
                 height: 300px;
                 overflow: scroll;
                 font-size: 20px;

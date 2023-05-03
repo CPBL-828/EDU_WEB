@@ -1,5 +1,12 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+  watch,
+} from "vue";
 import {
   defaultInterface,
   parentInterface,
@@ -163,6 +170,59 @@ export default defineComponent({
       }
     };
 
+    // const downloadResume = async () => {
+    //   if (teacherInfo.value?.resume) {
+    //     const resumeUrl = CONSTANT.BASE_URL + teacherInfo.value?.resume;
+    //     let element = document.getElementById(
+    //       "resume-download"
+    //     ) as HTMLAnchorElement;
+    //     const filename = `${new Date().toLocaleDateString()}_이력서_${
+    //       teacherInfo.value?.name
+    //     }.xlsx`;
+    //
+    //     element.setAttribute("download", filename);
+    //     element.href = resumeUrl;
+    //
+    //     if (
+    //       window.confirm(
+    //         `${teacherInfo.value?.name} 님의 이력서를 다운로드 하시겠습니까?`
+    //       )
+    //     ) {
+    //       await fetch(resumeUrl);
+    //     } else {
+    //       return false;
+    //     }
+    //   } else {
+    //     window.alert("저장되어 있는 이력서가 없습니다.");
+    //   }
+    // };
+
+    const resumeDownload = document.getElementById("resume-download");
+    const downloadResume = async () => {
+      if (teacherInfo.value?.resume) {
+        if (window.confirm("이력서를 다운로드 하시겠습니까?")) {
+          const resumeUrl = CONSTANT.BASE_URL + teacherInfo.value?.resume;
+          const response = await fetch(resumeUrl);
+          if (response.ok) {
+            const blob = await response.blob();
+            const filename = `${new Date().toLocaleDateString()}_이력서_${
+              teacherInfo.value?.name
+            }.xlsx`;
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", filename);
+            link.click();
+            URL.revokeObjectURL(link.href);
+          }
+        } else {
+          return false;
+        }
+      } else {
+        window.alert("저장되어 있는 이력서가 없습니다.");
+        return false;
+      }
+    };
+
     watch(
       () => store.state.modalState,
       () => {
@@ -186,23 +246,15 @@ export default defineComponent({
         teacherEditInfo.value.email = teacherInfo.value.email;
         teacherEditInfo.value.phone = teacherInfo.value.phone;
         teacherEditInfo.value.link = teacherInfo.value.link;
+        resumeDownload?.addEventListener("click", downloadResume);
       }
     });
 
-    const test = async () => {
-      const resumeUrl = CONSTANT.BASE_URL + teacherInfo.value?.resume;
-
-      const response = await fetch(resumeUrl);
-      const blob = await response.blob();
-      const filename = `${new Date().toLocaleDateString()}_이력서_${
-        teacherInfo.value?.name
-      }.xlsx`;
-
-      let element = document.getElementById("resume-download") as HTMLElement;
-      element.setAttribute("href", URL.createObjectURL(blob));
-
-      element.setAttribute("download", filename);
-    };
+    onUnmounted(() => {
+      if (props.userKey === USER_KEY.TEA) {
+        resumeDownload?.removeEventListener("click", downloadResume);
+      }
+    });
 
     return {
       category,
@@ -218,7 +270,7 @@ export default defineComponent({
       resumeModal,
       changeEditState,
       doEdit,
-      test,
+      downloadResume,
     };
   },
 });
@@ -289,13 +341,15 @@ export default defineComponent({
               </span>
             </div>
             <div class="my-info-section-body-content-btn">
-              <input
+              <div
+                class="my-info-section-body-content-btn-resume"
                 v-if="teacherInfo"
-                type="button"
-                class="view-btn"
-                :value="teacherInfo ? '이력서 보기' : ''"
-                @click="resumeModal"
-              />
+              >
+                <div class="down-btn" @click="downloadResume">
+                  <a id="resume-download">이력서 받기</a>
+                </div>
+                <input type="button" class="up-btn" value="업로드" />
+              </div>
               <input
                 v-if="studentInfo"
                 type="button"
@@ -313,12 +367,12 @@ export default defineComponent({
     </div>
 
     <modal-popup-component
-      :title="resumeState ? '이력서 보기' : '상세 정보'"
+      title="상세 정보"
       btn-state="SAVE"
       modal-height="620px"
       modal-width="1078px"
     >
-      <template v-slot:button v-if="!resumeState">
+      <template v-slot:button>
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"
@@ -535,12 +589,6 @@ export default defineComponent({
               </div>
             </div>
           </div>
-        </div>
-
-        <div v-else class="ready">
-          <p>
-            <a id="resume-download" @click="test"> 이력서 다운로드 </a>
-          </p>
         </div>
       </template>
     </modal-popup-component>

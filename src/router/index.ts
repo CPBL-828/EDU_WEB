@@ -49,6 +49,11 @@ const routes = [
     component: () => import("../views/StudentManagePage.vue"),
   },
   {
+    path: "/schedule",
+    name: "stu-schedule",
+    component: () => import("../views/LectureManagePage.vue"),
+  },
+  {
     path: "/schedule/:subCategory",
     name: "schedule",
     component: () => import("../views/ScheduleManagePage.vue"),

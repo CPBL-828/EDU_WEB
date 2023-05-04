@@ -11,7 +11,7 @@ export const STU_MAIN: categoryInterface[] = [
     KEY: "SCHEDULE",
     VALUE: "시간표",
     ICON: "fa-solid fa-chart-pie",
-    HAS_CHILD: false,
+    HAS_CHILD: true,
   },
   {
     KEY: "LECTURE",
@@ -21,9 +21,9 @@ export const STU_MAIN: categoryInterface[] = [
   },
   {
     KEY: "TEST",
-    VALUE: "시험 현황",
+    VALUE: "시험 관리",
     ICON: "fa-solid fa-highlighter",
-    HAS_CHILD: true,
+    HAS_CHILD: false,
   },
 ];
 
@@ -36,17 +36,14 @@ export const STU_SUB: defaultInterface[] = [
     ],
   },
   {
+    KEY: "SCHEDULE",
+    VALUE: [{ KEY: "CURRENT", VALUE: "현재 시간표" }],
+  },
+  {
     KEY: "LECTURE",
     VALUE: [
       { KEY: "ATTENDANCE", VALUE: "출석 현황" },
       { KEY: "ASSIGNMENT", VALUE: "과제" },
-    ],
-  },
-  {
-    KEY: "TEST",
-    VALUE: [
-      { KEY: "SCHEDULE", VALUE: "시험 일정" },
-      { KEY: "SCORE", VALUE: "성적" },
     ],
   },
 ];

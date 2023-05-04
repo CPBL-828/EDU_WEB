@@ -17,7 +17,7 @@ import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import common from "../../lib/common";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
-import { ApiClient } from "../../axios";
+import { ApiClient, FileClient } from "../../axios";
 /*
 @brief [강사, 학생, 학부모] [Main]내 공간 [Sub]내 정보
 @props 강사/학생/학부모 중 어떤 유저인지에 대한 키 값, 해당 유저의 정보
@@ -40,7 +40,7 @@ export default defineComponent({
   setup: function (props) {
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const fileURL: string = "http://52.78.111.175:8000/";
+    const fileURL: string = "http://52.78.111.175:8000";
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const studentEditInfo = ref<studentInterface>({
       studentKey: "",
@@ -94,6 +94,75 @@ export default defineComponent({
 
     const changeEditState = () => {
       editState.value = true;
+    };
+
+    const profileURL = ref<string>("");
+    const uploadImg = async (u: string, i: string) => {
+      const profileData = ref<FormData>(new FormData());
+      const photoFile: HTMLInputElement = document.getElementById(
+        i
+      ) as HTMLInputElement;
+      const maxSize = 3 * 1024 * 1024;
+
+      if (photoFile.files) {
+        if (photoFile.files[0].size > maxSize) {
+          window.alert("파일 사이즈는 3MB 이하로 등록 가능합니다.");
+          editState.value = false;
+          return false;
+        }
+        if (u === USER_KEY.STU) {
+          profileData.value.append(
+            "studentKey",
+            studentInfo.value?.studentKey as string
+          );
+        } else {
+          profileData.value.append(
+            "teacherKey",
+            teacherInfo.value?.teacherKey as string
+          );
+        }
+        profileData.value.append("profileImg", photoFile.files[0]);
+      }
+
+      if (u === USER_KEY.STU) {
+        const result = await FileClient(
+          "/members/editStudentProfile/",
+          profileData.value
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.EDIT) {
+            studentInfo.value = result.resultData as studentInterface;
+            common.removeItem(KEYS.LU);
+            common.setItem(KEYS.LU, common.makeJson(studentInfo.value));
+            window.alert("사진을 성공적으로 저장했습니다.");
+            profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
+            editState.value = false;
+          }
+        } else {
+          window.alert("프로필 이미지를 저장하는 데 실패했습니다.");
+          return false;
+        }
+      } else {
+        const result = await FileClient(
+          "/members/editTeacherProfile/",
+          profileData.value
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.EDIT) {
+            teacherInfo.value = result.resultData as teacherInterface;
+            common.removeItem(KEYS.LU);
+            common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
+            window.alert("사진을 성공적으로 수정했습니다.");
+            profileURL.value = CONSTANT.BASE_URL + teacherInfo.value.profileImg;
+            editState.value = false;
+          }
+        } else {
+          window.alert("프로필 이미지를 수정하는 데 실패했습니다.");
+          return false;
+        }
+      }
     };
 
     const doEdit = async () => {
@@ -170,33 +239,6 @@ export default defineComponent({
       }
     };
 
-    // const downloadResume = async () => {
-    //   if (teacherInfo.value?.resume) {
-    //     const resumeUrl = CONSTANT.BASE_URL + teacherInfo.value?.resume;
-    //     let element = document.getElementById(
-    //       "resume-download"
-    //     ) as HTMLAnchorElement;
-    //     const filename = `${new Date().toLocaleDateString()}_이력서_${
-    //       teacherInfo.value?.name
-    //     }.xlsx`;
-    //
-    //     element.setAttribute("download", filename);
-    //     element.href = resumeUrl;
-    //
-    //     if (
-    //       window.confirm(
-    //         `${teacherInfo.value?.name} 님의 이력서를 다운로드 하시겠습니까?`
-    //       )
-    //     ) {
-    //       await fetch(resumeUrl);
-    //     } else {
-    //       return false;
-    //     }
-    //   } else {
-    //     window.alert("저장되어 있는 이력서가 없습니다.");
-    //   }
-    // };
-
     const resumeDownload = document.getElementById("resume-download");
     const downloadResume = async () => {
       if (teacherInfo.value?.resume) {
@@ -241,6 +283,9 @@ export default defineComponent({
         studentEditInfo.value.grade = studentInfo.value.grade;
         studentEditInfo.value.address = studentInfo.value.address;
         studentEditInfo.value.phone = studentInfo.value.phone;
+
+        if (studentInfo.value.profileImg)
+          profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
       } else if (props.userKey === USER_KEY.TEA) {
         teacherInfo.value = props.userData as teacherInterface;
         teacherEditInfo.value.email = teacherInfo.value.email;
@@ -269,6 +314,7 @@ export default defineComponent({
       editModal,
       resumeModal,
       changeEditState,
+      uploadImg,
       doEdit,
       downloadResume,
     };
@@ -296,11 +342,7 @@ export default defineComponent({
           </div>
           <div class="my-info-section-body-img" v-if="studentInfo">
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
-            <img
-              v-if="studentInfo"
-              :src="fileURL + studentInfo.profileImg"
-              alt="profile"
-            />
+            <img v-else :src="fileURL + studentInfo.profileImg" alt="profile" />
           </div>
           <div class="my-info-section-body-content">
             <div
@@ -393,9 +435,19 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="my-info-profile">
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
-            <img :src="fileURL + studentInfo?.profileImg" alt="profile" />
+            <img
+              :src="fileURL + studentInfo?.profileImg"
+              alt="profile"
+              v-else
+            />
             <i class="fa-solid fa-camera" v-if="editState"></i>
-            <input type="file" accept="image/*" v-if="editState" />
+            <input
+              id="profile-img-edit"
+              type="file"
+              accept="image/*"
+              v-if="editState"
+              @change="uploadImg('STU', 'profile-img-edit')"
+            />
             <div class="my-info-profile-name">
               <span>{{ studentInfo?.name }}</span> 학생
             </div>

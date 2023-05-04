@@ -373,7 +373,6 @@ export default defineComponent({
               type="file"
               accept="image/*"
               v-if="editState"
-              @change="uploadImg('STU', 'profile-img-edit')"
             />
             <div class="my-info-profile-name">
               <span>{{ studentInfo?.name }}</span> 학생

@@ -96,75 +96,6 @@ export default defineComponent({
       editState.value = true;
     };
 
-    const profileURL = ref<string>("");
-    const uploadImg = async (u: string, i: string) => {
-      const profileData = ref<FormData>(new FormData());
-      const photoFile: HTMLInputElement = document.getElementById(
-        i
-      ) as HTMLInputElement;
-      const maxSize = 3 * 1024 * 1024;
-
-      if (photoFile.files) {
-        if (photoFile.files[0].size > maxSize) {
-          window.alert("파일 사이즈는 3MB 이하로 등록 가능합니다.");
-          editState.value = false;
-          return false;
-        }
-        if (u === USER_KEY.STU) {
-          profileData.value.append(
-            "studentKey",
-            studentInfo.value?.studentKey as string
-          );
-        } else {
-          profileData.value.append(
-            "teacherKey",
-            teacherInfo.value?.teacherKey as string
-          );
-        }
-        profileData.value.append("profileImg", photoFile.files[0]);
-      }
-
-      if (u === USER_KEY.STU) {
-        const result = await FileClient(
-          "/members/editStudentProfile/",
-          profileData.value
-        );
-
-        if (result) {
-          if (result.chunbae === RESULT_KEY.EDIT) {
-            studentInfo.value = result.resultData as studentInterface;
-            common.removeItem(KEYS.LU);
-            common.setItem(KEYS.LU, common.makeJson(studentInfo.value));
-            window.alert("사진을 성공적으로 저장했습니다.");
-            profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
-            editState.value = false;
-          }
-        } else {
-          window.alert("프로필 이미지를 저장하는 데 실패했습니다.");
-          return false;
-        }
-      } else {
-        const result = await FileClient(
-          "/members/editTeacherProfile/",
-          profileData.value
-        );
-
-        if (result) {
-          if (result.chunbae === RESULT_KEY.EDIT) {
-            teacherInfo.value = result.resultData as teacherInterface;
-            common.removeItem(KEYS.LU);
-            common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
-            window.alert("사진을 성공적으로 수정했습니다.");
-            profileURL.value = CONSTANT.BASE_URL + teacherInfo.value.profileImg;
-            editState.value = false;
-          }
-        } else {
-          window.alert("프로필 이미지를 수정하는 데 실패했습니다.");
-          return false;
-        }
-      }
-    };
-
     const doEdit = async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         let data = {
@@ -283,9 +214,6 @@ export default defineComponent({
         studentEditInfo.value.grade = studentInfo.value.grade;
         studentEditInfo.value.address = studentInfo.value.address;
         studentEditInfo.value.phone = studentInfo.value.phone;
-
-        if (studentInfo.value.profileImg)
-          profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
       } else if (props.userKey === USER_KEY.TEA) {
         teacherInfo.value = props.userData as teacherInterface;
         teacherEditInfo.value.email = teacherInfo.value.email;
@@ -314,7 +242,6 @@ export default defineComponent({
       editModal,
       resumeModal,
       changeEditState,
-      uploadImg,
       doEdit,
       downloadResume,
     };

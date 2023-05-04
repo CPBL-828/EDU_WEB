@@ -289,7 +289,7 @@ export default defineComponent({
                   :select-list="selectRoomList"
                   placeholder="강의실 목록"
                   row-width="216px"
-                  row-height="24px"
+                  row-height="30px"
                   @selectValue="selectRoom"
                 ></drop-box-component>
                 <input
@@ -309,7 +309,7 @@ export default defineComponent({
                   :select-list="selectDayList"
                   placeholder="요일"
                   row-width="216px"
-                  row-height="24px"
+                  row-height="30px"
                   @selectValue="selectDay"
                 ></drop-box-component>
                 <div class="start">

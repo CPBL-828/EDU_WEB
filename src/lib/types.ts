@@ -24,7 +24,7 @@ export interface studentInterface {
   address: string;
   remark: string;
   delState: string;
-  profileImg: string;
+  profileImg?: string;
   createDate: string;
   editDate: string;
 }
@@ -49,7 +49,7 @@ export interface teacherInterface {
   joinDate: string;
   leaveDate: string;
   resume: string;
-  profileImg: string;
+  profileImg?: string;
   link: string;
   createDate: string;
   editDate: string;

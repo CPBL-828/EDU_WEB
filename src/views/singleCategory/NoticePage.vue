@@ -408,7 +408,7 @@ export default defineComponent({
                   placeholder="공지 유형"
                   :select-list="noticeType"
                   row-width="120px"
-                  row-height="28px"
+                  row-height="31px"
                   @selectValue="changeType"
                 ></drop-box-component>
               </div>
@@ -417,7 +417,7 @@ export default defineComponent({
                   :placeholder="typePlaceholder"
                   :select-list="userList"
                   row-width="130px"
-                  row-height="28px"
+                  row-height="31px"
                   @selectValue="changeReader"
                 ></drop-box-component>
               </div>

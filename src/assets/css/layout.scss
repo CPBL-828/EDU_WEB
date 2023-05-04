@@ -627,9 +627,9 @@ section.drop {
 
   div[class*="item"] {
     width: calc(100% - 10px);
-    height: 16px;
+    height: 20px;
     padding: 7px 0;
-    margin: 5px 0;
+    margin: 10px 0;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -836,7 +836,7 @@ section.select-lecture {
 
       &-button {
         width: 180px;
-        height: 25px;
+        height: 30px;
         margin-top: 30px;
       }
     }

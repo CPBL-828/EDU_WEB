@@ -35,7 +35,7 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const teacherKey = ref<string>("");
+    const userKey = ref<string>("");
     const selectLectureState = ref(false);
     const roomKey = ref<string>("");
     const scheduleList = ref<Array<scheduleInterface>>([]);
@@ -48,11 +48,13 @@ export default defineComponent({
 
     const getScheduleList = async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-        teacherKey.value = common.getItem(KEYS.LU).teacherKey;
+        userKey.value = common.getItem(KEYS.LU).teacherKey;
+      } else if (common.getItem(KEYS.UK).userKey == USER_KEY.STU) {
+        userKey.value = common.getItem(KEYS.LU).studentKey;
       }
 
       let data = {
-        userKey: teacherKey.value,
+        userKey: userKey.value,
         // search: "",
         roomKey: roomKey.value,
         target: "",

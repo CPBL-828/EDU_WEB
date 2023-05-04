@@ -1,5 +1,12 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+  watch,
+} from "vue";
 import {
   defaultInterface,
   parentInterface,
@@ -10,7 +17,7 @@ import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import common from "../../lib/common";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
-import { ApiClient } from "../../axios";
+import { ApiClient, FileClient } from "../../axios";
 /*
 @brief [강사, 학생, 학부모] [Main]내 공간 [Sub]내 정보
 @props 강사/학생/학부모 중 어떤 유저인지에 대한 키 값, 해당 유저의 정보
@@ -33,7 +40,7 @@ export default defineComponent({
   setup: function (props) {
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const fileURL: string = "http://52.78.111.175:8000/";
+    const fileURL: string = "http://52.78.111.175:8000";
     const studentInfo = ref<studentInterface | undefined>(undefined);
     const studentEditInfo = ref<studentInterface>({
       studentKey: "",
@@ -87,6 +94,75 @@ export default defineComponent({
 
     const changeEditState = () => {
       editState.value = true;
+    };
+
+    const profileURL = ref<string>("");
+    const uploadImg = async (u: string, i: string) => {
+      const profileData = ref<FormData>(new FormData());
+      const photoFile: HTMLInputElement = document.getElementById(
+        i
+      ) as HTMLInputElement;
+      const maxSize = 3 * 1024 * 1024;
+
+      if (photoFile.files) {
+        if (photoFile.files[0].size > maxSize) {
+          window.alert("파일 사이즈는 3MB 이하로 등록 가능합니다.");
+          editState.value = false;
+          return false;
+        }
+        if (u === USER_KEY.STU) {
+          profileData.value.append(
+            "studentKey",
+            studentInfo.value?.studentKey as string
+          );
+        } else {
+          profileData.value.append(
+            "teacherKey",
+            teacherInfo.value?.teacherKey as string
+          );
+        }
+        profileData.value.append("profileImg", photoFile.files[0]);
+      }
+
+      if (u === USER_KEY.STU) {
+        const result = await FileClient(
+          "/members/editStudentProfile/",
+          profileData.value
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.EDIT) {
+            studentInfo.value = result.resultData as studentInterface;
+            common.removeItem(KEYS.LU);
+            common.setItem(KEYS.LU, common.makeJson(studentInfo.value));
+            window.alert("사진을 성공적으로 저장했습니다.");
+            profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
+            editState.value = false;
+          }
+        } else {
+          window.alert("프로필 이미지를 저장하는 데 실패했습니다.");
+          return false;
+        }
+      } else {
+        const result = await FileClient(
+          "/members/editTeacherProfile/",
+          profileData.value
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.EDIT) {
+            teacherInfo.value = result.resultData as teacherInterface;
+            common.removeItem(KEYS.LU);
+            common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
+            window.alert("사진을 성공적으로 수정했습니다.");
+            profileURL.value = CONSTANT.BASE_URL + teacherInfo.value.profileImg;
+            editState.value = false;
+          }
+        } else {
+          window.alert("프로필 이미지를 수정하는 데 실패했습니다.");
+          return false;
+        }
+      }
     };
 
     const doEdit = async () => {
@@ -163,6 +239,32 @@ export default defineComponent({
       }
     };
 
+    const resumeDownload = document.getElementById("resume-download");
+    const downloadResume = async () => {
+      if (teacherInfo.value?.resume) {
+        if (window.confirm("이력서를 다운로드 하시겠습니까?")) {
+          const resumeUrl = CONSTANT.BASE_URL + teacherInfo.value?.resume;
+          const response = await fetch(resumeUrl);
+          if (response.ok) {
+            const blob = await response.blob();
+            const filename = `${new Date().toLocaleDateString()}_이력서_${
+              teacherInfo.value?.name
+            }.xlsx`;
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", filename);
+            link.click();
+            URL.revokeObjectURL(link.href);
+          }
+        } else {
+          return false;
+        }
+      } else {
+        window.alert("저장되어 있는 이력서가 없습니다.");
+        return false;
+      }
+    };
+
     watch(
       () => store.state.modalState,
       () => {
@@ -181,11 +283,21 @@ export default defineComponent({
         studentEditInfo.value.grade = studentInfo.value.grade;
         studentEditInfo.value.address = studentInfo.value.address;
         studentEditInfo.value.phone = studentInfo.value.phone;
+
+        if (studentInfo.value.profileImg)
+          profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
       } else if (props.userKey === USER_KEY.TEA) {
         teacherInfo.value = props.userData as teacherInterface;
         teacherEditInfo.value.email = teacherInfo.value.email;
         teacherEditInfo.value.phone = teacherInfo.value.phone;
         teacherEditInfo.value.link = teacherInfo.value.link;
+        resumeDownload?.addEventListener("click", downloadResume);
+      }
+    });
+
+    onUnmounted(() => {
+      if (props.userKey === USER_KEY.TEA) {
+        resumeDownload?.removeEventListener("click", downloadResume);
       }
     });
 
@@ -202,7 +314,9 @@ export default defineComponent({
       editModal,
       resumeModal,
       changeEditState,
+      uploadImg,
       doEdit,
+      downloadResume,
     };
   },
 });
@@ -223,23 +337,12 @@ export default defineComponent({
         </div>
         <div class="my-info-section-body" v-if="teacherInfo || studentInfo">
           <div class="my-info-section-body-img" v-if="teacherInfo">
-            <i class="fa-solid fa-camera"></i>
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
-            <img
-              v-if="teacherInfo"
-              :src="fileURL + teacherInfo.profileImg"
-              alt="profile"
-            />
+            <img v-else :src="fileURL + teacherInfo.profileImg" alt="profile" />
           </div>
           <div class="my-info-section-body-img" v-if="studentInfo">
-            <i class="fa-solid fa-camera"></i>
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
-            <img
-              v-if="studentInfo"
-              :src="fileURL + studentInfo.profileImg"
-              alt="profile"
-            />
-            <input type="file" accept="image/*" />
+            <img v-else :src="fileURL + studentInfo.profileImg" alt="profile" />
           </div>
           <div class="my-info-section-body-content">
             <div
@@ -280,13 +383,15 @@ export default defineComponent({
               </span>
             </div>
             <div class="my-info-section-body-content-btn">
-              <input
+              <div
+                class="my-info-section-body-content-btn-resume"
                 v-if="teacherInfo"
-                type="button"
-                class="view-btn"
-                :value="teacherInfo ? '이력서 보기' : ''"
-                @click="resumeModal"
-              />
+              >
+                <div class="down-btn" @click="downloadResume">
+                  <a id="resume-download">이력서 받기</a>
+                </div>
+                <input type="button" class="up-btn" value="업로드" />
+              </div>
               <input
                 v-if="studentInfo"
                 type="button"
@@ -304,12 +409,12 @@ export default defineComponent({
     </div>
 
     <modal-popup-component
-      :title="resumeState ? '이력서 보기' : '상세 정보'"
+      title="상세 정보"
       btn-state="SAVE"
       modal-height="620px"
       modal-width="1078px"
     >
-      <template v-slot:button v-if="!resumeState">
+      <template v-slot:button>
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"
@@ -330,9 +435,19 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="my-info-profile">
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
-            <img :src="fileURL + studentInfo?.profileImg" alt="profile" />
+            <img
+              :src="fileURL + studentInfo?.profileImg"
+              alt="profile"
+              v-else
+            />
             <i class="fa-solid fa-camera" v-if="editState"></i>
-            <input type="file" accept="image/*" v-if="editState" />
+            <input
+              id="profile-img-edit"
+              type="file"
+              accept="image/*"
+              v-if="editState"
+              @change="uploadImg('STU', 'profile-img-edit')"
+            />
             <div class="my-info-profile-name">
               <span>{{ studentInfo?.name }}</span> 학생
             </div>
@@ -359,7 +474,7 @@ export default defineComponent({
                     >{{ studentInfo?.school }}
                     {{ studentInfo?.grade }}학년</span
                   >
-                  <div class="part-item-edit" v-if="editState">
+                  <div class="part-item-edit" v-else>
                     {{ studentInfo?.school }} {{ studentInfo?.grade }}
                   </div>
                 </div>
@@ -429,7 +544,11 @@ export default defineComponent({
           <div class="sap"></div>
           <div class="my-info-profile">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
-            <img :src="fileURL + teacherInfo?.profileImg" alt="profile" />
+            <img
+              v-else
+              :src="fileURL + teacherInfo?.profileImg"
+              alt="profile"
+            />
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
             <div class="my-info-profile-name">
@@ -523,8 +642,6 @@ export default defineComponent({
             </div>
           </div>
         </div>
-
-        <div v-else class="ready">준비 중입니다.</div>
       </template>
     </modal-popup-component>
   </section>

@@ -29,6 +29,7 @@ export default defineComponent({
   },
   setup(props) {
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
+    const userKey = ref<string>("");
     const lectureList = ref<Array<scheduleInterface>>([]);
     const showLectureList = ref<Array<scheduleInterface>>([]);
     const color = ref<Array<string>>([
@@ -67,9 +68,7 @@ export default defineComponent({
       lectureList.value = [];
       showLectureList.value = [];
       let data = {
-        userKey: teacherInfo.value?.teacherKey
-          ? teacherInfo.value?.teacherKey
-          : "",
+        userKey: userKey.value,
         search: "",
         roomKey: "",
         roomName: "",
@@ -186,6 +185,9 @@ export default defineComponent({
     onMounted(async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+        userKey.value = teacherInfo.value.teacherKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
+        userKey.value = common.getItem(KEYS.LU).studentKey;
       }
 
       if (props.listType === "LECTURE") await setLectureList();

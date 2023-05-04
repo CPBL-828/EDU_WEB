@@ -207,21 +207,21 @@ export default defineComponent({
                 placeholder="강의명"
                 :select-list="lectureNameList"
                 row-width="216px"
-                row-height="28px"
+                row-height="32px"
                 @selectValue="selectLectureName"
               ></drop-box-component>
               <drop-box-component
                 placeholder="대상"
                 :select-list="targetList"
                 row-width="130px"
-                row-height="28px"
+                row-height="32px"
                 @selectValue="selectTarget"
               ></drop-box-component>
               <drop-box-component
                 placeholder="강의실"
                 :select-list="roomList"
                 row-width="160px"
-                row-height="28px"
+                row-height="32px"
                 @selectValue="selectRoom"
               ></drop-box-component>
               <div class="find-button" @click="doSearch">강의 찾기</div>

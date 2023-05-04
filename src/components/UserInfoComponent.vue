@@ -435,8 +435,6 @@ export default defineComponent({
     });
 
     const showStudentDetail = (s: studentInterface) => {
-      profileURL.value = "";
-
       studentInfo.value = s;
       studentEditInfo.value.studentKey = s.studentKey;
       studentEditInfo.value.phone = s.phone;
@@ -447,6 +445,8 @@ export default defineComponent({
 
       if (studentInfo.value.profileImg) {
         profileURL.value = CONSTANT.FILE_URL + studentInfo.value.profileImg;
+      } else {
+        profileURL.value = "";
       }
 
       store.commit("setModalState", true);
@@ -479,6 +479,8 @@ export default defineComponent({
 
       if (teacherInfo.value.profileImg) {
         profileURL.value = CONSTANT.FILE_URL + teacherInfo.value.profileImg;
+      } else {
+        profileURL.value = "";
       }
 
       store.commit("setModalState", true);
@@ -1034,16 +1036,43 @@ export default defineComponent({
                 <div class="user-detail-info-content-left" v-if="teacherInfo">
                   <div class="name">
                     <span class="name-label">이름(아이디)</span>
-                    <span class="name-item"
+                    <span class="name-item" v-if="!editState"
                       >{{ teacherInfo?.name }} ({{ teacherInfo?.id }})</span
                     >
+                    <input
+                      v-else
+                      type="text"
+                      class="name-item"
+                      :disabled="true"
+                      :value="teacherInfo?.name"
+                    />
                   </div>
                   <div class="part">
                     <span class="part-label">담당</span>
-                    <span class="part-item"
+                    <span class="part-item" v-if="!editState"
                       >{{ teacherInfo?.part }}
                       {{ teacherInfo?.resSubject }}</span
                     >
+                    <div
+                      v-else
+                      :style="{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }"
+                    >
+                      <input
+                        type="text"
+                        class="part-item"
+                        :disabled="true"
+                        :value="teacherInfo?.part"
+                      />
+                      <input
+                        type="text"
+                        class="part-item"
+                        :disabled="true"
+                        :value="teacherInfo?.resSubject"
+                      />
+                    </div>
                   </div>
                   <div class="email">
                     <span class="email-label">이메일</span>
@@ -1051,7 +1080,7 @@ export default defineComponent({
                       type="text"
                       v-if="editState"
                       class="name-item"
-                      :placeholder="teacherInfo.email"
+                      :placeholder="teacherInfo?.email"
                       v-model="teacherEditInfo.email"
                     />
                     <span class="email-item" v-else>{{
@@ -1076,7 +1105,7 @@ export default defineComponent({
                     <input
                       type="text"
                       v-if="editState"
-                      class="sns-item"
+                      class="name-item"
                       :placeholder="studentInfo.phone"
                       v-model="studentEditInfo.phone"
                     />
@@ -1091,11 +1120,11 @@ export default defineComponent({
                     <input
                       type="text"
                       v-if="editState"
-                      class="sns-item"
+                      class="name-item"
                       :placeholder="studentInfo?.grade"
                       v-model="studentEditInfo.grade"
                     />
-                    <span class="join-item" v-else
+                    <span class="name-item" v-else
                       >{{ studentInfo?.grade }} 학년</span
                     >
                   </div>
@@ -1106,7 +1135,7 @@ export default defineComponent({
                     <input
                       type="text"
                       v-if="editState"
-                      class="sns-item"
+                      class="name-item"
                       :placeholder="teacherInfo.phone"
                       v-model="teacherEditInfo.phone"
                     />
@@ -1118,11 +1147,18 @@ export default defineComponent({
                   </div>
                   <div class="join">
                     <span class="join-label">입사일</span>
-                    <span class="join-item"
+                    <span class="join-item" v-if="!editState"
                       >{{ teacherInfo?.joinDate.substring(0, 4) }}.
                       {{ teacherInfo?.joinDate.substring(5, 7) }}.
                       {{ teacherInfo?.joinDate.substring(8, 10) }}</span
                     >
+                    <input
+                      v-else
+                      type="text"
+                      class="name-item"
+                      :disabled="true"
+                      :value="teacherInfo?.joinDate"
+                    />
                   </div>
                 </div>
               </div>

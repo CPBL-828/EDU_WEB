@@ -422,7 +422,7 @@ export default defineComponent({
                     >{{ studentInfo?.school }}
                     {{ studentInfo?.grade }}학년</span
                   >
-                  <div class="part-item-edit" v-if="editState">
+                  <div class="part-item-edit" v-else>
                     {{ studentInfo?.school }} {{ studentInfo?.grade }}
                   </div>
                 </div>

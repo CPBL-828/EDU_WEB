@@ -85,6 +85,7 @@ section.my-info {
             font-weight: bold;
 
             input,
+            .up-btn,
             .down-btn {
               display: flex;
               justify-content: center;
@@ -128,6 +129,10 @@ section.my-info {
                 text-align: center;
                 width: 90px;
                 border-radius: 0 19px 19px 0;
+              }
+
+              #resume-upload {
+                display: none;
               }
             }
 

@@ -2,8 +2,8 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import common from "../../lib/common";
 import { defaultInterface, scheduleInterface } from "../../lib/types";
-import { ApiClient } from "../../axios";
-import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
+import { ApiClient, FileClient } from "../../axios";
+import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
@@ -169,8 +169,59 @@ export default defineComponent({
       }
     };
 
-    const downloadPlanner = () => {
-      window.alert("준비 중인 기능입니다.");
+    const insertPlanner = async (l: scheduleInterface) => {
+      const plannerData = ref<FormData>(new FormData());
+      const plannerFile: HTMLInputElement = document.getElementById(
+        l.lectureKey + "-input-file"
+      ) as HTMLInputElement;
+
+      if (plannerFile.files) {
+        plannerData.value.append("lectureKey", l.lectureKey);
+        plannerData.value.append("planner", plannerFile.files[0]);
+      }
+
+      const result = await FileClient(
+        "/lectures/editLecturePlanner/",
+        plannerData.value
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.EDIT) {
+          window.alert(
+            l.lectureName +
+              " 강의의 강의 계획서를 성공적으로 업로드 하였습니다."
+          );
+          router.go(0);
+        }
+      } else {
+        window.alert("강의 계획서 업로드에 실패하였습니다.");
+      }
+    };
+
+    // const plannerDownload = document.getElementById("planner-download");
+    const downloadPlanner = async (l: scheduleInterface | undefined) => {
+      if (l) {
+        if (l.planner) {
+          if (window.confirm("계획서를 다운로드 하시겠습니까?")) {
+            const plannerUrl = CONSTANT.BASE_URL + "/media/" + l.planner;
+            const response = await fetch(plannerUrl);
+            if (response.ok) {
+              const blob = await response.blob();
+              const filename = `${l.teacherName}_${l.lectureName}_강의 계획서.xlsx`;
+              const link = document.createElement("a");
+              link.href = URL.createObjectURL(blob);
+              link.setAttribute("download", filename);
+              link.click();
+              URL.revokeObjectURL(link.href);
+            }
+          } else {
+            return false;
+          }
+        } else {
+          window.alert("저장되어 있는 계획서가 없습니다.");
+          return false;
+        }
+      }
     };
 
     watch(
@@ -221,6 +272,7 @@ export default defineComponent({
       changeState,
       doInsert,
       doReject,
+      insertPlanner,
       downloadPlanner,
     };
   },
@@ -291,15 +343,19 @@ export default defineComponent({
                   <td class="planner">
                     <div v-if="!adminState">
                       <label
-                        :for="item.lectureKey + 'input-file'"
+                        :for="item.lectureKey + '-input-file'"
                         class="btn-input"
                         >첨부하기</label
                       >
-                      <input
-                        type="file"
-                        :id="item.lectureKey + 'input-file'"
-                        :style="{ display: 'none' }"
-                      />
+                      <form>
+                        <input
+                          @change="insertPlanner(item)"
+                          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                          type="file"
+                          :id="item.lectureKey + '-input-file'"
+                          :style="{ display: 'none' }"
+                        />
+                      </form>
                     </div>
                     <div v-else>
                       <input
@@ -408,11 +464,14 @@ export default defineComponent({
                     <div class="label">강의실</div>
                     {{ previewSchedule.roomName }}
                   </div>
-                  <input
-                    type="button"
-                    value="강의 계획서 다운로드"
-                    @click="downloadPlanner"
-                  />
+                  <form>
+                    <input
+                      id="planner-download"
+                      type="button"
+                      value="강의 계획서 다운로드"
+                      @click="downloadPlanner(previewSchedule)"
+                    />
+                  </form>
                 </div>
               </div>
             </div>

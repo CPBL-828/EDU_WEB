@@ -114,8 +114,6 @@ export default defineComponent({
       part: "",
       resSubject: "",
       joinDate: "",
-      leaveDate: "1111-11-11",
-      resume: "이력서 파일",
     });
     const editState = ref(false);
     const filePreview = ref<Blob | null>(null);
@@ -1417,7 +1415,7 @@ export default defineComponent({
                     <drop-box-component
                       :select-list="gradeList"
                       placeholder="학급"
-                      row-width="60px"
+                      row-width="100px"
                       row-height="30px"
                       @selectValue="selectGrade"
                     ></drop-box-component>
@@ -1437,7 +1435,7 @@ export default defineComponent({
                     <drop-box-component
                       :select-list="subjectList"
                       placeholder="과목"
-                      row-width="60px"
+                      row-width="70px"
                       row-height="30px"
                       @selectValue="selectSubject"
                     ></drop-box-component>
@@ -1470,7 +1468,7 @@ export default defineComponent({
               </div>
 
               <div class="student-insert-section-body-container-info-address">
-                <span>입사일</span>
+                <span>입사일 <span class="red">(필수)</span></span>
                 <input
                   type="text"
                   placeholder="YYYY-MM-DD"

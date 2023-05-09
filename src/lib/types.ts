@@ -108,6 +108,7 @@ export interface scheduleInterface {
   suggestDate: string;
   progress: string;
   reason: string;
+  planner?: string;
   createDate: string;
   editDate: string;
   start: number;

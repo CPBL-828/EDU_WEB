@@ -18,6 +18,7 @@ import common from "../../lib/common";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { ApiClient, FileClient } from "../../axios";
+import { useRouter } from "vue-router";
 /*
 @brief [강사, 학생, 학부모] [Main]내 공간 [Sub]내 정보
 @props 강사/학생/학부모 중 어떤 유저인지에 대한 키 값, 해당 유저의 정보
@@ -39,6 +40,7 @@ export default defineComponent({
   },
   setup: function (props) {
     const store = useStore();
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const fileURL: string = "http://52.78.111.175:8000";
     const studentInfo = ref<studentInterface | undefined>(undefined);
@@ -170,6 +172,37 @@ export default defineComponent({
       }
     };
 
+    const uploadResume = async () => {
+      const resumeData = ref<FormData>(new FormData());
+      const resumeFile: HTMLInputElement = document.getElementById(
+        "resume-upload"
+      ) as HTMLInputElement;
+
+      if (resumeFile.files) {
+        resumeData.value.append(
+          "teacherKey",
+          teacherInfo.value?.teacherKey as string
+        );
+        resumeData.value.append("resume", resumeFile.files[0]);
+      }
+
+      const result = await FileClient(
+        "/members/editTeacherResume/",
+        resumeData.value
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.EDIT) {
+          common.removeItem(KEYS.LU);
+          common.setItem(KEYS.LU, common.makeJson(result.resultData));
+          window.alert("이력서를 성공적으로 업로드 하였습니다.");
+          router.go(0);
+        }
+      } else {
+        window.alert("이력서 업로드에 실패하였습니다.");
+      }
+    };
+
     const resumeDownload = document.getElementById("resume-download");
     const downloadResume = async () => {
       if (teacherInfo.value?.resume) {
@@ -180,7 +213,7 @@ export default defineComponent({
             const blob = await response.blob();
             const filename = `${new Date().toLocaleDateString()}_이력서_${
               teacherInfo.value?.name
-            }.xlsx`;
+            }`;
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.setAttribute("download", filename);
@@ -243,6 +276,7 @@ export default defineComponent({
       resumeModal,
       changeEditState,
       doEdit,
+      uploadResume,
       downloadResume,
     };
   },
@@ -317,7 +351,15 @@ export default defineComponent({
                 <div class="down-btn" @click="downloadResume">
                   <a id="resume-download">이력서 받기</a>
                 </div>
-                <input type="button" class="up-btn" value="업로드" />
+                <label for="resume-upload" class="up-btn">첨부하기</label>
+                <form>
+                  <input
+                    id="resume-upload"
+                    accept="application/msword, application/pdf, .hwp"
+                    type="file"
+                    @change="uploadResume"
+                  />
+                </form>
               </div>
               <input
                 v-if="studentInfo"

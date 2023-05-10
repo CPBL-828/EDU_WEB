@@ -163,7 +163,6 @@ export interface attendInterface {
 export interface testInterface {
   testKey: string;
   lectureKey_id: string;
-  lectureName: string;
   testDate: string;
   testType: string;
   testSheet: string;

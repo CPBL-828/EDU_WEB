@@ -1250,6 +1250,104 @@ section.modal {
         }
       }
 
+      //test-create
+      .test-create {
+        @include detail-custom();
+        height: 660px;
+        bottom: 30px;
+        border: 0;
+        flex-direction: row;
+        justify-content: center;
+
+        &-lecture {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 16px;
+          font-weight: bold;
+          color: $disable-color;
+        }
+
+        &-select {
+          &-type {
+            margin-top: 80px;
+          }
+
+          &-calendar {
+            margin-top: 30px;
+
+            .calendar-date {
+            }
+
+            .calendar-time {
+              margin-top: 30px;
+              width: 250px;
+              display: flex;
+              justify-content: center;
+
+              select {
+                width: 90px;
+                text-align: center;
+              }
+
+              .vc-time-date {
+                display: none;
+              }
+            }
+          }
+        }
+
+        &-view {
+          display: flex;
+          flex-direction: column;
+          margin-left: 100px;
+
+          span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #343434;
+          }
+
+          &-file {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 300px;
+            height: 30px;
+            border: 2px solid $disable-color;
+            border-radius: 10px;
+            margin-top: 20px;
+            padding: 0 10px;
+
+            > span {
+              width: 260px;
+              font-size: 16px;
+              font-weight: normal;
+              @include ellipsis();
+            }
+
+            input[type="file"] {
+              position: absolute;
+              z-index: 6;
+              top: 0;
+              right: 10px;
+              width: 20px;
+              opacity: 0;
+              cursor: pointer;
+            }
+
+            i {
+              font-size: 20px;
+              position: absolute;
+              right: 10px;
+              color: $sub-color;
+            }
+          }
+        }
+      }
+
       //test detail
       .test-status {
         @include detail-custom();
@@ -1279,6 +1377,7 @@ section.modal {
             border-spacing: 0;
 
             thead {
+              font-size: 20px;
               position: sticky;
               top: 0;
               background-color: rgba(231, 231, 231, 0.5);
@@ -1294,6 +1393,7 @@ section.modal {
             }
 
             tbody {
+              font-size: 20px;
               color: $sub-color;
 
               tr {

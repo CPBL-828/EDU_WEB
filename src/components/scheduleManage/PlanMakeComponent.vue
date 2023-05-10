@@ -207,7 +207,7 @@ export default defineComponent({
             const response = await fetch(plannerUrl);
             if (response.ok) {
               const blob = await response.blob();
-              const filename = `${l.teacherName}_${l.lectureName}_강의 계획서.xlsx`;
+              const filename = `${l.teacherName}_${l.lectureName}_강의 계획서`;
               const link = document.createElement("a");
               link.href = URL.createObjectURL(blob);
               link.setAttribute("download", filename);

@@ -264,7 +264,7 @@ section.data-list {
 
       tbody {
         width: 700px;
-        font-size: 18px;
+        font-size: 20px;
 
         tr {
           width: 100%;
@@ -297,11 +297,12 @@ section.data-list {
 
           .go-attend-detail {
             width: 130px;
-            height: 24px;
+            height: 30px;
             border: 0;
             border-radius: 10px;
             background-color: #b6b6b6;
             color: white;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: all 200ms;

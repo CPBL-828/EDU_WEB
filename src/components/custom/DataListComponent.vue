@@ -584,6 +584,7 @@ export default defineComponent({
                 width: '20%',
               }"
               class="file-name"
+              @click="$emit('downloadSheet', item)"
             >
               시험지 파일 조회
             </td>

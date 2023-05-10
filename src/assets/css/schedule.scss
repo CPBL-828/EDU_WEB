@@ -953,12 +953,12 @@ section.assignment {
               &-type {
                 position: relative;
                 width: 180px;
-                height: 25px;
+                height: 30px;
               }
 
               &-upload {
                 width: 130px;
-                height: 25px;
+                height: 30px;
                 border: 0;
                 border-radius: 10px;
                 background-color: $primary-color;
@@ -1282,21 +1282,57 @@ section.test {
           position: relative;
           height: 100%;
 
+          .back-btn {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 16px;
+            color: $disable-color;
+            cursor: pointer;
+            transition: all 200ms;
+
+            &:hover {
+              color: $sub-color;
+            }
+          }
+
           &-title {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            width: 1000px;
             position: absolute;
             top: 45px;
             left: 96px;
             font-size: 16px;
             font-weight: bold;
 
-            .lecture-name {
-              color: $sub-color;
+            &-content {
+              display: flex;
+              flex-direction: column;
+
+              .lecture-name {
+                color: $sub-color;
+              }
+
+              .subject-name {
+                color: #b6b6b6;
+              }
             }
 
-            .subject-name {
-              color: #b6b6b6;
+            .upload-btn {
+              width: 150px;
+              border: 0;
+              border-radius: 30px;
+              background-color: $primary-color;
+              color: white;
+              font-size: 16px;
+              font-weight: bold;
+              transition: all 200ms;
+              cursor: pointer;
+
+              &:hover {
+                background-color: $hover-color;
+              }
             }
           }
 

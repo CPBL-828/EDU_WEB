@@ -135,7 +135,9 @@ export default defineComponent({
           const response = await fetch(sheetUrl);
           if (response.ok) {
             const blob = await response.blob();
-            const filename = `${t.testDate.slice(0, 10)}_${t.testType}`;
+            const filename = `${
+              lectureInfo.value?.lectureName
+            }_${t.testDate.slice(0, 10)}_${t.testType}`;
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.setAttribute("download", filename);

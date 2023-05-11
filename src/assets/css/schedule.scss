@@ -927,6 +927,20 @@ section.assignment {
           position: relative;
           height: 100%;
 
+          .back-btn {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 16px;
+            color: $disable-color;
+            cursor: pointer;
+            transition: all 200ms;
+
+            &:hover {
+              color: $sub-color;
+            }
+          }
+
           &-title {
             display: flex;
             flex-direction: column;

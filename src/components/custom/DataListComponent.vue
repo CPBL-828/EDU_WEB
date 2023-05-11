@@ -586,7 +586,7 @@ export default defineComponent({
               class="file-name"
               @click="$emit('downloadSheet', item)"
             >
-              시험지 파일 조회
+              {{ item.testSheet ? "파일 다운로드" : "첨부 파일 없음" }}
             </td>
             <td
               :style="{
@@ -631,8 +631,9 @@ export default defineComponent({
                 width: '25%',
               }"
               class="file-name"
+              @click="$emit('downloadFile', item)"
             >
-              {{ item.assignment }}
+              {{ item.assignment ? "파일 다운로드" : "첨부 파일 없음" }}
             </td>
             <td
               :style="{

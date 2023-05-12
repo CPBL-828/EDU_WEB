@@ -818,6 +818,11 @@ section.modal {
       .suggest-detail {
         @include detail-custom();
 
+        &-tip {
+          font-size: 16px;
+          color: $disable-color;
+        }
+
         &-section {
           position: relative;
           top: 28px;

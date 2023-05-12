@@ -285,7 +285,7 @@ export default defineComponent({
             </div>
             <div class="top-sap"></div>
             <div class="suggest-detail-section-content">
-              <div class="suggest-detail-section-content-label">건의내용</div>
+              <div class="suggest-detail-section-content-label">건의 내용</div>
               <div class="suggest-detail-section-content-item">
                 {{ suggestDetail?.content }}
               </div>

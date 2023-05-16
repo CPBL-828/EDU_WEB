@@ -1368,16 +1368,12 @@ section.modal {
         }
 
         &-list {
-          width: 100%;
           height: 524px;
           overflow: scroll;
+          margin-top: 50px;
 
           table {
-            position: absolute;
-            top: 80px;
-            left: 50%;
             width: 900px;
-            transform: translateX(-50%);
             text-align: center;
             border-spacing: 0;
 
@@ -1385,7 +1381,7 @@ section.modal {
               font-size: 20px;
               position: sticky;
               top: 0;
-              background-color: rgba(231, 231, 231, 0.5);
+              background-color: rgba(231, 231, 231);
 
               tr {
                 height: 44px;
@@ -1400,6 +1396,7 @@ section.modal {
             tbody {
               font-size: 20px;
               color: $sub-color;
+              overflow: scroll;
 
               tr {
                 &:hover {
@@ -1486,6 +1483,51 @@ section.modal {
             font-weight: bold;
             color: $sub-color;
             margin-bottom: 5px;
+          }
+        }
+
+        &-list {
+          height: 524px;
+          overflow: scroll;
+
+          table {
+            width: 900px;
+            text-align: center;
+            border-spacing: 0;
+
+            thead {
+              font-size: 20px;
+              position: sticky;
+              top: 0;
+              background-color: rgba(231, 231, 231);
+
+              tr {
+                height: 44px;
+
+                th {
+                  border-top: 2px solid $disable-color;
+                  border-bottom: 2px solid $disable-color;
+                }
+              }
+            }
+
+            tbody {
+              font-size: 20px;
+              color: $sub-color;
+              overflow: scroll;
+
+              tr {
+                &:hover {
+                  background-color: rgba(248, 248, 248, 0.5);
+                }
+
+                td {
+                  width: 300px;
+                  height: 44px;
+                  border-bottom: 2px solid $disable-color;
+                }
+              }
+            }
           }
         }
       }

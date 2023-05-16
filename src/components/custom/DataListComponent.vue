@@ -645,7 +645,7 @@ export default defineComponent({
                 type="button"
                 value="상세 조회"
                 class="go-attend-detail"
-                @click="$emit('showTestDetail', item)"
+                @click="$emit('showAssignDetail', item)"
               />
             </td>
           </tr>

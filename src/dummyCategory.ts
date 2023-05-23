@@ -255,6 +255,7 @@ export const KYO_SUB: categoryInterface[] = [
       { KEY: "CONSULT", VALUE: "상담" },
       { KEY: "ANALYSIS", VALUE: "분석" },
       { KEY: "S-SUGGESTION", VALUE: "건의사항" },
+      { KEY: "CLASS", VALUE: "반 관리" },
     ],
   },
   {
@@ -335,6 +336,7 @@ export const ETC_SUB: categoryInterface[] = [
       { KEY: "CONSULT", VALUE: "상담" },
       { KEY: "ANALYSIS", VALUE: "분석" },
       { KEY: "S-SUGGESTION", VALUE: "건의사항" },
+      { KEY: "CLASS", VALUE: "반 관리" },
     ],
   },
   {

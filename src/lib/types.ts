@@ -193,3 +193,13 @@ export interface assignInterface {
   createDate: string;
   editDate: string;
 }
+
+export interface groupInterface {
+  groupKey: string;
+  groupName: string;
+  groupContent: string;
+  endDate: string;
+  delState: string;
+  createDate: string;
+  editDate: string;
+}

@@ -1200,3 +1200,98 @@ section.analysis-content {
     }
   }
 }
+
+section.group {
+  @include section-custom();
+
+  .group {
+    height: 100%;
+
+    &-section {
+      @include inner-section-custom();
+      max-width: 1000px;
+
+      &-tag {
+        @include tag-custom();
+      }
+
+      &-body {
+        @include body-custom();
+        height: 800px;
+
+        &-list {
+          position: relative;
+          top: 68px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 800px;
+          height: 600px;
+
+          &-table {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            border-top: 2px solid #343434;
+            border-bottom: 2px solid $disable-color;
+            border-spacing: 0;
+
+            &-header {
+              height: 50px;
+              font-size: 24px;
+              position: sticky;
+            }
+
+            &-content {
+              text-align: center;
+
+              &-item {
+                font-size: 20px;
+                transition: all 200ms;
+
+                &:hover {
+                  background-color: $background-color;
+                }
+
+                td {
+                  height: 45px;
+                  border-top: 2px solid $disable-color;
+
+                  input {
+                    width: 100px;
+                    height: 30px;
+                    border-radius: 10px;
+                    border: 0;
+                    color: white;
+                    font-size: 16px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 200ms;
+                  }
+
+                  .btn {
+                    &-create {
+                      background-color: $primary-color;
+                      margin-right: 13px;
+
+                      &:hover {
+                        background-color: $hover-color;
+                      }
+                    }
+
+                    &-delete {
+                      background-color: $disable-color;
+
+                      &:hover {
+                        background-color: $sub-color;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

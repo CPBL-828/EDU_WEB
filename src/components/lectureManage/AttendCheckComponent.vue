@@ -71,6 +71,8 @@ export default defineComponent({
       );
 
       if (result) {
+        attendList.value = [];
+
         if (result.count > 0) {
           studentList.value = result.resultData as studentInterface[];
 
@@ -90,6 +92,13 @@ export default defineComponent({
           });
         }
       }
+    };
+
+    const backToSelect = () => {
+      lectureInfo.value = undefined;
+      console.log(lectureInfo.value);
+      common.removeItem(KEYS.SS);
+      selectState.value = false;
     };
 
     const getAttendList = async () => {
@@ -206,6 +215,7 @@ export default defineComponent({
     return {
       category,
       today,
+      backToSelect,
       isLectureDay,
       selectState,
       lectureInfo,
@@ -241,6 +251,7 @@ export default defineComponent({
           {{ today.toISOString().substring(5, 7) }}월
           {{ today.toISOString().substring(8, 10) }}일
           {{ today.toString().substring(0, 4) }}
+          <span class="back-btn" @click="backToSelect">강의 다시 선택하기</span>
         </div>
         <div class="check-section-body-lecture" v-if="!selectState">
           <select-list-component
@@ -266,41 +277,43 @@ export default defineComponent({
               @click="saveAttend"
             />
           </div>
-          <table>
-            <thead style="text-align: center">
-              <tr>
-                <td style="width: 20%">이름</td>
-                <td colspan="4" style="width: 80%">출석</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in attendList">
-                <td>{{ item.studentName }}</td>
-                <td
-                  :class="
-                    item.state === state.VALUE
-                      ? 'check-selected-' + state.KEY
-                      : 'check'
-                  "
-                  :style="{
-                    transition: existAttend ? 'all 0.1s' : 'all 0.2s',
-                  }"
-                  v-for="state in stateList"
-                  @click="checkState(item.studentKey, state)"
-                >
-                  <input
-                    type="radio"
-                    :id="item.studentKey + '-' + state.KEY"
-                    name="check"
-                    :value="state.VALUE"
-                  />
-                  <label :for="item.studentKey + '-' + state.KEY">{{
-                    state.VALUE
-                  }}</label>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="check-section-body-list-table">
+            <table>
+              <thead style="text-align: center">
+                <tr>
+                  <td style="width: 20%">이름</td>
+                  <td colspan="4" style="width: 80%">출석</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in attendList">
+                  <td>{{ item.studentName }}</td>
+                  <td
+                    :class="
+                      item.state === state.VALUE
+                        ? 'check-selected-' + state.KEY
+                        : 'check'
+                    "
+                    :style="{
+                      transition: existAttend ? 'all 0.1s' : 'all 0.2s',
+                    }"
+                    v-for="state in stateList"
+                    @click="checkState(item.studentKey, state)"
+                  >
+                    <input
+                      type="radio"
+                      :id="item.studentKey + '-' + state.KEY"
+                      name="check"
+                      :value="state.VALUE"
+                    />
+                    <label :for="item.studentKey + '-' + state.KEY">{{
+                      state.VALUE
+                    }}</label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div class="block-check" v-if="existAttend || !isLectureDay"></div>
         </div>
         <div class="no-data" v-if="selectState && !studentList">

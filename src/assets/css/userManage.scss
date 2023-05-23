@@ -180,7 +180,7 @@ section.student-insert {
 
           input[type="text"] {
             width: 175px;
-            height: 30px;
+            height: 40px;
             border: 2px solid $disable-color;
             border-radius: 8px;
             padding-left: 5px;
@@ -327,6 +327,15 @@ section.student-insert {
           }
         }
 
+        .info-tip {
+          color: $primary-color;
+          position: absolute;
+          top: 40px;
+          right: 10px;
+          font-size: 16px;
+          font-weight: bold;
+        }
+
         &-container {
           position: relative;
           top: 50%;
@@ -416,7 +425,7 @@ section.student-insert {
             input,
             textarea {
               width: 185px;
-              height: 30px;
+              height: 40px;
               border: 2px solid $disable-color;
               border-radius: 8px;
               outline: 0;

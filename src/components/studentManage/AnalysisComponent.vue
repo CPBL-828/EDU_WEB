@@ -49,13 +49,7 @@ export default defineComponent({
     const studentList = ref<studentInterface[] | undefined>(undefined);
     const selectStudentState = ref(false);
     const selectedStudent = ref<studentInterface | undefined>(undefined);
-    const date = ref<string>(
-      new Date().toLocaleDateString().split("/")[2] +
-        "-" +
-        new Date().toLocaleDateString().split("/")[1] +
-        "-" +
-        new Date().toLocaleDateString().split("/")[0]
-    );
+    const date = ref<Date>(new Date());
     const selectDate = ref<string>("");
 
     const headerList: defaultInterface[] = [
@@ -113,7 +107,7 @@ export default defineComponent({
 
     const getStudentList = async () => {
       let data = {
-        userKey: userKey.value,
+        userKey: lectureKey.value ? "" : userKey.value,
         search: "",
         lectureKey: lectureKey.value,
       };
@@ -155,7 +149,12 @@ export default defineComponent({
     const selectStudent = async (s: studentInterface) => {
       selectedStudent.value = s;
       common.setItem(KEYS.SS, common.makeJson(selectedStudent.value));
-      selectDate.value = date.value.substring(0, 10);
+      selectDate.value =
+        date.value?.toLocaleDateString().split("/")[2] +
+        "-" +
+        date.value?.toLocaleDateString().split("/")[1] +
+        "-" +
+        date.value?.toLocaleDateString().split("/")[0];
 
       await getAnalysisList();
       selectStudentState.value = true;
@@ -225,11 +224,11 @@ export default defineComponent({
       async () => {
         if (date.value) {
           selectDate.value =
-            date.value?.split("/")[2] +
+            date.value?.toLocaleDateString().split("/")[2] +
             "-" +
-            date.value?.split("/")[1] +
+            date.value?.toLocaleDateString().split("/")[1] +
             "-" +
-            date.value?.split("/")[0];
+            date.value?.toLocaleDateString().split("/")[0];
           await getAnalysisList();
         } else {
           window.alert("날짜를 선택해 주세요.");

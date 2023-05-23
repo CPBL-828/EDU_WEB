@@ -1319,7 +1319,7 @@ export default defineComponent({
               </div>
 
               <div class="student-insert-section-body-container-info-phone">
-                <span>번호 <span class="red">(필수)</span></span>
+                <span>연락처 <span class="red">(필수)</span></span>
                 <input
                   type="text"
                   placeholder="'-' 없이 번호만 입력"
@@ -1330,7 +1330,7 @@ export default defineComponent({
 
             <div class="student-insert-section-body-container-info">
               <div class="student-insert-section-body-container-info-school">
-                <span>학교 <span class="red">(재학 시 필수)</span></span>
+                <span>학적 정보 <span class="red">(재학 시 필수)</span></span>
                 <div>
                   <input
                     type="text"
@@ -1350,7 +1350,7 @@ export default defineComponent({
               </div>
 
               <div class="student-insert-section-body-container-info-address">
-                <span>주소 <span class="red">(필수)</span></span>
+                <span>거주지 <span class="red">(필수)</span></span>
                 <input
                   type="text"
                   placeholder="주소"
@@ -1379,6 +1379,7 @@ export default defineComponent({
             value="저장하기"
             @click="insertTeacher"
           />
+          <span class="info-tip"> 모든 정보를 반드시 기입해 주세요. </span>
           <div class="student-insert-section-body-container">
             <div class="student-insert-section-body-container-profile">
               <span>증명사진을</span>
@@ -1389,7 +1390,7 @@ export default defineComponent({
 
             <div class="student-insert-section-body-container-info">
               <div class="student-insert-section-body-container-info-name">
-                <span>이름 <span class="red">(필수)</span></span>
+                <span>이름</span>
                 <input
                   type="text"
                   placeholder="이름"
@@ -1398,7 +1399,7 @@ export default defineComponent({
               </div>
 
               <div class="student-insert-section-body-container-info-phone">
-                <span>번호 <span class="red">(필수)</span></span>
+                <span>연락처</span>
                 <input
                   type="text"
                   placeholder="'-' 없이 번호만 입력"
@@ -1407,7 +1408,7 @@ export default defineComponent({
               </div>
 
               <div class="student-insert-section-body-container-info-school">
-                <span>담당 <span class="red">(필수)</span></span>
+                <span>담당</span>
                 <div>
                   <div
                     class="student-insert-section-body-container-info-school-drop"
@@ -1416,7 +1417,7 @@ export default defineComponent({
                       :select-list="gradeList"
                       placeholder="학급"
                       row-width="100px"
-                      row-height="30px"
+                      row-height="40px"
                       @selectValue="selectGrade"
                     ></drop-box-component>
 
@@ -1436,7 +1437,7 @@ export default defineComponent({
                       :select-list="subjectList"
                       placeholder="과목"
                       row-width="70px"
-                      row-height="30px"
+                      row-height="40px"
                       @selectValue="selectSubject"
                     ></drop-box-component>
                   </div>
@@ -1446,7 +1447,7 @@ export default defineComponent({
 
             <div class="student-insert-section-body-container-info">
               <div class="student-insert-section-body-container-info-email">
-                <span>이메일 <span class="red">(필수)</span></span>
+                <span>이메일</span>
                 <div>
                   <input
                     type="text"
@@ -1457,7 +1458,7 @@ export default defineComponent({
               </div>
 
               <div class="student-insert-section-body-container-info-email">
-                <span>SNS <span class="red">(필수)</span></span>
+                <span>SNS</span>
                 <div>
                   <input
                     type="text"
@@ -1468,7 +1469,7 @@ export default defineComponent({
               </div>
 
               <div class="student-insert-section-body-container-info-address">
-                <span>입사일 <span class="red">(필수)</span></span>
+                <span>입사일</span>
                 <input
                   type="text"
                   placeholder="YYYY-MM-DD"

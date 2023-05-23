@@ -628,6 +628,7 @@ export default defineComponent({
               <drop-box-component
                 placeholder="상담 유형"
                 row-width="160px"
+                row-height="40px"
                 :select-list="typeList"
                 @selectValue="selectInputType"
               ></drop-box-component>
@@ -638,6 +639,7 @@ export default defineComponent({
                 :select-list="studentList"
                 placeholder="학생명"
                 row-width="160px"
+                row-height="40px"
                 @selectValue="selectInputStudent"
               ></drop-box-component>
             </div>
@@ -686,6 +688,7 @@ export default defineComponent({
               <drop-box-component
                 :placeholder="planTypeHolder"
                 row-width="160px"
+                row-height="40px"
                 :select-list="typeList"
                 @selectValue="selectType"
               ></drop-box-component>
@@ -699,6 +702,7 @@ export default defineComponent({
                 :select-list="studentList"
                 :placeholder="planNameHolder"
                 row-width="160px"
+                row-height="40px"
                 @selectValue="selectStudent"
               ></drop-box-component>
             </div>
@@ -784,6 +788,7 @@ export default defineComponent({
               <drop-box-component
                 :placeholder="listTypeHolder"
                 row-width="160px"
+                row-height="40px"
                 :select-list="typeList"
                 @selectValue="selectType"
               ></drop-box-component>
@@ -797,6 +802,7 @@ export default defineComponent({
                 :select-list="studentList"
                 :placeholder="listNameHolder"
                 row-width="160px"
+                row-height="40px"
                 @selectValue="selectStudent"
               ></drop-box-component>
             </div>

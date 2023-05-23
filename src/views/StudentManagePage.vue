@@ -8,6 +8,7 @@ import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
 import SuggestionComponent from "../components/myInfo/SuggestionComponent.vue";
 import SuggestionManageComponent from "../components/SuggestionManageComponent.vue";
+import GroupManagement from "../components/studentManage/GroupManagement.vue";
 /*
 @brief [강사, 관리자] [Main]학생 관리
        선택한 [Sub]에 따라 페이지 표시
@@ -15,6 +16,7 @@ import SuggestionManageComponent from "../components/SuggestionManageComponent.v
 export default defineComponent({
   name: "StudentManagePage",
   components: {
+    GroupManagement,
     SuggestionManageComponent,
     SuggestionComponent,
     ConsultComponent,
@@ -70,4 +72,5 @@ export default defineComponent({
     v-if="currentCategory === 'S-SUGGESTION'"
     show-user="STU"
   ></suggestion-manage-component>
+  <group-management v-if="currentCategory === 'CLASS'"></group-management>
 </template>

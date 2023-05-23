@@ -1116,6 +1116,20 @@ section.check {
           i {
             margin-right: 5px;
           }
+
+          .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            font-size: 16px;
+            color: $disable-color;
+            cursor: pointer;
+            transition: all 200ms;
+
+            &:hover {
+              color: $sub-color;
+            }
+          }
         }
 
         &-lecture {
@@ -1171,72 +1185,81 @@ section.check {
             }
           }
 
-          table {
-            position: absolute;
+          &-table {
+            position: relative;
             top: 50px;
-            border: 1px solid #eaeaea;
-            text-align: center;
-            border-spacing: 0;
-            width: 100%;
-            font-size: 18px;
-            font-weight: bold;
-            color: #343434;
+            width: 1060px;
+            height: 560px;
+            overflow: scroll;
 
-            thead {
-              tr {
-                width: 100%;
-                height: 50px;
+            table {
+              position: absolute;
+              border: 1px solid #eaeaea;
+              text-align: center;
+              border-spacing: 0;
+              width: 100%;
+              font-size: 18px;
+              font-weight: bold;
+              color: #343434;
 
-                td {
-                  background-color: #eaeaea;
+              thead {
+                position: sticky;
+
+                tr {
+                  width: 100%;
+                  height: 50px;
+
+                  td {
+                    background-color: #eaeaea;
+                  }
                 }
               }
-            }
 
-            tbody {
-              overflow: scroll;
+              tbody {
+                overflow: scroll;
 
-              tr {
-                width: 100%;
-                height: 60px;
+                tr {
+                  width: 100%;
+                  height: 60px;
 
-                td {
-                  width: 20%;
-                  color: $sub-color;
-                  border: 1px solid #eaeaea;
-                  font-weight: normal;
-                }
-
-                td.check {
-                  @include radio-custom();
-                  font-weight: normal;
-                  color: $sub-color;
-
-                  &:hover {
-                    background-color: $disable-color;
-                    color: white;
-                    font-weight: bold;
+                  td {
+                    width: 20%;
+                    color: $sub-color;
+                    border: 1px solid #eaeaea;
+                    font-weight: normal;
                   }
 
-                  &-selected {
-                    &-OK {
-                      background-color: #8fbe61;
-                      @include radio-custom();
-                    }
+                  td.check {
+                    @include radio-custom();
+                    font-weight: normal;
+                    color: $sub-color;
 
-                    &-NO {
-                      background-color: #da7e7e;
-                      @include radio-custom();
-                    }
-
-                    &-LATE {
-                      background-color: #f3d97c;
-                      @include radio-custom();
-                    }
-
-                    &-ETC {
+                    &:hover {
                       background-color: $disable-color;
-                      @include radio-custom();
+                      color: white;
+                      font-weight: bold;
+                    }
+
+                    &-selected {
+                      &-OK {
+                        background-color: #8fbe61;
+                        @include radio-custom();
+                      }
+
+                      &-NO {
+                        background-color: #da7e7e;
+                        @include radio-custom();
+                      }
+
+                      &-LATE {
+                        background-color: #f3d97c;
+                        @include radio-custom();
+                      }
+
+                      &-ETC {
+                        background-color: $disable-color;
+                        @include radio-custom();
+                      }
                     }
                   }
                 }

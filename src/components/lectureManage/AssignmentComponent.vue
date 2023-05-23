@@ -45,6 +45,7 @@ export default defineComponent({
     const createMode = ref(false);
     const content = ref<string>("");
     const selectedDate = ref<Date>(new Date());
+    const assignDetail = ref<assignInterface | undefined>(undefined);
 
     const getAssignmentList = async () => {
       let data = {
@@ -171,6 +172,11 @@ export default defineComponent({
       }
     };
 
+    const showAssignDetail = (a: assignInterface) => {
+      assignDetail.value = a;
+      store.commit("setModalState", true);
+    };
+
     onMounted(async () => {
       category.value = common.findCategory();
 
@@ -208,6 +214,7 @@ export default defineComponent({
       downloadFile,
       showUploadModal,
       doInsert,
+      showAssignDetail,
     };
   },
 });
@@ -264,6 +271,7 @@ export default defineComponent({
               list-type="assign"
               :row-height="44"
               @downloadFile="downloadFile"
+              @showAssignDetail="showAssignDetail"
             ></data-list-component>
           </div>
         </div>
@@ -305,6 +313,99 @@ export default defineComponent({
               v-model="selectedDate"
               :minute-increment="5"
             />
+          </div>
+        </div>
+        <div v-else class="assign-create">
+          <div class="assign-create-lecture">
+            {{ lectureInfo?.lectureName }}
+          </div>
+          <div class="assign-create-list">
+            <table>
+              <thead>
+                <tr>
+                  <th>이름</th>
+                  <th>제출 여부</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+                <tr>
+                  <td>이름</td>
+                  <td>제출</td>
+                  <td>비고</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </template>

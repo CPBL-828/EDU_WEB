@@ -50,8 +50,8 @@ section.modal {
       .btn {
         position: absolute;
         z-index: 10;
-        top: 46px;
-        left: 47px;
+        top: 26px;
+        left: 34px;
         width: 128px;
         height: 32px;
         cursor: pointer;
@@ -1767,6 +1767,61 @@ section.modal {
             height: 200px;
             margin-top: 20px;
             overflow: scroll;
+          }
+        }
+      }
+
+      .group-detail {
+        @include detail-custom();
+        flex-direction: row;
+
+        &-left,
+        &-right {
+          width: 50%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .label {
+            color: $sub-color;
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 16px;
+          }
+
+          .item {
+            width: 200px;
+            height: 40px;
+            border: 2px solid $disable-color;
+            border-radius: 10px;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          &-name {
+            display: flex;
+            align-items: center;
+
+            input {
+              width: 200px;
+              height: 40px;
+              border: 2px solid $disable-color;
+              border-radius: 10px;
+              font-size: 16px;
+
+              &:focus {
+                outline: 0;
+                border: 2px solid $sub-color;
+              }
+            }
+          }
+
+          &-teacher {
+            width: auto;
+            height: auto;
           }
         }
       }

@@ -196,6 +196,8 @@ export interface assignInterface {
 
 export interface groupInterface {
   groupKey: string;
+  teacherKey_id: string;
+  teacherName: string;
   groupName: string;
   groupContent: string;
   endDate: string;

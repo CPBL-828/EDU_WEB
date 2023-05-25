@@ -21,11 +21,13 @@ export default defineComponent({
     const router = useRouter();
     const fileURL: string = CONSTANT.FILE_URL;
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const createState = ref(false);
     const header: defaultInterface[] = [
       { KEY: "NAME", VALUE: "반 이름" },
       { KEY: "TEA", VALUE: "담당 강사" },
     ];
     const groupList = ref<Array<groupInterface>>([]);
+    const groupInsertData = ref<groupInterface | undefined>(undefined);
     const groupDetail = ref<groupInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
@@ -137,6 +139,10 @@ export default defineComponent({
       }
     };
 
+    const changeCreateMode = () => {
+      createState.value = true;
+    };
+
     const changeEditState = async () => {
       await setTeacherList();
 
@@ -158,7 +164,8 @@ export default defineComponent({
     const doEdit = async () => {
       if (
         groupDetail.value?.groupName === groupEditData.value.groupName &&
-        groupDetail.value?.teacherKey_id === teacherInfo.value?.teacherKey
+        groupDetail.value?.teacherKey_id === teacherInfo.value?.teacherKey &&
+        groupDetail.value?.groupContent === groupEditData.value.groupContent
       ) {
         if (
           window.confirm("수정된 내용이 없습니다.\n수정을 취소하시겠습니까?")
@@ -212,14 +219,17 @@ export default defineComponent({
     return {
       fileURL,
       category,
+      createState,
       header,
       groupList,
+      groupInsertData,
       groupDetail,
       teacherInfo,
       editState,
       groupEditData,
       teacherList,
       deleteGroup,
+      changeCreateMode,
       showGroupDetail,
       changeEditState,
       selectTeacher,
@@ -243,7 +253,26 @@ export default defineComponent({
           }}
         </div>
         <div class="group-section-body">
-          <div class="group-section-body-list">
+          <input
+            v-if="!createState"
+            type="button"
+            value="생성하기"
+            class="btn-create"
+            @click="changeCreateMode"
+          />
+          <input
+            v-else-if="createState && !groupInsertData"
+            type="button"
+            value="다음으로"
+            class="btn-more"
+          />
+          <input
+            v-else-if="createState && groupInsertData"
+            type="button"
+            value="저장"
+            class="save"
+          />
+          <div class="group-section-body-list" v-if="!createState">
             <table class="group-section-body-list-table">
               <thead class="group-section-body-list-table-header">
                 <tr class="group-section-body-list-table-header-item">
@@ -277,6 +306,8 @@ export default defineComponent({
               </tbody>
             </table>
           </div>
+
+          <div class="group-section-body-list" v-else>하하</div>
         </div>
       </div>
     </div>
@@ -315,6 +346,16 @@ export default defineComponent({
                   maxlength="50"
                 />
                 <div class="item" v-else>{{ groupDetail?.groupName }}</div>
+              </div>
+              <div class="group-detail-left-container-content">
+                <span class="label">반 설명</span>
+                <input
+                  type="text"
+                  v-if="editState"
+                  v-model="groupEditData.groupContent"
+                  maxlength="50"
+                />
+                <div class="item" v-else>{{ groupDetail?.groupContent }}</div>
               </div>
               <div class="group-detail-left-container-teacher">
                 <span class="label"> 담당 강사 </span>

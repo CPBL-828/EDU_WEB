@@ -1792,6 +1792,7 @@ section.modal {
             }
 
             .item {
+              padding: 0 10px;
               width: 200px;
               height: 40px;
               border: 2px solid $disable-color;
@@ -1800,12 +1801,12 @@ section.modal {
               display: flex;
               justify-content: center;
               align-items: center;
+              overflow: scroll;
             }
 
-            &-name {
-              margin-top: 141px;
+            &-name,
+            &-content {
               display: flex;
-              align-items: center;
 
               input {
                 padding: 0 10px;
@@ -1822,13 +1823,33 @@ section.modal {
               }
             }
 
+            &-name {
+              margin-top: 141px;
+              align-items: center;
+            }
+
+            &-content {
+              margin-top: 15px;
+              align-items: flex-start;
+
+              .item {
+                padding: 10px;
+                height: 80px;
+                justify-content: flex-start;
+              }
+
+              input {
+                height: 100px;
+              }
+            }
+
             &-teacher {
               width: auto;
               height: auto;
-              margin-top: 43px;
+              margin-top: 30px;
 
               &-drop {
-                margin-top: 42px;
+                margin-top: 15px;
                 width: auto;
                 height: auto;
               }

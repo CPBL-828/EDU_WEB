@@ -1808,6 +1808,7 @@ section.modal {
               align-items: center;
 
               input {
+                padding: 0 10px;
                 width: 200px;
                 height: 40px;
                 border: 2px solid $disable-color;
@@ -1825,6 +1826,12 @@ section.modal {
               width: auto;
               height: auto;
               margin-top: 43px;
+
+              &-drop {
+                margin-top: 42px;
+                width: auto;
+                height: auto;
+              }
 
               &-profile {
                 display: flex;

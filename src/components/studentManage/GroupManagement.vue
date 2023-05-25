@@ -11,10 +11,11 @@ import { CONSTANT, KEYS, RESULT_KEY } from "../../constant";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import DropBoxComponent from "../custom/DropBoxComponent.vue";
 
 export default defineComponent({
   name: "GroupManagement",
-  components: { ModalPopupComponent },
+  components: { DropBoxComponent, ModalPopupComponent },
   setup() {
     const store = useStore();
     const router = useRouter();
@@ -28,6 +29,18 @@ export default defineComponent({
     const groupDetail = ref<groupInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
+    const groupEditData = ref<groupInterface>({
+      groupKey: "",
+      teacherKey_id: "",
+      teacherName: "",
+      groupName: "",
+      groupContent: "",
+      endDate: "",
+      delState: "",
+      createDate: "",
+      editDate: "",
+    });
+    const teacherList = ref<Array<defaultInterface>>([]);
 
     const getGroupList = async () => {
       let data = {
@@ -48,6 +61,25 @@ export default defineComponent({
         if (result.count > 0) {
           result.resultData.map((group: groupInterface) => {
             if (group.delState === "N") groupList.value.push(group);
+          });
+        }
+      }
+    };
+
+    const setTeacherList = async () => {
+      let data = {
+        search: "",
+      };
+
+      const result = await ApiClient(
+        "/members/getTeacherList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          result.resultData.map((t: teacherInterface) => {
+            teacherList.value.push({ KEY: t.teacherKey, VALUE: t.name });
           });
         }
       }
@@ -105,11 +137,78 @@ export default defineComponent({
       }
     };
 
+    const changeEditState = async () => {
+      await setTeacherList();
+
+      if (groupDetail.value) {
+        groupEditData.value.groupKey = groupDetail.value.groupKey;
+        groupEditData.value.teacherKey_id = groupDetail.value.teacherKey_id;
+        groupEditData.value.groupName = groupDetail.value.groupName;
+        groupEditData.value.groupContent = groupDetail.value.groupContent;
+      }
+
+      editState.value = true;
+    };
+
+    const selectTeacher = (t: defaultInterface) => {
+      groupEditData.value.teacherKey_id = t.KEY;
+      getTeacherDetail(t.KEY);
+    };
+
+    const doEdit = async () => {
+      if (
+        groupDetail.value?.groupName === groupEditData.value.groupName &&
+        groupDetail.value?.teacherKey_id === teacherInfo.value?.teacherKey
+      ) {
+        if (
+          window.confirm("수정된 내용이 없습니다.\n수정을 취소하시겠습니까?")
+        ) {
+          editState.value = false;
+          return false;
+        } else {
+          return false;
+        }
+      }
+
+      if (window.confirm("수정한 정보를 저장하시겠습니까?")) {
+        let data = {
+          groupKey: groupEditData.value.groupKey,
+          teacherKey: groupEditData.value.teacherKey_id,
+          groupName: groupEditData.value.groupName,
+          groupContent: groupEditData.value.groupContent,
+        };
+
+        const result = await ApiClient(
+          "/lectures/editGroup/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.EDIT) {
+            groupDetail.value = result.resultData as groupInterface;
+            window.alert(
+              "성공적으로 수정했습니다.\n수정된 목록을 확인하시려면 팝업을 닫고 새로고침을 해주세요."
+            );
+            editState.value = false;
+          } else {
+            window.alert("수정을 실패했습니다. 다시 시도해 주세요.");
+            return false;
+          }
+        } else {
+          window.alert("수정을 실패했습니다. 다시 시도해 주세요.");
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+
     onMounted(() => {
       category.value = common.findCategory();
 
       getGroupList();
     });
+
     return {
       fileURL,
       category,
@@ -118,8 +217,13 @@ export default defineComponent({
       groupDetail,
       teacherInfo,
       editState,
-      showGroupDetail,
+      groupEditData,
+      teacherList,
       deleteGroup,
+      showGroupDetail,
+      changeEditState,
+      selectTeacher,
+      doEdit,
     };
   },
 });
@@ -184,10 +288,16 @@ export default defineComponent({
     >
       <template v-slot:button>
         <div class="btn">
-          <div :class="editState ? 'btn-save-active' : 'btn-save'">
+          <div
+            :class="editState ? 'btn-save-active' : 'btn-save'"
+            @click="doEdit"
+          >
             저장하기
           </div>
-          <div :class="!editState ? 'btn-edit-active' : 'btn-edit'">
+          <div
+            :class="!editState ? 'btn-edit-active' : 'btn-edit'"
+            @click="changeEditState"
+          >
             수정하기
           </div>
         </div>
@@ -198,7 +308,12 @@ export default defineComponent({
             <div class="group-detail-left-container">
               <div class="group-detail-left-container-name">
                 <span class="label">반 이름</span>
-                <input type="text" v-if="editState" />
+                <input
+                  type="text"
+                  v-if="editState"
+                  v-model="groupEditData.groupName"
+                  maxlength="50"
+                />
                 <div class="item" v-else>{{ groupDetail?.groupName }}</div>
               </div>
               <div class="group-detail-left-container-teacher">
@@ -226,6 +341,16 @@ export default defineComponent({
                       >{{ teacherInfo.part }} {{ teacherInfo.resSubject }}</span
                     >
                   </div>
+                </div>
+                <div class="group-detail-left-container-teacher-drop">
+                  <drop-box-component
+                    v-if="editState"
+                    :select-list="teacherList"
+                    placeholder="강사 선택"
+                    row-height="40px"
+                    row-width="264px"
+                    @selectValue="selectTeacher"
+                  ></drop-box-component>
                 </div>
               </div>
             </div>

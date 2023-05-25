@@ -1,9 +1,13 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import { defaultInterface, groupInterface } from "../../lib/types";
+import {
+  defaultInterface,
+  groupInterface,
+  teacherInterface,
+} from "../../lib/types";
 import common from "../../lib/common";
 import { ApiClient } from "../../axios";
-import { KEYS, RESULT_KEY } from "../../constant";
+import { CONSTANT, KEYS, RESULT_KEY } from "../../constant";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -14,6 +18,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
+    const fileURL: string = CONSTANT.FILE_URL;
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const header: defaultInterface[] = [
       { KEY: "NAME", VALUE: "반 이름" },
@@ -21,6 +26,7 @@ export default defineComponent({
     ];
     const groupList = ref<Array<groupInterface>>([]);
     const groupDetail = ref<groupInterface | undefined>(undefined);
+    const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
 
     const getGroupList = async () => {
@@ -47,8 +53,24 @@ export default defineComponent({
       }
     };
 
-    const showGroupDetail = (g: groupInterface) => {
+    const getTeacherDetail = async (t: string) => {
+      let data = {
+        teacherKey: t,
+      };
+
+      const result = await ApiClient(
+        "/members/getTeacherDetail/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        teacherInfo.value = result.resultData[0] as teacherInterface;
+      }
+    };
+
+    const showGroupDetail = async (g: groupInterface) => {
       groupDetail.value = g;
+      await getTeacherDetail(g.teacherKey_id);
 
       store.commit("setModalState", true);
     };
@@ -89,10 +111,12 @@ export default defineComponent({
       getGroupList();
     });
     return {
+      fileURL,
       category,
       header,
       groupList,
       groupDetail,
+      teacherInfo,
       editState,
       showGroupDetail,
       deleteGroup,
@@ -171,21 +195,55 @@ export default defineComponent({
       <template v-slot:body>
         <div class="group-detail">
           <div class="group-detail-left">
-            <div class="group-detail-left-name">
-              <span class="label">반 이름</span>
-              <input type="text" v-if="editState" />
-              <div class="item" v-else>{{ groupDetail?.groupName }}</div>
-            </div>
-            <div class="group-detail-left-teacher">
-              <span class="label"> 담당 강사 </span>
-              <div class="group-detail-left-teacher-profile"></div>
+            <div class="group-detail-left-container">
+              <div class="group-detail-left-container-name">
+                <span class="label">반 이름</span>
+                <input type="text" v-if="editState" />
+                <div class="item" v-else>{{ groupDetail?.groupName }}</div>
+              </div>
+              <div class="group-detail-left-container-teacher">
+                <span class="label"> 담당 강사 </span>
+                <div
+                  class="group-detail-left-container-teacher-profile"
+                  v-if="teacherInfo"
+                >
+                  <img
+                    v-if="teacherInfo.profileImg"
+                    :src="fileURL + teacherInfo.profileImg"
+                    alt="profile"
+                  />
+                  <div
+                    class="group-detail-left-container-teacher-profile-img"
+                    v-else
+                  >
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <div class="group-detail-left-container-teacher-profile-info">
+                    <span class="label">강사명</span>
+                    <span class="item-name">{{ teacherInfo.name }}</span>
+                    <span class="label">담당</span>
+                    <span class="item-subject"
+                      >{{ teacherInfo.part }} {{ teacherInfo.resSubject }}</span
+                    >
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="group-detail-right">
-            <div class="group-detail-right-name">
-              <span class="label">생성일</span>
-              <div class="item">
-                {{ groupDetail?.createDate.split("T")[0] }}
+            <div class="group-detail-right-container">
+              <div class="group-detail-right-container-name">
+                <span class="label">생성일</span>
+                <div class="item">
+                  {{ groupDetail?.createDate.split("T")[0] }}
+                </div>
+              </div>
+              <div class="group-detail-right-container-student">
+                <div class="group-detail-right-container-student-header">
+                  <span class="label"> 배정 학생 </span>
+                  <input type="button" value="배정하기" class="btn-put" />
+                </div>
+                <div class="group-detail-right-container-student-list"></div>
               </div>
             </div>
           </div>

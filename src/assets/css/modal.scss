@@ -50,8 +50,8 @@ section.modal {
       .btn {
         position: absolute;
         z-index: 10;
-        top: 46px;
-        left: 47px;
+        top: 26px;
+        left: 34px;
         width: 128px;
         height: 32px;
         cursor: pointer;
@@ -1767,6 +1767,163 @@ section.modal {
             height: 200px;
             margin-top: 20px;
             overflow: scroll;
+          }
+        }
+      }
+
+      .group-detail {
+        @include detail-custom();
+        flex-direction: row;
+
+        &-left,
+        &-right {
+          width: 50%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          &-container {
+            .label {
+              color: $sub-color;
+              font-size: 16px;
+              font-weight: bold;
+              margin-right: 16px;
+            }
+
+            .item {
+              width: 200px;
+              height: 40px;
+              border: 2px solid $disable-color;
+              border-radius: 10px;
+              font-size: 16px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+
+            &-name {
+              margin-top: 141px;
+              display: flex;
+              align-items: center;
+
+              input {
+                padding: 0 10px;
+                width: 200px;
+                height: 40px;
+                border: 2px solid $disable-color;
+                border-radius: 10px;
+                font-size: 16px;
+
+                &:focus {
+                  outline: 0;
+                  border: 2px solid $sub-color;
+                }
+              }
+            }
+
+            &-teacher {
+              width: auto;
+              height: auto;
+              margin-top: 43px;
+
+              &-drop {
+                margin-top: 42px;
+                width: auto;
+                height: auto;
+              }
+
+              &-profile {
+                display: flex;
+                margin-top: 10px;
+
+                img {
+                  width: 90px;
+                  height: 113px;
+                  object-fit: cover;
+                  border-radius: 5px;
+                }
+
+                &-img {
+                  width: 90px;
+                  height: 113px;
+                  border-radius: 5px;
+                  background: $disable-color;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+
+                  > i {
+                    color: white;
+                    font-size: 69px;
+                  }
+                }
+
+                &-info {
+                  margin-left: 21px;
+
+                  span {
+                    display: block;
+                    font-size: 16px;
+                    font-weight: bold;
+                  }
+
+                  .label {
+                    color: $disable-color;
+                    margin-bottom: 5px;
+                  }
+
+                  span[class^="item"] {
+                    color: $sub-color;
+                  }
+
+                  .item-name {
+                    margin-bottom: 11px;
+                  }
+                }
+              }
+            }
+
+            &-student {
+              margin-top: 43px;
+              width: 300px;
+              height: auto;
+
+              &-header {
+                width: 100%;
+                height: auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+
+                input {
+                  width: 70px;
+                  height: 20px;
+                  border-radius: 19px;
+                  background-color: $primary-color;
+                  color: white;
+                  font-size: 14px;
+                  font-weight: bold;
+                  border: 0;
+                  cursor: pointer;
+                  transition: all 200ms;
+
+                  &:hover {
+                    background-color: $hover-color;
+                  }
+                }
+              }
+
+              &-list {
+                padding: 17px;
+                overflow: scroll;
+                width: 100%;
+                height: 350px;
+                border-radius: 10px;
+                border: 2px solid $disable-color;
+              }
+            }
           }
         }
       }

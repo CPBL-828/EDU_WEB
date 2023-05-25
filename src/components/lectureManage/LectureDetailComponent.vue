@@ -6,7 +6,7 @@ import {
   scheduleInterface,
 } from "../../lib/types";
 import common from "../../lib/common";
-import { KEYS, USER_KEY } from "../../constant";
+import { CONSTANT, KEYS, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
@@ -139,6 +139,31 @@ export default defineComponent({
       else currentPage.value = currentPage.value - 1;
     };
 
+    const downloadPlanner = async (l: scheduleInterface | undefined) => {
+      if (l) {
+        if (l.planner) {
+          if (window.confirm("계획서를 다운로드 하시겠습니까?")) {
+            const plannerUrl = CONSTANT.BASE_URL + "/media/" + l.planner;
+            const response = await fetch(plannerUrl);
+            if (response.ok) {
+              const blob = await response.blob();
+              const filename = `${l.teacherName}_${l.lectureName}_강의 계획서`;
+              const link = document.createElement("a");
+              link.href = URL.createObjectURL(blob);
+              link.setAttribute("download", filename);
+              link.click();
+              URL.revokeObjectURL(link.href);
+            }
+          } else {
+            return false;
+          }
+        } else {
+          window.alert("저장되어 있는 계획서가 없습니다.");
+          return false;
+        }
+      }
+    };
+
     watch(
       () => currentPage.value,
       () => {
@@ -179,6 +204,7 @@ export default defineComponent({
       selectLecture,
       selectPage,
       changePage,
+      downloadPlanner,
     };
   },
 });
@@ -279,7 +305,9 @@ export default defineComponent({
                 <span class="item">{{ lectureInfo.book }}</span>
                 <!--                <span class="label">수강 인원</span>-->
                 <!--                <span class="item">명</span>-->
-                <div class="planner-btn">강의계획서 열람하기</div>
+                <div class="planner-btn" @click="downloadPlanner(lectureInfo)">
+                  강의계획서 다운로드
+                </div>
               </div>
             </div>
           </div>

@@ -107,7 +107,7 @@ export default defineComponent({
       if (result) {
         studentAttendList.value = undefined;
         if (result.count > 0) {
-          totalDay.value = result.count / totalCnt.value;
+          totalDay.value = Math.floor(result.count / totalCnt.value);
 
           if (!studentInfo.value) {
             attendList.value = result.resultData as attendInterface[];

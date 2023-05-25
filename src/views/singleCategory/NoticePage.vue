@@ -232,6 +232,7 @@ export default defineComponent({
       () => {
         if (inputType.value === "전체") {
           typePlaceholder.value = "해당 없음";
+          userList.value = undefined;
         } else {
           typePlaceholder.value = inputType.value + "명";
 

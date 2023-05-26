@@ -22,12 +22,24 @@ export default defineComponent({
     const fileURL: string = CONSTANT.FILE_URL;
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const createState = ref(false);
+    const moreState = ref(false);
     const header: defaultInterface[] = [
       { KEY: "NAME", VALUE: "반 이름" },
       { KEY: "TEA", VALUE: "담당 강사" },
     ];
     const groupList = ref<Array<groupInterface>>([]);
-    const groupInsertData = ref<groupInterface | undefined>(undefined);
+    const groupInsertData = ref<groupInterface>({
+      groupKey: "",
+      teacherKey_id: "",
+      teacherName: "",
+      groupName: "",
+      groupContent: "",
+      endDate: "",
+      delState: "",
+      createDate: "",
+      editDate: "",
+    });
+    const selectedTeacher = ref<teacherInterface | undefined>(undefined);
     const groupDetail = ref<groupInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
@@ -98,7 +110,13 @@ export default defineComponent({
       );
 
       if (result) {
-        teacherInfo.value = result.resultData[0] as teacherInterface;
+        if (createState.value) {
+          selectedTeacher.value = result.resultData[0] as teacherInterface;
+          groupInsertData.value.teacherKey_id =
+            selectedTeacher.value.teacherKey;
+        } else {
+          teacherInfo.value = result.resultData[0] as teacherInterface;
+        }
       }
     };
 
@@ -139,8 +157,56 @@ export default defineComponent({
       }
     };
 
-    const changeCreateMode = () => {
-      createState.value = true;
+    const changeMode = async (p: number) => {
+      if (p === 0) {
+        await setTeacherList();
+        createState.value = true;
+      } else if (p === 1) {
+        await createGroup(1);
+      }
+    };
+
+    const createGroup = async (m: number) => {
+      if (!groupInsertData.value.groupName) {
+        window.alert("반 이름을 입력해 주세요.");
+        return false;
+      } else if (!groupInsertData.value.groupContent) {
+        window.alert("반 설명을 입력해 주세요.");
+        return false;
+      } else if (!groupInsertData.value.teacherKey_id) {
+        window.alert("담당 강사님을 선택해 주세요.");
+        return false;
+      }
+
+      if (window.confirm("입력하신 정보로 반을 생성하시겠습니까?")) {
+        let data = {
+          teacherKey: groupInsertData.value.teacherKey_id,
+          groupName: groupInsertData.value.groupName,
+          groupContent: groupInsertData.value.groupContent,
+        };
+
+        const result = await ApiClient(
+          "/lectures/createGroup/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.CREATE) {
+            await getGroupList();
+            window.alert("반을 성공적으로 생성했습니다.");
+
+            !m ? router.go(0) : (moreState.value = true);
+          } else {
+            window.alert("반 생성을 실패했습니다.");
+            return false;
+          }
+        } else {
+          window.alert("반 생성을 실패했습니다.");
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     const changeEditState = async () => {
@@ -157,7 +223,10 @@ export default defineComponent({
     };
 
     const selectTeacher = (t: defaultInterface) => {
-      groupEditData.value.teacherKey_id = t.KEY;
+      if (!createState.value) {
+        groupEditData.value.teacherKey_id = t.KEY;
+      }
+
       getTeacherDetail(t.KEY);
     };
 
@@ -220,16 +289,19 @@ export default defineComponent({
       fileURL,
       category,
       createState,
+      moreState,
       header,
       groupList,
       groupInsertData,
+      selectedTeacher,
       groupDetail,
       teacherInfo,
       editState,
       groupEditData,
       teacherList,
       deleteGroup,
-      changeCreateMode,
+      changeMode,
+      createGroup,
       showGroupDetail,
       changeEditState,
       selectTeacher,
@@ -258,16 +330,10 @@ export default defineComponent({
             type="button"
             value="생성하기"
             class="btn-create"
-            @click="changeCreateMode"
+            @click="changeMode(0)"
           />
           <input
-            v-else-if="createState && !groupInsertData"
-            type="button"
-            value="다음으로"
-            class="btn-more"
-          />
-          <input
-            v-else-if="createState && groupInsertData"
+            v-else-if="moreState"
             type="button"
             value="저장"
             class="save"
@@ -307,7 +373,94 @@ export default defineComponent({
             </table>
           </div>
 
-          <div class="group-section-body-list" v-else>하하</div>
+          <div class="group-section-body-insert" v-else>
+            <div class="group-section-body-insert-first" v-if="!moreState">
+              <div class="group-section-body-insert-first-left">
+                <div class="group-section-body-insert-first-left-container">
+                  <div
+                    class="group-section-body-insert-first-left-container-name"
+                  >
+                    <span class="label">반 이름</span>
+                    <input
+                      type="text"
+                      v-model="groupInsertData.groupName"
+                      maxlength="50"
+                    />
+                  </div>
+                  <div
+                    class="group-section-body-insert-first-left-container-content"
+                  >
+                    <span class="label">반 설명</span>
+                    <textarea v-model="groupInsertData.groupContent" />
+                  </div>
+                  <div
+                    class="group-section-body-insert-first-left-container-teacher"
+                  >
+                    <span class="label">담당 강사</span>
+                    <div
+                      class="group-section-body-insert-first-left-container-teacher-profile"
+                      v-if="selectedTeacher"
+                    >
+                      <img
+                        v-if="selectedTeacher.profileImg"
+                        :src="fileURL + selectedTeacher.profileImg"
+                        alt="profile"
+                      />
+                      <div
+                        class="group-section-body-insert-first-left-container-teacher-profile-img"
+                        v-else
+                      >
+                        <i class="fa-solid fa-user"></i>
+                      </div>
+                      <div
+                        class="group-section-body-insert-first-left-container-teacher-profile-info"
+                        v-if="selectedTeacher"
+                      >
+                        <span class="label">강사명</span>
+                        <span class="item-name">{{
+                          selectedTeacher.name
+                        }}</span>
+                        <span class="label">담당</span>
+                        <span class="item-subject"
+                          >{{ selectedTeacher.part }}
+                          {{ selectedTeacher.resSubject }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="group-section-body-insert-first-left-container-teacher-drop"
+                  >
+                    <drop-box-component
+                      :select-list="teacherList"
+                      placeholder="강사 선택"
+                      row-height="40px"
+                      row-width="264px"
+                      @selectValue="selectTeacher"
+                    ></drop-box-component>
+                  </div>
+                </div>
+              </div>
+              <div class="group-section-body-insert-first-right">
+                <span class="tip">추후에 학생들을 배정할 수 있습니다.</span>
+                <input
+                  type="button"
+                  class="btn-save"
+                  value="반 생성하기"
+                  @click="createGroup(0)"
+                />
+                <span class="tip">반을 생성하고 즉시 학생을 배정합니다.</span>
+                <input
+                  type="button"
+                  class="btn-more"
+                  value="학생 배정하기"
+                  @click="changeMode(1)"
+                />
+              </div>
+            </div>
+
+            <div class="group-section-body-list-more" v-else></div>
+          </div>
         </div>
       </div>
     </div>
@@ -353,7 +506,6 @@ export default defineComponent({
                   type="text"
                   v-if="editState"
                   v-model="groupEditData.groupContent"
-                  maxlength="50"
                 />
                 <div class="item" v-else>{{ groupDetail?.groupContent }}</div>
               </div>

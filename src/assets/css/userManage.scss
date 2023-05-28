@@ -1228,32 +1228,59 @@ section.group {
         @include body-custom();
         height: 800px;
 
+        > input[type="button"] {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          height: 33px;
+          width: 170px;
+          border-radius: 19px;
+          border: 2px solid #0099ff;
+          background-color: white;
+          color: #0099ff;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background-color: #0099ff;
+            color: white;
+          }
+        }
+
         &-list {
           position: relative;
+          overflow: scroll;
           top: 68px;
           left: 50%;
           transform: translateX(-50%);
           width: 800px;
-          height: 600px;
+          height: 700px;
 
-          &-table {
+          table {
             position: absolute;
             width: 100%;
             height: auto;
-            border-top: 2px solid #343434;
-            border-bottom: 2px solid $disable-color;
             border-spacing: 0;
 
-            &-header {
+            thead {
+              position: sticky;
+              background-color: white;
+              top: 0;
               height: 50px;
               font-size: 24px;
-              position: sticky;
+
+              th {
+                border-top: 2px solid #343434;
+                border-bottom: 2px solid $disable-color;
+              }
             }
 
-            &-content {
+            tbody {
               text-align: center;
 
-              &-item {
+              tr {
                 font-size: 20px;
                 transition: all 200ms;
 
@@ -1263,7 +1290,7 @@ section.group {
 
                 td {
                   height: 45px;
-                  border-top: 2px solid $disable-color;
+                  border-bottom: 2px solid $disable-color;
 
                   input {
                     width: 100px;
@@ -1297,6 +1324,312 @@ section.group {
                   }
                 }
               }
+            }
+          }
+        }
+
+        &-insert {
+          height: 100%;
+
+          &-first {
+            display: flex;
+            height: 100%;
+
+            &-left,
+            &-right {
+              width: 50%;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+
+              &-container {
+                .label {
+                  color: $sub-color;
+                  font-size: 16px;
+                  font-weight: bold;
+                  margin-right: 16px;
+                }
+
+                &-name,
+                &-content {
+                  display: flex;
+
+                  input {
+                    padding: 0 10px;
+                    width: 200px;
+                    height: 40px;
+                    border: 2px solid $disable-color;
+                    border-radius: 10px;
+                    font-size: 16px;
+
+                    &:focus {
+                      outline: 0;
+                      border: 2px solid $sub-color;
+                    }
+                  }
+                }
+
+                &-name {
+                  align-items: center;
+                }
+
+                &-content {
+                  margin-top: 15px;
+                  align-items: flex-start;
+
+                  textarea {
+                    padding: 0 10px;
+                    width: 200px;
+                    height: 100px;
+                    border: 2px solid $disable-color;
+                    border-radius: 10px;
+                    font-size: 16px;
+                    resize: none;
+
+                    &:focus {
+                      outline: 0;
+                      border: 2px solid $sub-color;
+                    }
+                  }
+                }
+
+                &-teacher {
+                  width: auto;
+                  height: auto;
+                  margin-top: 30px;
+
+                  &-drop {
+                    margin-top: 15px;
+                    width: auto;
+                    height: auto;
+                  }
+
+                  &-profile {
+                    display: flex;
+                    margin-top: 10px;
+
+                    img {
+                      width: 90px;
+                      height: 113px;
+                      object-fit: cover;
+                      border-radius: 5px;
+                    }
+
+                    &-img {
+                      width: 90px;
+                      height: 113px;
+                      border-radius: 5px;
+                      background: $disable-color;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+
+                      > i {
+                        color: white;
+                        font-size: 69px;
+                      }
+                    }
+
+                    &-info {
+                      margin-left: 21px;
+
+                      span {
+                        display: block;
+                        font-size: 16px;
+                        font-weight: bold;
+                      }
+
+                      .label {
+                        color: $disable-color;
+                        margin-bottom: 5px;
+                      }
+
+                      span[class^="item"] {
+                        color: $sub-color;
+                      }
+
+                      .item-name {
+                        margin-bottom: 11px;
+                      }
+                    }
+                  }
+                }
+              }
+
+              .tip {
+                font-size: 16px;
+                font-weight: bold;
+                color: $disable-color;
+                margin-bottom: 5px;
+              }
+
+              input[type="button"] {
+                background-color: $primary-color;
+                width: 150px;
+                height: 30px;
+                color: white;
+                font-weight: bold;
+                font-size: 16px;
+                border-radius: 10px;
+                border: 0;
+                cursor: pointer;
+                transition: all 200ms;
+
+                &:hover {
+                  background-color: $hover-color;
+                }
+              }
+
+              .btn-save {
+                margin-bottom: 60px;
+              }
+            }
+          }
+
+          &-more {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &-before,
+            &-after {
+              width: 330px;
+              height: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+
+              &-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 4px;
+
+                span {
+                  font-size: 20px;
+                  font-weight: bold;
+                  color: $sub-color;
+                }
+
+                span.group {
+                  color: $disable-color;
+                }
+
+                .search {
+                  width: 190px;
+                  height: 30px;
+                  border: 2px solid $disable-color;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  border-radius: 10px;
+
+                  input[type="text"] {
+                    margin-left: 7px;
+                    border: 0;
+                    width: 150px;
+                    height: 26px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: $disable-color;
+
+                    &:focus {
+                      outline: 0;
+                    }
+
+                    &::placeholder {
+                      color: $disable-color;
+                    }
+                  }
+
+                  i {
+                    color: white;
+                    background-color: $disable-color;
+                    width: 21px;
+                    height: 21px;
+                    border-radius: 25%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 5px;
+                    cursor: pointer;
+                  }
+                }
+              }
+
+              &-stu {
+                width: 100%;
+                height: 600px;
+                border: 2px solid $disable-color;
+                border-radius: 10px;
+                overflow: scroll;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                &-item {
+                  width: 280px;
+                  height: auto;
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin: 18px 0;
+
+                  &-profile {
+                    width: 64px;
+                    height: 80px;
+                    border-radius: 5px;
+                    background-color: $disable-color;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    i {
+                      color: white;
+                      font-size: 48px;
+                    }
+                  }
+
+                  img {
+                    border-radius: 5px;
+                    width: 64px;
+                    height: 100%;
+                    object-fit: cover;
+                  }
+
+                  &-info {
+                    span {
+                      display: block;
+                      font-size: 16px;
+                      font-weight: bold;
+                      color: $sub-color;
+                    }
+                  }
+
+                  input {
+                    width: 60px;
+                    height: 30px;
+                    background-color: $primary-color;
+                    border-radius: 15px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    color: white;
+                    border: 0;
+                    cursor: pointer;
+                    transition: all 200ms;
+
+                    &:hover {
+                      background-color: $hover-color;
+                    }
+                  }
+                }
+              }
+            }
+
+            &-before {
+              margin-right: 70px;
             }
           }
         }

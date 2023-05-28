@@ -12,7 +12,7 @@ import {
 import { categoryInterface, defaultInterface } from "./types";
 import { ref } from "vue";
 
-const makeJson = (data: object): string => {
+const makeJson = (data: object | Array<object>): string => {
   return JSON.stringify(data);
 };
 

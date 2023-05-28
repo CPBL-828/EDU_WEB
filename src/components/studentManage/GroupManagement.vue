@@ -3,6 +3,7 @@ import { defineComponent, onMounted, ref } from "vue";
 import {
   defaultInterface,
   groupInterface,
+  studentInterface,
   teacherInterface,
 } from "../../lib/types";
 import common from "../../lib/common";
@@ -40,6 +41,15 @@ export default defineComponent({
       editDate: "",
     });
     const selectedTeacher = ref<teacherInterface | undefined>(undefined);
+    const searchStudent = ref<string>("");
+    const studentList = ref<Array<studentInterface>>([]);
+    const selectedStudentList = ref<Array<studentInterface>>([]);
+    const selectedStudentData = ref([
+      {
+        groupKey: "",
+        studentKey: "",
+      },
+    ]);
     const groupDetail = ref<groupInterface | undefined>(undefined);
     const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
@@ -80,6 +90,27 @@ export default defineComponent({
       }
     };
 
+    const getStudentList = async () => {
+      let data = {
+        userKey: "",
+        search: searchStudent.value,
+        lectureKey: "",
+      };
+
+      const result = await ApiClient(
+        "/members/getStudentList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        studentList.value = result.resultData.filter((s: studentInterface) => {
+          return !selectedStudentList.value.some(
+            (ss: studentInterface) => ss.studentKey === s.studentKey
+          );
+        });
+      }
+    };
+
     const setTeacherList = async () => {
       let data = {
         search: "",
@@ -117,6 +148,71 @@ export default defineComponent({
         } else {
           teacherInfo.value = result.resultData[0] as teacherInterface;
         }
+      }
+    };
+
+    const goPutStudent = async () => {
+      if (
+        window.confirm(
+          `${groupDetail.value!.groupName} 반의 학생을 배정하시겠습니까?`
+        )
+      ) {
+        await getStudentList();
+        store.commit("setModalState", false);
+        createState.value = true;
+        moreState.value = true;
+      } else {
+        return false;
+      }
+    };
+
+    const addStudent = (s: studentInterface) => {
+      for (let i = 0; i < studentList.value.length; i++) {
+        if (studentList.value[i].studentKey === s.studentKey) {
+          studentList.value.splice(i, 1);
+          i--;
+        }
+      }
+      selectedStudentList.value.push(s);
+    };
+
+    const removeStudent = (s: studentInterface) => {
+      for (let i = 0; i < selectedStudentList.value.length; i++) {
+        if (selectedStudentList.value[i].studentKey === s.studentKey) {
+          selectedStudentList.value.splice(i, 1);
+          studentList.value.unshift(s);
+          i--;
+        }
+      }
+    };
+
+    const saveGroupStudent = async () => {
+      selectedStudentList.value.map((s: studentInterface) => {
+        selectedStudentData.value.push({
+          groupKey: groupDetail.value!.groupKey,
+          studentKey: s.studentKey,
+        });
+      });
+      selectedStudentData.value.splice(0, 1);
+
+      const result = await ApiClient(
+        "/lectures/createGroupStatus/",
+        common.makeJson(selectedStudentData.value)
+      );
+
+      if (result) {
+        if (result.chunbae === RESULT_KEY.CREATE) {
+          window.alert(
+            `${result.resultData.length} 명의 학생을 성공적으로 배정했습니다.`
+          );
+          router.go(0);
+        } else {
+          window.alert("학생 배정을 실패했습니다. 다시 시도해 주세요.");
+          return false;
+        }
+      } else {
+        window.alert("학생 배정을 실패했습니다. 다시 시도해 주세요.");
+        return false;
       }
     };
 
@@ -195,7 +291,13 @@ export default defineComponent({
             await getGroupList();
             window.alert("반을 성공적으로 생성했습니다.");
 
-            !m ? router.go(0) : (moreState.value = true);
+            if (!m) {
+              router.go(0);
+            } else {
+              groupDetail.value = result.resultData as groupInterface;
+              await getStudentList();
+              moreState.value = true;
+            }
           } else {
             window.alert("반 생성을 실패했습니다.");
             return false;
@@ -294,6 +396,9 @@ export default defineComponent({
       groupList,
       groupInsertData,
       selectedTeacher,
+      searchStudent,
+      studentList,
+      selectedStudentList,
       groupDetail,
       teacherInfo,
       editState,
@@ -302,6 +407,11 @@ export default defineComponent({
       deleteGroup,
       changeMode,
       createGroup,
+      getStudentList,
+      goPutStudent,
+      addStudent,
+      removeStudent,
+      saveGroupStudent,
       showGroupDetail,
       changeEditState,
       selectTeacher,
@@ -337,22 +447,20 @@ export default defineComponent({
             type="button"
             value="저장"
             class="save"
+            @click="saveGroupStudent"
           />
           <div class="group-section-body-list" v-if="!createState">
-            <table class="group-section-body-list-table">
-              <thead class="group-section-body-list-table-header">
-                <tr class="group-section-body-list-table-header-item">
+            <table>
+              <thead>
+                <tr>
                   <th v-for="item in header">
                     {{ item.VALUE }}
                   </th>
                   <th></th>
                 </tr>
               </thead>
-              <tbody class="group-section-body-list-table-content">
-                <tr
-                  class="group-section-body-list-table-content-item"
-                  v-for="item in groupList"
-                >
+              <tbody>
+                <tr v-for="item in groupList">
                   <td :style="{ width: '35%' }">{{ item.groupName }}</td>
                   <td :style="{ width: '30%' }">{{ item.teacherName }}</td>
                   <td :style="{ width: '35%' }">
@@ -459,7 +567,89 @@ export default defineComponent({
               </div>
             </div>
 
-            <div class="group-section-body-list-more" v-else></div>
+            <div class="group-section-body-insert-more" v-else>
+              <div class="group-section-body-insert-more-before">
+                <div class="group-section-body-insert-more-before-header">
+                  <span>학생 목록</span>
+                  <div class="search">
+                    <input
+                      type="text"
+                      v-model="searchStudent"
+                      placeholder="학생명, 학교명 검색"
+                      @keypress.enter="getStudentList"
+                    />
+                    <i
+                      class="fa-solid fa-magnifying-glass"
+                      @click="getStudentList"
+                    ></i>
+                  </div>
+                </div>
+                <div class="group-section-body-insert-more-before-stu">
+                  <div
+                    class="group-section-body-insert-more-before-stu-item"
+                    v-for="item in studentList"
+                  >
+                    <div
+                      class="group-section-body-insert-more-after-stu-item-profile"
+                      v-if="!item.profileImg"
+                    >
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                    <img
+                      v-if="item.profileImg"
+                      :src="fileURL + item.profileImg"
+                      alt="profile"
+                    />
+                    <div
+                      class="group-section-body-insert-more-after-stu-item-info"
+                    >
+                      <span>{{ item.name }}</span>
+                      <span>{{ item.school }} {{ item.grade }}</span>
+                    </div>
+                    <input
+                      type="button"
+                      value="배정"
+                      @click="addStudent(item)"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="group-section-body-insert-more-after">
+                <div class="group-section-body-insert-more-after-header">
+                  <span class="group">{{ groupDetail?.groupName }} 반</span>
+                  <span>배정 목록</span>
+                </div>
+                <div class="group-section-body-insert-more-after-stu">
+                  <div
+                    class="group-section-body-insert-more-after-stu-item"
+                    v-for="item in selectedStudentList"
+                  >
+                    <div
+                      class="group-section-body-insert-more-after-stu-item-profile"
+                      v-if="!item.profileImg"
+                    >
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                    <img
+                      v-if="item.profileImg"
+                      :src="fileURL + item.profileImg"
+                      alt="profile"
+                    />
+                    <div
+                      class="group-section-body-insert-more-after-stu-item-info"
+                    >
+                      <span>{{ item.name }}</span>
+                      <span>{{ item.school }} {{ item.grade }}</span>
+                    </div>
+                    <input
+                      type="button"
+                      value="취소"
+                      @click="removeStudent(item)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -559,7 +749,12 @@ export default defineComponent({
               <div class="group-detail-right-container-student">
                 <div class="group-detail-right-container-student-header">
                   <span class="label"> 배정 학생 </span>
-                  <input type="button" value="배정하기" class="btn-put" />
+                  <input
+                    type="button"
+                    value="배정하기"
+                    class="btn-put"
+                    @click="goPutStudent"
+                  />
                 </div>
                 <div class="group-detail-right-container-student-list"></div>
               </div>

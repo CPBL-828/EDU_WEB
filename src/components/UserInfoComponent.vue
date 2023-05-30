@@ -4,6 +4,7 @@ import CardListComponent from "./custom/CardListComponent.vue";
 import {
   adminInterface,
   defaultInterface,
+  groupInterface,
   parentInterface,
   scheduleInterface,
   studentInterface,
@@ -115,6 +116,7 @@ export default defineComponent({
       resSubject: "",
       joinDate: "",
     });
+    const groupInfo = ref<Array<groupInterface> | undefined>(undefined);
     const editState = ref(false);
     const filePreview = ref<Blob | null>(null);
     const profileURL = ref<string>("");
@@ -204,6 +206,32 @@ export default defineComponent({
               });
             }
           });
+        }
+      }
+    };
+
+    const getGroupList = async (
+      t: string,
+      u: studentInterface | teacherInterface
+    ) => {
+      let data = {
+        userType: t,
+        teacherKey:
+          t === USER_KEY.TEA ? (u as teacherInterface).teacherKey : "",
+        studentKey:
+          t === USER_KEY.STU ? (u as studentInterface).studentKey : "",
+      };
+
+      const result = await ApiClient(
+        "/lectures/getGroupList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          groupInfo.value = result.resultData as groupInterface[];
+        } else {
+          groupInfo.value = undefined;
         }
       }
     };
@@ -432,8 +460,9 @@ export default defineComponent({
       editDate: "",
     });
 
-    const showStudentDetail = (s: studentInterface) => {
+    const showStudentDetail = async (s: studentInterface) => {
       studentInfo.value = s;
+      await getGroupList(USER_KEY.STU, s);
       studentEditInfo.value.studentKey = s.studentKey;
       studentEditInfo.value.phone = s.phone;
       studentEditInfo.value.school = s.school;
@@ -468,8 +497,9 @@ export default defineComponent({
       editDate: "",
     });
 
-    const showTeacherDetail = (t: teacherInterface) => {
+    const showTeacherDetail = async (t: teacherInterface) => {
       teacherInfo.value = t;
+      await getGroupList(USER_KEY.TEA, t);
       teacherEditInfo.value.teacherKey = t.teacherKey;
       teacherEditInfo.value.phone = t.phone;
       teacherEditInfo.value.email = t.email;
@@ -761,6 +791,7 @@ export default defineComponent({
       birthNum,
       insertStudentData,
       insertTeacherData,
+      groupInfo,
       editState,
       getUserList,
       getParentList,
@@ -911,6 +942,9 @@ export default defineComponent({
         <div class="user">
           <div class="user-detail">
             <div class="user-detail-profile" v-if="studentInfo">
+              <div class="user-detail-profile-name">
+                <span>{{ studentInfo?.name }}</span> 학생
+              </div>
               <div :style="{ position: 'relative' }">
                 <i
                   class="fa-solid fa-xmark"
@@ -937,11 +971,17 @@ export default defineComponent({
                 />
               </form>
               <i class="fa-solid fa-camera" v-if="editState"></i>
-              <div class="user-detail-profile-name">
-                <span>{{ studentInfo?.name }}</span> 학생
+              <div class="user-detail-profile-group" v-if="groupInfo">
+                <div class="label">반</div>
+                <div class="item">
+                  <span v-for="item in groupInfo">{{ item.groupName }}</span>
+                </div>
               </div>
             </div>
             <div class="user-detail-profile" v-if="teacherInfo">
+              <div class="user-detail-profile-name">
+                <span>{{ teacherInfo?.name }}</span> 강사님
+              </div>
               <div :style="{ position: 'relative' }">
                 <i
                   class="fa-solid fa-xmark"
@@ -968,8 +1008,11 @@ export default defineComponent({
                 />
               </form>
               <i class="fa-solid fa-camera" v-if="editState"></i>
-              <div class="user-detail-profile-name">
-                <span>{{ teacherInfo?.name }}</span> 강사님
+              <div class="user-detail-profile-group" v-if="groupInfo">
+                <div class="label">반</div>
+                <div class="item">
+                  <span v-for="item in groupInfo">{{ item.groupName }}</span>
+                </div>
               </div>
             </div>
             <div class="sap"></div>

@@ -9,6 +9,7 @@ import {
 } from "vue";
 import {
   defaultInterface,
+  groupInterface,
   parentInterface,
   studentInterface,
   teacherInterface,
@@ -80,12 +81,37 @@ export default defineComponent({
       createDate: "",
       editDate: "",
     });
+    const groupInfo = ref<Array<groupInterface> | undefined>(undefined);
     const editState = ref(false);
     const resumeState = ref(false);
 
-    const editModal = () => {
+    const getGroupList = async () => {
+      const userType: string = common.getItem(KEYS.UK).userKey;
+
+      let data = {
+        userType: userType,
+        teacherKey:
+          userType === USER_KEY.TEA ? common.getItem(KEYS.LU).teacherKey : "",
+        studentKey:
+          userType === USER_KEY.STU ? common.getItem(KEYS.LU).studentKey : "",
+      };
+
+      const result = await ApiClient(
+        "/lectures/getGroupList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          groupInfo.value = result.resultData as groupInterface[];
+        }
+      }
+    };
+
+    const editModal = async () => {
       editState.value = false;
       resumeState.value = false;
+      await getGroupList();
       store.commit("setModalState", true);
     };
 
@@ -270,6 +296,7 @@ export default defineComponent({
       parentInfo,
       teacherInfo,
       teacherEditInfo,
+      groupInfo,
       editState,
       resumeState,
       editModal,
@@ -403,6 +430,9 @@ export default defineComponent({
         <div class="my-info" v-if="studentInfo">
           <div class="sap"></div>
           <div class="my-info-profile">
+            <div class="my-info-profile-name">
+              <span>{{ studentInfo?.name }}</span>
+            </div>
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
             <img
               :src="fileURL + studentInfo?.profileImg"
@@ -416,8 +446,11 @@ export default defineComponent({
               accept="image/*"
               v-if="editState"
             />
-            <div class="my-info-profile-name">
-              <span>{{ studentInfo?.name }}</span> 학생
+            <div class="group" v-if="groupInfo">
+              <div class="label">반</div>
+              <div class="item">
+                <span v-for="item in groupInfo">{{ item.groupName }}</span>
+              </div>
             </div>
           </div>
           <div class="my-info-info">
@@ -511,6 +544,9 @@ export default defineComponent({
         <div class="my-info" v-else-if="!resumeState">
           <div class="sap"></div>
           <div class="my-info-profile">
+            <div class="my-info-profile-name">
+              <span>{{ teacherInfo?.name }}</span> 강사님
+            </div>
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
             <img
               v-else
@@ -519,8 +555,11 @@ export default defineComponent({
             />
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
-            <div class="my-info-profile-name">
-              <span>{{ teacherInfo?.name }}</span> 강사님
+            <div class="my-info-profile-group" v-if="groupInfo">
+              <div class="label">반</div>
+              <div class="item">
+                <span v-for="item in groupInfo">{{ item.groupName }}</span>
+              </div>
             </div>
           </div>
           <div class="my-info-info">

@@ -3,6 +3,7 @@ import { defineComponent, onMounted, ref } from "vue";
 import common from "../../lib/common";
 import {
   defaultInterface,
+  groupInterface,
   roomInterface,
   scheduleInterface,
 } from "../../lib/types";
@@ -38,7 +39,10 @@ export default defineComponent({
     const selectedDay = ref<string>("");
     const time = ref<Date>(new Date());
     const duration = ref<number>();
+    const groupKey = ref<string>("");
     const book = ref<string>("");
+    const groupList = ref<Array<groupInterface> | undefined>(undefined);
+    const selectGroupList = ref<Array<defaultInterface>>([]);
     const roomList = ref<Array<roomInterface> | undefined>(undefined);
     const selectRoomList = ref<Array<defaultInterface>>([]);
     const days: Array<string> = ["월", "화", "수", "목", "금", "토", "일"];
@@ -93,6 +97,36 @@ export default defineComponent({
       }
     };
 
+    const getGroupList = async () => {
+      let data = {
+        userType: common.getItem(KEYS.UK).userKey,
+        teacherKey: common.getItem(KEYS.LU).teacherKey,
+        studentKey: "",
+      };
+
+      const result = await ApiClient(
+        "/lectures/getGroupList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          groupList.value = result.resultData as groupInterface[];
+
+          groupList.value.map((item: groupInterface) => {
+            selectGroupList.value.push({
+              KEY: item.groupKey,
+              VALUE: item.groupName,
+            });
+          });
+        }
+      }
+    };
+
+    const selectGroup = (g: defaultInterface) => {
+      groupKey.value = g.KEY;
+    };
+
     const getRoomList = async () => {
       let data = { search: "" };
       const result = await ApiClient(
@@ -142,7 +176,9 @@ export default defineComponent({
 
     //TODO...
     const insertAsk = async () => {
-      if (!roomKey.value) {
+      if (!groupKey.value) {
+        window.alert("반을 선택해 주세요.");
+      } else if (!roomKey.value) {
         window.alert("강의실을 선택해 주세요.");
         return false;
       } else if (!scheduleName.value) {
@@ -180,6 +216,7 @@ export default defineComponent({
             .replace(":", "-")
             .split(":")[0],
           duration: duration.value,
+          groupKEy: groupKey.value,
         };
 
         const result = await ApiClient(
@@ -218,6 +255,7 @@ export default defineComponent({
         userKey.value = common.getItem(KEYS.LU).teacherKey;
       }
 
+      await getGroupList();
       await getRoomList();
     });
 
@@ -228,6 +266,7 @@ export default defineComponent({
       time,
       duration,
       book,
+      selectGroupList,
       roomList,
       selectRoomList,
       selectDayList,
@@ -235,6 +274,7 @@ export default defineComponent({
       selectItem,
       selectState,
       changeState,
+      selectGroup,
       selectRoom,
       selectDay,
       openBookModal,
@@ -286,6 +326,13 @@ export default defineComponent({
               <span>건의 내용 선택</span>
               <div class="schedule-ask-section-body-info-container-item">
                 <drop-box-component
+                  :select-list="selectGroupList"
+                  placeholder="대상 반"
+                  row-width="216px"
+                  row-height="30px"
+                  @selectValue="selectGroup"
+                ></drop-box-component>
+                <drop-box-component
                   :select-list="selectRoomList"
                   placeholder="강의실 목록"
                   row-width="216px"
@@ -298,13 +345,6 @@ export default defineComponent({
                   placeholder="강의명"
                   v-model="scheduleName"
                 />
-                <!--                <drop-box-component-->
-                <!--                  :select-list="selectRoomList"-->
-                <!--                  placeholder="대상 학년"-->
-                <!--                  row-width="216px"-->
-                <!--                  row-height="24px"-->
-                <!--                  @selectValue="selectRoom"-->
-                <!--                ></drop-box-component>-->
                 <drop-box-component
                   :select-list="selectDayList"
                   placeholder="요일"

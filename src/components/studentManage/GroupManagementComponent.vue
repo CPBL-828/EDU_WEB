@@ -43,6 +43,8 @@ export default defineComponent({
     const selectedTeacher = ref<teacherInterface | undefined>(undefined);
     const searchStudent = ref<string>("");
     const studentList = ref<Array<studentInterface>>([]);
+    const studentState = ref(false);
+    const groupStudentList = ref<Array<studentInterface>>([]);
     const selectedStudentList = ref<Array<studentInterface>>([]);
     const selectedStudentData = ref([
       {
@@ -71,7 +73,6 @@ export default defineComponent({
         userType: common.getItem(KEYS.UK).userKey.slice(-3),
         teacherKey: "",
         studentKey: "",
-        groupKey: "",
       };
 
       const result = await ApiClient(
@@ -86,6 +87,25 @@ export default defineComponent({
           result.resultData.map((group: groupInterface) => {
             if (group.delState === "N") groupList.value.push(group);
           });
+        }
+      }
+    };
+
+    const getGroupStatus = async () => {
+      let data = {
+        groupKey: groupDetail.value?.groupKey,
+      };
+
+      const result = await ApiClient(
+        "/lectures/getGroupStatusList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        groupStudentList.value = result.resultData as studentInterface[];
+
+        if (result.count > 0) {
+          studentState.value = true;
         }
       }
     };
@@ -120,6 +140,8 @@ export default defineComponent({
         "/members/getTeacherList/",
         common.makeJson(data)
       );
+
+      teacherList.value = [];
 
       if (result) {
         if (result.count > 0) {
@@ -157,6 +179,9 @@ export default defineComponent({
           `${groupDetail.value!.groupName} 반의 학생을 배정하시겠습니까?`
         )
       ) {
+        await getGroupStatus();
+        selectedStudentList.value = groupStudentList.value;
+
         await getStudentList();
         store.commit("setModalState", false);
         createState.value = true;
@@ -195,29 +220,52 @@ export default defineComponent({
       });
       selectedStudentData.value.splice(0, 1);
 
-      const result = await ApiClient(
-        "/lectures/createGroupStatus/",
-        common.makeJson(selectedStudentData.value)
-      );
+      if (studentState.value) {
+        const result = await ApiClient(
+          "/lectures/editGroupStatus/",
+          common.makeJson(selectedStudentData.value)
+        );
 
-      if (result) {
-        if (result.chunbae === RESULT_KEY.CREATE) {
-          window.alert(
-            `${result.resultData.length} 명의 학생을 성공적으로 배정했습니다.`
-          );
-          router.go(0);
+        if (result) {
+          if (result.chunbae === RESULT_KEY.EDIT) {
+            window.alert(
+              `${result.resultData.length} 명의 학생을 성공적으로 배정했습니다.`
+            );
+            router.go(0);
+          } else {
+            window.alert("학생 배정을 실패했습니다. 다시 시도해 주세요.");
+            return false;
+          }
         } else {
           window.alert("학생 배정을 실패했습니다. 다시 시도해 주세요.");
           return false;
         }
       } else {
-        window.alert("학생 배정을 실패했습니다. 다시 시도해 주세요.");
-        return false;
+        const result = await ApiClient(
+          "/lectures/createGroupStatus/",
+          common.makeJson(selectedStudentData.value)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.CREATE) {
+            window.alert(
+              `${result.resultData.length} 명의 학생을 성공적으로 배정했습니다.`
+            );
+            router.go(0);
+          } else {
+            window.alert("학생 배정을 실패했습니다. 다시 시도해 주세요.");
+            return false;
+          }
+        } else {
+          window.alert("학생 배정을 실패했습니다. 다시 시도해 주세요.");
+          return false;
+        }
       }
     };
 
     const showGroupDetail = async (g: groupInterface) => {
       groupDetail.value = g;
+      await getGroupStatus();
       await getTeacherDetail(g.teacherKey_id);
 
       store.commit("setModalState", true);
@@ -251,6 +299,10 @@ export default defineComponent({
       } else {
         return false;
       }
+    };
+
+    const goBack = () => {
+      router.go(0);
     };
 
     const changeMode = async (p: number) => {
@@ -398,6 +450,7 @@ export default defineComponent({
       selectedTeacher,
       searchStudent,
       studentList,
+      groupStudentList,
       selectedStudentList,
       groupDetail,
       teacherInfo,
@@ -405,6 +458,7 @@ export default defineComponent({
       groupEditData,
       teacherList,
       deleteGroup,
+      goBack,
       changeMode,
       createGroup,
       getStudentList,
@@ -483,6 +537,7 @@ export default defineComponent({
 
           <div class="group-section-body-insert" v-else>
             <div class="group-section-body-insert-first" v-if="!moreState">
+              <span class="back-btn" @click="goBack">뒤로 가기</span>
               <div class="group-section-body-insert-first-left">
                 <div class="group-section-body-insert-first-left-container">
                   <div
@@ -756,7 +811,27 @@ export default defineComponent({
                     @click="goPutStudent"
                   />
                 </div>
-                <div class="group-detail-right-container-student-list"></div>
+                <div class="group-detail-right-container-student-list">
+                  <div
+                    class="group-detail-right-container-student-list-item"
+                    v-for="item in groupStudentList"
+                  >
+                    <img
+                      v-if="item.profileImg"
+                      :src="fileURL + item.profileImg"
+                      alt="profile"
+                    />
+                    <div
+                      class="group-detail-right-container-student-list-item-img"
+                      v-else
+                    >
+                      <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span class="name">{{ item.name }}</span>
+                    <span class="school">{{ item.school }}</span>
+                    <span class="grade">{{ item.grade }}학년</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

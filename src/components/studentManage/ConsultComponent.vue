@@ -737,6 +737,8 @@ export default defineComponent({
               <div
                 class="consult-plan-section-body-list-item-detail"
                 @click="openInsertPopup(item)"
+                가
+                v-if="(adminInfo && !teacherInfo) || !adminInfo"
               >
                 상담 결과 입력
               </div>

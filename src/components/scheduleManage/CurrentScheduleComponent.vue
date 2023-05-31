@@ -13,6 +13,7 @@ import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import SelectListComponent from "../custom/SelectListComponent.vue";
+import { useRouter } from "vue-router";
 /*
 @brief [강사, 학생, 학부모, 관리자] [Main]시간표 관리
        [Sub]현재 시간표 접근 시 해당 유저의 현재 시간표 표시
@@ -32,8 +33,9 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup() {
     const store = useStore();
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
     const selectLectureState = ref(false);
@@ -55,7 +57,6 @@ export default defineComponent({
 
       let data = {
         userKey: userKey.value,
-        // search: "",
         roomKey: roomKey.value,
         target: "",
         roomName: "",
@@ -90,6 +91,10 @@ export default defineComponent({
       selectLectureState.value = true;
     };
 
+    const goBack = () => {
+      router.go(0);
+    };
+
     const changeState = (s: string) => {
       selectState.value = s;
     };
@@ -116,6 +121,7 @@ export default defineComponent({
       selectItem,
       selectState,
       selectLecture,
+      goBack,
       changeState,
       selectSchedule,
       openModal,
@@ -145,6 +151,12 @@ export default defineComponent({
             {{ new Date().toISOString().substring(8, 10) }}일
             {{ new Date().toString().substring(0, 4) }}
           </div>
+          <span
+            @click="goBack"
+            class="back-btn"
+            v-if="adminState && selectLectureState"
+            >강의실 다시 선택하기</span
+          >
           <div
             class="current-schedule-section-body-button"
             v-if="!adminState || selectLectureState"

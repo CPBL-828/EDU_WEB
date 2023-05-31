@@ -41,6 +41,19 @@ section.current-schedule {
           }
         }
 
+        .back-btn {
+          position: absolute;
+          top: 5px;
+          right: 10px;
+          color: $disable-color;
+          cursor: pointer;
+          transition: all 200ms;
+
+          &:hover {
+            color: $sub-color;
+          }
+        }
+
         &-button {
           position: relative;
           top: 51px;

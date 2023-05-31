@@ -1225,6 +1225,15 @@ section.modal {
           color: #777777;
           overflow: scroll;
         }
+
+        textarea {
+          resize: none;
+          border: 0;
+
+          &:focus {
+            outline: 0;
+          }
+        }
       }
 
       //attendance detail

@@ -64,6 +64,8 @@ export default defineComponent({
     const analysisInsertDetail = ref<string>("");
     const analysisDetail = ref<analysisInterface | undefined>(undefined);
 
+    const editState = ref(false);
+
     const goBack = () => {
       common.removeItem(KEYS.SS);
       router.go(0);
@@ -195,6 +197,40 @@ export default defineComponent({
       openModal("view");
     };
 
+    const changeEditState = () => {
+      editState.value = true;
+    };
+
+    const doEdit = async () => {
+      if (analysisDetail.value?.content === analysisInsertDetail.value) {
+        if (
+          window.confirm("변경된 내용이 없습니다. 수정을 취소하시겠습니까?")
+        ) {
+          return false;
+        }
+      } else {
+        let data = {
+          analysisKey: analysisDetail.value?.analysisKey,
+          content: analysisInsertDetail.value,
+        };
+
+        const result = await ApiClient(
+          "/info/editAnalysis/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.EDIT) {
+            window.alert("성공적으로 수정했습니다.");
+            router.go(0);
+          } else {
+            window.alert("수정을 실패했습니다.");
+            return false;
+          }
+        }
+      }
+    };
+
     const deleteAnalysis = async () => {
       if (window.confirm("정말 삭제하시겠습니까?")) {
         let data = {
@@ -277,6 +313,7 @@ export default defineComponent({
       modalState,
       analysisInsertDetail,
       analysisDetail,
+      editState,
       goBack,
       selectLecture,
       refreshPage,
@@ -284,6 +321,8 @@ export default defineComponent({
       openModal,
       insertAnalysis,
       showAnalysisDetail,
+      changeEditState,
+      doEdit,
       deleteAnalysis,
     };
   },
@@ -398,6 +437,22 @@ export default defineComponent({
     <modal-popup-component
       :title="modalState === 'insert' ? '분석 내용 입력' : '분석 상세 내용'"
     >
+      <template v-slot:button v-if="modalState === 'view'">
+        <div class="btn">
+          <div
+            :class="editState ? 'btn-save-active' : 'btn-save'"
+            @click="doEdit"
+          >
+            저장하기
+          </div>
+          <div
+            :class="!editState ? 'btn-edit-active' : 'btn-edit'"
+            @click="changeEditState"
+          >
+            수정하기
+          </div>
+        </div>
+      </template>
       <template v-slot:body v-if="modalState === 'insert'">
         <div class="analysis-insert">
           <div class="analysis-insert-header">
@@ -421,7 +476,7 @@ export default defineComponent({
         </div>
       </template>
 
-      <template v-slot:body v-if="modalState === 'view'">
+      <template v-slot:body v-else>
         <span class="del-btn" @click="deleteAnalysis">분석 내용 삭제하기</span>
         <div class="analysis-detail">
           <div class="analysis-detail-header">
@@ -437,7 +492,13 @@ export default defineComponent({
               {{ analysisDetail?.studentName }}
             </div>
           </div>
-          <div style="white-space: pre" class="analysis-detail-body">
+          <textarea
+            v-if="editState"
+            v-model="analysisInsertDetail"
+            :placeholder="analysisDetail?.content"
+            class="analysis-detail-body"
+          ></textarea>
+          <div style="white-space: pre" class="analysis-detail-body" v-else>
             {{ analysisDetail?.content }}
           </div>
         </div>

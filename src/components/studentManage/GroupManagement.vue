@@ -301,6 +301,10 @@ export default defineComponent({
       }
     };
 
+    const goBack = () => {
+      router.go(0);
+    };
+
     const changeMode = async (p: number) => {
       if (p === 0) {
         await setTeacherList();
@@ -454,6 +458,7 @@ export default defineComponent({
       groupEditData,
       teacherList,
       deleteGroup,
+      goBack,
       changeMode,
       createGroup,
       getStudentList,
@@ -532,6 +537,7 @@ export default defineComponent({
 
           <div class="group-section-body-insert" v-else>
             <div class="group-section-body-insert-first" v-if="!moreState">
+              <span class="back-btn" @click="goBack">뒤로 가기</span>
               <div class="group-section-body-insert-first-left">
                 <div class="group-section-body-insert-first-left-container">
                   <div

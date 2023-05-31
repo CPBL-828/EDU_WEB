@@ -1335,6 +1335,19 @@ section.group {
             display: flex;
             height: 100%;
 
+            .back-btn {
+              position: absolute;
+              top: 5px;
+              left: 10px;
+              color: $disable-color;
+              cursor: pointer;
+              transition: all 200ms;
+
+              &:hover {
+                color: $sub-color;
+              }
+            }
+
             &-left,
             &-right {
               width: 50%;

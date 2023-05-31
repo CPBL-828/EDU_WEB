@@ -82,7 +82,7 @@ export default defineComponent({
       { KEY: "KOR", VALUE: "국어" },
       { KEY: "ENG", VALUE: "영어" },
       { KEY: "MATH", VALUE: "수학" },
-      { KEY: "HISTORY", VALUE: "수학" },
+      { KEY: "HISTORY", VALUE: "한국사" },
       { KEY: "RESEARCH", VALUE: "탐구" },
       { KEY: "CHARACTER", VALUE: "특성화" },
       { KEY: "ESSAY", VALUE: "논술" },
@@ -966,7 +966,7 @@ export default defineComponent({
                   id="profile-img-edit"
                   accept="image/*"
                   @change="uploadImg('STU', 'profile-img-edit')"
-                  :style="{ bottom: '60px', zIndex: 10 }"
+                  :style="{ bottom: '110px', zIndex: 10 }"
                   v-if="editState"
                 />
               </form>
@@ -1003,7 +1003,7 @@ export default defineComponent({
                   id="profile-img-edit"
                   accept="image/*"
                   @change="uploadImg('TEA', 'profile-img-edit')"
-                  :style="{ bottom: '60px', zIndex: 10 }"
+                  :style="{ bottom: '110px', zIndex: 10 }"
                   v-if="editState"
                 />
               </form>

@@ -55,7 +55,6 @@ export default defineComponent({
 
       let data = {
         userKey: userKey.value,
-        // search: "",
         roomKey: roomKey.value,
         target: "",
         roomName: "",

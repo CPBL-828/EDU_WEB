@@ -143,11 +143,11 @@ export default defineComponent({
         if (result.chunbae === RESULT_KEY.CREATE) {
           if (rejectMode.value) {
             window.alert(
-              previewSchedule.value + " 강의 편성 건의를 반려하였습니다."
+              previewSchedule.value?.lectureName + " 강의 편성 건의를 반려하였습니다."
             );
           } else {
             window.alert(
-              previewSchedule.value +
+              previewSchedule.value?.lectureName +
                 " 강의 편성을 승인하였습니다.\n이제 강의실 시간표를 통해 해당 강의를 확인하실 수 있습니다."
             );
           }

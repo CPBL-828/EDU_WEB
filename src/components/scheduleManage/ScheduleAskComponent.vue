@@ -216,7 +216,7 @@ export default defineComponent({
             .replace(":", "-")
             .split(":")[0],
           duration: duration.value,
-          groupKEy: groupKey.value,
+          groupKey: groupKey.value,
         };
 
         const result = await ApiClient(

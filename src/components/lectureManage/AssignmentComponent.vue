@@ -4,6 +4,7 @@ import {
   assignInterface,
   defaultInterface,
   scheduleInterface,
+  studentInterface,
   testInterface,
 } from "../../lib/types";
 import common from "../../lib/common";
@@ -23,7 +24,7 @@ export default defineComponent({
     SelectButtonComponent,
     SelectListComponent,
   },
-  setup() {
+  setup: function () {
     const router = useRouter();
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
@@ -41,10 +42,14 @@ export default defineComponent({
       { KEY: "ALL", VALUE: "전체" },
       { KEY: "PER", VALUE: "개별" },
     ];
-    const assignType = ref("ALL");
+    const assignType = ref<string>("ALL");
+    const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const createMode = ref(false);
+    const firstPage = ref(true);
+    const createAssignType = ref("ALL");
     const content = ref<string>("");
-    const selectedDate = ref<Date>(new Date());
+    const calendarState = ref(false);
+    const selectedDate = ref<Date | undefined>(undefined);
     const assignDetail = ref<assignInterface | undefined>(undefined);
 
     const getAssignmentList = async () => {
@@ -122,18 +127,52 @@ export default defineComponent({
       }
     };
 
-    const showUploadModal = () => {
+    const getStudentList = async () => {
+      let data = {
+        lectureKey: lectureInfo.value?.lectureKey,
+      };
+
+      const result = await ApiClient(
+        "/lectures/getLectureStatusList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          studentList.value = result.resultData as studentInterface[];
+        }
+      }
+    };
+
+    const showUploadModal = async () => {
       createMode.value = true;
+      await getStudentList();
       store.commit("setModalState", true);
     };
 
+    const selectType = (t: string) => {
+      createAssignType.value = t;
+    };
+
+    const showCalendar = () => {
+      calendarState.value = !calendarState.value;
+    };
+
     const doInsert = async () => {
+      if (!content.value) {
+        window.alert("과제 내용을 작성해 주세요.");
+        return false;
+      } else if (!selectedDate.value) {
+        window.alert("과제 마감 일자를 선택해 주세요.");
+        return false;
+      }
+
       let data = {
         lectureKey: lectureInfo.value?.lectureKey,
         lectureName: lectureInfo.value?.lectureName,
         content: content.value,
-        deadLine: selectedDate.value,
-        type: assignType.value === "ALL" ? "전체" : "개별",
+        deadLine: selectedDate.value ? selectedDate.value : new Date(),
+        type: createAssignType.value === "ALL" ? "전체" : "개별",
       };
 
       const result = await ApiClient(
@@ -147,11 +186,11 @@ export default defineComponent({
             "input-file"
           ) as HTMLInputElement;
 
-          if (inputFile.files) {
+          if (inputFile.files!.length > 0) {
             const fileData = ref<FormData>(new FormData());
 
             fileData.value.append("assignKey", result.resultData.assignKey);
-            fileData.value.append("assignment", inputFile.files[0]);
+            fileData.value.append("assignment", inputFile.files![0]);
 
             const fileResult = await FileClient(
               "/lectures/editAssignFile/",
@@ -165,16 +204,27 @@ export default defineComponent({
               }
             }
           } else {
-            window.alert("과제가 성공적으로 등록되었습니다.");
-            router.go(0);
+            if (createAssignType.value === "ALL") {
+              window.alert("과제가 성공적으로 등록되었습니다.");
+              router.go(0);
+            } else {
+              window.alert(
+                "과제가 성공적으로 등록되었습니다.\n학생을 선택해 주세요."
+              );
+            }
           }
         }
       }
     };
 
     const showAssignDetail = (a: assignInterface) => {
+      createMode.value = false;
       assignDetail.value = a;
       store.commit("setModalState", true);
+    };
+
+    const changePage = () => {
+      firstPage.value = !firstPage.value;
     };
 
     onMounted(async () => {
@@ -205,16 +255,24 @@ export default defineComponent({
       totalCnt,
       assignTypeList,
       assignType,
+      studentList,
       createMode,
+      firstPage,
+      createAssignType,
       content,
+      calendarState,
       selectedDate,
+      assignDetail,
       backToSelect,
       selectLecture,
       changeType,
       downloadFile,
       showUploadModal,
+      selectType,
+      showCalendar,
       doInsert,
       showAssignDetail,
+      changePage,
     };
   },
 });
@@ -279,47 +337,106 @@ export default defineComponent({
     </div>
 
     <modal-popup-component
-      :title="createMode ? '과제 업로드' : '과제 상세 조회'"
+      :title="createMode ? '과제 업로드' : '과제 열람하기'"
       modal-width="1078px"
       modal-height="750px"
     >
       <template v-slot:button>
         <div v-if="createMode" class="btn">
-          <div class="btn-save-active" @click="doInsert">업로드</div>
+          <div class="btn-edit-active" @click="doInsert">업로드</div>
+        </div>
+        <div v-else class="btn">
+          <div
+            :class="firstPage ? 'btn-save-active' : 'btn-save'"
+            @click="changePage"
+          >
+            제출 현황 보기
+          </div>
+          <div
+            :class="!firstPage ? 'btn-save-active' : 'btn-save'"
+            @click="changePage"
+          >
+            뒤로 가기
+          </div>
         </div>
       </template>
       <template v-slot:body>
         <div v-if="createMode" class="assign-create">
-          <span class="assign-create-lecture">{{
-            lectureInfo?.lectureName
-          }}</span>
-          <div class="assign-create-body">
-            <textarea
-              class="assign-create-body-content"
-              v-model="content"
-              placeholder="과제 내용"
-            ></textarea>
-            <div class="assign-create-body-file">
-              <form>
-                <input type="file" id="input-file" />
-              </form>
+          <div class="assign-create-header">
+            <div class="assign-create-header-lecture">
+              {{ lectureInfo?.lectureName }}
             </div>
-          </div>
-          <div class="assign-create-deadline">
-            <span>과제 마감일</span>
+            <div class="assign-create-header-select">
+              <select-button-component
+                :state-value="assignTypeList"
+                :select-value="createAssignType"
+                @changeState="selectType"
+              ></select-button-component>
+            </div>
+            <div class="assign-create-header-deadline" @click="showCalendar">
+              {{
+                selectedDate
+                  ? selectedDate.toLocaleString().substring(0, 17)
+                  : "마감 일자"
+              }}
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
             <v-date-picker
               class="calendar-date"
               mode="dateTime"
               v-model="selectedDate"
               :minute-increment="5"
+              v-if="calendarState"
             />
           </div>
-        </div>
-        <div v-else class="assign-create">
-          <div class="assign-create-lecture">
-            {{ lectureInfo?.lectureName }}
+          <div class="sap"></div>
+          <div class="assign-create-body">
+            <textarea
+              :style="{
+                width: createAssignType === 'ALL' ? '916px' : '700px',
+              }"
+              class="assign-create-body-content"
+              v-model="content"
+              placeholder="과제 내용을 작성해 주세요"
+            >
+            </textarea>
+            <div
+              class="assign-create-body-stu"
+              v-if="createAssignType === 'PER'"
+            >
+              <p v-for="item in studentList">
+                <label
+                  ><input type="checkbox" name="nb[]" value="01" />
+                  {{ item.name }}</label
+                >
+              </p>
+            </div>
           </div>
-          <div class="assign-create-list">
+          <form>
+            <input type="file" id="input-file" />
+          </form>
+        </div>
+
+        <div v-else class="assign-detail">
+          <div v-if="!createMode && firstPage" class="assign-detail-first">
+            <div class="assign-detail-first-header">
+              <div class="assign-detail-first-header-lecture">
+                {{ lectureInfo?.lectureName }}
+              </div>
+              <div class="sap"></div>
+              <div class="assign-detail-first-header-type">
+                과제 유형 : {{ assignDetail?.type }}
+              </div>
+              <div class="sap"></div>
+              <div class="assign-detail-first-header-deadline">
+                마감일 : {{ assignDetail?.deadLine.split("T")[0] }}
+              </div>
+            </div>
+            <div class="assign-detail-first-content">
+              {{ assignDetail?.content }}
+            </div>
+          </div>
+          <div v-else-if="!createMode && !firstPage" class="assign-detail-list">
             <table>
               <thead>
                 <tr>

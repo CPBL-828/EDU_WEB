@@ -28,6 +28,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const fileURL: string = CONSTANT.FILE_URL;
     const adminState = ref(false);
     const selectState = ref(false);
     const lectureInfo = ref<scheduleInterface | undefined>(undefined);
@@ -50,6 +51,10 @@ export default defineComponent({
     const content = ref<string>("");
     const calendarState = ref(false);
     const selectedDate = ref<Date | undefined>(undefined);
+    const selectedStudents = ref<Array<string>>([]);
+    const selectedStudentData = ref<
+      Array<{ assignKey: string; studentKey: string }>
+    >([]);
     const assignDetail = ref<assignInterface | undefined>(undefined);
 
     const getAssignmentList = async () => {
@@ -65,8 +70,6 @@ export default defineComponent({
       assignList.value = [];
       if (result) {
         if (result.count > 0) {
-          totalCnt.value = result.count;
-
           result.resultData.map((item: assignInterface) => {
             if (assignType.value === "ALL") {
               if (item.type === "전체") {
@@ -78,6 +81,8 @@ export default defineComponent({
               }
             }
           });
+
+          totalCnt.value = assignList.value?.length;
         }
       }
     };
@@ -158,6 +163,36 @@ export default defineComponent({
       calendarState.value = !calendarState.value;
     };
 
+    const handleCheckboxChange = () => {
+      selectedStudents.value = selectedStudents.value?.filter(Boolean);
+    };
+
+    const insertAssignFile = async (k: string) => {
+      const inputFile: HTMLInputElement = document.getElementById(
+        "input-file"
+      ) as HTMLInputElement;
+
+      if (inputFile.files!.length > 0) {
+        const fileData = ref<FormData>(new FormData());
+
+        fileData.value.append("assignKey", k);
+        fileData.value.append("assignment", inputFile.files![0]);
+
+        const fileResult = await FileClient(
+          "/lectures/editAssignFile/",
+          fileData.value
+        );
+
+        if (fileResult) {
+          if (fileResult.chunbae === RESULT_KEY.EDIT) {
+            window.alert("과제가 성공적으로 등록되었습니다.");
+          }
+        }
+      } else {
+        window.alert("과제가 성공적으로 등록되었습니다.");
+      }
+    };
+
     const doInsert = async () => {
       if (!content.value) {
         window.alert("과제 내용을 작성해 주세요.");
@@ -182,35 +217,34 @@ export default defineComponent({
 
       if (result) {
         if (result.chunbae === RESULT_KEY.CREATE) {
-          const inputFile: HTMLInputElement = document.getElementById(
-            "input-file"
-          ) as HTMLInputElement;
+          if (createAssignType.value === "ALL") {
+            await insertAssignFile(result.resultData.assignKey);
+            router.go(0);
+          } else {
+            selectedStudents.value?.map((s: string) => {
+              selectedStudentData.value.push({
+                assignKey: (result.resultData as assignInterface).assignKey,
+                studentKey: s,
+              });
+            });
 
-          if (inputFile.files!.length > 0) {
-            const fileData = ref<FormData>(new FormData());
-
-            fileData.value.append("assignKey", result.resultData.assignKey);
-            fileData.value.append("assignment", inputFile.files![0]);
-
-            const fileResult = await FileClient(
-              "/lectures/editAssignFile/",
-              fileData.value
+            const statusResult = await ApiClient(
+              "/lectures/createAssignStatus/",
+              common.makeJson(selectedStudentData.value)
             );
 
-            if (fileResult) {
-              if (fileResult.chunbae === RESULT_KEY.EDIT) {
-                window.alert("과제가 성공적으로 등록되었습니다.");
+            if (statusResult) {
+              if (statusResult.chunbae === RESULT_KEY.CREATE) {
+                window.alert("학생을 성공적으로 배정했습니다.");
+                await insertAssignFile(result.resultData.assignKey);
                 router.go(0);
+              } else {
+                window.alert("학생 배정을 실패했습니다.");
+                return false;
               }
-            }
-          } else {
-            if (createAssignType.value === "ALL") {
-              window.alert("과제가 성공적으로 등록되었습니다.");
-              router.go(0);
             } else {
-              window.alert(
-                "과제가 성공적으로 등록되었습니다.\n학생을 선택해 주세요."
-              );
+              window.alert("학생 배정을 실패했습니다.");
+              return false;
             }
           }
         }
@@ -247,6 +281,7 @@ export default defineComponent({
 
     return {
       category,
+      fileURL,
       adminState,
       selectState,
       lectureInfo,
@@ -262,6 +297,7 @@ export default defineComponent({
       content,
       calendarState,
       selectedDate,
+      selectedStudents,
       assignDetail,
       backToSelect,
       selectLecture,
@@ -270,6 +306,7 @@ export default defineComponent({
       showUploadModal,
       selectType,
       showCalendar,
+      handleCheckboxChange,
       doInsert,
       showAssignDetail,
       changePage,
@@ -324,8 +361,8 @@ export default defineComponent({
               :header="assignHeader"
               :data-list="assignList ? assignList : []"
               admin-state="N"
-              :list-cnt="12"
-              :total-cnt="totalCnt"
+              :list-cnt="10"
+              :total-cnt="totalCnt ? totalCnt : 0"
               list-type="assign"
               :row-height="44"
               @downloadFile="downloadFile"
@@ -404,10 +441,18 @@ export default defineComponent({
               class="assign-create-body-stu"
               v-if="createAssignType === 'PER'"
             >
-              <p v-for="item in studentList">
+              <p v-for="item in studentList" :key="item.studentKey">
                 <label
-                  ><input type="checkbox" name="nb[]" value="01" />
-                  {{ item.name }}</label
+                  ><input
+                    id="student-item"
+                    type="checkbox"
+                    name="nb[]"
+                    :value="item.studentKey"
+                    v-model="selectedStudents"
+                    @change="handleCheckboxChange"
+                  />
+                  <img :src="fileURL + item.profileImg" alt="profile user" />
+                  {{ item.name }} 학생</label
                 >
               </p>
             </div>

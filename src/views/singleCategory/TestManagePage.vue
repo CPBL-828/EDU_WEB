@@ -42,7 +42,10 @@ export default defineComponent({
     const testStatus = ref<Array<testStatusInterface> | undefined>(undefined);
     const scoreMode = ref(false);
     const createMode = ref(false);
-    const selectedDate = ref<Date>(new Date());
+    const firstPage = ref(true);
+    const content = ref<string>("");
+    const calendarState = ref(false);
+    const selectedDate = ref<Date | undefined>(undefined);
     const testType: defaultInterface[] = [
       {
         KEY: "WEEK",
@@ -171,6 +174,10 @@ export default defineComponent({
       selectedType.value = t;
     };
 
+    const showCalendar = () => {
+      calendarState.value = !calendarState.value;
+    };
+
     const insertFile = () => {
       const inputFile: HTMLInputElement = document.getElementById(
         "input-file"
@@ -182,6 +189,17 @@ export default defineComponent({
     };
 
     const doInsert = async () => {
+      if (!selectedType.value) {
+        window.alert("시험 유형을 선택해 주세요.");
+        return false;
+      } else if (!selectedDate.value) {
+        window.alert("시험 일자를 선택해 주세요.");
+        return false;
+      } else if (!content.value) {
+        window.alert("시험 내용을 작성해 주세요.");
+        return false;
+      }
+
       let data = {
         lectureKey: lectureInfo.value?.lectureKey,
         lectureName: lectureInfo.value?.lectureName,
@@ -200,11 +218,11 @@ export default defineComponent({
             "input-file"
           ) as HTMLInputElement;
 
-          if (inputFile.files) {
+          if (inputFile.files!.length > 0) {
             const fileData = ref<FormData>(new FormData());
 
             fileData.value.append("testKey", result.resultData.testKey);
-            fileData.value.append("testSheet", inputFile.files[0]);
+            fileData.value.append("testSheet", inputFile.files![0]);
 
             const fileResult = await FileClient(
               "/lectures/editTestSheet/",
@@ -223,6 +241,10 @@ export default defineComponent({
           }
         }
       }
+    };
+
+    const changePage = () => {
+      firstPage.value = !firstPage.value;
     };
 
     watch(
@@ -268,8 +290,11 @@ export default defineComponent({
       totalCnt,
       scoreMode,
       createMode,
+      firstPage,
       selectedDate,
       testType,
+      content,
+      calendarState,
       selectedType,
       selectedFile,
       backToSelect,
@@ -279,8 +304,10 @@ export default defineComponent({
       showScore,
       showCreateModal,
       selectType,
+      showCalendar,
       insertFile,
       doInsert,
+      changePage,
     };
   },
 });
@@ -347,58 +374,88 @@ export default defineComponent({
         <div v-if="createMode" class="btn">
           <div class="btn-save-active" @click="doInsert">등록하기</div>
         </div>
+        <div v-else class="btn">
+          <div
+            :class="firstPage ? 'btn-save-active' : 'btn-save'"
+            @click="changePage"
+          >
+            응시 현황 보기
+          </div>
+          <div
+            :class="!firstPage ? 'btn-save-active' : 'btn-save'"
+            @click="changePage"
+          >
+            뒤로 가기
+          </div>
+        </div>
       </template>
       <template v-slot:body>
-        <div v-if="createMode" class="test-create">
-          <div class="test-create-lecture">{{ lectureInfo?.lectureName }}</div>
-          <div class="test-create-select">
-            <div class="test-create-select-type">
+        <div v-if="createMode" class="assign-create">
+          <div class="assign-create-header">
+            <div class="assign-create-header-lecture">
+              {{ lectureInfo?.lectureName }}
+            </div>
+            <div class="assign-create-header-select">
               <drop-box-component
                 placeholder="시험 유형"
                 :select-list="testType"
-                row-width="250px"
+                row-width="275px"
                 @selectValue="selectType"
               />
             </div>
-            <div class="test-create-select-calendar">
-              <v-date-picker
-                class="calendar-date"
-                mode="dateTime"
-                v-model="selectedDate"
-                :minute-increment="5"
-              />
+            <div class="assign-create-header-deadline" @click="showCalendar">
+              {{
+                selectedDate
+                  ? selectedDate.toLocaleString().substring(0, 17)
+                  : "시험 일자"
+              }}
+              <i class="fa-solid fa-chevron-down"></i>
             </div>
+            <v-date-picker
+              class="calendar-date"
+              mode="dateTime"
+              v-model="selectedDate"
+              :minute-increment="5"
+              v-if="calendarState"
+            />
           </div>
-          <div class="test-create-view">
-            <div class="test-create-view-lecture">
-              <span>{{ lectureInfo?.lectureName }}</span> 강의에
-            </div>
-            <div class="test-create-view-date">
-              <span>
-                {{ selectedDate ? selectedDate?.toLocaleString() : "" }}</span
-              >
-              일자로
-            </div>
-            <div class="test-create-view-type">
-              <span>{{ selectedType ? selectedType?.VALUE : "" }}</span
-              >을 등록하시겠습니까?
-            </div>
-
-            <div class="test-create-view-file">
-              <span>{{
-                selectedFile ? selectedFile : "관련 파일을 첨부해 주세요."
-              }}</span>
-              <form>
-                <input type="file" id="input-file" @change="insertFile" />
-              </form>
-              <i class="fa-solid fa-file-arrow-up"></i>
-            </div>
+          <div class="sap"></div>
+          <div class="assign-create-body">
+            <textarea
+              :style="{
+                width: '916px',
+              }"
+              class="assign-create-body-content"
+              v-model="content"
+              placeholder="시험 내용을 작성해 주세요"
+            >
+            </textarea>
           </div>
+          <form>
+            <input type="file" id="input-file" />
+          </form>
         </div>
+
         <div v-else class="test-status">
-          <div class="test-status-lecture">{{ lectureInfo?.lectureName }}</div>
-          <div class="test-status-list" v-if="!scoreMode">
-            <table>
+          <div v-if="!createMode && firstPage" class="test-status-first">
+            <div class="test-status-first-header">
+              <div class="test-status-first-header-lecture">
+                {{ lectureInfo?.lectureName }}
+              </div>
+              <div class="sap"></div>
+              <div class="test-status-first-header-type">
+                시험 유형 : {{ testInfo?.testType }}
+              </div>
+              <div class="sap"></div>
+              <div class="test-status-first-header-deadline">
+                시험일자 : {{ testInfo?.testDate.split("T")[0] }}
+              </div>
+            </div>
+            <div class="test-status-first-content">내용</div>
+          </div>
+
+          <div v-else-if="!createMode && !firstPage" class="test-status-list">
+            <table v-if="!createMode && !firstPage && !scoreMode">
               <thead>
                 <tr>
                   <th>이름</th>
@@ -416,6 +473,7 @@ export default defineComponent({
                 </tr>
               </tbody>
             </table>
+            <div v-else-if="!createMode && !firstPage && scoreMode"></div>
           </div>
         </div>
       </template>

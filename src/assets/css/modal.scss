@@ -1407,15 +1407,9 @@ section.modal {
       .test-status {
         @include detail-custom();
         height: 600px;
-        top: 50px;
+        top: 70px;
         bottom: 0;
         border: 0;
-
-        &-lecture {
-          font-size: 16px;
-          font-weight: bold;
-          color: $disable-color;
-        }
 
         &-list {
           height: 524px;
@@ -1468,7 +1462,7 @@ section.modal {
                     font-size: 16px;
                     font-weight: bold;
                     cursor: pointer;
-                    transition: all 200ms;
+                    transition: all;
 
                     &:hover {
                       background-color: $hover-color;
@@ -1477,6 +1471,62 @@ section.modal {
                 }
               }
             }
+
+            //table {
+            //  width: 900px;
+            //  text-align: center;
+            //  border-spacing: 0;
+            //
+            //  thead {
+            //    font-size: 20px;
+            //    position: sticky;
+            //    top: 0;
+            //    background-color: rgba(231, 231, 231);
+            //
+            //    tr {
+            //      height: 44px;
+            //
+            //      th {
+            //        border-top: 2px solid $disable-color;
+            //        border-bottom: 2px solid $disable-color;
+            //      }
+            //    }
+            //  }
+            //
+            //  tbody {
+            //    font-size: 20px;
+            //    color: $sub-color;
+            //    overflow: scroll;
+            //
+            //    tr {
+            //      &:hover {
+            //        background-color: rgba(248, 248, 248, 0.5);
+            //      }
+            //
+            //      td {
+            //        width: 300px;
+            //        height: 44px;
+            //        border-bottom: 2px solid $disable-color;
+            //
+            //        input[type="button"] {
+            //          width: 130px;
+            //          height: 30px;
+            //          background-color: $primary-color;
+            //          border: 0;
+            //          border-radius: 10px;
+            //          color: white;
+            //          font-size: 16px;
+            //          font-weight: bold;
+            //          cursor: pointer;
+            //          transition: all 200ms;
+            //
+            //          &:hover {
+            //            background-color: $hover-color;
+            //          }
+            //        }
+            //      }
+            //    }
+            //  }
           }
         }
       }
@@ -1599,8 +1649,9 @@ section.modal {
         }
       }
 
-      // assign-detail
-      .assign-detail {
+      // assign-detail, test-detail
+      .assign-detail,
+      .test-status {
         @include detail-custom();
         height: 650px;
         bottom: 30px;
@@ -1632,7 +1683,7 @@ section.modal {
           }
 
           &-content {
-            padding: 10px 20px;
+            padding: 30px 40px;
             width: 916px;
             height: 548px;
             overflow: scroll;

@@ -51,6 +51,7 @@ export default defineComponent({
     ];
     const selectState = ref("pm");
     const previewSchedule = ref<scheduleInterface | undefined>(undefined);
+    const previewRoom = ref<string>("");
     const previewScheduleList = ref<Array<scheduleInterface>>([]);
     const rejectMode = ref(false);
     const rejectReason = ref<string>("");
@@ -62,7 +63,7 @@ export default defineComponent({
       let data = {
         userKey: userKey.value,
         search: "",
-        roomKey: "",
+        roomKey: previewRoom.value,
         target: "",
         roomName: "",
         lectureName: "",
@@ -117,6 +118,7 @@ export default defineComponent({
 
     const showDetail = async (l: scheduleInterface) => {
       previewSchedule.value = l;
+      previewRoom.value = l.roomKey_id;
       await setLectureList();
       previewScheduleList.value.push(l);
       store.commit("setModalState", true);
@@ -143,7 +145,8 @@ export default defineComponent({
         if (result.chunbae === RESULT_KEY.CREATE) {
           if (rejectMode.value) {
             window.alert(
-              previewSchedule.value?.lectureName + " 강의 편성 건의를 반려하였습니다."
+              previewSchedule.value?.lectureName +
+                " 강의 편성 건의를 반려하였습니다."
             );
           } else {
             window.alert(

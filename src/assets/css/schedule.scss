@@ -491,6 +491,9 @@ section.planner {
               background-color: #eaeaea;
 
               tr {
+                th.teacher {
+                  width: 15%;
+                }
                 th.name {
                   width: 30%;
                 }
@@ -1132,6 +1135,7 @@ section.check {
 
           .back-btn {
             position: absolute;
+            z-index: 11;
             top: 30px;
             left: 0;
             font-size: 16px;

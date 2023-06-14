@@ -125,13 +125,16 @@ export default defineComponent({
       let data = {
         userKey: "",
         search: "",
+        parentKey: "",
       };
+
       if (search.value) {
         data = Object.assign(data, { search: search.value });
       }
       if (common.getItem(KEYS.UK).userKey.slice(-3) !== USER_KEY.ADM) {
         data = Object.assign(data, {
           userKey: teacherKey.value,
+          lectureKey: lectureKey.value,
         });
       } else {
         data = Object.assign(data, {
@@ -149,6 +152,7 @@ export default defineComponent({
         );
 
         if (result) {
+          console.log(result);
           userData.value = [];
 
           if (result.count > 0) {
@@ -265,6 +269,7 @@ export default defineComponent({
         await getParentList();
       }
 
+      profileURL.value = "";
       createMode.value = u;
     };
 

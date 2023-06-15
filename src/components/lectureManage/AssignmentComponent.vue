@@ -261,6 +261,34 @@ export default defineComponent({
       firstPage.value = !firstPage.value;
     };
 
+    const removeAssign = async () => {
+      if (window.confirm("해당 과제를 삭제하시겠습니까?")) {
+        let data = {
+          assignKey: assignDetail.value?.assignKey,
+        };
+
+        const result = await ApiClient(
+          "/lectures/deleteAssign/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.DELETE) {
+            window.alert("과제를 성공적으로 삭제했습니다.");
+            router.go(0);
+          } else {
+            window.alert("과제를 삭제하지 못했습니다.\n다시 시도해 주세요.");
+            return false;
+          }
+        } else {
+          window.alert("과제를 삭제하지 못했습니다.\n다시 시도해 주세요.");
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+
     onMounted(async () => {
       category.value = common.findCategory();
 
@@ -310,6 +338,7 @@ export default defineComponent({
       doInsert,
       showAssignDetail,
       changePage,
+      removeAssign,
     };
   },
 });
@@ -398,6 +427,7 @@ export default defineComponent({
         </div>
       </template>
       <template v-slot:body>
+        <span class="remove-btn" @click="removeAssign">강의 삭제하기</span>
         <div v-if="createMode" class="assign-create">
           <div class="assign-create-header">
             <div class="assign-create-header-lecture">

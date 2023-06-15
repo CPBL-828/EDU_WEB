@@ -427,7 +427,9 @@ export default defineComponent({
         </div>
       </template>
       <template v-slot:body>
-        <span class="remove-btn" @click="removeAssign">강의 삭제하기</span>
+        <span class="remove-btn" @click="removeAssign" v-if="adminState"
+          >강의 삭제하기</span
+        >
         <div v-if="createMode" class="assign-create">
           <div class="assign-create-header">
             <div class="assign-create-header-lecture">

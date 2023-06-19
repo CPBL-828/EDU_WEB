@@ -2,10 +2,10 @@
 import { defineComponent, onMounted, ref } from "vue";
 import {
   assignInterface,
+  assignStatusInterface,
   defaultInterface,
   scheduleInterface,
   studentInterface,
-  testInterface,
 } from "../../lib/types";
 import common from "../../lib/common";
 import SelectListComponent from "../custom/SelectListComponent.vue";
@@ -28,6 +28,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const fileURL: string = CONSTANT.FILE_URL;
     const adminState = ref(false);
     const selectState = ref(false);
     const lectureInfo = ref<scheduleInterface | undefined>(undefined);
@@ -50,11 +51,21 @@ export default defineComponent({
     const content = ref<string>("");
     const calendarState = ref(false);
     const selectedDate = ref<Date | undefined>(undefined);
+    const selectedStudents = ref<Array<string>>([]);
+    const selectedStudentData = ref<
+      Array<{ assignKey: string; studentKey: string }>
+    >([]);
     const assignDetail = ref<assignInterface | undefined>(undefined);
+    const assignStatus = ref<Array<assignStatusInterface> | undefined>(
+      undefined
+    );
+    const studentKey = ref<string>("");
 
     const getAssignmentList = async () => {
       let data = {
         lectureKey: lectureInfo.value?.lectureKey,
+        type: assignType.value,
+        studentKey: assignType.value === "ALL" ? "" : studentKey.value,
       };
 
       const result = await ApiClient(
@@ -65,19 +76,9 @@ export default defineComponent({
       assignList.value = [];
       if (result) {
         if (result.count > 0) {
-          totalCnt.value = result.count;
+          assignList.value = result.resultData as assignInterface[];
 
-          result.resultData.map((item: assignInterface) => {
-            if (assignType.value === "ALL") {
-              if (item.type === "전체") {
-                assignList.value?.push(item);
-              }
-            } else {
-              if (item.type === "개별") {
-                assignList.value?.push(item);
-              }
-            }
-          });
+          totalCnt.value = assignList.value?.length;
         }
       }
     };
@@ -158,6 +159,36 @@ export default defineComponent({
       calendarState.value = !calendarState.value;
     };
 
+    const handleCheckboxChange = () => {
+      selectedStudents.value = selectedStudents.value?.filter(Boolean);
+    };
+
+    const insertAssignFile = async (k: string) => {
+      const inputFile: HTMLInputElement = document.getElementById(
+        "input-file"
+      ) as HTMLInputElement;
+
+      if (inputFile.files!.length > 0) {
+        const fileData = ref<FormData>(new FormData());
+
+        fileData.value.append("assignKey", k);
+        fileData.value.append("assignment", inputFile.files![0]);
+
+        const fileResult = await FileClient(
+          "/lectures/editAssignFile/",
+          fileData.value
+        );
+
+        if (fileResult) {
+          if (fileResult.chunbae === RESULT_KEY.EDIT) {
+            window.alert("과제가 성공적으로 등록되었습니다.");
+          }
+        }
+      } else {
+        window.alert("과제가 성공적으로 등록되었습니다.");
+      }
+    };
+
     const doInsert = async () => {
       if (!content.value) {
         window.alert("과제 내용을 작성해 주세요.");
@@ -182,49 +213,94 @@ export default defineComponent({
 
       if (result) {
         if (result.chunbae === RESULT_KEY.CREATE) {
-          const inputFile: HTMLInputElement = document.getElementById(
-            "input-file"
-          ) as HTMLInputElement;
+          if (createAssignType.value === "ALL") {
+            await insertAssignFile(result.resultData.assignKey);
+            router.go(0);
+          } else {
+            selectedStudents.value?.map((s: string) => {
+              selectedStudentData.value.push({
+                assignKey: (result.resultData as assignInterface).assignKey,
+                studentKey: s,
+              });
+            });
 
-          if (inputFile.files!.length > 0) {
-            const fileData = ref<FormData>(new FormData());
-
-            fileData.value.append("assignKey", result.resultData.assignKey);
-            fileData.value.append("assignment", inputFile.files![0]);
-
-            const fileResult = await FileClient(
-              "/lectures/editAssignFile/",
-              fileData.value
+            const statusResult = await ApiClient(
+              "/lectures/createAssignStatus/",
+              common.makeJson(selectedStudentData.value)
             );
 
-            if (fileResult) {
-              if (fileResult.chunbae === RESULT_KEY.EDIT) {
-                window.alert("과제가 성공적으로 등록되었습니다.");
+            if (statusResult) {
+              if (statusResult.chunbae === RESULT_KEY.CREATE) {
+                window.alert("학생을 성공적으로 배정했습니다.");
+                await insertAssignFile(result.resultData.assignKey);
                 router.go(0);
+              } else {
+                window.alert("학생 배정을 실패했습니다.");
+                return false;
               }
-            }
-          } else {
-            if (createAssignType.value === "ALL") {
-              window.alert("과제가 성공적으로 등록되었습니다.");
-              router.go(0);
             } else {
-              window.alert(
-                "과제가 성공적으로 등록되었습니다.\n학생을 선택해 주세요."
-              );
+              window.alert("학생 배정을 실패했습니다.");
+              return false;
             }
           }
         }
       }
     };
 
-    const showAssignDetail = (a: assignInterface) => {
+    const showAssignDetail = async (a: assignInterface) => {
       createMode.value = false;
       assignDetail.value = a;
+      await getAssignStatusList();
       store.commit("setModalState", true);
     };
 
     const changePage = () => {
       firstPage.value = !firstPage.value;
+    };
+
+    const getAssignStatusList = async () => {
+      let data = {
+        assignKey: assignDetail.value?.assignKey,
+      };
+
+      const result = await ApiClient(
+        "/lectures/getAssignStatusList/",
+        common.makeJson(data)
+      );
+
+      if (result) {
+        if (result.count > 0) {
+          assignStatus.value = result.resultData as assignStatusInterface[];
+        }
+      }
+    };
+
+    const removeAssign = async () => {
+      if (window.confirm("해당 과제를 삭제하시겠습니까?")) {
+        let data = {
+          assignKey: assignDetail.value?.assignKey,
+        };
+
+        const result = await ApiClient(
+          "/lectures/deleteAssign/",
+          common.makeJson(data)
+        );
+
+        if (result) {
+          if (result.chunbae === RESULT_KEY.DELETE) {
+            window.alert("과제를 성공적으로 삭제했습니다.");
+            router.go(0);
+          } else {
+            window.alert("과제를 삭제하지 못했습니다.\n다시 시도해 주세요.");
+            return false;
+          }
+        } else {
+          window.alert("과제를 삭제하지 못했습니다.\n다시 시도해 주세요.");
+          return false;
+        }
+      } else {
+        return false;
+      }
     };
 
     onMounted(async () => {
@@ -235,6 +311,16 @@ export default defineComponent({
         common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM
       ) {
         adminState.value = true;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
+        studentKey.value = common.getItem(KEYS.LU).studentKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
+        const child = await common.setChildren(
+          common.getItem(KEYS.LU).parentKey
+        );
+
+        if (child) {
+          studentKey.value = child.studentKey;
+        }
       }
 
       if (common.getItem(KEYS.SS)) {
@@ -247,11 +333,13 @@ export default defineComponent({
 
     return {
       category,
+      fileURL,
       adminState,
       selectState,
       lectureInfo,
       assignHeader,
       assignList,
+      assignStatus,
       totalCnt,
       assignTypeList,
       assignType,
@@ -262,6 +350,7 @@ export default defineComponent({
       content,
       calendarState,
       selectedDate,
+      selectedStudents,
       assignDetail,
       backToSelect,
       selectLecture,
@@ -270,9 +359,11 @@ export default defineComponent({
       showUploadModal,
       selectType,
       showCalendar,
+      handleCheckboxChange,
       doInsert,
       showAssignDetail,
       changePage,
+      removeAssign,
     };
   },
 });
@@ -324,8 +415,8 @@ export default defineComponent({
               :header="assignHeader"
               :data-list="assignList ? assignList : []"
               admin-state="N"
-              :list-cnt="12"
-              :total-cnt="totalCnt"
+              :list-cnt="10"
+              :total-cnt="totalCnt ? totalCnt : 0"
               list-type="assign"
               :row-height="44"
               @downloadFile="downloadFile"
@@ -361,6 +452,9 @@ export default defineComponent({
         </div>
       </template>
       <template v-slot:body>
+        <span class="remove-btn" @click="removeAssign" v-if="adminState"
+          >강의 삭제하기</span
+        >
         <div v-if="createMode" class="assign-create">
           <div class="assign-create-header">
             <div class="assign-create-header-lecture">
@@ -404,10 +498,18 @@ export default defineComponent({
               class="assign-create-body-stu"
               v-if="createAssignType === 'PER'"
             >
-              <p v-for="item in studentList">
+              <p v-for="item in studentList" :key="item.studentKey">
                 <label
-                  ><input type="checkbox" name="nb[]" value="01" />
-                  {{ item.name }}</label
+                  ><input
+                    id="student-item"
+                    type="checkbox"
+                    name="nb[]"
+                    :value="item.studentKey"
+                    v-model="selectedStudents"
+                    @change="handleCheckboxChange"
+                  />
+                  <img :src="fileURL + item.profileImg" alt="profile user" />
+                  {{ item.name }} 학생</label
                 >
               </p>
             </div>
@@ -443,83 +545,15 @@ export default defineComponent({
                   <th>이름</th>
                   <th>제출 여부</th>
                   <th>비고</th>
+                  <th>점수</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
+                <tr v-for="item in assignStatus">
+                  <td>{{ item.studentName }}</td>
+                  <td>{{ item.assignState === "Y" ? "제출" : "미제출" }}</td>
+                  <td>{{ item.assignNote ? item.assignNote : "내용 없음" }}</td>
+                  <td>{{ item.assignScore }}</td>
                 </tr>
               </tbody>
             </table>

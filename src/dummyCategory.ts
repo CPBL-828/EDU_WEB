@@ -57,9 +57,9 @@ export const PAR_MAIN: categoryInterface[] = [
   },
   {
     KEY: "SCHEDULE",
-    VALUE: "자녀 시간표",
+    VALUE: "시간표",
     ICON: "fa-solid fa-chart-pie",
-    HAS_CHILD: false,
+    HAS_CHILD: true,
   },
   {
     KEY: "LECTURE",
@@ -69,9 +69,9 @@ export const PAR_MAIN: categoryInterface[] = [
   },
   {
     KEY: "TEST",
-    VALUE: "시험 현황",
+    VALUE: "시험",
     ICON: "fa-solid fa-highlighter",
-    HAS_CHILD: true,
+    HAS_CHILD: false,
   },
   {
     KEY: "CNA",
@@ -90,17 +90,14 @@ export const PAR_SUB: defaultInterface[] = [
     ],
   },
   {
+    KEY: "SCHEDULE",
+    VALUE: [{ KEY: "CURRENT", VALUE: "자녀 시간표" }],
+  },
+  {
     KEY: "LECTURE",
     VALUE: [
       { KEY: "ATTENDANCE", VALUE: "출석 현황" },
       { KEY: "ASSIGNMENT", VALUE: "과제" },
-    ],
-  },
-  {
-    KEY: "TEST",
-    VALUE: [
-      { KEY: "SCHEDULE", VALUE: "시험 일정" },
-      { KEY: "SCORE", VALUE: "성적 입력" },
     ],
   },
   {

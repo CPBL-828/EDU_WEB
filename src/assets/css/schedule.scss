@@ -491,6 +491,9 @@ section.planner {
               background-color: #eaeaea;
 
               tr {
+                th.teacher {
+                  width: 15%;
+                }
                 th.name {
                   width: 30%;
                 }
@@ -1004,11 +1007,11 @@ section.assignment {
 
           &-list {
             position: absolute;
-            bottom: 107px;
+            bottom: 90px;
             left: 50%;
             transform: translateX(-50%);
             width: 1000px;
-            height: 524px;
+            height: 540px;
           }
         }
       }
@@ -1066,12 +1069,47 @@ section.attendance {
             color: $sub-color;
           }
 
-          &-data {
+          &-data,
+          &-stu {
             position: absolute;
             top: 131px;
             left: 50%;
             transform: translateX(-50%);
             width: 900px;
+          }
+
+          &-stu {
+            border: 2px solid #e7e7e7;
+            border-radius: 10px;
+            height: 500px;
+
+            table {
+              width: 100%;
+              font-size: 20px;
+              border-spacing: 0;
+
+              thead {
+                position: sticky;
+                top: 0;
+                height: 50px;
+                color: $sub-color;
+
+                tr {
+                  th {
+                    border-bottom: 2px solid #e7e7e7;
+                  }
+                }
+              }
+
+              tbody {
+                text-align: center;
+                color: #343434;
+
+                tr {
+                  height: 50px;
+                }
+              }
+            }
           }
 
           .no-data {
@@ -1132,6 +1170,7 @@ section.check {
 
           .back-btn {
             position: absolute;
+            z-index: 11;
             top: 30px;
             left: 0;
             font-size: 16px;

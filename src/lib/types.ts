@@ -165,6 +165,7 @@ export interface testInterface {
   lectureKey_id: string;
   testDate: string;
   testType: string;
+  content: string;
   testSheet: string;
   createDate: string;
   editDate: string;
@@ -190,6 +191,18 @@ export interface assignInterface {
   content: string;
   deadLine: string;
   type: string;
+  createDate: string;
+  editDate: string;
+}
+
+export interface assignStatusInterface {
+  assignStatusKey: string;
+  assignKey_id: string;
+  studentKey_id: string;
+  studentName: string;
+  assignState: string;
+  assignScore: string;
+  assignNote: string;
   createDate: string;
   editDate: string;
 }

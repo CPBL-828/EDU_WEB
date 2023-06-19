@@ -143,7 +143,10 @@ export default defineComponent({
     watch(
       () => selectState.value,
       async () => {
-        await getStudentList();
+        if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
+        } else {
+          await getStudentList();
+        }
         await getAttendList();
       }
     );
@@ -153,6 +156,17 @@ export default defineComponent({
 
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         teacherKey.value = common.getItem(KEYS.LU).teacherKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
+        const child = await common.setChildren(
+          common.getItem(KEYS.LU).parentKey
+        );
+
+        if (child) {
+          studentInfo.value = {
+            KEY: child.studentKey,
+            VALUE: child.name,
+          };
+        }
       }
     });
 
@@ -210,6 +224,45 @@ export default defineComponent({
                 :row-height="40"
                 @showAttendDetail="showAttendDetail"
               ></data-list-component>
+            </div>
+            <div
+              class="attendance-section-body-list-stu"
+              v-else-if="studentAttendList"
+            >
+              <table>
+                <thead>
+                  <tr>
+                    <th
+                      :style="{
+                        width: '25%',
+                      }"
+                    >
+                      날짜
+                    </th>
+                    <th
+                      :style="{
+                        width: '25%',
+                      }"
+                    >
+                      출석 상태
+                    </th>
+                    <th
+                      :style="{
+                        width: '50%',
+                      }"
+                    >
+                      사유
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in studentAttendList">
+                    <td>{{ item.createDate.split("T")[0] }}</td>
+                    <td>{{ item.state }}</td>
+                    <td>{{ item.reason ? item.reason : "내용 없음" }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div v-else class="no-data">출결 데이터가 없습니다.</div>
           </div>

@@ -115,6 +115,7 @@ export default defineComponent({
         userKey: "",
         search: searchStudent.value,
         lectureKey: "",
+        parentKey: "",
       };
 
       const result = await ApiClient(

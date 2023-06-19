@@ -2,10 +2,10 @@
 import { defineComponent, onMounted, ref } from "vue";
 import {
   assignInterface,
+  assignStatusInterface,
   defaultInterface,
   scheduleInterface,
   studentInterface,
-  testInterface,
 } from "../../lib/types";
 import common from "../../lib/common";
 import SelectListComponent from "../custom/SelectListComponent.vue";
@@ -56,10 +56,15 @@ export default defineComponent({
       Array<{ assignKey: string; studentKey: string }>
     >([]);
     const assignDetail = ref<assignInterface | undefined>(undefined);
+    const assignStatus = ref<Array<assignStatusInterface> | undefined>(
+      undefined
+    );
+    const studentKey = ref<string>("");
 
     const getAssignmentList = async () => {
       let data = {
         lectureKey: lectureInfo.value?.lectureKey,
+        studentKey: assignType.value === "ALL" ? "" : studentKey.value,
       };
 
       const result = await ApiClient(
@@ -70,17 +75,7 @@ export default defineComponent({
       assignList.value = [];
       if (result) {
         if (result.count > 0) {
-          result.resultData.map((item: assignInterface) => {
-            if (assignType.value === "ALL") {
-              if (item.type === "전체") {
-                assignList.value?.push(item);
-              }
-            } else {
-              if (item.type === "개별") {
-                assignList.value?.push(item);
-              }
-            }
-          });
+          assignList.value = result.resultData as assignInterface[];
 
           totalCnt.value = assignList.value?.length;
         }
@@ -251,14 +246,34 @@ export default defineComponent({
       }
     };
 
-    const showAssignDetail = (a: assignInterface) => {
+    const showAssignDetail = async (a: assignInterface) => {
       createMode.value = false;
       assignDetail.value = a;
+      await getAssignStatusList();
       store.commit("setModalState", true);
     };
 
     const changePage = () => {
       firstPage.value = !firstPage.value;
+    };
+
+    const getAssignStatusList = async () => {
+      let data = {
+        assignKey: assignDetail.value?.assignKey,
+        studentKey: "",
+      };
+
+      const result = await ApiClient(
+        "/lectures/getAssignStatusList/",
+        common.makeJson(data)
+      );
+
+      console.log(result);
+      if (result) {
+        if (result.count > 0) {
+          assignStatus.value = result.resultData as assignStatusInterface[];
+        }
+      }
     };
 
     const removeAssign = async () => {
@@ -297,6 +312,8 @@ export default defineComponent({
         common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM
       ) {
         adminState.value = true;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
+        studentKey.value = common.getItem(KEYS.LU).studentKey;
       }
 
       if (common.getItem(KEYS.SS)) {
@@ -315,6 +332,7 @@ export default defineComponent({
       lectureInfo,
       assignHeader,
       assignList,
+      assignStatus,
       totalCnt,
       assignTypeList,
       assignType,
@@ -520,83 +538,15 @@ export default defineComponent({
                   <th>이름</th>
                   <th>제출 여부</th>
                   <th>비고</th>
+                  <th>점수</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
-                </tr>
-                <tr>
-                  <td>이름</td>
-                  <td>제출</td>
-                  <td>비고</td>
+                <tr v-for="item in assignStatus">
+                  <td>{{ item.studentName }}</td>
+                  <td>{{ item.assignState === "Y" ? "응시" : "미응시" }}</td>
+                  <td>{{ item.assignNote ? item.assignNote : "내용 없음" }}</td>
+                  <td>{{ item.assignScore }}</td>
                 </tr>
               </tbody>
             </table>

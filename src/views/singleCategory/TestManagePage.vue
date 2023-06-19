@@ -23,7 +23,7 @@ export default defineComponent({
     DataListComponent,
     SelectListComponent,
   },
-  setup() {
+  setup: function () {
     const store = useStore();
     const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
@@ -106,7 +106,7 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          testStatus.value = result.resultData;
+          testStatus.value = result.resultData as testStatusInterface[];
         }
       }
     };
@@ -205,6 +205,7 @@ export default defineComponent({
         lectureName: lectureInfo.value?.lectureName,
         testDate: selectedDate.value,
         testType: selectedType.value?.VALUE as string,
+        content: content.value,
       };
 
       const result = await ApiClient(
@@ -451,7 +452,7 @@ export default defineComponent({
                 시험일자 : {{ testInfo?.testDate.split("T")[0] }}
               </div>
             </div>
-            <div class="test-status-first-content">내용</div>
+            <div class="test-status-first-content">{{ testInfo?.content }}</div>
           </div>
 
           <div v-else-if="!createMode && !firstPage" class="test-status-list">

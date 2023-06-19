@@ -9,8 +9,9 @@ import {
   TEA_MAIN,
   TEA_SUB,
 } from "../dummyCategory";
-import { categoryInterface, defaultInterface } from "./types";
+import { categoryInterface, defaultInterface, studentInterface } from "./types";
 import { ref } from "vue";
+import { ApiClient } from "../axios";
 
 const makeJson = (data: object | Array<object>): string => {
   return JSON.stringify(data);
@@ -144,6 +145,18 @@ const getImg = (f: string) => {
   return CONSTANT.FILE_URL + f;
 };
 
+const setChildren = async (p: string) => {
+  let data = { userKey: "", search: "", lectureKey: "", parentKey: p };
+
+  const result = await ApiClient("/members/getStudentList/", makeJson(data));
+
+  if (result) {
+    if (result.count > 0) {
+      return result.resultData[0] as studentInterface;
+    }
+  }
+};
+
 export default {
   makeJson,
   parseJson,
@@ -152,4 +165,5 @@ export default {
   removeItem,
   findCategory,
   getImg,
+  setChildren,
 };

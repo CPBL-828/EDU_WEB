@@ -110,6 +110,16 @@ export default defineComponent({
     onMounted(async () => {
       category.value = common.findCategory();
 
+      if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
+        const child = await common.setChildren(
+          common.getItem(KEYS.LU).parentKey
+        );
+
+        if (child) {
+          userKey.value = child.studentKey;
+        }
+      }
+
       await getScheduleList();
     });
 
@@ -218,10 +228,10 @@ export default defineComponent({
                   <div class="label">강의실</div>
                   {{ scheduleInfo.roomName }}
                 </div>
-                <div class="info-progress">
-                  <div class="label">강의 진행표</div>
-                  <div class="progress-btn" @click="openModal">열람하기</div>
-                </div>
+                <!--                <div class="info-progress">-->
+                <!--                  <div class="label">강의 진행표</div>-->
+                <!--                  <div class="progress-btn" @click="openModal">열람하기</div>-->
+                <!--                </div>-->
               </div>
             </div>
           </div>

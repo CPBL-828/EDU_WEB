@@ -112,7 +112,13 @@ export default defineComponent({
         userKey: lectureKey.value ? "" : userKey.value,
         search: "",
         lectureKey: lectureKey.value,
+        parentKey:
+          common.getItem(KEYS.UK).userKey === USER_KEY.PAR
+            ? common.getItem(KEYS.LU).parentKey
+            : "",
       };
+
+      console.log(data);
 
       const result = await ApiClient(
         "/members/getStudentList/",
@@ -276,8 +282,10 @@ export default defineComponent({
       category.value = common.findCategory();
 
       if (!props.adminState) {
-        teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
-        userKey.value = teacherInfo.value.teacherKey;
+        if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
+          teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+          userKey.value = teacherInfo.value.teacherKey;
+        }
       } else {
         userKey.value = (common.getItem(KEYS.LU) as adminInterface).adminKey;
       }
@@ -289,7 +297,9 @@ export default defineComponent({
         await getAnalysisList();
       }
 
-      await getLectureList();
+      if (common.getItem(KEYS.UK).userKey !== USER_KEY.PAR) {
+        await getLectureList();
+      }
       await getStudentList();
     });
 
@@ -300,6 +310,7 @@ export default defineComponent({
     return {
       category,
       fileURL,
+      teacherInfo,
       placeholder,
       lectureList,
       lectureKey,
@@ -346,7 +357,10 @@ export default defineComponent({
           <span class="refresh-btn" v-if="lectureKey" @click="refreshPage"
             >강의 다시 선택하기</span
           >
-          <div class="analysis-component-section-body-select">
+          <div
+            class="analysis-component-section-body-select"
+            v-if="adminState || teacherInfo"
+          >
             <div class="analysis-component-section-body-select-drop">
               <drop-box-component
                 :placeholder="placeholder"

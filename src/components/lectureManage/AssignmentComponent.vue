@@ -64,6 +64,7 @@ export default defineComponent({
     const getAssignmentList = async () => {
       let data = {
         lectureKey: lectureInfo.value?.lectureKey,
+        type: assignType.value,
         studentKey: assignType.value === "ALL" ? "" : studentKey.value,
       };
 
@@ -260,7 +261,6 @@ export default defineComponent({
     const getAssignStatusList = async () => {
       let data = {
         assignKey: assignDetail.value?.assignKey,
-        studentKey: "",
       };
 
       const result = await ApiClient(
@@ -268,7 +268,6 @@ export default defineComponent({
         common.makeJson(data)
       );
 
-      console.log(result);
       if (result) {
         if (result.count > 0) {
           assignStatus.value = result.resultData as assignStatusInterface[];
@@ -314,6 +313,14 @@ export default defineComponent({
         adminState.value = true;
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
         studentKey.value = common.getItem(KEYS.LU).studentKey;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
+        const child = await common.setChildren(
+          common.getItem(KEYS.LU).parentKey
+        );
+
+        if (child) {
+          studentKey.value = child.studentKey;
+        }
       }
 
       if (common.getItem(KEYS.SS)) {
@@ -544,7 +551,7 @@ export default defineComponent({
               <tbody>
                 <tr v-for="item in assignStatus">
                   <td>{{ item.studentName }}</td>
-                  <td>{{ item.assignState === "Y" ? "응시" : "미응시" }}</td>
+                  <td>{{ item.assignState === "Y" ? "제출" : "미제출" }}</td>
                   <td>{{ item.assignNote ? item.assignNote : "내용 없음" }}</td>
                   <td>{{ item.assignScore }}</td>
                 </tr>

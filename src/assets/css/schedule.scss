@@ -1069,12 +1069,47 @@ section.attendance {
             color: $sub-color;
           }
 
-          &-data {
+          &-data,
+          &-stu {
             position: absolute;
             top: 131px;
             left: 50%;
             transform: translateX(-50%);
             width: 900px;
+          }
+
+          &-stu {
+            border: 2px solid #e7e7e7;
+            border-radius: 10px;
+            height: 500px;
+
+            table {
+              width: 100%;
+              font-size: 20px;
+              border-spacing: 0;
+
+              thead {
+                position: sticky;
+                top: 0;
+                height: 50px;
+                color: $sub-color;
+
+                tr {
+                  th {
+                    border-bottom: 2px solid #e7e7e7;
+                  }
+                }
+              }
+
+              tbody {
+                text-align: center;
+                color: #343434;
+
+                tr {
+                  height: 50px;
+                }
+              }
+            }
           }
 
           .no-data {

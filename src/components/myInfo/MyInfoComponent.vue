@@ -323,51 +323,74 @@ export default defineComponent({
               : ""
           }}
         </div>
-        <div class="my-info-section-body" v-if="teacherInfo || studentInfo">
+        <div
+          class="my-info-section-body"
+          v-if="teacherInfo || studentInfo || parentInfo"
+        >
           <div class="my-info-section-body-img" v-if="teacherInfo">
             <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
             <img v-else :src="fileURL + teacherInfo.profileImg" alt="profile" />
           </div>
-          <div class="my-info-section-body-img" v-if="studentInfo">
+          <div class="my-info-section-body-img" v-else-if="studentInfo">
             <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
             <img v-else :src="fileURL + studentInfo.profileImg" alt="profile" />
+          </div>
+          <div class="my-info-section-body-img" v-else-if="parentInfo">
+            <i class="fa-solid fa-user"></i>
           </div>
           <div class="my-info-section-body-content">
             <div
               class="my-info-section-body-content-text"
-              v-if="(studentInfo || teacherInfo) && !editState"
+              v-if="teacherInfo && !editState"
             >
-              <span class="name" v-if="teacherInfo">
-                이름 : {{ teacherInfo.name }} ({{ teacherInfo.id }})
+              <span class="name">
+                이름 : {{ teacherInfo?.name }} ({{ teacherInfo?.id }})
               </span>
-              <span class="phone" v-if="teacherInfo">
-                연락처 : {{ teacherInfo.phone.substring(0, 3) }}-{{
-                  teacherInfo.phone.substring(3, 7)
-                }}-{{ teacherInfo.phone.substring(7, 11) }}
+              <span class="phone">
+                연락처 : {{ teacherInfo?.phone.substring(0, 3) }}-{{
+                  teacherInfo?.phone.substring(3, 7)
+                }}-{{ teacherInfo?.phone.substring(7, 11) }}
               </span>
-              <span class="join" v-if="teacherInfo">
-                입사일 : {{ teacherInfo.joinDate.substring(0, 4) }}/{{
-                  teacherInfo.joinDate.substring(5, 7)
-                }}/{{ teacherInfo.joinDate.substring(8, 10) }}
+              <span class="join">
+                입사일 : {{ teacherInfo?.joinDate.substring(0, 4) }}/{{
+                  teacherInfo?.joinDate.substring(5, 7)
+                }}/{{ teacherInfo?.joinDate.substring(8, 10) }}
               </span>
-              <span class="subject" v-if="teacherInfo">
-                담당과목 : {{ teacherInfo.resSubject }}
+              <span class="subject">
+                담당과목 : {{ teacherInfo?.resSubject }}
               </span>
-              <span class="part" v-if="teacherInfo">
-                담당학년 : {{ teacherInfo.part }}
-              </span>
+              <span class="part"> 담당학년 : {{ teacherInfo?.part }} </span>
+            </div>
 
-              <span class="name" v-if="studentInfo">
-                이름 : {{ studentInfo.name }} ({{ studentInfo.id }})
+            <div
+              class="my-info-section-body-content-text"
+              v-if="studentInfo && !editState"
+            >
+              <span class="name">
+                이름 : {{ studentInfo?.name }} ({{ studentInfo?.id }})
               </span>
-              <span class="part" v-if="studentInfo">
-                연락처 : {{ studentInfo.phone.substring(0, 3) }}-{{
-                  studentInfo.phone.substring(3, 7)
-                }}-{{ studentInfo.phone.substring(7, 11) }}
+              <span class="part">
+                연락처 : {{ studentInfo?.phone.substring(0, 3) }}-{{
+                  studentInfo?.phone.substring(3, 7)
+                }}-{{ studentInfo?.phone.substring(7, 11) }}
               </span>
-              <span class="join" v-if="studentInfo">
-                학교 : {{ studentInfo.school?.slice(0, -3) }}
-                {{ studentInfo.grade }}학년
+              <span class="join">
+                학교 : {{ studentInfo?.school?.slice(0, -3) }}
+                {{ studentInfo?.grade }}학년
+              </span>
+            </div>
+
+            <div
+              class="my-info-section-body-content-text"
+              v-if="parentInfo && !editState"
+            >
+              <span class="name">
+                이름 : {{ parentInfo?.name }} ({{ parentInfo?.id }})
+              </span>
+              <span class="part">
+                연락처 : {{ parentInfo?.phone.substring(0, 3) }}-{{
+                  parentInfo?.phone.substring(3, 7)
+                }}-{{ parentInfo?.phone.substring(7, 11) }}
               </span>
             </div>
             <div class="my-info-section-body-content-btn">
@@ -395,7 +418,7 @@ export default defineComponent({
                 :value="studentInfo ? '세부 정보' : ''"
                 @click="editModal"
               />
-              <div class="edit-btn" @click="editModal" v-else>
+              <div class="edit-btn" @click="editModal" v-else-if="!parentInfo">
                 <i class="fa-solid fa-pen"></i>정보 수정
               </div>
             </div>

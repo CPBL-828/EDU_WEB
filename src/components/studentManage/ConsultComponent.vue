@@ -72,6 +72,7 @@ export default defineComponent({
     const inputType = ref<string>("");
     const inputDateCalendarState = ref(false);
     const inputTimeCalendarState = ref(false);
+    const viewInput = ref(false);
 
     //상담 예정 현황
     const planDate = ref<Date | undefined>(undefined);
@@ -114,6 +115,8 @@ export default defineComponent({
       let data = { teacherKey: "" };
       common.setItem(KEYS.ST, common.makeJson(data));
 
+      viewInput.value = true;
+
       await setStudentList();
       await setConsultList();
     };
@@ -131,10 +134,18 @@ export default defineComponent({
       let data = {
         userKey: teacherInfo.value
           ? teacherInfo.value?.teacherKey
-          : adminInfo.value?.adminKey,
+          : adminInfo.value
+          ? adminInfo.value.adminKey
+          : "",
         search: "",
         lectureKey: "",
+        parentKey:
+          common.getItem(KEYS.UK).userKey === USER_KEY.PAR
+            ? common.getItem(KEYS.LU).parentKey
+            : "",
       };
+
+      console.log(data);
 
       const result = await ApiClient(
         "/members/getStudentList/",
@@ -157,7 +168,9 @@ export default defineComponent({
       let data = {
         userKey: teacherInfo.value
           ? teacherInfo.value?.teacherKey
-          : adminInfo.value?.adminKey,
+          : adminInfo.value
+          ? adminInfo.value.adminKey
+          : "",
         studentKey: student.value.KEY,
         search: consultType.value,
         date: date.value,
@@ -457,9 +470,18 @@ export default defineComponent({
 
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+        viewInput.value = true;
+      } else if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
+        const child = await common.setChildren(
+          common.getItem(KEYS.LU).parentKey
+        );
 
-        await setStudentList();
-        await setConsultList();
+        if (child) {
+          student.value = {
+            KEY: child.studentKey,
+            VALUE: child.name,
+          };
+        }
       } else if (props.adminState) {
         adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
       }
@@ -468,17 +490,14 @@ export default defineComponent({
         if (common.getItem(KEYS.ST).teacherKey) {
           teacherInfo.value = common.getItem(KEYS.ST);
           selectTeacherState.value = true;
-
-          await setStudentList();
-          await setConsultList();
         } else {
           adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
           selectTeacherState.value = true;
-
-          await setStudentList();
-          await setConsultList();
         }
       }
+
+      await setStudentList();
+      await setConsultList();
     });
 
     onUnmounted(() => {
@@ -495,6 +514,7 @@ export default defineComponent({
       date,
       time,
       typeList,
+      viewInput,
       inputDate,
       inputTime,
       inputDateCalendarState,
@@ -578,10 +598,7 @@ export default defineComponent({
       <span class="go-back" @click="goBack" v-if="adminState"
         >강사 다시 선택하기</span
       >
-      <div
-        class="consult-input-section"
-        v-if="(adminInfo && !teacherInfo) || !adminInfo"
-      >
+      <div class="consult-input-section" v-if="viewInput">
         <div class="consult-input-section-tag">상담 일정 입력</div>
         <div class="consult-input-section-body">
           <span class="consult-input-section-body-title">
@@ -656,7 +673,7 @@ export default defineComponent({
       <div
         class="consult-plan-section"
         :style="{
-          top: adminInfo && teacherInfo ? '39px' : '',
+          top: !viewInput ? '39px' : '',
         }"
       >
         <div class="consult-plan-section-tag">상담 예정 현황</div>
@@ -738,7 +755,7 @@ export default defineComponent({
                 class="consult-plan-section-body-list-item-detail"
                 @click="openInsertPopup(item)"
                 가
-                v-if="(adminInfo && !teacherInfo) || !adminInfo"
+                v-if="viewInput"
               >
                 상담 결과 입력
               </div>
@@ -761,7 +778,7 @@ export default defineComponent({
       <div
         class="consult-list-section"
         :style="{
-          top: adminInfo && teacherInfo ? '510px' : '',
+          top: !viewInput ? '510px' : '',
         }"
       >
         <div class="consult-list-section-tag">상담 목록 조회</div>

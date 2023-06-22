@@ -11,14 +11,9 @@ import DropBoxComponent from "./custom/DropBoxComponent.vue";
 import { ApiClient } from "../axios";
 import SelectButtonComponent from "./custom/SelectButtonComponent.vue";
 import ModalPopupComponent from "./custom/ModalPopupComponent.vue";
-import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
+import { KEYS, RESULT_KEY } from "../constant";
 import { useRouter } from "vue-router";
-/*
-@brief [학생, 학부모, 강사] [Main] 내 공간 [Sub]건의사항
-       [관리자] [Main]학생 관리, 강사 관리 [Sub]건의사항
-       교무 관리자는 각 유저의 건의사항 처리
-       기타 관리자는 각 유저의 건의사항 열람만 가능
- */
+
 export default defineComponent({
   name: "SuggestionManageComponent",
   props: {

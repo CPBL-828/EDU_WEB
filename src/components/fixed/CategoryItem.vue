@@ -1,9 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { categoryInterface } from "../../lib/types";
-/*
-@brief 메인 카테고리
- */
+
 export default defineComponent({
   name: "CategoryItem",
   props: {
@@ -11,9 +9,6 @@ export default defineComponent({
       type: Array as PropType<Array<categoryInterface>>,
       required: true,
     },
-  },
-  setup() {
-    return {};
   },
 });
 </script>

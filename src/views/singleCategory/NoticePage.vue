@@ -14,11 +14,7 @@ import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../../components/custom/ModalPopupComponent.vue";
 import DropBoxComponent from "../../components/custom/DropBoxComponent.vue";
-/*
-@brief [강사, 학생, 학부모, 관리자] [Main]공지
-       [Sub]전체 공지: 공지 데이터의 type이 '전체'인 것만 표시
-       [Sub]내 공지: 현재 로그인한 user의 userKey를 getNoticeList parameter로 보내 해당 유저만 열람 가능한 공지 목록 표시
- */
+
 export default defineComponent({
   name: "NoticePage",
   components: { DropBoxComponent, ModalPopupComponent, DataListComponent },
@@ -40,7 +36,6 @@ export default defineComponent({
       { KEY: "ALL", VALUE: "전체" },
       { KEY: USER_KEY.TEA, VALUE: "강사" },
       { KEY: USER_KEY.STU, VALUE: "학생" },
-      // { KEY: USER_KEY.PAR, VALUE: "학부모" },
     ];
     const userList = ref<Array<defaultInterface> | undefined>(undefined);
     const noticeList = ref<Array<noticeInterface> | undefined>(undefined);

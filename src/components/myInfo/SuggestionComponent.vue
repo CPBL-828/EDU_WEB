@@ -14,13 +14,7 @@ import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
-/*
-@brief [학생, 학부모, 강사] [Main] 내 공간 [Sub]건의사항
-       [관리자] [Main]학생 관리, 강사 관리 [Sub]건의사항
-       교무 관리자는 각 유저의 건의사항 처리
-       기타 관리자는 각 유저의 건의사항 열람만 가능
-@props 현재 로그인 한 유저의 권한 값
- */
+
 export default defineComponent({
   name: "SuggestionComponent",
   components: {
@@ -307,10 +301,7 @@ export default defineComponent({
                   }})</span
                 >
               </div>
-              <div
-                style="white-space: pre"
-                class="suggest-detail-section-answer-item"
-              >
+              <div class="suggest-detail-section-answer-item">
                 {{
                   suggestDetail?.answer
                     ? suggestDetail?.answer

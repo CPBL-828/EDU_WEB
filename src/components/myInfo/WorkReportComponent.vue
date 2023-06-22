@@ -1,18 +1,15 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { defaultInterface, teacherInterface } from "../../lib/types";
 import common from "../../lib/common";
 import { ApiClient } from "../../axios";
 import { KEYS, USER_KEY } from "../../constant";
 import SelectListComponent from "../custom/SelectListComponent.vue";
-/*
-@brief [강사] [Main]내 공간 [Sub]출근부
-       [관리자] [Main]강사 관리 [Sub]출근부
- */
+
 export default defineComponent({
   name: "WorkReportComponent",
   components: { SelectListComponent },
-  setup(props) {
+  setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const adminState = ref(false);
@@ -20,10 +17,8 @@ export default defineComponent({
     const today = ref<Date>(new Date());
     const date = ref<Date>(new Date());
     const comeTime = ref<Date>(new Date());
-    // const fixCome = ref<Date | undefined>(undefined);
     const fixCome = ref<string>(new Date().toLocaleString());
     const outTime = ref<Date>(new Date());
-    // const fixOut = ref<Date | undefined>(undefined);
     const fixOut = ref<string>(new Date().toLocaleString());
 
     const selectTeacher = (t: teacherInterface) => {
@@ -31,8 +26,6 @@ export default defineComponent({
     };
 
     const saveComeTime = async (t: Date) => {
-      // fixCome.value = t;
-
       if (window.confirm(fixCome.value + "로 출근 시간을 저장하시겠습니까?")) {
         let data = {
           teacherKey: teacherData.value?.teacherKey,
@@ -50,8 +43,6 @@ export default defineComponent({
     };
 
     const saveOutTime = async (t: Date) => {
-      // fixOut.value = t;
-
       if (window.confirm(fixOut.value + "로 퇴근 시간을 저장하시겠습니까?")) {
         let data = {
           teacherKey: teacherData.value?.teacherKey,
@@ -60,8 +51,8 @@ export default defineComponent({
         };
 
         const result = await ApiClient(
-            "/info/createWork/",
-            common.makeJson(data)
+          "/info/createWork/",
+          common.makeJson(data)
         );
       } else {
         return false;
@@ -137,10 +128,6 @@ export default defineComponent({
                     class="my-work-section-body-section-input-section-come-datetime"
                   >
                     <input type="text" :value="fixCome" :disabled="true" />
-                    <!--                    <i-->
-                    <!--                      class="fa-solid fa-chevron-down"-->
-                    <!--                      @click="openCalendar('come')"-->
-                    <!--                    ></i>-->
                   </div>
                   <input
                     type="button"
@@ -148,24 +135,12 @@ export default defineComponent({
                     value="출근"
                     @click="saveComeTime(comeTime)"
                   />
-                  <!--                  <v-date-picker-->
-                  <!--                    :class="-->
-                  <!--                      calendarState === 'come' ? 'calendar-come' : 'calendar'-->
-                  <!--                    "-->
-                  <!--                    mode="time"-->
-                  <!--                    v-model="comeTime"-->
-                  <!--                    :minute-increment="10"-->
-                  <!--                  />-->
                 </div>
                 <div class="my-work-section-body-section-input-section-out">
                   <div
                     class="my-work-section-body-section-input-section-out-datetime"
                   >
                     <input type="text" :value="fixOut" :disabled="true" />
-                    <!--                    <i-->
-                    <!--                      class="fa-solid fa-chevron-down"-->
-                    <!--                      @click="openCalendar('out')"-->
-                    <!--                    ></i>-->
                   </div>
                   <input
                     type="button"
@@ -173,14 +148,6 @@ export default defineComponent({
                     value="퇴근"
                     @click="saveOutTime(outTime)"
                   />
-                  <!--                  <v-date-picker-->
-                  <!--                    :class="-->
-                  <!--                      calendarState === 'out' ? 'calendar-out' : 'calendar'-->
-                  <!--                    "-->
-                  <!--                    mode="time"-->
-                  <!--                    v-model="outTime"-->
-                  <!--                    :minute-increment="10"-->
-                  <!--                  />-->
                 </div>
               </div>
             </div>

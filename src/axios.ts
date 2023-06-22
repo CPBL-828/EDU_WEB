@@ -1,4 +1,4 @@
-import Axios, { AxiosResponse } from "axios";
+import Axios from "axios";
 import { CONSTANT } from "./constant";
 
 let instance = Axios.create({
@@ -32,7 +32,7 @@ export const ApiClient = async (url: string, data: string) => {
       return res.data;
     })
     .catch((res) => {
-      console.log(res);
+      // console.log(res);
     });
 };
 
@@ -43,26 +43,6 @@ export const FileClient = async (url: string, data: FormData) => {
       return res.data;
     })
     .catch((res) => {
-      console.log(res);
+      // console.log(res);
     });
 };
-//
-// const forceFileDownload = (res: AxiosResponse, title: string) => {
-//   const url = window.URL.createObjectURL(new Blob([res.data]));
-//   const link = document.createElement("a");
-//   link.href = url;
-//   link.setAttribute("download", title);
-//   document.body.appendChild(link);
-//   link.click();
-// };
-//
-// export const downloadWithAxios = async (url: string, title: string) => {
-//   return await getApiClient("file")
-//     .get(url)
-//     .then((res) => {
-//       forceFileDownload(res, title);
-//     })
-//     .catch((e) => {
-//       console.error(e);
-//     });
-// };

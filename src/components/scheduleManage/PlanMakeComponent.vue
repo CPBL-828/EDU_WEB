@@ -10,11 +10,7 @@ import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import TimetableComponent from "../custom/TimetableComponent.vue";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import { useRouter } from "vue-router";
-/*
-@brief [강사, 관리자] [Main]시간표 관리 [Sub]계획서 작성
-       강사는 계획서 작성 및 작성한 계획서 목록 열람
-       관리자는 강사가 작성한 계획서 열람 및 처리
- */
+
 export default defineComponent({
   name: "PlanMakeComponent",
   components: {
@@ -201,7 +197,6 @@ export default defineComponent({
       }
     };
 
-    // const plannerDownload = document.getElementById("planner-download");
     const downloadPlanner = async (l: scheduleInterface | undefined) => {
       if (l) {
         if (l.planner) {

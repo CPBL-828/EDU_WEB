@@ -15,11 +15,7 @@ import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useRouter } from "vue-router";
-/*
-@brief [강사] [Main]시간표 관리 [Sub]시간표 건의
-       강의실 선택 시, 해당 강의실을 시간표 표시
-       강의실, 강의명, 요일, 시작 입력 받고 계획서, 교재 링크 추가해서 건의
- */
+
 export default defineComponent({
   name: "ScheduleAskComponent",
   components: {
@@ -174,7 +170,6 @@ export default defineComponent({
       }
     };
 
-    //TODO...
     const insertAsk = async () => {
       if (!groupKey.value) {
         window.alert("반을 선택해 주세요.");

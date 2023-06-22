@@ -2,9 +2,7 @@
 import { defineComponent, ref } from "vue";
 import { USER_KEY } from "../../constant";
 import { useRouter } from "vue-router";
-/*
-@brief 본인 권한을 선택하고 해당 유저의 로그인 창으로 넘어가는 페이지
- */
+
 export default defineComponent({
   name: "UserSelectPage",
   setup() {
@@ -32,11 +30,6 @@ export default defineComponent({
       },
     ]);
 
-    /*
-    @brief 로그인 화면으로 이동
-    @date 22/10/06
-    @param 로그인 유저를 표시할 userType의 key 값
-     */
     const goLogin = (k: string) => {
       let user: string = "";
       if (k === USER_KEY.STU) user = "student";

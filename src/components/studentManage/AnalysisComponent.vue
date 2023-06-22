@@ -118,8 +118,6 @@ export default defineComponent({
             : "",
       };
 
-      console.log(data);
-
       const result = await ApiClient(
         "/members/getStudentList/",
         common.makeJson(data)

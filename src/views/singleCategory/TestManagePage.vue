@@ -15,6 +15,7 @@ import ModalPopupComponent from "../../components/custom/ModalPopupComponent.vue
 import { useRouter } from "vue-router";
 import DropBoxComponent from "../../components/custom/DropBoxComponent.vue";
 import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../../constant";
+
 export default defineComponent({
   name: "TestManagePage",
   components: {
@@ -160,7 +161,6 @@ export default defineComponent({
     };
 
     const showScore = () => {
-      // scoreMode.value = true;
       store.commit("setModalState", false);
       router.push("/main");
     };

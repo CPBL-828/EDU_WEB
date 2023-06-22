@@ -10,10 +10,7 @@ import {
   scheduleInterface,
   teacherInterface,
 } from "../../lib/types";
-/*
-@brief 강의, 강의실 선택 화면
-       데이터 열람 기준 선정
- */
+
 export default defineComponent({
   name: "SelectListComponent",
   components: { SelectButtonComponent },

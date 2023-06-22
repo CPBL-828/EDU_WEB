@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import SidebarComponent from "./components/fixed/SidebarComponent.vue";
 import { useRoute } from "vue-router";
 import CalendarPopup from "./components/fixed/CalendarPopup.vue";
@@ -13,14 +13,6 @@ export default defineComponent({
     const route = useRoute();
     const sidebarState = ref(true);
     const modalBack = ref(false);
-
-    onMounted(() => {
-      console.log(
-        "  ハ____ハ      ｡ﾟﾟ･｡･ﾟﾟ｡\n" +
-          " ꒰ ⬩ ω ⬩ ꒱    ˚｡    ｡˚\n" +
-          " |   つ Success! ﾟ･｡･ﾟ\n"
-      );
-    });
 
     watch(
       () => route.path,

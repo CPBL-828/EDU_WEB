@@ -1,8 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-/*
-@brief 페이징 처리
- */
+
 export default defineComponent({
   name: "PaginationComponent",
   props: {

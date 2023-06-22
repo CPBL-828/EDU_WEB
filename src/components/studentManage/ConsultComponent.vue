@@ -23,11 +23,7 @@ import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import SelectListComponent from "../custom/SelectListComponent.vue";
-/*
-@brief [강사, 관리자] [Main]학생 관리, [학부모] [Main]상담 및 분석
-       [Sub]상담 접근 시, 강사는 본인이 담당하는 학생과의 상담 정보를, 관리자는 선택한 강사의 담당 학생 상담 정보를,
-       학부모는 자신의 상담 정보를 표시
- */
+
 export default defineComponent({
   name: "ConsultComponent",
   props: {
@@ -144,8 +140,6 @@ export default defineComponent({
             ? common.getItem(KEYS.LU).parentKey
             : "",
       };
-
-      console.log(data);
 
       const result = await ApiClient(
         "/members/getStudentList/",

@@ -11,10 +11,7 @@ import { KEYS, USER_KEY } from "../constant";
 import { useRoute } from "vue-router";
 import WorkReportComponent from "../components/myInfo/WorkReportComponent.vue";
 import SuggestionComponent from "../components/myInfo/SuggestionComponent.vue";
-/*
-@brief [강사, 학생, 학부모] [Main]내 공간
-       선택한 [Sub]에 따라 페이지 표시
- */
+
 export default defineComponent({
   name: "MyPlacePage",
   components: { SuggestionComponent, WorkReportComponent, MyInfoComponent },
@@ -27,9 +24,6 @@ export default defineComponent({
     const workUser = ref<teacherInterface | undefined>(undefined);
     const currentCategory = ref<string | undefined>(undefined);
 
-    /*
-    사용자가 선택하는 카테고리를 추적
-     */
     watch(
       () => route.path,
       () => {

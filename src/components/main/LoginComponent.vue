@@ -13,9 +13,7 @@ import {
 } from "../../lib/types";
 import { ApiClient } from "../../axios";
 import common from "../../lib/common";
-/*
-@brief 로그인 실행 화면
- */
+
 export default defineComponent({
   name: "LoginComponent",
   components: { ChevronLeftSquareIcon, UserCircleIcon },
@@ -30,11 +28,6 @@ export default defineComponent({
       router.back();
     };
 
-    /*
-    @brief 로그인 실행
-           유저 데이터(result)를 성공적으로 가져올 시, 현재 유저 타입에 맞춰 userData에 result 저장
-    @date 22/10/06
-     */
     const doLogin = async () => {
       let data: object = {
         userType: userType.value,
@@ -79,9 +72,6 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      /*
-      접속하려는 유저 타입 가져오기
-       */
       userType.value = route.fullPath
         .split("/")[1]
         .substring(0, 3)

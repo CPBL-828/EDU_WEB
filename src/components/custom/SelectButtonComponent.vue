@@ -1,9 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../../lib/types";
-/*
-@brief 이지선다 선택 버튼
- */
+
 export default defineComponent({
   name: "SelectButtonComponent",
   props: {

@@ -18,11 +18,7 @@ import ModalPopupComponent from "./custom/ModalPopupComponent.vue";
 import SelectButtonComponent from "./custom/SelectButtonComponent.vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-/*
-@brief [강사] [Main]학생 관리, [관리자] [Main]학생 관리, 강사 관리
-       [Sub]학생 정보, 강사 정보 접근 시 카드형 컴포넌트를 통해 유저 리스트 표시
-@props 보여주고자 하는 유저 값
- */
+
 export default defineComponent({
   name: "UserInfoComponent",
   props: {

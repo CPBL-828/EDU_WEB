@@ -10,6 +10,7 @@ import common from "../../lib/common";
 import SelectListComponent from "../custom/SelectListComponent.vue";
 import { ApiClient } from "../../axios";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
+
 interface sendingAttendInterface {
   studentName: string;
   studentKey: string;
@@ -18,11 +19,7 @@ interface sendingAttendInterface {
   state: string;
   reason: string;
 }
-/*
-@brief [강사] [Main]강의 관리
-       [Sub]출석체크로 접근해서 출석 체크
-       attendList 받아 와서 오늘자 출석 현황 존재 O/X에 따라 화면 컨트롤
- */
+
 export default defineComponent({
   name: "AttendCheckComponent",
   components: { SelectListComponent },
@@ -96,7 +93,6 @@ export default defineComponent({
 
     const backToSelect = () => {
       lectureInfo.value = undefined;
-      console.log(lectureInfo.value);
       common.removeItem(KEYS.SS);
       selectState.value = false;
     };

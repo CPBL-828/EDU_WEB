@@ -113,6 +113,7 @@ export interface scheduleInterface {
   editDate: string;
   start: number;
   minute: number;
+  total: number;
 }
 
 export interface consultInterface {

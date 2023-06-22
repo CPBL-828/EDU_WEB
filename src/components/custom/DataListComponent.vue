@@ -12,10 +12,7 @@ import {
 import ModalPopupComponent from "./ModalPopupComponent.vue";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import { showAttendInterface } from "../lectureManage/AttendanceComponent.vue";
-import AssignmentComponent from "../lectureManage/AssignmentComponent.vue";
-/*
-@brief 글 리스트 형태의 데이터를 표현하기 위한 컴포넌트
- */
+
 export default defineComponent({
   name: "DataListComponent",
   components: { PaginationComponent, ModalPopupComponent },
@@ -75,9 +72,6 @@ export default defineComponent({
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
 
-    /*
-    props에 존재하는 데이터 리스트의 종류에 따라 현재 컴포넌트에서 보여줄 데이터 리스트를 set
-     */
     // 공지사항
     const setNoticeList = () => {
       if (props.dataList) {
@@ -200,10 +194,6 @@ export default defineComponent({
     };
 
     watch(
-      /*
-        현재 페이지가 변경되면, 페이지 값에 따라 표시할 dataList 변경
-        페이징은 추후 별도의 컴포넌트로 분리해야 함
-       */
       () => currentPage.value,
       () => {
         if (props.listType === "notice") {
@@ -246,9 +236,6 @@ export default defineComponent({
     );
 
     watch(
-      /*
-        검색, 필터링 등으로 props의 dataList가 바뀌면 setXXXList() 재호출
-         */
       () => props.dataList,
       async () => {
         if (props.listType === "consult") {

@@ -1,9 +1,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { scheduleInterface } from "../../lib/types";
-/*
-@brief 시간표 컴포넌트
- */
+
 export default defineComponent({
   name: "TimetableComponent",
   props: {

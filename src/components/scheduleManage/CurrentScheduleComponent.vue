@@ -14,11 +14,7 @@ import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import SelectListComponent from "../custom/SelectListComponent.vue";
 import { useRouter } from "vue-router";
-/*
-@brief [강사, 학생, 학부모, 관리자] [Main]시간표 관리
-       [Sub]현재 시간표 접근 시 해당 유저의 현재 시간표 표시
-       관리자의 경우, 강의실별 현재 시간표를 표시
- */
+
 export default defineComponent({
   name: "CurrentScheduleComponent.vue",
   components: {
@@ -228,10 +224,6 @@ export default defineComponent({
                   <div class="label">강의실</div>
                   {{ scheduleInfo.roomName }}
                 </div>
-                <!--                <div class="info-progress">-->
-                <!--                  <div class="label">강의 진행표</div>-->
-                <!--                  <div class="progress-btn" @click="openModal">열람하기</div>-->
-                <!--                </div>-->
               </div>
             </div>
           </div>

@@ -578,7 +578,7 @@ export default defineComponent({
             />
             <i class="fa-solid fa-camera" v-if="editState"></i>
             <input type="file" accept="image/*" v-if="editState" />
-            <div class="my-info-profile-group" v-if="groupInfo">
+            <div class="group" v-if="groupInfo">
               <div class="label">반</div>
               <div class="item">
                 <span v-for="item in groupInfo">{{ item.groupName }}</span>

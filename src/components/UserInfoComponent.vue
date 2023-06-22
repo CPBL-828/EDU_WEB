@@ -923,7 +923,7 @@ export default defineComponent({
       modal-height="620px"
       modal-width="1078px"
     >
-      <template v-slot:button>
+      <template v-slot:button v-if="adminState">
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"

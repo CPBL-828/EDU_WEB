@@ -204,7 +204,7 @@ export default defineComponent({
             처리 여부 :
             <div class="suggestion-section-body-state-button">
               <select-button-component
-                :state-value="selectItem"
+                :select-list="selectItem"
                 :select-value="selectState"
                 @changeState="changeState"
               />

@@ -391,7 +391,7 @@ export default defineComponent({
               <div class="preview-section-schedule-btn">
                 <div class="preview-section-schedule-btn-select">
                   <select-button-component
-                    :state-value="selectItem"
+                    :select-list="selectItem"
                     :select-value="selectState"
                     @changeState="changeState"
                   ></select-button-component>
@@ -416,7 +416,7 @@ export default defineComponent({
               </div>
               <div class="preview-section-schedule-timetable">
                 <timetable-component
-                  :schedule-list="previewScheduleList"
+                  :lecture-list="previewScheduleList"
                   :select-type="selectState"
                 ></timetable-component>
               </div>

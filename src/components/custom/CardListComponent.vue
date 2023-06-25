@@ -1,11 +1,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { studentInterface, teacherInterface } from "../../lib/types";
-import { CONSTANT, KEYS, USER_KEY } from "../../constant";
+import { CONSTANT, USER_KEY } from "../../constant";
 import ModalPopupComponent from "./ModalPopupComponent.vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import common from "../../lib/common";
 
 export default defineComponent({
   name: "CardListComponent",
@@ -21,44 +18,15 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
-    const router = useRouter();
     const fileURL: string = CONSTANT.FILE_URL;
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
-    const studentInfo = ref<studentInterface | undefined>(undefined);
     const teacherList = ref<Array<teacherInterface> | undefined>(undefined);
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
 
     const setUserList = () => {
       if (props.viewUser === USER_KEY.STU) {
         studentList.value = props.userList as studentInterface[];
       } else {
         teacherList.value = props.userList as teacherInterface[];
-      }
-    };
-
-    const openModal = (u: string, i: studentInterface | teacherInterface) => {
-      store.state.modalState = true;
-
-      if (u === USER_KEY.STU) {
-        studentInfo.value = i as studentInterface;
-      } else {
-        teacherInfo.value = i as teacherInterface;
-      }
-    };
-
-    const goOther = (w: string) => {
-      store.state.modalState = false;
-
-      if (w === "ANALYSIS") {
-        common.removeItem(KEYS.SR);
-        common.setItem(KEYS.SR, common.makeJson({ sr: w.toLowerCase() }));
-        router.push("/s-manage/analysis");
-      } else if (w === "TEST") {
-        common.removeItem(KEYS.MR);
-        common.removeItem(KEYS.SR);
-        common.setItem(KEYS.MR, common.makeJson({ mr: w.toLowerCase() }));
-        router.push("/test");
       }
     };
 
@@ -76,11 +44,7 @@ export default defineComponent({
     return {
       fileURL,
       studentList,
-      studentInfo,
       teacherList,
-      teacherInfo,
-      openModal,
-      goOther,
     };
   },
 });

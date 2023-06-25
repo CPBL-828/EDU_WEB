@@ -304,7 +304,7 @@ export default defineComponent({
           <div class="schedule-ask-section-body-button">
             <div class="schedule-ask-section-body-button-state">
               <select-button-component
-                :state-value="selectItem"
+                :select-list="selectItem"
                 :select-value="selectState"
                 @changeState="changeState"
               ></select-button-component>
@@ -312,7 +312,7 @@ export default defineComponent({
           </div>
           <div class="schedule-ask-section-body-timetable">
             <timetable-component
-              :schedule-list="scheduleList"
+              :lecture-list="scheduleList"
               :select-type="selectState"
             ></timetable-component>
           </div>

@@ -25,11 +25,11 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
     const userKey = ref<string>("");
+    const teacherDetail = ref<teacherInterface | undefined>(undefined);
     const lectureList = ref<Array<scheduleInterface>>([]);
     const showLectureList = ref<Array<scheduleInterface>>([]);
-    const color = ref<Array<string>>([
+    const lectureColor = ref<Array<string>>([
       "#d57a7b",
       "#e39177",
       "#eeb958",
@@ -64,6 +64,7 @@ export default defineComponent({
     const setLectureList = async () => {
       lectureList.value = [];
       showLectureList.value = [];
+
       let data = {
         userKey: userKey.value,
         search: "",
@@ -77,6 +78,7 @@ export default defineComponent({
         "/lectures/getLectureList/",
         common.makeJson(data)
       );
+
       if (result) {
         if (result.count > 0) {
           result.resultData.map((item: scheduleInterface) => {
@@ -149,18 +151,19 @@ export default defineComponent({
       }
     };
 
-    const changeState = (s: string) => {
-      selectState.value = s;
+    const changeState = (state: string) => {
+      selectState.value = state;
     };
 
-    const selectPage = (p: number) => {
-      currentLecturePage.value = p;
-    };
-
-    const changePage = (p: number) => {
-      if (p === 1) currentLecturePage.value = currentLecturePage.value + 1;
-      else currentLecturePage.value = currentLecturePage.value - 1;
-    };
+    //TODO pagination
+    // const selectPage = (page: number) => {
+    //   currentLecturePage.value = page;
+    // };
+    //
+    // const changePage = (page: number) => {
+    //   if (page === 1) currentLecturePage.value = currentLecturePage.value + 1;
+    //   else currentLecturePage.value = currentLecturePage.value - 1;
+    // };
 
     watch(
       () => currentLecturePage.value,
@@ -181,8 +184,8 @@ export default defineComponent({
 
     onMounted(async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-        teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
-        userKey.value = teacherInfo.value.teacherKey;
+        teacherDetail.value = common.getItem(KEYS.LU) as teacherInterface;
+        userKey.value = teacherDetail.value.teacherKey;
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
         userKey.value = common.getItem(KEYS.LU).studentKey;
       }
@@ -191,13 +194,13 @@ export default defineComponent({
       else if (props.listType === "ROOM") await setRoomList();
       else if (props.listType === "TEA") await setTeacherList();
 
-      color.value = color.value.sort(() => Math.random() - 0.5);
+      lectureColor.value = lectureColor.value.sort(() => Math.random() - 0.5);
     });
 
     return {
-      teacherInfo,
+      teacherDetail,
       showLectureList,
-      color,
+      lectureColor,
       lecturePage,
       currentLecturePage,
       selectItem,
@@ -209,8 +212,8 @@ export default defineComponent({
       teacherPage,
       currentTeacherPage,
       changeState,
-      selectPage,
-      changePage,
+      // selectPage,
+      // changePage,
     };
   },
 });
@@ -221,15 +224,15 @@ export default defineComponent({
     <!--    강의 선택 -->
     <div class="select-lecture" v-if="listType === 'LECTURE'">
       <div class="select-lecture-label">
-        <span class="select-lecture-label-teacher" v-if="teacherInfo">
-          {{ teacherInfo?.name }} 강사님의 강의 현황
+        <span class="select-lecture-label-teacher" v-if="teacherDetail">
+          {{ teacherDetail?.name }} 강사님의 강의 현황
         </span>
         <span class="select-lecture-label-tip"
           >열람할 강의를 선택해주세요.</span
         >
         <div class="select-lecture-label-button">
           <select-button-component
-            :state-value="selectItem"
+            :select-list="selectItem"
             :select-value="selectState"
             @changeState="changeState"
           ></select-button-component>
@@ -240,7 +243,7 @@ export default defineComponent({
         <div
           class="select-lecture-list-item"
           v-for="(item, index) in showLectureList"
-          :style="{ backgroundColor: color[index] }"
+          :style="{ backgroundColor: lectureColor[index] }"
           @click="$emit('selectLecture', item)"
         >
           <span class="select-lecture-list-item-name">{{
@@ -267,7 +270,7 @@ export default defineComponent({
         <div
           class="select-lecture-list-item"
           v-for="(item, index) in showRoomList"
-          :style="{ backgroundColor: color[index] }"
+          :style="{ backgroundColor: lectureColor[index] }"
           @click="$emit('selectRoom', item)"
         >
           <span class="select-lecture-list-item-name">{{ item.name }}</span>
@@ -303,7 +306,7 @@ export default defineComponent({
         <div
           class="select-lecture-list-item"
           v-for="(item, index) in showTeacherList"
-          :style="{ backgroundColor: color[index] }"
+          :style="{ backgroundColor: lectureColor[index] }"
           @click="$emit('selectTeacher', item)"
         >
           <span class="select-lecture-list-item-name">{{ item.name }}</span>

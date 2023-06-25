@@ -5,7 +5,7 @@ import { defaultInterface } from "../../lib/types";
 export default defineComponent({
   name: "SelectButtonComponent",
   props: {
-    stateValue: {
+    selectList: {
       types: Array as PropType<Array<defaultInterface>>,
       required: true,
     },
@@ -15,8 +15,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const selectItem = ref<Array<defaultInterface>>(
-      props.stateValue as defaultInterface[]
+    const itemList = ref<Array<defaultInterface>>(
+      props.selectList as defaultInterface[]
     );
     const selectState = ref<string>(props.selectValue as string);
 
@@ -28,7 +28,7 @@ export default defineComponent({
     );
 
     return {
-      selectItem,
+      itemList,
       selectState,
     };
   },
@@ -41,23 +41,23 @@ export default defineComponent({
       <div class="select-state">
         <div
           :class="
-            selectState === selectItem[0].KEY
+            selectState === itemList[0].KEY
               ? 'select-state-ok-active'
               : 'select-state-ok'
           "
-          @click="$emit('changeState', selectItem[0].KEY)"
+          @click="$emit('changeState', itemList[0].KEY)"
         >
-          {{ selectItem[0].VALUE }}
+          {{ itemList[0].VALUE }}
         </div>
         <div
           :class="
-            selectState === selectItem[1].KEY
+            selectState === itemList[1].KEY
               ? 'select-state-wait-active'
               : 'select-state-wait'
           "
-          @click="$emit('changeState', selectItem[1].KEY)"
+          @click="$emit('changeState', itemList[1].KEY)"
         >
-          {{ selectItem[1].VALUE }}
+          {{ itemList[1].VALUE }}
         </div>
       </div>
     </div>

@@ -169,7 +169,7 @@ export default defineComponent({
           >
             <div class="current-schedule-section-body-button-state">
               <select-button-component
-                :state-value="selectItem"
+                :select-list="selectItem"
                 :select-value="selectState"
                 @changeState="changeState"
               ></select-button-component>
@@ -190,9 +190,9 @@ export default defineComponent({
             v-if="!adminState || selectLectureState"
           >
             <timetable-component
-              :schedule-list="scheduleList"
+              :lecture-list="scheduleList"
               :select-type="selectState"
-              @clickSchedule="selectSchedule"
+              @showLectureDetail="selectSchedule"
             ></timetable-component>
           </div>
 

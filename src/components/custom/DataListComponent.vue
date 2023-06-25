@@ -184,12 +184,12 @@ export default defineComponent({
       }
     };
 
-    const selectPage = (p: number) => {
-      currentPage.value = p;
+    const selectPage = (page: number) => {
+      currentPage.value = page;
     };
 
-    const changePage = (p: number) => {
-      if (p === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (page: number) => {
+      if (page === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 

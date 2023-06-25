@@ -20,22 +20,22 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const popupState = ref(false);
+    const modalState = ref(false);
 
     const closeModal = () => {
       store.commit("setModalState", false);
-      popupState.value = false;
+      modalState.value = false;
     };
 
     watch(
       () => store.state.modalState,
       () => {
-        popupState.value = store.state.modalState;
+        modalState.value = store.state.modalState;
       }
     );
 
     return {
-      popupState,
+      modalState,
       closeModal,
     };
   },
@@ -45,7 +45,7 @@ export default defineComponent({
 <template>
   <section
     class="modal"
-    v-if="popupState"
+    v-if="modalState"
     :style="{
       width: modalWidth ? modalWidth.toString() : '1078px',
       height: modalHeight ? modalHeight.toString() : '808px',

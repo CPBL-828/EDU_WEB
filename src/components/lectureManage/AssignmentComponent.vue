@@ -397,7 +397,7 @@ export default defineComponent({
             <div class="assignment-section-body-content-title-btn">
               <div class="assignment-section-body-content-title-btn-type">
                 <select-button-component
-                  :state-value="assignTypeList"
+                  :select-list="assignTypeList"
                   :select-value="assignType"
                   @changeState="changeType"
                 ></select-button-component>
@@ -463,7 +463,7 @@ export default defineComponent({
             </div>
             <div class="assign-create-header-select">
               <select-button-component
-                :state-value="assignTypeList"
+                :select-list="assignTypeList"
                 :select-value="createAssignType"
                 @changeState="selectType"
               ></select-button-component>

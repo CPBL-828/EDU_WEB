@@ -23,6 +23,6 @@ export const KEYS = {
   UK: "UK",
   MR: "MR", // main route
   SR: "SR", // sub route
-  SS: "SS", // select student
-  ST: "ST", // select teacher
+  SS: "SS", // selected student
+  ST: "ST", // selected teacher
 };

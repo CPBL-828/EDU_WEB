@@ -762,7 +762,7 @@ export default defineComponent({
             <pagination-component
               @changePage="changePage"
               @selectPage="selectPage"
-              :page="planPage"
+              :total-page="planPage"
               :current-page="planCurrentPage"
             ></pagination-component>
           </div>

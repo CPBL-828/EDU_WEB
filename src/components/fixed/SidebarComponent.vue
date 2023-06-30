@@ -2,12 +2,7 @@
 import { defineComponent, onMounted, ref, watch } from "vue";
 import { KEYS, USER_KEY } from "../../constant";
 import CategoryItem from "./CategoryItem.vue";
-import {
-  adminInterface,
-  categoryInterface,
-  defaultInterface,
-  teacherInterface,
-} from "../../lib/types";
+import { categoryInterface, defaultInterface } from "../../lib/types";
 import {
   ETC_MAIN,
   ETC_SUB,
@@ -29,61 +24,77 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const userData = ref<teacherInterface | adminInterface>();
-    const userKey = ref({ userKey: "" });
-    const mainItem = ref<categoryInterface[]>();
-    const subItem = ref<categoryInterface[]>();
-    const resultItem = ref<defaultInterface[]>();
-    const subState = ref(false);
+    const userKey = ref<string>("");
+    const mainCategory = ref<categoryInterface[]>();
+    const subCategory = ref<categoryInterface[]>();
+    const resultSubItem = ref<defaultInterface[]>();
+    const showSubState = ref(false);
     const selectSubState = ref<string | undefined>(undefined);
 
-    const goMain = () => {
+    const goToMain = () => {
       common.removeItem(KEYS.MR);
       common.removeItem(KEYS.SR);
-      subState.value = false;
+
+      showSubState.value = false;
       selectSubState.value = undefined;
+
       router.push("/main");
     };
 
-    const onClickAway = (e: Event) => {
-      if (e.isTrusted) {
-        subState.value = false;
+    const onClickAway = (event: Event) => {
+      if (event.isTrusted) {
+        showSubState.value = false;
       }
     };
 
-    const selectMain = (m: categoryInterface) => {
-      common.setItem(KEYS.MR, common.makeJson({ mr: m.KEY.toLowerCase() }));
+    const selectMain = (mainItem: categoryInterface) => {
+      common.setItem(
+        KEYS.MR,
+        common.makeJson({ mr: mainItem.KEY.toLowerCase() })
+      );
 
-      if (m.HAS_CHILD) {
-        subItem.value?.map((item: categoryInterface) => {
-          if (m.KEY === item.KEY)
-            resultItem.value = item.VALUE as defaultInterface[];
+      if (mainItem.HAS_CHILD) {
+        subCategory.value?.map((item: categoryInterface) => {
+          if (mainItem.KEY === item.KEY)
+            resultSubItem.value = item.VALUE as defaultInterface[];
         });
-        subState.value = true;
+
+        showSubState.value = true;
       } else {
         if (selectSubState.value) selectSubState.value = undefined;
         if (common.getItem(KEYS.SR)) common.removeItem(KEYS.SR);
-        subState.value = false;
+
+        showSubState.value = false;
+
         router.push("/" + common.getItem(KEYS.MR).mr);
       }
     };
 
-    const selectSub = (s: categoryInterface) => {
+    const selectSub = (subItem: categoryInterface) => {
       if (!common.getItem(KEYS.SR)) {
-        common.setItem(KEYS.SR, common.makeJson({ sr: s.KEY.toLowerCase() }));
+        common.setItem(
+          KEYS.SR,
+          common.makeJson({ sr: subItem.KEY.toLowerCase() })
+        );
+
         router.push(
-          "/" + common.getItem(KEYS.MR).mr + "/" + s.KEY.toLowerCase()
+          "/" + common.getItem(KEYS.MR).mr + "/" + subItem.KEY.toLowerCase()
         );
       } else {
-        if (common.getItem(KEYS.SR).sr === s.KEY.toLowerCase()) {
+        if (common.getItem(KEYS.SR).sr === subItem.KEY.toLowerCase()) {
           common.removeItem(KEYS.SS);
           common.removeItem(KEYS.ST);
+
           router.go(0);
         } else {
           common.removeItem(KEYS.SR);
-          common.setItem(KEYS.SR, common.makeJson({ sr: s.KEY.toLowerCase() }));
+          common.setItem(
+            KEYS.SR,
+            common.makeJson({ sr: subItem.KEY.toLowerCase() })
+          );
+
           router.push(
-            "/" + common.getItem(KEYS.MR).mr + "/" + s.KEY.toLowerCase()
+            "/" + common.getItem(KEYS.MR).mr + "/" + subItem.KEY.toLowerCase()
           );
         }
       }
@@ -97,6 +108,7 @@ export default defineComponent({
         common.removeItem(KEYS.SR);
         common.removeItem(KEYS.SS);
         common.removeItem(KEYS.ST);
+
         router.push("/");
       }
     };
@@ -111,25 +123,24 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      userData.value = common.getItem(KEYS.LU);
-      userKey.value = common.getItem(KEYS.UK);
+      userKey.value = common.getItem(KEYS.UK).userKey;
 
-      if (userData.value) {
-        if (userKey.value.userKey === USER_KEY.PAR) {
-          mainItem.value = PAR_MAIN;
-          subItem.value = PAR_SUB;
-        } else if (userKey.value.userKey === USER_KEY.STU) {
-          mainItem.value = STU_MAIN;
-          subItem.value = STU_SUB;
-        } else if (userKey.value.userKey === USER_KEY.TEA) {
-          mainItem.value = TEA_MAIN;
-          subItem.value = TEA_SUB;
-        } else if (userKey.value.userKey === USER_KEY.KYO_ADM) {
-          mainItem.value = KYO_MAIN;
-          subItem.value = KYO_SUB;
+      if (userKey.value) {
+        if (userKey.value === USER_KEY.PAR) {
+          mainCategory.value = PAR_MAIN;
+          subCategory.value = PAR_SUB;
+        } else if (userKey.value === USER_KEY.STU) {
+          mainCategory.value = STU_MAIN;
+          subCategory.value = STU_SUB;
+        } else if (userKey.value === USER_KEY.TEA) {
+          mainCategory.value = TEA_MAIN;
+          subCategory.value = TEA_SUB;
+        } else if (userKey.value === USER_KEY.KYO_ADM) {
+          mainCategory.value = KYO_MAIN;
+          subCategory.value = KYO_SUB;
         } else {
-          mainItem.value = ETC_MAIN;
-          subItem.value = ETC_SUB;
+          mainCategory.value = ETC_MAIN;
+          subCategory.value = ETC_SUB;
         }
       } else {
         router.push("/");
@@ -141,11 +152,11 @@ export default defineComponent({
     });
 
     return {
-      mainItem,
-      resultItem,
-      subState,
+      mainCategory,
+      resultSubItem,
+      showSubState,
       selectSubState,
-      goMain,
+      goToMain,
       onClickAway,
       selectMain,
       selectSub,
@@ -158,12 +169,12 @@ export default defineComponent({
 <template>
   <div class="away" v-click-away="onClickAway">
     <section class="sidebar">
-      <div class="sidebar" v-if="mainItem">
-        <img src="/assets/image/logo.png" alt="logo" @click="goMain" />
+      <div class="sidebar" v-if="mainCategory">
+        <img src="/assets/image/logo.png" alt="logo" @click="goToMain" />
         <div class="sidebar-user"></div>
         <div class="sidebar-category">
           <category-item
-            :main-category="mainItem"
+            :main-category="mainCategory"
             @selectMain="selectMain"
           ></category-item>
         </div>
@@ -173,19 +184,22 @@ export default defineComponent({
 
     <section class="sub-sidebar">
       <div class="sub-sidebar">
-        <div :class="subState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
+        <div :class="showSubState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
           <div class="back">
-            <i class="fa-solid fa-angles-left" @click="subState = false"></i>
+            <i
+              class="fa-solid fa-angles-left"
+              @click="showSubState = false"
+            ></i>
           </div>
           <div class="hi">반갑습니다!</div>
-          <div class="sub-sidebar-open-category" v-if="resultItem">
+          <div class="sub-sidebar-open-category" v-if="resultSubItem">
             <div
               :class="
                 selectSubState === item.KEY
                   ? 'sub-sidebar-open-category-item-active'
                   : 'sub-sidebar-open-category-item'
               "
-              v-for="item in resultItem"
+              v-for="item in resultSubItem"
               @click="selectSub(item)"
             >
               {{ item.VALUE }}

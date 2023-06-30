@@ -3,15 +3,13 @@ import { defineComponent, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { defaultInterface } from "../../lib/types";
 import common from "../../lib/common";
-import { KEYS } from "../../constant";
 
 export default defineComponent({
   name: "HeaderComponent",
   setup() {
     const route = useRoute();
-    const userKey = ref<string | undefined>(undefined);
     const showRoute = ref(false);
-    const category = ref<Array<defaultInterface> | undefined>(undefined);
+    const currentCategory = ref<Array<defaultInterface> | undefined>(undefined);
 
     watch(
       () => route.path,
@@ -20,27 +18,23 @@ export default defineComponent({
           showRoute.value = false;
         } else {
           showRoute.value = true;
-          category.value = common.findCategory();
+          currentCategory.value = common.findCategory();
         }
       }
     );
 
     onMounted(() => {
-      if (common.getItem(KEYS.UK)) {
-        userKey.value = common.getItem(KEYS.UK).userKey;
-      }
-
       if (route.path === "/main") {
         showRoute.value = false;
       } else {
         showRoute.value = true;
-        category.value = common.findCategory();
+        currentCategory.value = common.findCategory();
       }
     });
 
     return {
       showRoute,
-      category,
+      currentCategory,
     };
   },
 });
@@ -49,11 +43,14 @@ export default defineComponent({
 <template>
   <section class="header">
     <div class="header">
-      <div class="path" v-if="showRoute && category">
+      <div class="path" v-if="showRoute && currentCategory">
         <i class="fa-solid fa-bars"></i>
-        {{ category[0] ? category[0]["VALUE"] : "" }}
-        <i class="fa-solid fa-angle-right" v-if="category[1]['VALUE']"></i>
-        {{ category[1] ? category[1]["VALUE"] : "" }}
+        {{ currentCategory[0] ? currentCategory[0]["VALUE"] : "" }}
+        <i
+          class="fa-solid fa-angle-right"
+          v-if="currentCategory[1]['VALUE']"
+        ></i>
+        {{ currentCategory[1] ? currentCategory[1]["VALUE"] : "" }}
       </div>
     </div>
   </section>

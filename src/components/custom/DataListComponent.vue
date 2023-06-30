@@ -68,7 +68,7 @@ export default defineComponent({
     );
     const showTestList = ref<Array<testInterface> | undefined>(undefined);
     const showAssignList = ref<Array<assignInterface> | undefined>(undefined);
-    const page = ref<number>(0);
+    const totalPage = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
 
@@ -80,10 +80,10 @@ export default defineComponent({
             0,
             listCnt.value
           ) as noticeInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
           showNoticeList.value = props.dataList as noticeInterface[];
-          page.value = 0;
+          totalPage.value = 0;
         }
       }
     };
@@ -96,10 +96,10 @@ export default defineComponent({
             0,
             listCnt.value
           ) as suggestInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
           showSuggestList.value = props.dataList as suggestInterface[];
-          page.value = 0;
+          totalPage.value = 0;
         }
       }
     };
@@ -112,10 +112,10 @@ export default defineComponent({
             0,
             listCnt.value
           ) as consultInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
           showConsultList.value = props.dataList as consultInterface[];
-          page.value = 0;
+          totalPage.value = 0;
         }
       }
     };
@@ -128,10 +128,10 @@ export default defineComponent({
             0,
             listCnt.value
           ) as analysisInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
           showAnalysisList.value = props.dataList as analysisInterface[];
-          page.value = 0;
+          totalPage.value = 0;
         }
       }
     };
@@ -144,10 +144,10 @@ export default defineComponent({
             0,
             listCnt.value
           ) as showAttendInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
           showAttendList.value = props.dataList as showAttendInterface[];
-          page.value = 0;
+          totalPage.value = 0;
         }
       }
     };
@@ -160,10 +160,10 @@ export default defineComponent({
             0,
             listCnt.value
           ) as testInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
           showTestList.value = props.dataList as testInterface[];
-          page.value = 0;
+          totalPage.value = 0;
         }
       }
     };
@@ -176,10 +176,10 @@ export default defineComponent({
             0,
             listCnt.value
           ) as assignInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
           showAssignList.value = props.dataList as assignInterface[];
-          page.value = 0;
+          totalPage.value = 0;
         }
       }
     };
@@ -288,7 +288,7 @@ export default defineComponent({
       showAttendList,
       showTestList,
       showAssignList,
-      page,
+      totalPage,
       currentPage,
       selectPage,
       changePage,
@@ -640,7 +640,7 @@ export default defineComponent({
       </table>
       <div class="data-list-pagination">
         <pagination-component
-          :page="page"
+          :total-page="totalPage"
           :current-page="currentPage"
           @selectPage="selectPage"
           @changePage="changePage"

@@ -279,7 +279,7 @@ export default defineComponent({
               </div>
               <div class="lecture-detail-section-body-left-list-page">
                 <pagination-component
-                  :page="page"
+                  :total-page="page"
                   :current-page="currentPage"
                   @selectPage="selectPage"
                   @changePage="changePage"

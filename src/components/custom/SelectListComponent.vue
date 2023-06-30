@@ -45,11 +45,11 @@ export default defineComponent({
     ]);
     const lecturePage = ref<number>(0);
     const currentLecturePage = ref<number>(1);
-    const selectItem: defaultInterface[] = [
+    const selectList: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectState = ref("pm");
+    const selectValue = ref("pm");
 
     const roomList = ref<Array<roomInterface>>([]);
     const showRoomList = ref<Array<roomInterface>>([]);
@@ -152,7 +152,7 @@ export default defineComponent({
     };
 
     const changeState = (state: string) => {
-      selectState.value = state;
+      selectValue.value = state;
     };
 
     //TODO pagination
@@ -176,7 +176,7 @@ export default defineComponent({
     );
 
     watch(
-      () => selectState.value,
+      () => selectValue.value,
       async () => {
         await setLectureList();
       }
@@ -203,8 +203,8 @@ export default defineComponent({
       lectureColor,
       lecturePage,
       currentLecturePage,
-      selectItem,
-      selectState,
+      selectList,
+      selectValue,
       showRoomList,
       roomPage,
       currentRoomPage,
@@ -232,8 +232,8 @@ export default defineComponent({
         >
         <div class="select-lecture-label-button">
           <select-button-component
-            :select-list="selectItem"
-            :select-value="selectState"
+            :select-list="selectList"
+            :select-value="selectValue"
             @changeState="changeState"
           ></select-button-component>
         </div>

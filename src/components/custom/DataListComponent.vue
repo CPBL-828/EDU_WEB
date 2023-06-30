@@ -9,13 +9,12 @@ import {
   suggestInterface,
   testInterface,
 } from "../../lib/types";
-import ModalPopupComponent from "./ModalPopupComponent.vue";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import { showAttendInterface } from "../lectureManage/AttendanceComponent.vue";
 
 export default defineComponent({
   name: "DataListComponent",
-  components: { PaginationComponent, ModalPopupComponent },
+  components: { PaginationComponent },
   props: {
     adminState: {
       type: String as PropType<string>,

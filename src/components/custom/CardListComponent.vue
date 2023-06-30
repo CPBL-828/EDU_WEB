@@ -2,11 +2,9 @@
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { studentInterface, teacherInterface } from "../../lib/types";
 import { CONSTANT, USER_KEY } from "../../constant";
-import ModalPopupComponent from "./ModalPopupComponent.vue";
 
 export default defineComponent({
   name: "CardListComponent",
-  components: { ModalPopupComponent },
   props: {
     viewUser: {
       types: String as PropType<string>,

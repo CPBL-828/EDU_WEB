@@ -13,7 +13,7 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string | undefined>(undefined);
     const adminState = ref(false);
-    const teacherData = ref<teacherInterface | undefined>(undefined);
+    const teacherDetail = ref<teacherInterface | undefined>(undefined);
     const today = ref<Date>(new Date());
     const date = ref<Date>(new Date());
     const comeTime = ref<Date>(new Date());
@@ -21,14 +21,14 @@ export default defineComponent({
     const outTime = ref<Date>(new Date());
     const fixOut = ref<string>(new Date().toLocaleString());
 
-    const selectTeacher = (t: teacherInterface) => {
-      teacherData.value = t;
+    const selectTeacher = (teacher: teacherInterface) => {
+      teacherDetail.value = teacher;
     };
 
-    const saveComeTime = async (t: Date) => {
+    const saveComeTime = async (today: Date) => {
       if (window.confirm(fixCome.value + "로 출근 시간을 저장하시겠습니까?")) {
         let data = {
-          teacherKey: teacherData.value?.teacherKey,
+          teacherKey: teacherDetail.value?.teacherKey,
           state: "출근",
           reason: "",
         };
@@ -42,10 +42,10 @@ export default defineComponent({
       }
     };
 
-    const saveOutTime = async (t: Date) => {
+    const saveOutTime = async (today: Date) => {
       if (window.confirm(fixOut.value + "로 퇴근 시간을 저장하시겠습니까?")) {
         let data = {
-          teacherKey: teacherData.value?.teacherKey,
+          teacherKey: teacherDetail.value?.teacherKey,
           state: "퇴근",
           reason: "",
         };
@@ -64,7 +64,7 @@ export default defineComponent({
       userKey.value = common.getItem(KEYS.UK).userKey;
 
       if (userKey.value === USER_KEY.TEA) {
-        teacherData.value = common.getItem(KEYS.LU) as teacherInterface;
+        teacherDetail.value = common.getItem(KEYS.LU) as teacherInterface;
       } else if (userKey.value?.slice(-3) === USER_KEY.ADM) {
         adminState.value = true;
       }
@@ -73,7 +73,7 @@ export default defineComponent({
     return {
       category,
       adminState,
-      teacherData,
+      teacherDetail,
       today,
       date,
       comeTime,
@@ -101,7 +101,7 @@ export default defineComponent({
               : ""
           }}
         </div>
-        <div class="my-work-section-body" v-if="adminState && !teacherData">
+        <div class="my-work-section-body" v-if="adminState && !teacherDetail">
           <div class="my-work-section-body-teacher">
             <select-list-component
               list-type="TEA"
@@ -170,7 +170,7 @@ export default defineComponent({
                   {{ date?.toISOString().substring(5, 7) }}월
                   {{ date?.toISOString().substring(8, 10) }}일
                 </div>
-                <div class="user">{{ teacherData?.name }} 강사님</div>
+                <div class="user">{{ teacherDetail?.name }} 강사님</div>
 
                 <div class="start">출근 -</div>
                 <div class="end">퇴근 -</div>

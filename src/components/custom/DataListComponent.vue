@@ -10,7 +10,7 @@ import {
   testInterface,
 } from "../../lib/types";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
-import { showAttendInterface } from "../lectureManage/AttendanceComponent.vue";
+import { viewAttendInterface } from "../lectureManage/AttendanceComponent.vue";
 
 export default defineComponent({
   name: "DataListComponent",
@@ -35,7 +35,7 @@ export default defineComponent({
           | suggestInterface
           | consultInterface
           | analysisInterface
-          | showAttendInterface
+          | viewAttendInterface
           | testInterface
           | assignInterface
         >
@@ -62,7 +62,7 @@ export default defineComponent({
     const showAnalysisList = ref<Array<analysisInterface> | undefined>(
       undefined
     );
-    const showAttendList = ref<Array<showAttendInterface> | undefined>(
+    const showAttendList = ref<Array<viewAttendInterface> | undefined>(
       undefined
     );
     const showTestList = ref<Array<testInterface> | undefined>(undefined);
@@ -142,10 +142,10 @@ export default defineComponent({
           showAttendList.value = props.dataList.slice(
             0,
             listCnt.value
-          ) as showAttendInterface[];
+          ) as viewAttendInterface[];
           totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showAttendList.value = props.dataList as showAttendInterface[];
+          showAttendList.value = props.dataList as viewAttendInterface[];
           totalPage.value = 0;
         }
       }
@@ -219,7 +219,7 @@ export default defineComponent({
           showAttendList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
-          ) as showAttendInterface[];
+          ) as viewAttendInterface[];
         } else if (props.listType == "test") {
           showTestList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,

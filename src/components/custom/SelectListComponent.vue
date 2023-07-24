@@ -86,7 +86,7 @@ export default defineComponent({
               item.start = Number(item.startTime?.substring(0, 2));
               item.minute = Number(item.startTime?.substring(3, 5));
 
-              if (selectState.value === "pm") {
+              if (selectValue.value === "pm") {
                 if (item.start >= 13) lectureList.value.push(item);
               } else {
                 if (item.start < 13) lectureList.value.push(item);

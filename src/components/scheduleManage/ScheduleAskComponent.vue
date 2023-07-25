@@ -32,7 +32,7 @@ export default defineComponent({
     const roomKey = ref<string | undefined>(undefined);
     const roomName = ref<string>("");
     const scheduleName = ref<string>("");
-    const selectedDay = ref<string>("");
+    const selectDay = ref<string>("");
     const time = ref<Date>(new Date());
     const duration = ref<number>();
     const groupKey = ref<string>("");
@@ -52,17 +52,17 @@ export default defineComponent({
       { KEY: "sun", VALUE: "일" },
     ]);
     const scheduleList = ref<Array<scheduleInterface>>([]);
-    const selectItem: defaultInterface[] = [
+    const timeList: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectState = ref("pm");
+    const selectTime = ref("pm");
 
-    const changeState = (s: string) => {
-      selectState.value = s;
+    const changeTime = (time: string) => {
+      selectTime.value = time;
     };
 
-    const getScheduleList = async () => {
+    const getLectureList = async () => {
       let data = {
         userKey: userKey.value,
         search: "",
@@ -119,8 +119,8 @@ export default defineComponent({
       }
     };
 
-    const selectGroup = (g: defaultInterface) => {
-      groupKey.value = g.KEY;
+    const selectGroup = (group: defaultInterface) => {
+      groupKey.value = group.KEY;
     };
 
     const getRoomList = async () => {
@@ -141,17 +141,17 @@ export default defineComponent({
       }
     };
 
-    const selectRoom = async (r: defaultInterface) => {
-      roomKey.value = r.KEY;
-      roomName.value = r.VALUE as string;
-      await getScheduleList();
+    const selectRoom = async (room: defaultInterface) => {
+      roomKey.value = room.KEY;
+      roomName.value = room.VALUE as string;
+      await getLectureList();
     };
 
-    const selectDay = (d: defaultInterface) => {
-      selectedDay.value = d.VALUE as string;
+    const changeDay = (day: defaultInterface) => {
+      selectDay.value = day.VALUE as string;
     };
 
-    const openBookModal = () => {
+    const showScheduleBook = () => {
       store.commit("setModalState", true);
     };
 
@@ -170,7 +170,7 @@ export default defineComponent({
       }
     };
 
-    const insertAsk = async () => {
+    const createLecturePlan = async () => {
       if (!groupKey.value) {
         window.alert("반을 선택해 주세요.");
       } else if (!roomKey.value) {
@@ -179,7 +179,7 @@ export default defineComponent({
       } else if (!scheduleName.value) {
         window.alert("강의명을 입력해 주세요.");
         return false;
-      } else if (!selectedDay.value) {
+      } else if (!selectDay.value) {
         window.alert("요일을 선택해 주세요.");
         return false;
       } else if (!duration.value) {
@@ -205,7 +205,7 @@ export default defineComponent({
           subject: common.getItem(KEYS.LU).resSubject,
           book: book.value,
           target: common.getItem(KEYS.LU).part,
-          day: days.indexOf(selectedDay.value) + 1,
+          day: days.indexOf(selectDay.value) + 1,
           startTime: time.value
             .toLocaleTimeString()
             .replace(":", "-")
@@ -257,7 +257,7 @@ export default defineComponent({
     return {
       category,
       scheduleName,
-      selectedDay,
+      selectDay,
       time,
       duration,
       book,
@@ -266,15 +266,15 @@ export default defineComponent({
       selectRoomList,
       selectDayList,
       scheduleList,
-      selectItem,
-      selectState,
-      changeState,
+      timeList,
+      selectTime,
+      changeTime,
       selectGroup,
       selectRoom,
-      selectDay,
-      openBookModal,
+      changeDay,
+      showScheduleBook,
       insertBook,
-      insertAsk,
+      createLecturePlan,
     };
   },
 });
@@ -304,16 +304,16 @@ export default defineComponent({
           <div class="schedule-ask-section-body-button">
             <div class="schedule-ask-section-body-button-state">
               <select-button-component
-                :select-list="selectItem"
-                :select-value="selectState"
-                @changeState="changeState"
+                :select-list="timeList"
+                :select-value="selectTime"
+                @changeTime="changeTime"
               ></select-button-component>
             </div>
           </div>
           <div class="schedule-ask-section-body-timetable">
             <timetable-component
               :lecture-list="scheduleList"
-              :select-type="selectState"
+              :select-type="selectTime"
             ></timetable-component>
           </div>
           <div class="schedule-ask-section-body-info">
@@ -345,7 +345,7 @@ export default defineComponent({
                   placeholder="요일"
                   row-width="216px"
                   row-height="30px"
-                  @selectValue="selectDay"
+                  @selectValue="changeDay"
                 ></drop-box-component>
                 <div class="start">
                   <div class="start-label">시작 시간</div>
@@ -378,7 +378,7 @@ export default defineComponent({
                 </button>
                 <button
                   class="schedule-ask-section-body-info-container-etc-book"
-                  @click="openBookModal"
+                  @click="showScheduleBook"
                 >
                   교재 링크 입력하기
                 </button>
@@ -387,7 +387,7 @@ export default defineComponent({
                 type="button"
                 value="건의하기"
                 class="schedule-ask-section-body-info-container-submit"
-                @click="insertAsk"
+                @click="createLecturePlan"
               />
             </div>
           </div>

@@ -1,9 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../../lib/types";
-/*
-@brief 기존의 선택 박스와 동일한 기능
- */
+
 export default defineComponent({
   name: "DropBoxComponent",
   props: {
@@ -26,12 +24,12 @@ export default defineComponent({
   },
   setup(props, context) {
     const { emit } = context;
-    const main = ref<string>(props.placeholder as string);
+    const mainHolder = ref<string>(props.placeholder as string);
     const openState = ref(false);
     const itemList = ref<Array<defaultInterface>>(
       props.selectList as defaultInterface[]
     );
-    const selectItem = ref<string | undefined>(undefined);
+    const selectedItem = ref<string | undefined>(undefined);
 
     const onClickAway = (event: Event) => {
       if (event.isTrusted) {
@@ -43,16 +41,16 @@ export default defineComponent({
       openState.value = !openState.value;
     };
 
-    const changeItem = (i: defaultInterface) => {
-      selectItem.value = i.KEY;
-      main.value = i.VALUE as string;
-      emit("selectValue", i);
+    const selectItem = (item: defaultInterface) => {
+      selectedItem.value = item.KEY;
+      mainHolder.value = item.VALUE as string;
+      emit("selectValue", item);
     };
 
     watch(
       () => props.placeholder,
       () => {
-        main.value = props.placeholder as string;
+        mainHolder.value = props.placeholder as string;
       }
     );
 
@@ -64,13 +62,13 @@ export default defineComponent({
     );
 
     return {
-      main,
+      mainHolder,
       openState,
       itemList,
-      selectItem,
+      selectedItem,
       onClickAway,
       changeOpenState,
-      changeItem,
+      selectItem,
     };
   },
 });
@@ -86,7 +84,7 @@ export default defineComponent({
         height: rowHeight,
       }"
     >
-      {{ main }}
+      {{ mainHolder }}
       <i
         class="fa-solid fa-chevron-down"
         v-if="!rowWidth || Number(rowWidth.split('px')[0]) > 150"
@@ -100,9 +98,11 @@ export default defineComponent({
         v-if="openState"
         v-for="item in itemList"
         :class="
-          selectItem === item?.KEY ? 'drop-list-item-active' : 'drop-list-item'
+          selectedItem === item?.KEY
+            ? 'drop-list-item-active'
+            : 'drop-list-item'
         "
-        @click="changeItem(item)"
+        @click="selectItem(item)"
       >
         {{ item?.VALUE }}
       </div>

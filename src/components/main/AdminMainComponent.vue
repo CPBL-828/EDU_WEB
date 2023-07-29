@@ -8,28 +8,29 @@ import { defaultInterface, suggestInterface } from "../../lib/types";
 import DataListComponent from "../custom/DataListComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
-/*
-@brief [관리자] 로그인 성공 후 가장 초기 메인 화면
-       강사와 학생의 건의 목록은 양쪽에 표시
- */
+
 export default defineComponent({
   name: "AdminMainComponent",
   components: { ModalPopupComponent, DataListComponent, ConsultComponent },
   setup() {
     const store = useStore();
     const userKey = ref<string | undefined>(undefined);
-    const header: defaultInterface[] = [
+    const suggestHeader: defaultInterface[] = [
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
       { KEY: "WRITER", VALUE: "작성자명" },
     ];
-    const studentSuggest = ref<Array<suggestInterface> | undefined>(undefined);
-    const stuTotal = ref<number>(0);
-    const teacherSuggest = ref<Array<suggestInterface> | undefined>(undefined);
-    const teaTotal = ref<number>(0);
+    const studentSuggestList = ref<Array<suggestInterface> | undefined>(
+      undefined
+    );
+    const studentSuggestTotal = ref<number>(0);
+    const teacherSuggestList = ref<Array<suggestInterface> | undefined>(
+      undefined
+    );
+    const teacherSuggestTotal = ref<number>(0);
     const suggestDetail = ref<suggestInterface | undefined>(undefined);
 
-    const setStudentSuggest = async () => {
+    const setStudentSuggestList = async () => {
       let data = {
         userType: USER_KEY.ADM,
         search: "",
@@ -44,16 +45,17 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          studentSuggest.value = result.resultData as suggestInterface[];
+          studentSuggestList.value = result.resultData as suggestInterface[];
         }
 
-        if (studentSuggest.value?.length) {
-          stuTotal.value = studentSuggest.value?.length as number;
+        if (studentSuggestList.value?.length) {
+          studentSuggestTotal.value = studentSuggestList.value
+            ?.length as number;
         }
       }
     };
 
-    const setTeacherSuggest = async () => {
+    const setTeacherSuggestList = async () => {
       let data = {
         userType: USER_KEY.ADM,
         search: "",
@@ -68,17 +70,18 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          teacherSuggest.value = result.resultData as suggestInterface[];
+          teacherSuggestList.value = result.resultData as suggestInterface[];
         }
 
-        if (teacherSuggest.value?.length) {
-          teaTotal.value = teacherSuggest.value?.length as number;
+        if (teacherSuggestList.value?.length) {
+          teacherSuggestTotal.value = teacherSuggestList.value
+            ?.length as number;
         }
       }
     };
 
-    const showSuggestDetail = (s: suggestInterface) => {
-      suggestDetail.value = s;
+    const showSuggestDetail = (suggest: suggestInterface) => {
+      suggestDetail.value = suggest;
 
       store.commit("setModalState", true);
     };
@@ -88,16 +91,16 @@ export default defineComponent({
         userKey.value = common.getItem(KEYS.LU).adminKey;
       }
 
-      setStudentSuggest();
-      setTeacherSuggest();
+      setStudentSuggestList();
+      setTeacherSuggestList();
     });
 
     return {
-      header,
-      studentSuggest,
-      stuTotal,
-      teacherSuggest,
-      teaTotal,
+      suggestHeader,
+      studentSuggestList,
+      studentSuggestTotal,
+      teacherSuggestList,
+      teacherSuggestTotal,
       suggestDetail,
       showSuggestDetail,
     };
@@ -114,11 +117,11 @@ export default defineComponent({
           <div class="admin-main-section-left-body">
             <div class="admin-main-section-left-body-list">
               <data-list-component
-                :header="header"
+                :header="suggestHeader"
                 list-type="suggest"
-                :data-list="studentSuggest ? studentSuggest : []"
+                :data-list="studentSuggestList ? studentSuggestList : []"
                 :row-height="39"
-                :total-cnt="stuTotal"
+                :total-cnt="studentSuggestTotal"
                 :list-cnt="8"
                 admin-state="Y"
                 @saveSuggestDetail="showSuggestDetail"
@@ -132,11 +135,11 @@ export default defineComponent({
           <div class="admin-main-section-right-body">
             <div class="admin-main-section-right-body-list">
               <data-list-component
-                :header="header"
+                :header="suggestHeader"
                 list-type="suggest"
-                :data-list="teacherSuggest ? teacherSuggest : []"
+                :data-list="teacherSuggestList ? teacherSuggestList : []"
                 :row-height="39"
-                :total-cnt="teaTotal"
+                :total-cnt="teacherSuggestTotal"
                 :list-cnt="8"
                 admin-state="Y"
                 @saveSuggestDetail="showSuggestDetail"

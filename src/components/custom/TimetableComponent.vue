@@ -1,13 +1,11 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { scheduleInterface } from "../../lib/types";
-/*
-@brief 시간표 컴포넌트
- */
+
 export default defineComponent({
   name: "TimetableComponent",
   props: {
-    scheduleList: {
+    lectureList: {
       types: Array as PropType<Array<scheduleInterface>>,
       required: true,
     },
@@ -18,21 +16,20 @@ export default defineComponent({
   },
   setup(props) {
     const blockState = ref(false);
-    const viewScheduleList = ref<Array<scheduleInterface>>([]);
-    const scheduleInfo = ref<scheduleInterface>();
+    const viewLectureList = ref<Array<scheduleInterface>>([]);
 
     const setViewList = () => {
-      if (props.scheduleList) {
+      if (props.lectureList) {
         blockState.value = true;
-        viewScheduleList.value = [];
-        (props.scheduleList as []).map((item: scheduleInterface) => {
+        viewLectureList.value = [];
+        (props.lectureList as []).map((item: scheduleInterface) => {
           if (props.selectType === "pm") {
             if (item.start >= 13) {
-              viewScheduleList.value.push(item);
+              viewLectureList.value.push(item);
             }
           } else {
             if (item.start < 13) {
-              viewScheduleList.value.push(item);
+              viewLectureList.value.push(item);
             }
           }
         });
@@ -47,7 +44,7 @@ export default defineComponent({
     );
 
     watch(
-      () => props.scheduleList as [],
+      () => props.lectureList as [],
       () => {
         setViewList();
       }
@@ -59,15 +56,14 @@ export default defineComponent({
 
     return {
       blockState,
-      viewScheduleList,
-      scheduleInfo,
+      viewLectureList,
     };
   },
 });
 </script>
 
 <template>
-  <section class="schedule" v-if="viewScheduleList">
+  <section class="schedule" v-if="viewLectureList">
     <div class="all">
       <div class="time-label">
         <span
@@ -94,7 +90,7 @@ export default defineComponent({
         v-if="blockState && selectType === 'pm'"
         class="schedule-block"
         id="block"
-        v-for="item in viewScheduleList"
+        v-for="item in viewLectureList"
         :style="{
           backgroundColor: item.color,
           position: 'absolute',
@@ -117,7 +113,7 @@ export default defineComponent({
         v-if="blockState && selectType === 'am'"
         class="schedule-block"
         id="block"
-        v-for="item in viewScheduleList"
+        v-for="item in viewLectureList"
         :style="{
           backgroundColor: item.color,
           position: 'absolute',
@@ -125,7 +121,7 @@ export default defineComponent({
           top: item.start * 6 * 10 + (item.start + 1) - 60 + item.minute + 'px',
           left: 120 + (item.day - 1) * 116 + 4 + 'px',
         }"
-        @click="$emit('clickSchedule', item)"
+        @click="$emit('showLectureDetail', item)"
       >
         <span class="name">{{ item.lectureName }}</span>
         <span>{{ item.subject }}</span>

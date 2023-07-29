@@ -15,11 +15,7 @@ import DropBoxComponent from "../custom/DropBoxComponent.vue";
 import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useRouter } from "vue-router";
-/*
-@brief [강사] [Main]시간표 관리 [Sub]시간표 건의
-       강의실 선택 시, 해당 강의실을 시간표 표시
-       강의실, 강의명, 요일, 시작 입력 받고 계획서, 교재 링크 추가해서 건의
- */
+
 export default defineComponent({
   name: "ScheduleAskComponent",
   components: {
@@ -56,17 +52,17 @@ export default defineComponent({
       { KEY: "sun", VALUE: "일" },
     ]);
     const scheduleList = ref<Array<scheduleInterface>>([]);
-    const selectItem: defaultInterface[] = [
+    const timeList: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectState = ref("pm");
+    const selectedTime = ref("pm");
 
-    const changeState = (s: string) => {
-      selectState.value = s;
+    const changeTime = (time: string) => {
+      selectedTime.value = time;
     };
 
-    const getScheduleList = async () => {
+    const getLectureList = async () => {
       let data = {
         userKey: userKey.value,
         search: "",
@@ -123,8 +119,8 @@ export default defineComponent({
       }
     };
 
-    const selectGroup = (g: defaultInterface) => {
-      groupKey.value = g.KEY;
+    const selectGroup = (group: defaultInterface) => {
+      groupKey.value = group.KEY;
     };
 
     const getRoomList = async () => {
@@ -145,17 +141,17 @@ export default defineComponent({
       }
     };
 
-    const selectRoom = async (r: defaultInterface) => {
-      roomKey.value = r.KEY;
-      roomName.value = r.VALUE as string;
-      await getScheduleList();
+    const selectRoom = async (room: defaultInterface) => {
+      roomKey.value = room.KEY;
+      roomName.value = room.VALUE as string;
+      await getLectureList();
     };
 
-    const selectDay = (d: defaultInterface) => {
-      selectedDay.value = d.VALUE as string;
+    const selectDay = (day: defaultInterface) => {
+      selectedDay.value = day.VALUE as string;
     };
 
-    const openBookModal = () => {
+    const showBookModal = () => {
       store.commit("setModalState", true);
     };
 
@@ -174,8 +170,7 @@ export default defineComponent({
       }
     };
 
-    //TODO...
-    const insertAsk = async () => {
+    const createLecturePlan = async () => {
       if (!groupKey.value) {
         window.alert("반을 선택해 주세요.");
       } else if (!roomKey.value) {
@@ -271,15 +266,15 @@ export default defineComponent({
       selectRoomList,
       selectDayList,
       scheduleList,
-      selectItem,
-      selectState,
-      changeState,
+      timeList,
+      selectedTime,
+      changeTime,
       selectGroup,
       selectRoom,
       selectDay,
-      openBookModal,
+      showBookModal,
       insertBook,
-      insertAsk,
+      createLecturePlan,
     };
   },
 });
@@ -309,16 +304,16 @@ export default defineComponent({
           <div class="schedule-ask-section-body-button">
             <div class="schedule-ask-section-body-button-state">
               <select-button-component
-                :state-value="selectItem"
-                :select-value="selectState"
-                @changeState="changeState"
+                :select-list="timeList"
+                :select-value="selectedTime"
+                @changeTime="changeTime"
               ></select-button-component>
             </div>
           </div>
           <div class="schedule-ask-section-body-timetable">
             <timetable-component
-              :schedule-list="scheduleList"
-              :select-type="selectState"
+              :lecture-list="scheduleList"
+              :select-type="selectedTime"
             ></timetable-component>
           </div>
           <div class="schedule-ask-section-body-info">
@@ -383,7 +378,7 @@ export default defineComponent({
                 </button>
                 <button
                   class="schedule-ask-section-body-info-container-etc-book"
-                  @click="openBookModal"
+                  @click="showBookModal"
                 >
                   교재 링크 입력하기
                 </button>
@@ -392,7 +387,7 @@ export default defineComponent({
                 type="button"
                 value="건의하기"
                 class="schedule-ask-section-body-info-container-submit"
-                @click="insertAsk"
+                @click="createLecturePlan"
               />
             </div>
           </div>

@@ -9,16 +9,12 @@ import {
   suggestInterface,
   testInterface,
 } from "../../lib/types";
-import ModalPopupComponent from "./ModalPopupComponent.vue";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
-import { showAttendInterface } from "../lectureManage/AttendanceComponent.vue";
-import AssignmentComponent from "../lectureManage/AssignmentComponent.vue";
-/*
-@brief 글 리스트 형태의 데이터를 표현하기 위한 컴포넌트
- */
+import { viewAttendInterface } from "../lectureManage/AttendanceComponent.vue";
+
 export default defineComponent({
   name: "DataListComponent",
-  components: { PaginationComponent, ModalPopupComponent },
+  components: { PaginationComponent },
   props: {
     adminState: {
       type: String as PropType<string>,
@@ -39,7 +35,7 @@ export default defineComponent({
           | suggestInterface
           | consultInterface
           | analysisInterface
-          | showAttendInterface
+          | viewAttendInterface
           | testInterface
           | assignInterface
         >
@@ -60,36 +56,33 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const showNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
-    const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
-    const showConsultList = ref<Array<consultInterface> | undefined>(undefined);
-    const showAnalysisList = ref<Array<analysisInterface> | undefined>(
+    const viewNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
+    const viewSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
+    const viewConsultList = ref<Array<consultInterface> | undefined>(undefined);
+    const viewAnalysisList = ref<Array<analysisInterface> | undefined>(
       undefined
     );
-    const showAttendList = ref<Array<showAttendInterface> | undefined>(
+    const showAttendList = ref<Array<viewAttendInterface> | undefined>(
       undefined
     );
-    const showTestList = ref<Array<testInterface> | undefined>(undefined);
-    const showAssignList = ref<Array<assignInterface> | undefined>(undefined);
-    const page = ref<number>(0);
+    const viewTestList = ref<Array<testInterface> | undefined>(undefined);
+    const viewAssignList = ref<Array<assignInterface> | undefined>(undefined);
+    const totalPage = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
 
-    /*
-    props에 존재하는 데이터 리스트의 종류에 따라 현재 컴포넌트에서 보여줄 데이터 리스트를 set
-     */
     // 공지사항
     const setNoticeList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showNoticeList.value = props.dataList.slice(
+          viewNoticeList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as noticeInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showNoticeList.value = props.dataList as noticeInterface[];
-          page.value = 0;
+          viewNoticeList.value = props.dataList as noticeInterface[];
+          totalPage.value = 0;
         }
       }
     };
@@ -98,14 +91,14 @@ export default defineComponent({
     const setSuggestList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showSuggestList.value = props.dataList.slice(
+          viewSuggestList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as suggestInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showSuggestList.value = props.dataList as suggestInterface[];
-          page.value = 0;
+          viewSuggestList.value = props.dataList as suggestInterface[];
+          totalPage.value = 0;
         }
       }
     };
@@ -114,14 +107,14 @@ export default defineComponent({
     const setConsultList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showConsultList.value = props.dataList.slice(
+          viewConsultList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as consultInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showConsultList.value = props.dataList as consultInterface[];
-          page.value = 0;
+          viewConsultList.value = props.dataList as consultInterface[];
+          totalPage.value = 0;
         }
       }
     };
@@ -130,14 +123,14 @@ export default defineComponent({
     const setAnalysisList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showAnalysisList.value = props.dataList.slice(
+          viewAnalysisList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as analysisInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showAnalysisList.value = props.dataList as analysisInterface[];
-          page.value = 0;
+          viewAnalysisList.value = props.dataList as analysisInterface[];
+          totalPage.value = 0;
         }
       }
     };
@@ -149,11 +142,11 @@ export default defineComponent({
           showAttendList.value = props.dataList.slice(
             0,
             listCnt.value
-          ) as showAttendInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          ) as viewAttendInterface[];
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showAttendList.value = props.dataList as showAttendInterface[];
-          page.value = 0;
+          showAttendList.value = props.dataList as viewAttendInterface[];
+          totalPage.value = 0;
         }
       }
     };
@@ -162,14 +155,14 @@ export default defineComponent({
     const setTestList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showTestList.value = props.dataList.slice(
+          viewTestList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as testInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showTestList.value = props.dataList as testInterface[];
-          page.value = 0;
+          viewTestList.value = props.dataList as testInterface[];
+          totalPage.value = 0;
         }
       }
     };
@@ -178,51 +171,47 @@ export default defineComponent({
     const setAssignList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showAssignList.value = props.dataList.slice(
+          viewAssignList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as assignInterface[];
-          page.value = Math.ceil(props.totalCnt / listCnt.value);
+          totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showAssignList.value = props.dataList as assignInterface[];
-          page.value = 0;
+          viewAssignList.value = props.dataList as assignInterface[];
+          totalPage.value = 0;
         }
       }
     };
 
-    const selectPage = (p: number) => {
-      currentPage.value = p;
+    const selectPage = (page: number) => {
+      currentPage.value = page;
     };
 
-    const changePage = (p: number) => {
-      if (p === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (page: number) => {
+      if (page === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 
     watch(
-      /*
-        현재 페이지가 변경되면, 페이지 값에 따라 표시할 dataList 변경
-        페이징은 추후 별도의 컴포넌트로 분리해야 함
-       */
       () => currentPage.value,
       () => {
         if (props.listType === "notice") {
-          showNoticeList.value = props.dataList?.slice(
+          viewNoticeList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as noticeInterface[];
         } else if (props.listType === "suggest") {
-          showSuggestList.value = props.dataList?.slice(
+          viewSuggestList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as suggestInterface[];
         } else if (props.listType === "consult") {
-          showConsultList.value = props.dataList?.slice(
+          viewConsultList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as consultInterface[];
         } else if (props.listType === "analysis") {
-          showAnalysisList.value = props.dataList?.slice(
+          viewAnalysisList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as analysisInterface[];
@@ -230,14 +219,14 @@ export default defineComponent({
           showAttendList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
-          ) as showAttendInterface[];
+          ) as viewAttendInterface[];
         } else if (props.listType == "test") {
-          showTestList.value = props.dataList?.slice(
+          viewTestList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as testInterface[];
         } else if (props.listType == "assign") {
-          showAssignList.value = props.dataList?.slice(
+          viewAssignList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as assignInterface[];
@@ -246,9 +235,6 @@ export default defineComponent({
     );
 
     watch(
-      /*
-        검색, 필터링 등으로 props의 dataList가 바뀌면 setXXXList() 재호출
-         */
       () => props.dataList,
       async () => {
         if (props.listType === "consult") {
@@ -294,14 +280,14 @@ export default defineComponent({
     });
 
     return {
-      showNoticeList,
-      showSuggestList,
-      showConsultList,
-      showAnalysisList,
+      viewNoticeList,
+      viewSuggestList,
+      viewConsultList,
+      viewAnalysisList,
       showAttendList,
-      showTestList,
-      showAssignList,
-      page,
+      viewTestList,
+      viewAssignList,
+      totalPage,
       currentPage,
       selectPage,
       changePage,
@@ -325,8 +311,8 @@ export default defineComponent({
           <!--        공지 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showNoticeList"
-            v-for="item in showNoticeList"
+            v-if="viewNoticeList"
+            v-for="item in viewNoticeList"
             @click="$emit('showNoticeDetail', item)"
           >
             <td
@@ -368,8 +354,8 @@ export default defineComponent({
           <!--          건의사항 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showSuggestList"
-            v-for="item in showSuggestList"
+            v-if="viewSuggestList"
+            v-for="item in viewSuggestList"
             @click="$emit('saveSuggestDetail', item)"
           >
             <td
@@ -414,8 +400,8 @@ export default defineComponent({
           <!--          상담 목록 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showConsultList"
-            v-for="item in showConsultList"
+            v-if="viewConsultList"
+            v-for="item in viewConsultList"
             @click="$emit('showConsultDetail', item)"
           >
             <td
@@ -465,8 +451,8 @@ export default defineComponent({
           <!--          분석 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showAnalysisList"
-            v-for="item in showAnalysisList"
+            v-if="viewAnalysisList"
+            v-for="item in viewAnalysisList"
           >
             <td
               :style="{
@@ -546,8 +532,8 @@ export default defineComponent({
           <!--        시험 목록 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showTestList"
-            v-for="item in showTestList"
+            v-if="viewTestList"
+            v-for="item in viewTestList"
           >
             <td
               :style="{
@@ -606,8 +592,8 @@ export default defineComponent({
           <!--          과제 목록 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showAssignList"
-            v-for="item in showAssignList"
+            v-if="viewAssignList"
+            v-for="item in viewAssignList"
           >
             <td
               :style="{
@@ -653,7 +639,7 @@ export default defineComponent({
       </table>
       <div class="data-list-pagination">
         <pagination-component
-          :page="page"
+          :total-page="totalPage"
           :current-page="currentPage"
           @selectPage="selectPage"
           @changePage="changePage"

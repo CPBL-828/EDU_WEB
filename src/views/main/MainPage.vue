@@ -10,10 +10,7 @@ import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
 import NoticePage from "../singleCategory/NoticePage.vue";
 import AdminMainComponent from "../../components/main/AdminMainComponent.vue";
-/*
-@brief 각 유저가 로그인 후, 가장 처음 표시되는 메인 화면
-       [강사, 학생, 학부모] 내 정보 페이지, [관리자] 학생과 강사의 건의사항 페이지
- */
+
 export default defineComponent({
   name: "MainPage",
   components: { AdminMainComponent, NoticePage, MyInfoComponent },

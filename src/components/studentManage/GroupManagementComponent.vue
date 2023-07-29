@@ -24,12 +24,12 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const createState = ref(false);
     const moreState = ref(false);
-    const header: defaultInterface[] = [
+    const groupHeader: defaultInterface[] = [
       { KEY: "NAME", VALUE: "반 이름" },
       { KEY: "TEA", VALUE: "담당 강사" },
     ];
     const groupList = ref<Array<groupInterface>>([]);
-    const groupInsertData = ref<groupInterface>({
+    const insertGroupDetail = ref<groupInterface>({
       groupKey: "",
       teacherKey_id: "",
       teacherName: "",
@@ -46,16 +46,16 @@ export default defineComponent({
     const studentState = ref(false);
     const groupStudentList = ref<Array<studentInterface>>([]);
     const selectedStudentList = ref<Array<studentInterface>>([]);
-    const selectedStudentData = ref([
+    const selectedStudentDetail = ref([
       {
         groupKey: "",
         studentKey: "",
       },
     ]);
     const groupDetail = ref<groupInterface | undefined>(undefined);
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
+    const teacherDetail = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
-    const groupEditData = ref<groupInterface>({
+    const editGroupDetail = ref<groupInterface>({
       groupKey: "",
       teacherKey_id: "",
       teacherName: "",
@@ -91,13 +91,13 @@ export default defineComponent({
       }
     };
 
-    const getGroupStatus = async () => {
+    const getGroupStatusList = async () => {
       let data = {
         groupKey: groupDetail.value?.groupKey,
       };
 
       const result = await ApiClient(
-        "/lectures/getGroupStatusList/",
+        "/lectures/getGroupStatusListList/",
         common.makeJson(data)
       );
 
@@ -153,9 +153,9 @@ export default defineComponent({
       }
     };
 
-    const getTeacherDetail = async (t: string) => {
+    const getTeacherDetail = async (teacher: string) => {
       let data = {
-        teacherKey: t,
+        teacherKey: teacher,
       };
 
       const result = await ApiClient(
@@ -166,10 +166,10 @@ export default defineComponent({
       if (result) {
         if (createState.value) {
           selectedTeacher.value = result.resultData[0] as teacherInterface;
-          groupInsertData.value.teacherKey_id =
+          insertGroupDetail.value.teacherKey_id =
             selectedTeacher.value.teacherKey;
         } else {
-          teacherInfo.value = result.resultData[0] as teacherInterface;
+          teacherDetail.value = result.resultData[0] as teacherInterface;
         }
       }
     };
@@ -180,7 +180,7 @@ export default defineComponent({
           `${groupDetail.value!.groupName} 반의 학생을 배정하시겠습니까?`
         )
       ) {
-        await getGroupStatus();
+        await getGroupStatusList();
         selectedStudentList.value = groupStudentList.value;
 
         await getStudentList();
@@ -192,39 +192,39 @@ export default defineComponent({
       }
     };
 
-    const addStudent = (s: studentInterface) => {
+    const addStudent = (student: studentInterface) => {
       for (let i = 0; i < studentList.value.length; i++) {
-        if (studentList.value[i].studentKey === s.studentKey) {
+        if (studentList.value[i].studentKey === student.studentKey) {
           studentList.value.splice(i, 1);
           i--;
         }
       }
-      selectedStudentList.value.push(s);
+      selectedStudentList.value.push(student);
     };
 
-    const removeStudent = (s: studentInterface) => {
+    const removeStudent = (student: studentInterface) => {
       for (let i = 0; i < selectedStudentList.value.length; i++) {
-        if (selectedStudentList.value[i].studentKey === s.studentKey) {
+        if (selectedStudentList.value[i].studentKey === student.studentKey) {
           selectedStudentList.value.splice(i, 1);
-          studentList.value.unshift(s);
+          studentList.value.unshift(student);
           i--;
         }
       }
     };
 
-    const saveGroupStudent = async () => {
+    const setGroupStatus = async () => {
       selectedStudentList.value.map((s: studentInterface) => {
-        selectedStudentData.value.push({
+        selectedStudentDetail.value.push({
           groupKey: groupDetail.value!.groupKey,
           studentKey: s.studentKey,
         });
       });
-      selectedStudentData.value.splice(0, 1);
+      selectedStudentDetail.value.splice(0, 1);
 
       if (studentState.value) {
         const result = await ApiClient(
           "/lectures/editGroupStatus/",
-          common.makeJson(selectedStudentData.value)
+          common.makeJson(selectedStudentDetail.value)
         );
 
         if (result) {
@@ -244,7 +244,7 @@ export default defineComponent({
       } else {
         const result = await ApiClient(
           "/lectures/createGroupStatus/",
-          common.makeJson(selectedStudentData.value)
+          common.makeJson(selectedStudentDetail.value)
         );
 
         if (result) {
@@ -264,22 +264,22 @@ export default defineComponent({
       }
     };
 
-    const showGroupDetail = async (g: groupInterface) => {
-      groupDetail.value = g;
-      await getGroupStatus();
-      await getTeacherDetail(g.teacherKey_id);
+    const showGroupDetail = async (group: groupInterface) => {
+      groupDetail.value = group;
+      await getGroupStatusList();
+      await getTeacherDetail(group.teacherKey_id);
 
       store.commit("setModalState", true);
     };
 
-    const deleteGroup = async (k: string) => {
+    const deleteGroup = async (key: string) => {
       if (
         window.confirm(
           "반을 삭제하면 삭제된 반 목록에서만 확인할 수 있으며,\n반으로써의 효력이 사라집니다.\n정말 삭제하시겠습니까?"
         )
       ) {
         let data = {
-          groupKey: k,
+          groupKey: key,
         };
 
         const result = await ApiClient(
@@ -306,32 +306,32 @@ export default defineComponent({
       router.go(0);
     };
 
-    const changeMode = async (p: number) => {
-      if (p === 0) {
+    const changeMode = async (page: number) => {
+      if (page === 0) {
         await setTeacherList();
         createState.value = true;
-      } else if (p === 1) {
+      } else if (page === 1) {
         await createGroup(1);
       }
     };
 
-    const createGroup = async (m: number) => {
-      if (!groupInsertData.value.groupName) {
+    const createGroup = async (mode: number) => {
+      if (!insertGroupDetail.value.groupName) {
         window.alert("반 이름을 입력해 주세요.");
         return false;
-      } else if (!groupInsertData.value.groupContent) {
+      } else if (!insertGroupDetail.value.groupContent) {
         window.alert("반 설명을 입력해 주세요.");
         return false;
-      } else if (!groupInsertData.value.teacherKey_id) {
+      } else if (!insertGroupDetail.value.teacherKey_id) {
         window.alert("담당 강사님을 선택해 주세요.");
         return false;
       }
 
       if (window.confirm("입력하신 정보로 반을 생성하시겠습니까?")) {
         let data = {
-          teacherKey: groupInsertData.value.teacherKey_id,
-          groupName: groupInsertData.value.groupName,
-          groupContent: groupInsertData.value.groupContent,
+          teacherKey: insertGroupDetail.value.teacherKey_id,
+          groupName: insertGroupDetail.value.groupName,
+          groupContent: insertGroupDetail.value.groupContent,
         };
 
         const result = await ApiClient(
@@ -344,7 +344,7 @@ export default defineComponent({
             await getGroupList();
             window.alert("반을 성공적으로 생성했습니다.");
 
-            if (!m) {
+            if (!mode) {
               router.go(0);
             } else {
               groupDetail.value = result.resultData as groupInterface;
@@ -368,28 +368,28 @@ export default defineComponent({
       await setTeacherList();
 
       if (groupDetail.value) {
-        groupEditData.value.groupKey = groupDetail.value.groupKey;
-        groupEditData.value.teacherKey_id = groupDetail.value.teacherKey_id;
-        groupEditData.value.groupName = groupDetail.value.groupName;
-        groupEditData.value.groupContent = groupDetail.value.groupContent;
+        editGroupDetail.value.groupKey = groupDetail.value.groupKey;
+        editGroupDetail.value.teacherKey_id = groupDetail.value.teacherKey_id;
+        editGroupDetail.value.groupName = groupDetail.value.groupName;
+        editGroupDetail.value.groupContent = groupDetail.value.groupContent;
       }
 
       editState.value = true;
     };
 
-    const selectTeacher = (t: defaultInterface) => {
+    const selectTeacher = (teacher: defaultInterface) => {
       if (!createState.value) {
-        groupEditData.value.teacherKey_id = t.KEY;
+        editGroupDetail.value.teacherKey_id = teacher.KEY;
       }
 
-      getTeacherDetail(t.KEY);
+      getTeacherDetail(teacher.KEY);
     };
 
-    const doEdit = async () => {
+    const editGroup = async () => {
       if (
-        groupDetail.value?.groupName === groupEditData.value.groupName &&
-        groupDetail.value?.teacherKey_id === teacherInfo.value?.teacherKey &&
-        groupDetail.value?.groupContent === groupEditData.value.groupContent
+        groupDetail.value?.groupName === editGroupDetail.value.groupName &&
+        groupDetail.value?.teacherKey_id === teacherDetail.value?.teacherKey &&
+        groupDetail.value?.groupContent === editGroupDetail.value.groupContent
       ) {
         if (
           window.confirm("수정된 내용이 없습니다.\n수정을 취소하시겠습니까?")
@@ -403,10 +403,10 @@ export default defineComponent({
 
       if (window.confirm("수정한 정보를 저장하시겠습니까?")) {
         let data = {
-          groupKey: groupEditData.value.groupKey,
-          teacherKey: groupEditData.value.teacherKey_id,
-          groupName: groupEditData.value.groupName,
-          groupContent: groupEditData.value.groupContent,
+          groupKey: editGroupDetail.value.groupKey,
+          teacherKey: editGroupDetail.value.teacherKey_id,
+          groupName: editGroupDetail.value.groupName,
+          groupContent: editGroupDetail.value.groupContent,
         };
 
         const result = await ApiClient(
@@ -445,18 +445,18 @@ export default defineComponent({
       category,
       createState,
       moreState,
-      header,
+      groupHeader,
       groupList,
-      groupInsertData,
+      insertGroupDetail,
       selectedTeacher,
       searchStudent,
       studentList,
       groupStudentList,
       selectedStudentList,
       groupDetail,
-      teacherInfo,
+      teacherDetail,
       editState,
-      groupEditData,
+      editGroupDetail,
       teacherList,
       deleteGroup,
       goBack,
@@ -466,11 +466,11 @@ export default defineComponent({
       goPutStudent,
       addStudent,
       removeStudent,
-      saveGroupStudent,
+      setGroupStatus,
       showGroupDetail,
       changeEditState,
       selectTeacher,
-      doEdit,
+      editGroup,
     };
   },
 });
@@ -502,13 +502,13 @@ export default defineComponent({
             type="button"
             value="저장"
             class="save"
-            @click="saveGroupStudent"
+            @click="setGroupStatus"
           />
           <div class="group-section-body-list" v-if="!createState">
             <table>
               <thead>
                 <tr>
-                  <th v-for="item in header">
+                  <th v-for="item in groupHeader">
                     {{ item.VALUE }}
                   </th>
                   <th></th>
@@ -547,7 +547,7 @@ export default defineComponent({
                     <span class="label">반 이름</span>
                     <input
                       type="text"
-                      v-model="groupInsertData.groupName"
+                      v-model="insertGroupDetail.groupName"
                       maxlength="50"
                     />
                   </div>
@@ -555,7 +555,7 @@ export default defineComponent({
                     class="group-section-body-insert-first-left-container-content"
                   >
                     <span class="label">반 설명</span>
-                    <textarea v-model="groupInsertData.groupContent" />
+                    <textarea v-model="insertGroupDetail.groupContent" />
                   </div>
                   <div
                     class="group-section-body-insert-first-left-container-teacher"
@@ -625,7 +625,7 @@ export default defineComponent({
 
             <div class="group-section-body-insert-more" v-else>
               <div class="group-section-body-insert-more-before">
-                <div class="group-section-body-insert-more-before-header">
+                <div class="group-section-body-insert-more-before-groupHeader">
                   <span>학생 목록</span>
                   <div class="search">
                     <input
@@ -671,7 +671,7 @@ export default defineComponent({
                 </div>
               </div>
               <div class="group-section-body-insert-more-after">
-                <div class="group-section-body-insert-more-after-header">
+                <div class="group-section-body-insert-more-after-groupHeader">
                   <span class="group">{{ groupDetail?.groupName }} 반</span>
                   <span>배정 목록</span>
                 </div>
@@ -720,7 +720,7 @@ export default defineComponent({
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"
-            @click="doEdit"
+            @click="editGroup"
           >
             저장하기
           </div>
@@ -741,7 +741,7 @@ export default defineComponent({
                 <input
                   type="text"
                   v-if="editState"
-                  v-model="groupEditData.groupName"
+                  v-model="editGroupDetail.groupName"
                   maxlength="50"
                 />
                 <div class="item" v-else>{{ groupDetail?.groupName }}</div>
@@ -751,7 +751,7 @@ export default defineComponent({
                 <input
                   type="text"
                   v-if="editState"
-                  v-model="groupEditData.groupContent"
+                  v-model="editGroupDetail.groupContent"
                 />
                 <div class="item" v-else>{{ groupDetail?.groupContent }}</div>
               </div>
@@ -759,11 +759,11 @@ export default defineComponent({
                 <span class="label"> 담당 강사 </span>
                 <div
                   class="group-detail-left-container-teacher-profile"
-                  v-if="teacherInfo"
+                  v-if="teacherDetail"
                 >
                   <img
-                    v-if="teacherInfo.profileImg"
-                    :src="fileURL + teacherInfo.profileImg"
+                    v-if="teacherDetail.profileImg"
+                    :src="fileURL + teacherDetail.profileImg"
                     alt="profile"
                   />
                   <div
@@ -774,10 +774,11 @@ export default defineComponent({
                   </div>
                   <div class="group-detail-left-container-teacher-profile-info">
                     <span class="label">강사명</span>
-                    <span class="item-name">{{ teacherInfo.name }}</span>
+                    <span class="item-name">{{ teacherDetail.name }}</span>
                     <span class="label">담당</span>
                     <span class="item-subject"
-                      >{{ teacherInfo.part }} {{ teacherInfo.resSubject }}</span
+                      >{{ teacherDetail.part }}
+                      {{ teacherDetail.resSubject }}</span
                     >
                   </div>
                 </div>
@@ -803,7 +804,7 @@ export default defineComponent({
                 </div>
               </div>
               <div class="group-detail-right-container-student">
-                <div class="group-detail-right-container-student-header">
+                <div class="group-detail-right-container-student-groupHeader">
                   <span class="label"> 배정 학생 </span>
                   <input
                     type="button"

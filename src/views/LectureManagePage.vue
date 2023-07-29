@@ -6,9 +6,7 @@ import AttendanceComponent from "../components/lectureManage/AttendanceComponent
 import AttendCheckComponent from "../components/lectureManage/AttendCheckComponent.vue";
 import AssignmentComponent from "../components/lectureManage/AssignmentComponent.vue";
 import ReportComponent from "../components/lectureManage/ReportComponent.vue";
-/*
-[학생, 학부모, 관리자] [Main]강의 관리
- */
+
 export default defineComponent({
   name: "LectureManagePage",
   components: {
@@ -56,7 +54,5 @@ export default defineComponent({
   <assignment-component
     v-if="currentCategory === 'ASSIGNMENT'"
   ></assignment-component>
-  <report-component
-    v-if="currentCategory === 'REPORT'"
-    ></report-component>
+  <report-component v-if="currentCategory === 'REPORT'"></report-component>
 </template>

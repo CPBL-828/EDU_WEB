@@ -1,12 +1,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-/*
-@brief 페이징 처리
- */
+
 export default defineComponent({
   name: "PaginationComponent",
   props: {
-    page: {
+    totalPage: {
       type: Number as PropType<number>,
       required: true,
     },
@@ -26,8 +24,8 @@ export default defineComponent({
           startPage.value = Math.floor(props.currentPage / 10) * 10 + 1;
           endPage.value = startPage.value + 9;
 
-          if (startPage.value + 9 > props.page) {
-            endPage.value = props.page;
+          if (startPage.value + 9 > props.totalPage) {
+            endPage.value = props.totalPage;
           }
         } else {
           startPage.value = props.currentPage - 9;
@@ -35,10 +33,11 @@ export default defineComponent({
         }
       } else {
         startPage.value = 1;
-        endPage.value = props.page > 10 ? 10 : props.page;
+        endPage.value = props.totalPage > 10 ? 10 : props.totalPage;
       }
 
       viewPage.value = [];
+
       for (let i = startPage.value; i <= endPage.value; i++) {
         viewPage.value.push(i);
       }
@@ -53,7 +52,7 @@ export default defineComponent({
 
     onMounted(() => {
       watch(
-        () => props.page,
+        () => props.totalPage,
         () => {
           setViewPage();
         }
@@ -77,13 +76,13 @@ export default defineComponent({
         <i class="fa-solid fa-angle-left"></i>
       </div>
       <span
-        @click="$emit('selectPage', i)"
-        v-for="i in viewPage"
-        :class="currentPage === i ? 'page-active' : 'page'"
-        >{{ i }}</span
+        @click="$emit('selectPage', item)"
+        v-for="item in viewPage"
+        :class="currentPage === item ? 'page-active' : 'page'"
+        >{{ item }}</span
       >
       <div
-        :class="currentPage !== page ? 'arrow-active' : 'arrow'"
+        :class="currentPage !== totalPage ? 'arrow-active' : 'arrow'"
         @click="$emit('changePage', 1)"
       >
         <i class="fa-solid fa-angle-right"></i>

@@ -14,11 +14,7 @@ import { useStore } from "vuex";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import SelectListComponent from "../custom/SelectListComponent.vue";
 import { useRouter } from "vue-router";
-/*
-@brief [강사, 학생, 학부모, 관리자] [Main]시간표 관리
-       [Sub]현재 시간표 접근 시 해당 유저의 현재 시간표 표시
-       관리자의 경우, 강의실별 현재 시간표를 표시
- */
+
 export default defineComponent({
   name: "CurrentScheduleComponent.vue",
   components: {
@@ -38,17 +34,17 @@ export default defineComponent({
     const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
-    const selectLectureState = ref(false);
+    const selectRoomState = ref(false);
     const roomKey = ref<string>("");
     const scheduleList = ref<Array<scheduleInterface>>([]);
-    const scheduleInfo = ref<scheduleInterface | undefined>(undefined);
-    const selectItem: defaultInterface[] = [
+    const scheduleDetail = ref<scheduleInterface | undefined>(undefined);
+    const timeList: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectState = ref("pm");
+    const selectedTime = ref("pm");
 
-    const getScheduleList = async () => {
+    const getLectureList = async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         userKey.value = common.getItem(KEYS.LU).teacherKey;
       } else if (common.getItem(KEYS.UK).userKey == USER_KEY.STU) {
@@ -85,25 +81,25 @@ export default defineComponent({
       }
     };
 
-    const selectLecture = async (r: roomInterface) => {
-      roomKey.value = r.roomKey;
-      await getScheduleList();
-      selectLectureState.value = true;
+    const selectRoom = async (room: roomInterface) => {
+      roomKey.value = room.roomKey;
+      await getLectureList();
+      selectRoomState.value = true;
     };
 
     const goBack = () => {
       router.go(0);
     };
 
-    const changeState = (s: string) => {
-      selectState.value = s;
+    const changeTime = (time: string) => {
+      selectedTime.value = time;
     };
 
-    const selectSchedule = (i: scheduleInterface) => {
-      scheduleInfo.value = i;
+    const selectSchedule = (schedule: scheduleInterface) => {
+      scheduleDetail.value = schedule;
     };
 
-    const openModal = () => {
+    const showScheduleProgress = () => {
       store.commit("setModalState", true);
     };
 
@@ -120,21 +116,21 @@ export default defineComponent({
         }
       }
 
-      await getScheduleList();
+      await getLectureList();
     });
 
     return {
       category,
-      selectLectureState,
+      selectRoomState,
       scheduleList,
-      scheduleInfo,
-      selectItem,
-      selectState,
-      selectLecture,
+      scheduleDetail,
+      timeList,
+      selectedTime,
+      selectRoom,
       goBack,
-      changeState,
+      changeTime,
       selectSchedule,
-      openModal,
+      showScheduleProgress,
     };
   },
 });
@@ -164,18 +160,18 @@ export default defineComponent({
           <span
             @click="goBack"
             class="back-btn"
-            v-if="adminState && selectLectureState"
+            v-if="adminState && selectRoomState"
             >강의실 다시 선택하기</span
           >
           <div
             class="current-schedule-section-body-button"
-            v-if="!adminState || selectLectureState"
+            v-if="!adminState || selectRoomState"
           >
             <div class="current-schedule-section-body-button-state">
               <select-button-component
-                :state-value="selectItem"
-                :select-value="selectState"
-                @changeState="changeState"
+                :select-list="timeList"
+                :select-value="selectedTime"
+                @changeTime="changeTime"
               ></select-button-component>
             </div>
             <div class="current-schedule-section-body-button-past">
@@ -184,54 +180,50 @@ export default defineComponent({
           </div>
           <div class="current-schedule-section-body-lecture" v-if="adminState">
             <select-list-component
-              v-if="!selectLectureState"
+              v-if="!selectRoomState"
               list-type="ROOM"
-              @selectRoom="selectLecture"
+              @selectRoom="selectRoom"
             ></select-list-component>
           </div>
           <div
             class="current-schedule-section-body-timetable"
-            v-if="!adminState || selectLectureState"
+            v-if="!adminState || selectRoomState"
           >
             <timetable-component
-              :schedule-list="scheduleList"
-              :select-type="selectState"
-              @clickSchedule="selectSchedule"
+              :lecture-list="scheduleList"
+              :select-type="selectedTime"
+              @showLectureDetail="selectSchedule"
             ></timetable-component>
           </div>
 
           <div
             class="current-schedule-section-body-info"
-            v-if="!adminState || selectLectureState"
+            v-if="!adminState || selectRoomState"
           >
             <div class="current-schedule-section-body-info-container">
-              <div class="info" v-if="!scheduleInfo">
+              <div class="info" v-if="!scheduleDetail">
                 <div class="info-no-data">강의를 선택해 주세요</div>
-                <div class="info-underline" v-if="scheduleInfo"></div>
+                <div class="info-underline" v-if="scheduleDetail"></div>
               </div>
-              <div class="info" v-if="scheduleInfo">
-                <div class="info-name">{{ scheduleInfo.lectureName }}</div>
+              <div class="info" v-if="scheduleDetail">
+                <div class="info-name">{{ scheduleDetail.lectureName }}</div>
                 <div class="info-underline"></div>
                 <div class="info-teacher">
                   <div class="label">강사명</div>
-                  {{ scheduleInfo.teacherName }}
+                  {{ scheduleDetail.teacherName }}
                 </div>
                 <div class="info-book">
                   <div class="label">교재</div>
-                  {{ scheduleInfo.book }}
+                  {{ scheduleDetail.book }}
                 </div>
                 <div class="info-grade">
                   <div class="label">학년</div>
-                  {{ scheduleInfo.target }}
+                  {{ scheduleDetail.target }}
                 </div>
                 <div class="info-room">
                   <div class="label">강의실</div>
-                  {{ scheduleInfo.roomName }}
+                  {{ scheduleDetail.roomName }}
                 </div>
-                <!--                <div class="info-progress">-->
-                <!--                  <div class="label">강의 진행표</div>-->
-                <!--                  <div class="progress-btn" @click="openModal">열람하기</div>-->
-                <!--                </div>-->
               </div>
             </div>
           </div>

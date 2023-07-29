@@ -1,13 +1,11 @@
 <script lang="ts">
 import { defineComponent, PropType, ref, watch } from "vue";
 import { defaultInterface } from "../../lib/types";
-/*
-@brief 이지선다 선택 버튼
- */
+
 export default defineComponent({
   name: "SelectButtonComponent",
   props: {
-    stateValue: {
+    selectList: {
       types: Array as PropType<Array<defaultInterface>>,
       required: true,
     },
@@ -17,21 +15,21 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const selectItem = ref<Array<defaultInterface>>(
-      props.stateValue as defaultInterface[]
+    const itemList = ref<Array<defaultInterface>>(
+      props.selectList as defaultInterface[]
     );
-    const selectState = ref<string>(props.selectValue as string);
+    const selectedState = ref<string>(props.selectValue as string);
 
     watch(
       () => props.selectValue,
       () => {
-        selectState.value = props.selectValue as string;
+        selectedState.value = props.selectValue as string;
       }
     );
 
     return {
-      selectItem,
-      selectState,
+      itemList,
+      selectedState,
     };
   },
 });
@@ -43,23 +41,23 @@ export default defineComponent({
       <div class="select-state">
         <div
           :class="
-            selectState === selectItem[0].KEY
+            selectedState === itemList[0].KEY
               ? 'select-state-ok-active'
               : 'select-state-ok'
           "
-          @click="$emit('changeState', selectItem[0].KEY)"
+          @click="$emit('changeState', itemList[0].KEY)"
         >
-          {{ selectItem[0].VALUE }}
+          {{ itemList[0].VALUE }}
         </div>
         <div
           :class="
-            selectState === selectItem[1].KEY
+            selectedState === itemList[1].KEY
               ? 'select-state-wait-active'
               : 'select-state-wait'
           "
-          @click="$emit('changeState', selectItem[1].KEY)"
+          @click="$emit('changeState', itemList[1].KEY)"
         >
-          {{ selectItem[1].VALUE }}
+          {{ itemList[1].VALUE }}
         </div>
       </div>
     </div>

@@ -23,11 +23,7 @@ import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import SelectListComponent from "../custom/SelectListComponent.vue";
-/*
-@brief [강사, 관리자] [Main]학생 관리, [학부모] [Main]상담 및 분석
-       [Sub]상담 접근 시, 강사는 본인이 담당하는 학생과의 상담 정보를, 관리자는 선택한 강사의 담당 학생 상담 정보를,
-       학부모는 자신의 상담 정보를 표시
- */
+
 export default defineComponent({
   name: "ConsultComponent",
   props: {
@@ -44,17 +40,17 @@ export default defineComponent({
     DropBoxComponent,
   },
   setup(props) {
-    const router = useRouter();
     const store = useStore();
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const selectTeacherState = ref(false);
     const selectSection = ref<string | undefined>(undefined);
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
-    const adminInfo = ref<adminInterface | undefined>(undefined);
-    const student = ref<defaultInterface>({ KEY: "", VALUE: "" });
+    const teacherDetail = ref<teacherInterface | undefined>(undefined);
+    const adminDetail = ref<adminInterface | undefined>(undefined);
+    const studentDetail = ref<defaultInterface>({ KEY: "", VALUE: "" });
     //TODO 일정 입력, 상담 예정 나누기
     const consultType = ref<string>("");
-    const studentList = ref<Array<defaultInterface>>([]);
+    const studentDetailList = ref<Array<defaultInterface>>([]);
 
     const date = ref<string>("");
     const time = ref<string | undefined>(undefined);
@@ -78,7 +74,7 @@ export default defineComponent({
     const planDate = ref<Date | undefined>(undefined);
     const planDateCalendarState = ref(false);
     const planConsultList = ref<Array<consultInterface>>([]);
-    const showPlanConsultList = ref<Array<consultInterface>>([]);
+    const viewPlanConsultList = ref<Array<consultInterface>>([]);
     const planTotalCnt = ref<number>(0);
     const planPage = ref<number>(0);
     const planCurrentPage = ref<number>(1);
@@ -97,7 +93,7 @@ export default defineComponent({
       { KEY: "date", VALUE: "상담 일자" },
       { KEY: "time", VALUE: "상담 시간" },
       { KEY: "type", VALUE: "상담 유형" },
-      { KEY: "student", VALUE: "상담 학생" },
+      { KEY: "studentDetail", VALUE: "상담 학생" },
       { KEY: "teacher", VALUE: "상담 강사" },
     ];
     const listConsultDetail = ref<consultInterface | undefined>(undefined);
@@ -121,10 +117,10 @@ export default defineComponent({
       await setConsultList();
     };
 
-    const selectTeacher = async (t: teacherInterface) => {
+    const selectTeacher = async (teacher: teacherInterface) => {
       selectTeacherState.value = true;
-      teacherInfo.value = t;
-      common.setItem(KEYS.ST, common.makeJson(teacherInfo.value));
+      teacherDetail.value = teacher;
+      common.setItem(KEYS.ST, common.makeJson(teacherDetail.value));
 
       await setStudentList();
       await setConsultList();
@@ -132,10 +128,10 @@ export default defineComponent({
 
     const setStudentList = async () => {
       let data = {
-        userKey: teacherInfo.value
-          ? teacherInfo.value?.teacherKey
-          : adminInfo.value
-          ? adminInfo.value.adminKey
+        userKey: teacherDetail.value
+          ? teacherDetail.value?.teacherKey
+          : adminDetail.value
+          ? adminDetail.value.adminKey
           : "",
         search: "",
         lectureKey: "",
@@ -145,8 +141,6 @@ export default defineComponent({
             : "",
       };
 
-      console.log(data);
-
       const result = await ApiClient(
         "/members/getStudentList/",
         common.makeJson(data)
@@ -155,8 +149,8 @@ export default defineComponent({
       if (result) {
         if (result.count > 0) {
           for (let i = 0; i < result.count; i++) {
-            studentList.value[i] = {
-              KEY: result.resultData[i].studentKey,
+            studentDetailList.value[i] = {
+              KEY: result.resultData[i].studentDetailKey,
               VALUE: result.resultData[i].name,
             };
           }
@@ -166,12 +160,12 @@ export default defineComponent({
 
     const setConsultList = async () => {
       let data = {
-        userKey: teacherInfo.value
-          ? teacherInfo.value?.teacherKey
-          : adminInfo.value
-          ? adminInfo.value.adminKey
+        userKey: teacherDetail.value
+          ? teacherDetail.value?.teacherKey
+          : adminDetail.value
+          ? adminDetail.value.adminKey
           : "",
-        studentKey: student.value.KEY,
+        studentDetailKey: studentDetail.value.KEY,
         search: consultType.value,
         date: date.value,
       };
@@ -227,23 +221,23 @@ export default defineComponent({
       listTotalCnt.value = listConsultList.value.length;
       planTotalCnt.value = planConsultList.value.length;
       if (planTotalCnt.value > planListCnt) {
-        showPlanConsultList.value = planConsultList.value.slice(0, planListCnt);
+        viewPlanConsultList.value = planConsultList.value.slice(0, planListCnt);
         planPage.value = Math.ceil(planTotalCnt.value / planListCnt);
       } else {
-        showPlanConsultList.value = planConsultList.value;
+        viewPlanConsultList.value = planConsultList.value;
         planPage.value = 0;
       }
     };
 
-    const openCalendar = (s: string, t: string) => {
-      if (s === "input") {
-        if (t === "date") {
+    const openCalendar = (section: string, calendar: string) => {
+      if (section === "input") {
+        if (calendar === "date") {
           inputDate.value = new Date();
           inputDateCalendarState.value = !inputDateCalendarState.value;
         } else {
           inputTimeCalendarState.value = !inputTimeCalendarState.value;
         }
-      } else if (s === "plan") {
+      } else if (section === "plan") {
         planDate.value = new Date();
         planDateCalendarState.value = !planDateCalendarState.value;
       } else {
@@ -251,48 +245,48 @@ export default defineComponent({
       }
     };
 
-    const selectInputType = (t: defaultInterface) => {
-      inputType.value = (t.VALUE as string) + " 상담";
+    const selectInputType = (type: defaultInterface) => {
+      inputType.value = (type.VALUE as string) + " 상담";
     };
 
-    const selectType = async (t: defaultInterface) => {
-      consultType.value = t.VALUE as string;
+    const selectType = async (type: defaultInterface) => {
+      consultType.value = type.VALUE as string;
 
       if (selectSection.value === "plan")
-        planTypeHolder.value = t.VALUE as string;
+        planTypeHolder.value = type.VALUE as string;
       if (selectSection.value === "list")
-        listTypeHolder.value = t.VALUE as string;
+        listTypeHolder.value = type.VALUE as string;
 
       await setConsultList();
     };
 
-    const selectInputStudent = (s: defaultInterface) => {
-      student.value.KEY = s.KEY;
-      student.value.VALUE = s.VALUE as string;
+    const selectInputStudent = (student: defaultInterface) => {
+      studentDetail.value.KEY = student.KEY;
+      studentDetail.value.VALUE = student.VALUE as string;
     };
 
-    const selectStudent = async (s: defaultInterface) => {
-      student.value.KEY = s.KEY;
-      student.value.VALUE = s.VALUE as string;
+    const selectStudent = async (student: defaultInterface) => {
+      studentDetail.value.KEY = student.KEY;
+      studentDetail.value.VALUE = student.VALUE as string;
 
       if (selectSection.value === "plan")
-        planNameHolder.value = s.VALUE as string;
+        planNameHolder.value = student.VALUE as string;
       if (selectSection.value === "list")
-        listNameHolder.value = s.VALUE as string;
+        listNameHolder.value = student.VALUE as string;
 
       await setConsultList();
     };
 
-    const selectPage = (p: number) => {
-      planCurrentPage.value = p;
+    const selectPage = (page: number) => {
+      planCurrentPage.value = page;
     };
 
-    const changePage = (p: number) => {
-      if (p === 1) planCurrentPage.value = planCurrentPage.value + 1;
+    const changePage = (page: number) => {
+      if (page === 1) planCurrentPage.value = planCurrentPage.value + 1;
       else planCurrentPage.value = planCurrentPage.value - 1;
     };
 
-    const insertConsult = async () => {
+    const createConsultPlan = async () => {
       if (!date.value) {
         window.alert("상담 날짜를 입력해 주세요.");
         return false;
@@ -302,18 +296,18 @@ export default defineComponent({
       } else if (!inputType.value) {
         window.alert("상담 유형을 선택해 주세요.");
         return false;
-      } else if (!student.value) {
+      } else if (!studentDetail.value) {
         window.alert("학생을 선택해 주세요.");
         return false;
       }
 
       let data = {
-        studentKey: student.value.KEY,
-        studentName: student.value.VALUE,
-        targetKey: teacherInfo.value
-          ? teacherInfo.value?.teacherKey
-          : adminInfo.value?.adminKey,
-        targetName: props.adminState ? "관리자" : teacherInfo.value?.name,
+        studentDetailKey: studentDetail.value.KEY,
+        studentDetailName: studentDetail.value.VALUE,
+        targetKey: teacherDetail.value
+          ? teacherDetail.value?.teacherKey
+          : adminDetail.value?.adminKey,
+        targetName: props.adminState ? "관리자" : teacherDetail.value?.name,
         consultDate:
           date.value && time.value ? date.value + time.value + ":00" : "",
         content: "",
@@ -330,13 +324,13 @@ export default defineComponent({
       }
     };
 
-    const openInsertPopup = (h: consultInterface) => {
+    const openInsertModal = (placeholder: consultInterface) => {
       selectSection.value = "plan";
-      planDetailHeader.value = h;
+      planDetailHeader.value = placeholder;
       store.commit("setModalState", true);
     };
 
-    const doInput = async () => {
+    const createConsult = async () => {
       if (!planDetailContent.value) {
         window.alert("상담 내용을 입력해 주세요.");
         return false;
@@ -358,9 +352,9 @@ export default defineComponent({
       }
     };
 
-    const showConsultDetail = (i: consultInterface) => {
+    const showConsultDetail = (consult: consultInterface) => {
       selectSection.value = "list";
-      listConsultDetail.value = i;
+      listConsultDetail.value = consult;
       store.commit("setModalState", true);
       document.getElementById("consult")?.scrollTo(0, 0);
     };
@@ -389,11 +383,11 @@ export default defineComponent({
       }
     };
 
-    const removeFilter = async (s: string) => {
+    const removeFilter = async (section: string) => {
       consultType.value = "";
-      student.value = { KEY: "", VALUE: "" };
+      studentDetail.value = { KEY: "", VALUE: "" };
 
-      if (s === "plan") {
+      if (section === "plan") {
         selectSection.value = "plan";
 
         planDate.value = undefined;
@@ -403,7 +397,7 @@ export default defineComponent({
         planNameHolder.value = "학생명";
 
         await setConsultList();
-      } else if (s === "list") {
+      } else if (section === "list") {
         selectSection.value = "list";
 
         listDate.value = undefined;
@@ -457,7 +451,7 @@ export default defineComponent({
       () => planCurrentPage.value,
       () => {
         if (planConsultList.value.length > 0) {
-          showPlanConsultList.value = planConsultList.value?.slice(
+          viewPlanConsultList.value = planConsultList.value?.slice(
             planListCnt * planCurrentPage.value - planListCnt,
             planListCnt * planCurrentPage.value
           ) as [];
@@ -469,7 +463,7 @@ export default defineComponent({
       category.value = common.findCategory();
 
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-        teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+        teacherDetail.value = common.getItem(KEYS.LU) as teacherInterface;
         viewInput.value = true;
       } else if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
         const child = await common.setChildren(
@@ -477,21 +471,21 @@ export default defineComponent({
         );
 
         if (child) {
-          student.value = {
+          studentDetail.value = {
             KEY: child.studentKey,
             VALUE: child.name,
           };
         }
       } else if (props.adminState) {
-        adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
+        adminDetail.value = common.getItem(KEYS.LU) as adminInterface;
       }
 
       if (common.getItem(KEYS.ST)) {
         if (common.getItem(KEYS.ST).teacherKey) {
-          teacherInfo.value = common.getItem(KEYS.ST);
+          teacherDetail.value = common.getItem(KEYS.ST);
           selectTeacherState.value = true;
         } else {
-          adminInfo.value = common.getItem(KEYS.LU) as adminInterface;
+          adminDetail.value = common.getItem(KEYS.LU) as adminInterface;
           selectTeacherState.value = true;
         }
       }
@@ -508,9 +502,9 @@ export default defineComponent({
       category,
       selectTeacherState,
       selectSection,
-      teacherInfo,
-      adminInfo,
-      studentList,
+      teacherDetail,
+      adminDetail,
+      studentDetailList,
       date,
       time,
       typeList,
@@ -522,7 +516,7 @@ export default defineComponent({
       planDate,
       planDateCalendarState,
       planConsultList,
-      showPlanConsultList,
+      viewPlanConsultList,
       planTotalCnt,
       planPage,
       planCurrentPage,
@@ -548,9 +542,9 @@ export default defineComponent({
       selectStudent,
       selectPage,
       changePage,
-      insertConsult,
-      openInsertPopup,
-      doInput,
+      createConsultPlan,
+      openInsertModal,
+      createConsult,
       showConsultDetail,
       deleteConsult,
       removeFilter,
@@ -653,7 +647,7 @@ export default defineComponent({
             <div class="sap"></div>
             <div class="consult-input-section-body-item-name">
               <drop-box-component
-                :select-list="studentList"
+                :select-list="studentDetailList"
                 placeholder="학생명"
                 row-width="160px"
                 row-height="40px"
@@ -662,7 +656,7 @@ export default defineComponent({
             </div>
             <div
               class="consult-input-section-body-item-insert"
-              @click="insertConsult"
+              @click="createConsultPlan"
             >
               상담 일정 추가 하기
             </div>
@@ -716,7 +710,7 @@ export default defineComponent({
               @click="selectSection = 'plan'"
             >
               <drop-box-component
-                :select-list="studentList"
+                :select-list="studentDetailList"
                 :placeholder="planNameHolder"
                 row-width="160px"
                 row-height="40px"
@@ -731,7 +725,7 @@ export default defineComponent({
           <div class="underline"></div>
           <div v-if="planConsultList" class="consult-plan-section-body-list">
             <div
-              v-for="item in showPlanConsultList"
+              v-for="item in viewPlanConsultList"
               class="consult-plan-section-body-list-item"
             >
               <div class="consult-plan-section-body-list-item-date">
@@ -748,12 +742,12 @@ export default defineComponent({
                 {{ item.consultType }}
                 <div class="plan-sap"></div>
               </div>
-              <div class="consult-plan-section-body-list-item-student">
+              <div class="consult-plan-section-body-list-item-studentDetail">
                 {{ item.studentName }}
               </div>
               <div
                 class="consult-plan-section-body-list-item-detail"
-                @click="openInsertPopup(item)"
+                @click="openInsertModal(item)"
                 가
                 v-if="viewInput"
               >
@@ -768,7 +762,7 @@ export default defineComponent({
             <pagination-component
               @changePage="changePage"
               @selectPage="selectPage"
-              :page="planPage"
+              :total-page="planPage"
               :current-page="planCurrentPage"
             ></pagination-component>
           </div>
@@ -818,7 +812,7 @@ export default defineComponent({
               @click="selectSection = 'list'"
             >
               <drop-box-component
-                :select-list="studentList"
+                :select-list="studentDetailList"
                 :placeholder="listNameHolder"
                 row-width="160px"
                 row-height="40px"
@@ -904,7 +898,7 @@ export default defineComponent({
                 type="button"
                 value="상담 결과 작성"
                 class="save-btn"
-                @click="doInput"
+                @click="createConsult"
               />
             </div>
             <textarea

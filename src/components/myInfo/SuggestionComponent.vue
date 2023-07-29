@@ -14,13 +14,7 @@ import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
-/*
-@brief [학생, 학부모, 강사] [Main] 내 공간 [Sub]건의사항
-       [관리자] [Main]학생 관리, 강사 관리 [Sub]건의사항
-       교무 관리자는 각 유저의 건의사항 처리
-       기타 관리자는 각 유저의 건의사항 열람만 가능
-@props 현재 로그인 한 유저의 권한 값
- */
+
 export default defineComponent({
   name: "SuggestionComponent",
   components: {
@@ -34,20 +28,20 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
     const userType = ref<string>("");
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
-    const studentInfo = ref<studentInterface | undefined>(undefined);
-    const selectState = ref("ok");
-    const selectItem = ref<Array<defaultInterface>>([
+    const teacherDetail = ref<teacherInterface | undefined>(undefined);
+    const studentDetail = ref<studentInterface | undefined>(undefined);
+    const selectedState = ref("ok");
+    const stateList = ref<Array<defaultInterface>>([
       { KEY: "ok", VALUE: "처리 완료" },
       { KEY: "wait", VALUE: "대기중" },
     ]);
-    const header: defaultInterface[] = [
+    const suggestHeader: defaultInterface[] = [
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
       { KEY: "WRITEr", VALUE: "작성자명" },
       { KEY: "DETAIL", VALUE: "상세 사항" },
     ];
-    const placeholder: string = "건의 유형";
+    const typeHolder: string = "건의 유형";
     const typeList: defaultInterface[] = [
       { KEY: "LECTURE", VALUE: "강의" },
       { KEY: "STUDENT", VALUE: "학생" },
@@ -55,11 +49,11 @@ export default defineComponent({
       { KEY: "FACILITY", VALUE: "시설물" },
       { KEY: "ETC", VALUE: "기타" },
     ];
-    const consultType = ref<string>("");
+    const type = ref<string>("");
     const content = ref<string>("");
-    const width: string = "280px";
-    const datetime = ref<string>(new Date().toLocaleString().slice(0, -3));
-    const allSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
+    const dropboxWidth: string = "280px";
+    const writeDate = ref<string>(new Date().toLocaleString().slice(0, -3));
+    const suggestList = ref<Array<suggestInterface> | undefined>(undefined);
     const viewSuggestList = ref<Array<suggestInterface>>([]);
     const suggestDetail = ref<suggestInterface | undefined>(undefined);
     const totalCnt = ref<number | undefined>(undefined);
@@ -78,9 +72,9 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          allSuggestList.value = result.resultData;
+          suggestList.value = result.resultData;
 
-          allSuggestList.value?.map((item: suggestInterface) => {
+          suggestList.value?.map((item: suggestInterface) => {
             if (item.state === "Y") {
               viewSuggestList.value.push(item);
             }
@@ -89,20 +83,20 @@ export default defineComponent({
       }
     };
 
-    const changeState = (s: string) => {
-      selectState.value = s;
+    const changeState = (state: string) => {
+      selectedState.value = state;
 
-      if (allSuggestList.value) {
+      if (suggestList.value) {
         viewSuggestList.value = [];
 
-        if (s === "ok") {
-          allSuggestList.value.map((item: suggestInterface) => {
+        if (state === "ok") {
+          suggestList.value.map((item: suggestInterface) => {
             if (item.state === "Y") {
               viewSuggestList.value.push(item);
             }
           });
         } else {
-          allSuggestList.value.map((item: suggestInterface) => {
+          suggestList.value.map((item: suggestInterface) => {
             if (item.state === "N") {
               viewSuggestList.value.push(item);
             }
@@ -113,12 +107,12 @@ export default defineComponent({
       }
     };
 
-    const selectType = (t: defaultInterface) => {
-      consultType.value = t.VALUE as string;
+    const selectType = (selectedType: defaultInterface) => {
+      type.value = selectedType.VALUE as string;
     };
 
-    const insertSuggest = async () => {
-      if (!consultType.value) {
+    const createSuggestPlan = async () => {
+      if (!type.value) {
         window.alert("건의 유형을 선택해 주세요.");
         return false;
       } else if (!content.value) {
@@ -128,11 +122,11 @@ export default defineComponent({
 
       let data = {
         writerKey: userKey.value,
-        writerName: teacherInfo.value
-          ? teacherInfo.value.name
-          : studentInfo.value?.name,
+        writerName: teacherDetail.value
+          ? teacherDetail.value.name
+          : studentDetail.value?.name,
         writerType: userType.value,
-        type: consultType.value,
+        type: type.value,
         content: content.value,
       };
 
@@ -144,7 +138,7 @@ export default defineComponent({
       if (result) {
         if (result.chunbae === RESULT_KEY.CREATE) {
           window.alert("건의사항을 성공적으로 작성했습니다.");
-          consultType.value = "";
+          type.value = "";
           content.value = "";
           await setSuggestList();
           changeState("wait");
@@ -152,8 +146,8 @@ export default defineComponent({
       }
     };
 
-    const showSuggestDetail = (i: suggestInterface) => {
-      suggestDetail.value = i;
+    const showSuggestDetail = (suggest: suggestInterface) => {
+      suggestDetail.value = suggest;
       store.commit("setModalState", true);
     };
 
@@ -164,11 +158,11 @@ export default defineComponent({
         if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
           userKey.value = common.getItem(KEYS.LU).teacherKey;
           userType.value = USER_KEY.TEA;
-          teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
+          teacherDetail.value = common.getItem(KEYS.LU) as teacherInterface;
         } else if (common.getItem(KEYS.UK).userKey === USER_KEY.STU) {
           userKey.value = common.getItem(KEYS.LU).studentKey;
           userType.value = USER_KEY.STU;
-          studentInfo.value = common.getItem(KEYS.LU) as studentInterface;
+          studentDetail.value = common.getItem(KEYS.LU) as studentInterface;
         }
       }
 
@@ -177,20 +171,20 @@ export default defineComponent({
 
     return {
       category,
-      selectState,
-      selectItem,
-      header,
-      placeholder,
+      selectedState,
+      stateList,
+      suggestHeader,
+      typeHolder,
       typeList,
       content,
-      width,
-      datetime,
+      dropboxWidth,
+      writeDate,
       viewSuggestList,
       suggestDetail,
       totalCnt,
       changeState,
       selectType,
-      insertSuggest,
+      createSuggestPlan,
       showSuggestDetail,
     };
   },
@@ -216,8 +210,8 @@ export default defineComponent({
             교무 처리 여부 :
             <div class="suggestion-section-body-state-button">
               <select-button-component
-                :state-value="selectItem"
-                :select-value="selectState"
+                :select-list="stateList"
+                :select-value="selectedState"
                 @changeState="changeState"
               />
             </div>
@@ -226,7 +220,7 @@ export default defineComponent({
             <data-list-component
               list-type="suggest"
               :data-list="viewSuggestList"
-              :header="header"
+              :header="suggestHeader"
               :row-height="39"
               :total-cnt="totalCnt ? totalCnt : 0"
               :list-cnt="13"
@@ -239,14 +233,14 @@ export default defineComponent({
             </span>
             <div class="suggestion-section-body-write-drop">
               <drop-box-component
-                :placeholder="placeholder"
+                :placeholder="typeHolder"
                 :select-list="typeList"
-                :row-width="width"
+                :row-width="dropboxWidth"
                 @selectValue="selectType"
               ></drop-box-component>
             </div>
             <div class="suggestion-section-body-write-date">
-              {{ datetime }}
+              {{ writeDate }}
             </div>
             <textarea
               placeholder="내용을 입력해주세요."
@@ -255,7 +249,7 @@ export default defineComponent({
             />
             <div
               class="suggestion-section-body-write-btn"
-              @click="insertSuggest"
+              @click="createSuggestPlan"
             >
               건의하기
             </div>
@@ -307,10 +301,7 @@ export default defineComponent({
                   }})</span
                 >
               </div>
-              <div
-                style="white-space: pre"
-                class="suggest-detail-section-answer-item"
-              >
+              <div class="suggest-detail-section-answer-item">
                 {{
                   suggestDetail?.answer
                     ? suggestDetail?.answer

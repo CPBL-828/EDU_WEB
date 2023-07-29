@@ -1,17 +1,10 @@
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import { studentInterface, teacherInterface } from "../../lib/types";
-import { CONSTANT, KEYS, USER_KEY } from "../../constant";
-import ModalPopupComponent from "./ModalPopupComponent.vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import common from "../../lib/common";
-/*
-@brief 전체 학생 및 강사의 요약적 정보를 표시할 카드형 리스트
- */
+import { CONSTANT, USER_KEY } from "../../constant";
+
 export default defineComponent({
   name: "CardListComponent",
-  components: { ModalPopupComponent },
   props: {
     viewUser: {
       types: String as PropType<string>,
@@ -23,13 +16,9 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
-    const router = useRouter();
     const fileURL: string = CONSTANT.FILE_URL;
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
-    const studentInfo = ref<studentInterface | undefined>(undefined);
     const teacherList = ref<Array<teacherInterface> | undefined>(undefined);
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
 
     const setUserList = () => {
       if (props.viewUser === USER_KEY.STU) {
@@ -39,35 +28,6 @@ export default defineComponent({
       }
     };
 
-    const openModal = (u: string, i: studentInterface | teacherInterface) => {
-      store.state.modalState = true;
-
-      if (u === USER_KEY.STU) {
-        studentInfo.value = i as studentInterface;
-      } else {
-        teacherInfo.value = i as teacherInterface;
-      }
-    };
-
-    const goOther = (w: string) => {
-      store.state.modalState = false;
-
-      if (w === "ANALYSIS") {
-        common.removeItem(KEYS.SR);
-        common.setItem(KEYS.SR, common.makeJson({ sr: w.toLowerCase() }));
-        router.push("/s-manage/analysis");
-      } else if (w === "TEST") {
-        common.removeItem(KEYS.MR);
-        common.removeItem(KEYS.SR);
-        common.setItem(KEYS.MR, common.makeJson({ mr: w.toLowerCase() }));
-        router.push("/test");
-      }
-    };
-
-    /*
-    상위 컴포넌트에서 검색으로 인해 userList에 담긴 값이 변경되면,
-    setUserList()를 호출해 현재 컴포넌트의 userList에도 정상적으로 적용되도록 함
-     */
     watch(
       () => props.userList,
       async () => {
@@ -82,11 +42,7 @@ export default defineComponent({
     return {
       fileURL,
       studentList,
-      studentInfo,
       teacherList,
-      teacherInfo,
-      openModal,
-      goOther,
     };
   },
 });
@@ -137,7 +93,6 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <!--        <div class="card-item-detail" @click="openModal('STU', item)">-->
         <div class="card-item-detail" @click="$emit('showStudentDetail', item)">
           <span>상세</span>
           <span>조회</span>

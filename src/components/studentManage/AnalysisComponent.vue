@@ -42,17 +42,17 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const fileURL: string = CONSTANT.FILE_URL;
     const userKey = ref<string>("");
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
-    const placeholder = ref<string>("강의 선택");
+    const teacherDetail = ref<teacherInterface | undefined>(undefined);
+    const lectureHolder = ref<string>("강의 선택");
     const lectureList = ref<defaultInterface[]>([]);
     const lectureKey = ref<string>("");
     const studentList = ref<studentInterface[] | undefined>(undefined);
     const selectStudentState = ref(false);
     const selectedStudent = ref<studentInterface | undefined>(undefined);
     const date = ref<Date>(new Date());
-    const selectDate = ref<string>("");
+    const selectedDate = ref<string>("");
 
-    const headerList: defaultInterface[] = [
+    const analysisHeader: defaultInterface[] = [
       { KEY: "date", VALUE: "작성 일자" },
       { KEY: "writer", VALUE: "작성자" },
       { KEY: "detail", VALUE: "상세 내용" },
@@ -61,7 +61,7 @@ export default defineComponent({
     const totalCnt = ref<number>(0);
 
     const modalState = ref<string | undefined>(undefined);
-    const analysisInsertDetail = ref<string>("");
+    const insertAnalysisDetail = ref<string>("");
     const analysisDetail = ref<analysisInterface | undefined>(undefined);
 
     const editState = ref(false);
@@ -98,8 +98,8 @@ export default defineComponent({
       }
     };
 
-    const selectLecture = async (l: defaultInterface) => {
-      lectureKey.value = l.KEY;
+    const selectLecture = async (lecture: defaultInterface) => {
+      lectureKey.value = lecture.KEY;
       await getStudentList();
     };
 
@@ -118,8 +118,6 @@ export default defineComponent({
             : "",
       };
 
-      console.log(data);
-
       const result = await ApiClient(
         "/members/getStudentList/",
         common.makeJson(data)
@@ -136,7 +134,7 @@ export default defineComponent({
     const getAnalysisList = async () => {
       let data = {
         userKey: selectedStudent.value?.studentKey,
-        date: selectDate.value,
+        date: selectedDate.value,
       };
 
       const result = await ApiClient(
@@ -154,10 +152,10 @@ export default defineComponent({
       }
     };
 
-    const selectStudent = async (s: studentInterface) => {
-      selectedStudent.value = s;
+    const selectStudent = async (student: studentInterface) => {
+      selectedStudent.value = student;
       common.setItem(KEYS.SS, common.makeJson(selectedStudent.value));
-      selectDate.value =
+      selectedDate.value =
         date.value?.toLocaleDateString().split("/")[2] +
         "-" +
         date.value?.toLocaleDateString().split("/")[1] +
@@ -168,13 +166,13 @@ export default defineComponent({
       selectStudentState.value = true;
     };
 
-    const openModal = (s: string) => {
-      modalState.value = s;
+    const openModal = (mode: string) => {
+      modalState.value = mode;
       store.commit("setModalState", true);
     };
 
     const insertAnalysis = async () => {
-      if (!analysisInsertDetail.value) {
+      if (!insertAnalysisDetail.value) {
         window.alert("분석 내용을 입력해 주세요.");
         return false;
       }
@@ -183,8 +181,8 @@ export default defineComponent({
         studentKey: selectedStudent.value?.studentKey,
         studentName: selectedStudent.value?.name,
         writerKey: userKey.value,
-        writerName: props.adminState ? "관리자" : teacherInfo.value?.name,
-        content: analysisInsertDetail.value,
+        writerName: props.adminState ? "관리자" : teacherDetail.value?.name,
+        content: insertAnalysisDetail.value,
       };
 
       const result = await ApiClient(
@@ -198,8 +196,8 @@ export default defineComponent({
       }
     };
 
-    const showAnalysisDetail = (item: analysisInterface) => {
-      analysisDetail.value = item;
+    const showAnalysisDetail = (analysis: analysisInterface) => {
+      analysisDetail.value = analysis;
       openModal("view");
     };
 
@@ -207,8 +205,8 @@ export default defineComponent({
       editState.value = true;
     };
 
-    const doEdit = async () => {
-      if (analysisDetail.value?.content === analysisInsertDetail.value) {
+    const editAnalysis = async () => {
+      if (analysisDetail.value?.content === insertAnalysisDetail.value) {
         if (
           window.confirm("변경된 내용이 없습니다. 수정을 취소하시겠습니까?")
         ) {
@@ -217,7 +215,7 @@ export default defineComponent({
       } else {
         let data = {
           analysisKey: analysisDetail.value?.analysisKey,
-          content: analysisInsertDetail.value,
+          content: insertAnalysisDetail.value,
         };
 
         const result = await ApiClient(
@@ -265,7 +263,7 @@ export default defineComponent({
       () => date.value,
       async () => {
         if (date.value) {
-          selectDate.value =
+          selectedDate.value =
             date.value?.toLocaleDateString().split("/")[2] +
             "-" +
             date.value?.toLocaleDateString().split("/")[1] +
@@ -283,8 +281,8 @@ export default defineComponent({
 
       if (!props.adminState) {
         if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
-          teacherInfo.value = common.getItem(KEYS.LU) as teacherInterface;
-          userKey.value = teacherInfo.value.teacherKey;
+          teacherDetail.value = common.getItem(KEYS.LU) as teacherInterface;
+          userKey.value = teacherDetail.value.teacherKey;
         }
       } else {
         userKey.value = (common.getItem(KEYS.LU) as adminInterface).adminKey;
@@ -310,19 +308,19 @@ export default defineComponent({
     return {
       category,
       fileURL,
-      teacherInfo,
-      placeholder,
+      teacherDetail,
+      lectureHolder,
       lectureList,
       lectureKey,
       studentList,
       selectStudentState,
       selectedStudent,
       date,
-      headerList,
+      analysisHeader,
       analysisList,
       totalCnt,
       modalState,
-      analysisInsertDetail,
+      insertAnalysisDetail,
       analysisDetail,
       editState,
       goBack,
@@ -333,7 +331,7 @@ export default defineComponent({
       insertAnalysis,
       showAnalysisDetail,
       changeEditState,
-      doEdit,
+      editAnalysis,
       deleteAnalysis,
     };
   },
@@ -359,11 +357,11 @@ export default defineComponent({
           >
           <div
             class="analysis-component-section-body-select"
-            v-if="adminState || teacherInfo"
+            v-if="adminState || teacherDetail"
           >
             <div class="analysis-component-section-body-select-drop">
               <drop-box-component
-                :placeholder="placeholder"
+                :placeholder="lectureHolder"
                 :select-list="lectureList"
                 @selectValue="selectLecture"
               ></drop-box-component>
@@ -435,7 +433,7 @@ export default defineComponent({
             <div class="analysis-content-section-body-data-list">
               <data-list-component
                 list-type="analysis"
-                :header="headerList"
+                :header="analysisHeader"
                 :data-list="analysisList"
                 :total-cnt="totalCnt ? totalCnt : 0"
                 :row-height="39"
@@ -455,7 +453,7 @@ export default defineComponent({
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"
-            @click="doEdit"
+            @click="editAnalysis"
           >
             저장하기
           </div>
@@ -483,7 +481,7 @@ export default defineComponent({
           </div>
           <div class="sap"></div>
           <textarea
-            v-model="analysisInsertDetail"
+            v-model="insertAnalysisDetail"
             placeholder="분석 내용을 입력해주세요."
             class="analysis-insert-body"
           ></textarea>
@@ -508,7 +506,7 @@ export default defineComponent({
           </div>
           <textarea
             v-if="editState"
-            v-model="analysisInsertDetail"
+            v-model="insertAnalysisDetail"
             :placeholder="analysisDetail?.content"
             class="analysis-detail-body"
           ></textarea>

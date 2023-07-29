@@ -13,28 +13,21 @@ import {
 } from "../../lib/types";
 import { ApiClient } from "../../axios";
 import common from "../../lib/common";
-/*
-@brief 로그인 실행 화면
- */
+
 export default defineComponent({
   name: "LoginComponent",
   components: { ChevronLeftSquareIcon, UserCircleIcon },
   setup() {
-    const router = useRouter();
     const route = useRoute();
-    const userType = ref<string>();
-    const whoAmI = ref<defaultInterface>();
-    const userId = ref<string>();
+    const router = useRouter();
+    const userType = ref<string>("");
+    const selectedUserType = ref<defaultInterface>();
+    const userId = ref<string>("");
 
     const goBack = () => {
       router.back();
     };
 
-    /*
-    @brief 로그인 실행
-           유저 데이터(result)를 성공적으로 가져올 시, 현재 유저 타입에 맞춰 userData에 result 저장
-    @date 22/10/06
-     */
     const doLogin = async () => {
       let data: object = {
         userType: userType.value,
@@ -71,35 +64,34 @@ export default defineComponent({
           window.alert("로그인 성공. 환영합니다!");
           await router.push("/main");
         } else {
-          window.alert(whoAmI.value?.VALUE + " 정보를 찾을 수 없어요!");
+          window.alert(
+            selectedUserType.value?.VALUE + " 정보를 찾을 수 없어요!"
+          );
         }
       } else {
-        window.alert(whoAmI.value?.VALUE + " ID를 입력해 주세요!");
+        window.alert(selectedUserType.value?.VALUE + " ID를 입력해 주세요!");
       }
     };
 
     onMounted(() => {
-      /*
-      접속하려는 유저 타입 가져오기
-       */
       userType.value = route.fullPath
         .split("/")[1]
         .substring(0, 3)
         .toUpperCase();
 
       if (userType.value === USER_KEY.STU) {
-        whoAmI.value = { KEY: USER_KEY.STU, VALUE: "학생" };
+        selectedUserType.value = { KEY: USER_KEY.STU, VALUE: "학생" };
       } else if (userType.value === USER_KEY.PAR) {
-        whoAmI.value = { KEY: USER_KEY.PAR, VALUE: "학부모" };
+        selectedUserType.value = { KEY: USER_KEY.PAR, VALUE: "학부모" };
       } else if (userType.value === USER_KEY.TEA) {
-        whoAmI.value = { KEY: USER_KEY.TEA, VALUE: "강사" };
+        selectedUserType.value = { KEY: USER_KEY.TEA, VALUE: "강사" };
       } else if (userType.value === USER_KEY.ADM) {
-        whoAmI.value = { KEY: USER_KEY.ADM, VALUE: "관리자" };
+        selectedUserType.value = { KEY: USER_KEY.ADM, VALUE: "관리자" };
       }
     });
 
     return {
-      whoAmI,
+      selectedUserType,
       userId,
       goBack,
       doLogin,
@@ -118,7 +110,7 @@ export default defineComponent({
         <div class="login-input-box-section">
           <div class="login-input-box-section-title">LOGIN</div>
           <div class="login-input-box-section-sub">
-            {{ whoAmI?.VALUE }} ID 입력해주세요
+            {{ selectedUserType?.VALUE }} ID 입력해주세요
           </div>
           <user-circle-icon class="login-input-box-section-icon" />
           <input

@@ -10,11 +10,7 @@ import { CONSTANT, KEYS, USER_KEY } from "../../constant";
 import { ApiClient } from "../../axios";
 import PaginationComponent from "../fixed/PaginationComponent.vue";
 import DropBoxComponent from "../custom/DropBoxComponent.vue";
-/*
-@brief [강사, 관리자] [Main]강의 관리
-       [Sub]강의 상세 접근 시, 강사에게는 본인 담당 강의를
-       관리자에게는 전체 강의를 표시
- */
+
 export default defineComponent({
   name: "LectureDetailComponent",
   components: { DropBoxComponent, PaginationComponent },
@@ -41,12 +37,12 @@ export default defineComponent({
     ];
     const target = ref<string>("");
     const roomList = ref<Array<defaultInterface>>([]);
-    const roomName = ref<string>("");
     const roomKey = ref<string>("");
+    const roomName = ref<string>("");
     const day: Array<string> = ["월", "화", "수", "목", "금", "토", "일"];
     const lectureList = ref<Array<scheduleInterface>>([]);
-    const showLectureList = ref<Array<scheduleInterface>>([]);
-    const lectureInfo = ref<scheduleInterface | undefined>(undefined);
+    const viewLectureList = ref<Array<scheduleInterface>>([]);
+    const lectureDetail = ref<scheduleInterface | undefined>(undefined);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
 
@@ -100,24 +96,24 @@ export default defineComponent({
       }
 
       if (lectureList.value.length > 12) {
-        showLectureList.value = lectureList.value.slice(0, 12);
+        viewLectureList.value = lectureList.value.slice(0, 12);
         page.value = Math.ceil(lectureList.value.length / 12);
       } else {
-        showLectureList.value = lectureList.value;
+        viewLectureList.value = lectureList.value;
         page.value = 0;
       }
     };
 
-    const selectLectureName = (n: defaultInterface) => {
-      lectureName.value = n.VALUE as string;
+    const selectLectureName = (name: defaultInterface) => {
+      lectureName.value = name.VALUE as string;
     };
 
-    const selectTarget = (t: defaultInterface) => {
-      target.value = t.VALUE as string;
+    const selectTarget = (selectedTarget: defaultInterface) => {
+      target.value = selectedTarget.VALUE as string;
     };
 
-    const selectRoom = (r: defaultInterface) => {
-      roomName.value = r.VALUE as string;
+    const selectRoom = (room: defaultInterface) => {
+      roomName.value = room.VALUE as string;
     };
 
     const doSearch = () => {
@@ -126,28 +122,28 @@ export default defineComponent({
       setLectureList();
     };
 
-    const selectLecture = (i: scheduleInterface) => {
-      lectureInfo.value = i;
+    const selectLecture = (lecture: scheduleInterface) => {
+      lectureDetail.value = lecture;
     };
 
-    const selectPage = (p: number) => {
-      currentPage.value = p;
+    const selectPage = (page: number) => {
+      currentPage.value = page;
     };
 
-    const changePage = (p: number) => {
-      if (p === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (page: number) => {
+      if (page === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 
-    const downloadPlanner = async (l: scheduleInterface | undefined) => {
-      if (l) {
-        if (l.planner) {
+    const downloadPlanner = async (lecture: scheduleInterface | undefined) => {
+      if (lecture) {
+        if (lecture.planner) {
           if (window.confirm("계획서를 다운로드 하시겠습니까?")) {
-            const plannerUrl = CONSTANT.BASE_URL + "/media/" + l.planner;
+            const plannerUrl = CONSTANT.BASE_URL + "/media/" + lecture.planner;
             const response = await fetch(plannerUrl);
             if (response.ok) {
               const blob = await response.blob();
-              const filename = `${l.teacherName}_${l.lectureName}_강의 계획서`;
+              const filename = `${lecture.teacherName}_${lecture.lectureName}_강의 계획서`;
               const link = document.createElement("a");
               link.href = URL.createObjectURL(blob);
               link.setAttribute("download", filename);
@@ -167,7 +163,7 @@ export default defineComponent({
     watch(
       () => currentPage.value,
       () => {
-        showLectureList.value = lectureList.value.slice(
+        viewLectureList.value = lectureList.value.slice(
           12 * currentPage.value - 12,
           12 * currentPage.value
         );
@@ -193,8 +189,8 @@ export default defineComponent({
       targetList,
       roomList,
       day,
-      showLectureList,
-      lectureInfo,
+      viewLectureList,
+      lectureDetail,
       page,
       currentPage,
       selectLectureName,
@@ -255,7 +251,7 @@ export default defineComponent({
             <div class="lecture-detail-section-body-left-list">
               <div
                 class="lecture-detail-section-body-left-list-item"
-                v-for="item in showLectureList"
+                v-for="item in viewLectureList"
                 @click="selectLecture(item)"
               >
                 <span class="lecture-name">{{ item.lectureName }}</span>
@@ -265,7 +261,7 @@ export default defineComponent({
               </div>
               <div class="lecture-detail-section-body-left-list-page">
                 <pagination-component
-                  :page="page"
+                  :total-page="page"
                   :current-page="currentPage"
                   @selectPage="selectPage"
                   @changePage="changePage"
@@ -277,35 +273,38 @@ export default defineComponent({
             <div class="lecture-detail-section-body-right-main">
               <div
                 class="lecture-detail-section-body-right-main-tip"
-                v-if="!lectureInfo"
+                v-if="!lectureDetail"
               >
                 <span>강의 상세 열람을</span
                 ><span>원하는 강의를 선택해 주세요.</span>
               </div>
               <div
                 class="lecture-detail-section-body-right-main-detail"
-                v-if="lectureInfo"
+                v-if="lectureDetail"
               >
                 <span class="title-label">강의 상세 조회</span>
-                <span class="title-item">{{ lectureInfo.lectureName }}</span>
+                <span class="title-item">{{ lectureDetail.lectureName }}</span>
                 <div class="sap"></div>
                 <span class="label">강사명</span>
-                <span class="item">{{ lectureInfo.teacherName }}</span>
+                <span class="item">{{ lectureDetail.teacherName }}</span>
                 <span class="label">대상 학년</span>
-                <span class="item">{{ lectureInfo.target }}</span>
+                <span class="item">{{ lectureDetail.target }}</span>
                 <span class="label">강의 요일</span>
-                <span class="item">{{ day[lectureInfo.day - 1] }}</span>
+                <span class="item">{{ day[lectureDetail.day - 1] }}</span>
                 <span class="label">강의 시간</span>
                 <span class="item"
-                  >{{ lectureInfo.start }}:{{
-                    lectureInfo.minute === 0 ? "00" : lectureInfo.minute
+                  >{{ lectureDetail.start }}:{{
+                    lectureDetail.minute === 0 ? "00" : lectureDetail.minute
                   }}</span
                 >
                 <span class="label">강의 교재</span>
-                <span class="item">{{ lectureInfo.book }}</span>
-                <!--                <span class="label">수강 인원</span>-->
-                <!--                <span class="item">명</span>-->
-                <div class="planner-btn" @click="downloadPlanner(lectureInfo)">
+                <span class="item">{{ lectureDetail.book }}</span>
+                <span class="label">수강 인원</span>
+                <span class="item">{{ lectureDetail.total }} 명</span>
+                <div
+                  class="planner-btn"
+                  @click="downloadPlanner(lectureDetail)"
+                >
                   강의계획서 다운로드
                 </div>
               </div>

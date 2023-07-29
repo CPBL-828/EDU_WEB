@@ -11,14 +11,9 @@ import DropBoxComponent from "./custom/DropBoxComponent.vue";
 import { ApiClient } from "../axios";
 import SelectButtonComponent from "./custom/SelectButtonComponent.vue";
 import ModalPopupComponent from "./custom/ModalPopupComponent.vue";
-import { KEYS, RESULT_KEY, USER_KEY } from "../constant";
+import { KEYS, RESULT_KEY } from "../constant";
 import { useRouter } from "vue-router";
-/*
-@brief [학생, 학부모, 강사] [Main] 내 공간 [Sub]건의사항
-       [관리자] [Main]학생 관리, 강사 관리 [Sub]건의사항
-       교무 관리자는 각 유저의 건의사항 처리
-       기타 관리자는 각 유저의 건의사항 열람만 가능
- */
+
 export default defineComponent({
   name: "SuggestionManageComponent",
   props: {
@@ -38,17 +33,17 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
     const userType = ref<string>("");
-    const selectState = ref("wait");
-    const selectItem = ref<Array<defaultInterface>>([
+    const selectedState = ref("wait");
+    const stateList = ref<Array<defaultInterface>>([
       { KEY: "ok", VALUE: "처리 완료" },
       { KEY: "wait", VALUE: "대기중" },
     ]);
-    const header: defaultInterface[] = [
+    const suggestHeader: defaultInterface[] = [
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
       { KEY: "WRITEr", VALUE: "작성자명" },
     ];
-    const placeholder: string = "건의 유형";
+    const typeHolder: string = "건의 유형";
     const typeList: defaultInterface[] = [
       { KEY: "LECTURE", VALUE: "강의" },
       { KEY: "STUDENT", VALUE: "학생" },
@@ -89,13 +84,13 @@ export default defineComponent({
       }
     };
 
-    const changeState = (s: string) => {
-      selectState.value = s;
+    const changeState = (state: string) => {
+      selectedState.value = state;
 
       if (allSuggestList.value) {
         viewSuggestList.value = [];
 
-        if (s === "ok") {
+        if (state === "ok") {
           allSuggestList.value.map((item: suggestInterface) => {
             if (item.state === "Y") {
               viewSuggestList.value.push(item);
@@ -113,12 +108,12 @@ export default defineComponent({
       }
     };
 
-    const selectType = (t: defaultInterface) => {
-      consultType.value = t.VALUE as string;
+    const selectType = (type: defaultInterface) => {
+      consultType.value = type.VALUE as string;
     };
 
-    const saveSuggestDetail = (i: suggestInterface) => {
-      suggestDetail.value = i;
+    const saveSuggestDetail = (suggest: suggestInterface) => {
+      suggestDetail.value = suggest;
     };
 
     const clickAnswer = () => {
@@ -128,7 +123,7 @@ export default defineComponent({
       }
     };
 
-    const insertAnswer = async () => {
+    const createSuggestReply = async () => {
       if (!suggestDetail.value) {
         window.alert("처리할 건의사항을 먼저 선택해주세요.");
       } else if (!answer.value) {
@@ -171,10 +166,10 @@ export default defineComponent({
 
     return {
       category,
-      selectState,
-      selectItem,
-      header,
-      placeholder,
+      selectedState,
+      stateList,
+      suggestHeader,
+      typeHolder,
       typeList,
       viewSuggestList,
       suggestDetail,
@@ -184,7 +179,7 @@ export default defineComponent({
       selectType,
       saveSuggestDetail,
       clickAnswer,
-      insertAnswer,
+      createSuggestReply,
     };
   },
 });
@@ -209,8 +204,8 @@ export default defineComponent({
             처리 여부 :
             <div class="suggestion-section-body-state-button">
               <select-button-component
-                :state-value="selectItem"
-                :select-value="selectState"
+                :select-list="stateList"
+                :select-value="selectedState"
                 @changeState="changeState"
               />
             </div>
@@ -219,7 +214,7 @@ export default defineComponent({
             <data-list-component
               list-type="suggest"
               :data-list="viewSuggestList"
-              :header="header"
+              :header="suggestHeader"
               :row-height="39"
               :total-cnt="totalCnt ? totalCnt : 0"
               :list-cnt="13"
@@ -271,7 +266,7 @@ export default defineComponent({
               type="button"
               class="suggestion-section-body-write-btn"
               value="처리"
-              @click="insertAnswer"
+              @click="createSuggestReply"
             />
             <input
               v-else

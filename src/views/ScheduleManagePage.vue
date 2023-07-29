@@ -6,10 +6,7 @@ import ScheduleAskComponent from "../components/scheduleManage/ScheduleAskCompon
 import PlanMakeComponent from "../components/scheduleManage/PlanMakeComponent.vue";
 import common from "../lib/common";
 import { KEYS, USER_KEY } from "../constant";
-/*
-@brief [강사, 관리자] [Main]시간표 관리
-       선택한 [Sub]에 따라 페이지를 표시
- */
+
 export default defineComponent({
   name: "ScheduleManagePage.vue",
   components: {

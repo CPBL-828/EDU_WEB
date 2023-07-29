@@ -13,16 +13,14 @@ import DataListComponent from "../custom/DataListComponent.vue";
 import { ApiClient } from "../../axios";
 import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
-/*
-@brief [강사, 관리자] [Main]강의 관리
-       [Sub]출석부 접근 후, 강의 선택 시 표시되는 페이지
- */
-export interface showAttendInterface {
+
+export interface viewAttendInterface {
   studentKey: string;
   studentName: string;
   totalDay: number;
   attendDay: number;
 }
+
 export default defineComponent({
   name: "AttendanceComponent",
   components: {
@@ -34,40 +32,41 @@ export default defineComponent({
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const teacherKey = ref<string>("");
-    const studentInfo = ref<defaultInterface | undefined>(undefined);
-    const selectState = ref(false);
+    const selectLectureState = ref(false);
+    const lectureDetail = ref<scheduleInterface | undefined>(undefined);
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
-    const lectureInfo = ref<scheduleInterface | undefined>(undefined);
-    const header: Array<defaultInterface> = [
+    const attendListHeader: Array<defaultInterface> = [
       { KEY: "NAME", VALUE: "이름" },
       { KEY: "CURRENT", VALUE: "현재 수업 일수" },
       { KEY: "ATTENDANCE", VALUE: "출석일" },
     ];
     const attendList = ref<Array<attendInterface> | undefined>(undefined);
-    const totalCnt = ref(0);
+    const viewAttendList = ref<Array<viewAttendInterface>>([]);
     const totalDay = ref(0);
-    const showAttendList = ref<Array<showAttendInterface>>([]);
+    const totalCnt = ref(0);
 
-    const detailHeader: defaultInterface[] = [
+    const attendDetailHeader: defaultInterface[] = [
       { KEY: "DATE", VALUE: "수업일자" },
       { KEY: "STATE", VALUE: "출석 상태" },
       { KEY: "EDIT", VALUE: "수정 여부" },
       { KEY: "REASON", VALUE: "사유" },
     ];
+    const selectedStudent = ref<defaultInterface | undefined>(undefined);
     const studentAttendList = ref<Array<attendInterface> | undefined>(
       undefined
     );
 
-    const selectLecture = (i: scheduleInterface) => {
-      lectureInfo.value = i;
-      selectState.value = true;
+    const selectLecture = (lecture: scheduleInterface) => {
+      lectureDetail.value = lecture;
+      selectLectureState.value = true;
     };
 
+    //TODO getStudentList -> getLectureStatusList
     const getStudentList = async () => {
       let data = {
         userKey: teacherKey.value,
         search: "",
-        lectureKey: lectureInfo.value?.lectureKey,
+        lectureKey: lectureDetail.value?.lectureKey,
       };
 
       const result = await ApiClient(
@@ -82,7 +81,7 @@ export default defineComponent({
           studentList.value.map((item: studentInterface) => {
             totalCnt.value += 1;
 
-            showAttendList.value.push({
+            viewAttendList.value.push({
               studentKey: item.studentKey,
               studentName: item.name,
               totalDay: 0,
@@ -95,8 +94,8 @@ export default defineComponent({
 
     const getAttendList = async () => {
       let data = {
-        lectureKey: lectureInfo.value?.lectureKey,
-        userKey: studentInfo.value ? studentInfo.value.KEY : "",
+        lectureKey: lectureDetail.value?.lectureKey,
+        userKey: selectedStudent.value ? selectedStudent.value.KEY : "",
       };
 
       const result = await ApiClient(
@@ -109,21 +108,21 @@ export default defineComponent({
         if (result.count > 0) {
           totalDay.value = Math.floor(result.count / totalCnt.value);
 
-          if (!studentInfo.value) {
+          if (!selectedStudent.value) {
             attendList.value = result.resultData as attendInterface[];
 
             attendList.value.map((item: attendInterface) => {
-              showAttendList.value.map((attend: showAttendInterface) => {
-                attend.totalDay = totalDay.value;
-                if (attend.studentKey === item.studentKey_id) {
+              viewAttendList.value.map((viewItem: viewAttendInterface) => {
+                viewItem.totalDay = totalDay.value;
+                if (viewItem.studentKey === item.studentKey_id) {
                   if (item.state === "출석") {
-                    attend.attendDay += 1;
+                    viewItem.attendDay += 1;
                   }
                 }
               });
             });
 
-            totalCnt.value = showAttendList.value?.length;
+            totalCnt.value = viewAttendList.value?.length;
           } else {
             studentAttendList.value = result.resultData as attendInterface[];
           }
@@ -131,17 +130,18 @@ export default defineComponent({
       }
     };
 
-    const showAttendDetail = async (i: showAttendInterface) => {
-      studentInfo.value = {
-        KEY: i.studentKey,
-        VALUE: i.studentName as string,
+    const showAttendDetail = async (attend: viewAttendInterface) => {
+      selectedStudent.value = {
+        KEY: attend.studentKey,
+        VALUE: attend.studentName as string,
       };
+
       await getAttendList();
       store.commit("setModalState", true);
     };
 
     watch(
-      () => selectState.value,
+      () => selectLectureState.value,
       async () => {
         if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
         } else {
@@ -162,7 +162,7 @@ export default defineComponent({
         );
 
         if (child) {
-          studentInfo.value = {
+          selectedStudent.value = {
             KEY: child.studentKey,
             VALUE: child.name,
           };
@@ -172,15 +172,15 @@ export default defineComponent({
 
     return {
       category,
-      studentInfo,
-      selectState,
+      selectLectureState,
+      lectureDetail,
       studentList,
+      attendListHeader,
       attendList,
-      lectureInfo,
-      header,
+      viewAttendList,
       totalCnt,
-      showAttendList,
-      detailHeader,
+      attendDetailHeader,
+      selectedStudent,
       studentAttendList,
       selectLecture,
       showAttendDetail,
@@ -203,7 +203,10 @@ export default defineComponent({
           }}
         </div>
         <div class="attendance-section-body">
-          <div class="attendance-section-body-lecture" v-if="!selectState">
+          <div
+            class="attendance-section-body-lecture"
+            v-if="!selectLectureState"
+          >
             <select-list-component
               list-type="LECTURE"
               @selectLecture="selectLecture"
@@ -212,14 +215,14 @@ export default defineComponent({
           <div class="attendance-section-body-list" v-else>
             <span class="attendance-section-body-list-title">출석 현황</span>
             <span class="attendance-section-body-list-lecture">{{
-              lectureInfo?.lectureName
+              lectureDetail?.lectureName
             }}</span>
             <div class="attendance-section-body-list-data" v-if="attendList">
               <data-list-component
                 :total-cnt="totalCnt ? totalCnt : 0"
-                :data-list="showAttendList"
+                :data-list="viewAttendList"
                 list-type="attend"
-                :header="header"
+                :header="attendListHeader"
                 :list-cnt="12"
                 :row-height="40"
                 @showAttendDetail="showAttendDetail"
@@ -273,12 +276,14 @@ export default defineComponent({
     <modal-popup-component title="출석 현황 상세 보기" modal-height="780px">
       <template v-slot:body>
         <div class="attend-detail">
-          <span class="attend-detail-student">{{ studentInfo?.VALUE }}</span>
+          <span class="attend-detail-student">{{
+            selectedStudent?.VALUE
+          }}</span>
           <div class="attend-detail-list">
             <table v-if="studentAttendList">
               <thead>
                 <tr>
-                  <td v-for="item in detailHeader">{{ item.VALUE }}</td>
+                  <td v-for="item in attendDetailHeader">{{ item.VALUE }}</td>
                 </tr>
               </thead>
               <tbody>

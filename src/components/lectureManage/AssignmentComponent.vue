@@ -16,6 +16,7 @@ import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import { useStore } from "vuex";
 import { CONSTANT, KEYS, RESULT_KEY, USER_KEY } from "../../constant";
 import { useRouter } from "vue-router";
+
 export default defineComponent({
   name: "AssignmentComponent",
   components: {
@@ -25,13 +26,18 @@ export default defineComponent({
     SelectListComponent,
   },
   setup: function () {
-    const router = useRouter();
     const store = useStore();
+    const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const fileURL: string = CONSTANT.FILE_URL;
     const adminState = ref(false);
-    const selectState = ref(false);
-    const lectureInfo = ref<scheduleInterface | undefined>(undefined);
+    const selectLectureState = ref(false);
+    const lectureDetail = ref<scheduleInterface | undefined>(undefined);
+    const typeList: defaultInterface[] = [
+      { KEY: "ALL", VALUE: "전체" },
+      { KEY: "PER", VALUE: "개별" },
+    ];
+    const viewAssignType = ref<string>("ALL");
     const assignHeader: defaultInterface[] = [
       { KEY: "CREATE", VALUE: "생성일" },
       { KEY: "DEADLINE", VALUE: "마감일" },
@@ -39,33 +45,34 @@ export default defineComponent({
     ];
     const assignList = ref<Array<assignInterface> | undefined>(undefined);
     const totalCnt = ref(0);
-    const assignTypeList: defaultInterface[] = [
-      { KEY: "ALL", VALUE: "전체" },
-      { KEY: "PER", VALUE: "개별" },
-    ];
-    const assignType = ref<string>("ALL");
-    const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const createMode = ref(false);
-    const firstPage = ref(true);
+    const modalFirstPage = ref(true);
     const createAssignType = ref("ALL");
-    const content = ref<string>("");
     const calendarState = ref(false);
     const selectedDate = ref<Date | undefined>(undefined);
+    const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const selectedStudents = ref<Array<string>>([]);
-    const selectedStudentData = ref<
+    const selectedStudentsData = ref<
       Array<{ assignKey: string; studentKey: string }>
     >([]);
+    const assignContent = ref<string>("");
     const assignDetail = ref<assignInterface | undefined>(undefined);
     const assignStatus = ref<Array<assignStatusInterface> | undefined>(
       undefined
     );
     const studentKey = ref<string>("");
 
-    const getAssignmentList = async () => {
+    const backToSelect = () => {
+      lectureDetail.value = undefined;
+      common.removeItem(KEYS.SS);
+      selectLectureState.value = false;
+    };
+
+    const getAssignList = async () => {
       let data = {
-        lectureKey: lectureInfo.value?.lectureKey,
-        type: assignType.value,
-        studentKey: assignType.value === "ALL" ? "" : studentKey.value,
+        lectureKey: lectureDetail.value?.lectureKey,
+        type: viewAssignType.value,
+        studentKey: viewAssignType.value === "ALL" ? "" : studentKey.value,
       };
 
       const result = await ApiClient(
@@ -83,33 +90,27 @@ export default defineComponent({
       }
     };
 
-    const backToSelect = () => {
-      lectureInfo.value = undefined;
-      common.removeItem(KEYS.SS);
-      selectState.value = false;
+    const selectLecture = async (lecture: scheduleInterface) => {
+      lectureDetail.value = lecture;
+      common.setItem(KEYS.SS, common.makeJson(lectureDetail.value));
+
+      await getAssignList();
+      selectLectureState.value = true;
     };
 
-    const selectLecture = async (i: scheduleInterface) => {
-      lectureInfo.value = i;
-      common.setItem(KEYS.SS, common.makeJson(lectureInfo.value));
-
-      await getAssignmentList();
-      selectState.value = true;
+    const changeViewAssignType = async (type: string) => {
+      viewAssignType.value = type;
+      await getAssignList();
     };
 
-    const changeType = async (t: string) => {
-      assignType.value = t;
-      await getAssignmentList();
-    };
-
-    const downloadFile = async (a: assignInterface) => {
-      if (a.assignment) {
+    const downloadFile = async (assign: assignInterface) => {
+      if (assign.assignment) {
         if (window.confirm("첨부파일을 다운로드 하시겠습니까?")) {
-          const fileUrl = CONSTANT.FILE_URL + a.assignment;
+          const fileUrl = CONSTANT.FILE_URL + assign.assignment;
           const response = await fetch(fileUrl);
           if (response.ok) {
             const blob = await response.blob();
-            const filename = `${lectureInfo.value?.lectureName}_${a.type} 과제`;
+            const filename = `${lectureDetail.value?.lectureName}_${assign.type} 과제`;
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.setAttribute("download", filename);
@@ -128,9 +129,19 @@ export default defineComponent({
       }
     };
 
-    const getStudentList = async () => {
+    const showCreateModal = async () => {
+      createMode.value = true;
+      await getLectureStatusList();
+      store.commit("setModalState", true);
+    };
+
+    const changeCreateAssignType = (type: string) => {
+      createAssignType.value = type;
+    };
+
+    const getLectureStatusList = async () => {
       let data = {
-        lectureKey: lectureInfo.value?.lectureKey,
+        lectureKey: lectureDetail.value?.lectureKey,
       };
 
       const result = await ApiClient(
@@ -145,17 +156,7 @@ export default defineComponent({
       }
     };
 
-    const showUploadModal = async () => {
-      createMode.value = true;
-      await getStudentList();
-      store.commit("setModalState", true);
-    };
-
-    const selectType = (t: string) => {
-      createAssignType.value = t;
-    };
-
-    const showCalendar = () => {
+    const changeCalendarState = () => {
       calendarState.value = !calendarState.value;
     };
 
@@ -163,7 +164,7 @@ export default defineComponent({
       selectedStudents.value = selectedStudents.value?.filter(Boolean);
     };
 
-    const insertAssignFile = async (k: string) => {
+    const editAssignFile = async (assignKey: string) => {
       const inputFile: HTMLInputElement = document.getElementById(
         "input-file"
       ) as HTMLInputElement;
@@ -171,7 +172,7 @@ export default defineComponent({
       if (inputFile.files!.length > 0) {
         const fileData = ref<FormData>(new FormData());
 
-        fileData.value.append("assignKey", k);
+        fileData.value.append("assignKey", assignKey);
         fileData.value.append("assignment", inputFile.files![0]);
 
         const fileResult = await FileClient(
@@ -189,8 +190,8 @@ export default defineComponent({
       }
     };
 
-    const doInsert = async () => {
-      if (!content.value) {
+    const createAssign = async () => {
+      if (!assignContent.value) {
         window.alert("과제 내용을 작성해 주세요.");
         return false;
       } else if (!selectedDate.value) {
@@ -199,9 +200,9 @@ export default defineComponent({
       }
 
       let data = {
-        lectureKey: lectureInfo.value?.lectureKey,
-        lectureName: lectureInfo.value?.lectureName,
-        content: content.value,
+        lectureKey: lectureDetail.value?.lectureKey,
+        lectureName: lectureDetail.value?.lectureName,
+        content: assignContent.value,
         deadLine: selectedDate.value ? selectedDate.value : new Date(),
         type: createAssignType.value === "ALL" ? "전체" : "개별",
       };
@@ -214,11 +215,11 @@ export default defineComponent({
       if (result) {
         if (result.chunbae === RESULT_KEY.CREATE) {
           if (createAssignType.value === "ALL") {
-            await insertAssignFile(result.resultData.assignKey);
+            await editAssignFile(result.resultData.assignKey);
             router.go(0);
           } else {
             selectedStudents.value?.map((s: string) => {
-              selectedStudentData.value.push({
+              selectedStudentsData.value.push({
                 assignKey: (result.resultData as assignInterface).assignKey,
                 studentKey: s,
               });
@@ -226,13 +227,13 @@ export default defineComponent({
 
             const statusResult = await ApiClient(
               "/lectures/createAssignStatus/",
-              common.makeJson(selectedStudentData.value)
+              common.makeJson(selectedStudentsData.value)
             );
 
             if (statusResult) {
               if (statusResult.chunbae === RESULT_KEY.CREATE) {
                 window.alert("학생을 성공적으로 배정했습니다.");
-                await insertAssignFile(result.resultData.assignKey);
+                await editAssignFile(result.resultData.assignKey);
                 router.go(0);
               } else {
                 window.alert("학생 배정을 실패했습니다.");
@@ -247,15 +248,15 @@ export default defineComponent({
       }
     };
 
-    const showAssignDetail = async (a: assignInterface) => {
+    const showAssignDetail = async (assign: assignInterface) => {
       createMode.value = false;
-      assignDetail.value = a;
+      assignDetail.value = assign;
       await getAssignStatusList();
       store.commit("setModalState", true);
     };
 
-    const changePage = () => {
-      firstPage.value = !firstPage.value;
+    const changeModalPage = () => {
+      modalFirstPage.value = !modalFirstPage.value;
     };
 
     const getAssignStatusList = async () => {
@@ -275,7 +276,7 @@ export default defineComponent({
       }
     };
 
-    const removeAssign = async () => {
+    const deleteAssign = async () => {
       if (window.confirm("해당 과제를 삭제하시겠습니까?")) {
         let data = {
           assignKey: assignDetail.value?.assignKey,
@@ -324,10 +325,10 @@ export default defineComponent({
       }
 
       if (common.getItem(KEYS.SS)) {
-        lectureInfo.value = common.getItem(KEYS.SS);
-        selectState.value = true;
+        lectureDetail.value = common.getItem(KEYS.SS);
+        selectLectureState.value = true;
 
-        await getAssignmentList();
+        await getAssignList();
       }
     });
 
@@ -335,35 +336,35 @@ export default defineComponent({
       category,
       fileURL,
       adminState,
-      selectState,
-      lectureInfo,
+      selectLectureState,
+      lectureDetail,
+      typeList,
+      viewAssignType,
       assignHeader,
       assignList,
-      assignStatus,
       totalCnt,
-      assignTypeList,
-      assignType,
-      studentList,
       createMode,
-      firstPage,
+      modalFirstPage,
       createAssignType,
-      content,
       calendarState,
       selectedDate,
+      studentList,
       selectedStudents,
+      assignContent,
       assignDetail,
+      assignStatus,
       backToSelect,
       selectLecture,
-      changeType,
+      changeViewAssignType,
       downloadFile,
-      showUploadModal,
-      selectType,
-      showCalendar,
+      showCreateModal,
+      changeCreateAssignType,
+      changeCalendarState,
       handleCheckboxChange,
-      doInsert,
+      createAssign,
       showAssignDetail,
-      changePage,
-      removeAssign,
+      changeModalPage,
+      deleteAssign,
     };
   },
 });
@@ -382,7 +383,7 @@ export default defineComponent({
         }}
       </div>
       <div class="assignment-section-body">
-        <div class="assignment-section-body-lecture" v-if="!selectState">
+        <div class="assignment-section-body-lecture" v-if="!selectLectureState">
           <select-list-component
             list-type="LECTURE"
             @selectLecture="selectLecture"
@@ -391,14 +392,14 @@ export default defineComponent({
         <div class="assignment-section-body-content" v-else>
           <span class="back-btn" @click="backToSelect">강의 다시 선택하기</span>
           <div class="assignment-section-body-content-title">
-            <span class="lecture-name">{{ lectureInfo?.lectureName }}</span>
-            <span class="subject-name">{{ lectureInfo?.subject }}</span>
+            <span class="lecture-name">{{ lectureDetail?.lectureName }}</span>
+            <span class="subject-name">{{ lectureDetail?.subject }}</span>
             <div class="assignment-section-body-content-title-btn">
               <div class="assignment-section-body-content-title-btn-type">
                 <select-button-component
-                  :state-value="assignTypeList"
-                  :select-value="assignType"
-                  @changeState="changeType"
+                  :select-list="typeList"
+                  :select-value="viewAssignType"
+                  @changeState="changeViewAssignType"
                 ></select-button-component>
               </div>
               <input
@@ -406,7 +407,7 @@ export default defineComponent({
                 type="button"
                 value="과제 업로드"
                 class="assignment-section-body-content-title-btn-upload"
-                @click="showUploadModal"
+                @click="showCreateModal"
               />
             </div>
           </div>
@@ -434,40 +435,43 @@ export default defineComponent({
     >
       <template v-slot:button>
         <div v-if="createMode" class="btn">
-          <div class="btn-edit-active" @click="doInsert">업로드</div>
+          <div class="btn-edit-active" @click="createAssign">업로드</div>
         </div>
         <div v-else class="btn">
           <div
-            :class="firstPage ? 'btn-save-active' : 'btn-save'"
-            @click="changePage"
+            :class="modalFirstPage ? 'btn-save-active' : 'btn-save'"
+            @click="changeModalPage"
           >
             제출 현황 보기
           </div>
           <div
-            :class="!firstPage ? 'btn-save-active' : 'btn-save'"
-            @click="changePage"
+            :class="!modalFirstPage ? 'btn-save-active' : 'btn-save'"
+            @click="changeModalPage"
           >
             뒤로 가기
           </div>
         </div>
       </template>
       <template v-slot:body>
-        <span class="remove-btn" @click="removeAssign" v-if="adminState"
+        <span class="remove-btn" @click="deleteAssign" v-if="adminState"
           >강의 삭제하기</span
         >
         <div v-if="createMode" class="assign-create">
           <div class="assign-create-header">
             <div class="assign-create-header-lecture">
-              {{ lectureInfo?.lectureName }}
+              {{ lectureDetail?.lectureName }}
             </div>
             <div class="assign-create-header-select">
               <select-button-component
-                :state-value="assignTypeList"
+                :select-list="typeList"
                 :select-value="createAssignType"
-                @changeState="selectType"
+                @changeState="changeCreateAssignType"
               ></select-button-component>
             </div>
-            <div class="assign-create-header-deadline" @click="showCalendar">
+            <div
+              class="assign-create-header-deadline"
+              @click="changeCalendarState"
+            >
               {{
                 selectedDate
                   ? selectedDate.toLocaleString().substring(0, 17)
@@ -490,7 +494,7 @@ export default defineComponent({
                 width: createAssignType === 'ALL' ? '916px' : '700px',
               }"
               class="assign-create-body-content"
-              v-model="content"
+              v-model="assignContent"
               placeholder="과제 내용을 작성해 주세요"
             >
             </textarea>
@@ -520,10 +524,10 @@ export default defineComponent({
         </div>
 
         <div v-else class="assign-detail">
-          <div v-if="!createMode && firstPage" class="assign-detail-first">
+          <div v-if="!createMode && modalFirstPage" class="assign-detail-first">
             <div class="assign-detail-first-header">
               <div class="assign-detail-first-header-lecture">
-                {{ lectureInfo?.lectureName }}
+                {{ lectureDetail?.lectureName }}
               </div>
               <div class="sap"></div>
               <div class="assign-detail-first-header-type">
@@ -538,7 +542,10 @@ export default defineComponent({
               {{ assignDetail?.content }}
             </div>
           </div>
-          <div v-else-if="!createMode && !firstPage" class="assign-detail-list">
+          <div
+            v-else-if="!createMode && !modalFirstPage"
+            class="assign-detail-list"
+          >
             <table>
               <thead>
                 <tr>

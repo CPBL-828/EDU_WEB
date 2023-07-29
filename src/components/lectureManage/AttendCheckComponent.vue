@@ -10,6 +10,7 @@ import common from "../../lib/common";
 import SelectListComponent from "../custom/SelectListComponent.vue";
 import { ApiClient } from "../../axios";
 import { KEYS, RESULT_KEY, USER_KEY } from "../../constant";
+
 interface sendingAttendInterface {
   studentName: string;
   studentKey: string;
@@ -18,51 +19,48 @@ interface sendingAttendInterface {
   state: string;
   reason: string;
 }
-/*
-@brief [강사] [Main]강의 관리
-       [Sub]출석체크로 접근해서 출석 체크
-       attendList 받아 와서 오늘자 출석 현황 존재 O/X에 따라 화면 컨트롤
- */
+
 export default defineComponent({
   name: "AttendCheckComponent",
   components: { SelectListComponent },
   setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const today = ref<Date>(new Date());
-    const isLectureDay = ref(false);
+    const lectureDayState = ref(false);
     const teacherKey = ref<string>("");
-    const selectState = ref(false);
-    const lectureInfo = ref<scheduleInterface | undefined>(undefined);
+    const selectLectureState = ref(false);
+    const lectureDetail = ref<scheduleInterface | undefined>(undefined);
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
-    const existAttend = ref(false);
-    const attendList = ref<Array<sendingAttendInterface>>([]);
-    const stateList: defaultInterface[] = [
+    const existAttendState = ref(false);
+    const attendStateList: defaultInterface[] = [
       { KEY: "OK", VALUE: "출석" },
       { KEY: "NO", VALUE: "결석" },
       { KEY: "LATE", VALUE: "지각" },
       { KEY: "ETC", VALUE: "보류" },
     ];
+    const attendList = ref<Array<sendingAttendInterface>>([]);
 
-    const selectLecture = (item: scheduleInterface) => {
-      lectureInfo.value = item;
-      selectState.value = true;
+    const selectLecture = (lecture: scheduleInterface) => {
+      lectureDetail.value = lecture;
+      selectLectureState.value = true;
 
       if (today.value.getDay() !== 0) {
-        if (today.value.getDay() === lectureInfo.value.day) {
-          isLectureDay.value = true;
+        if (today.value.getDay() === lectureDetail.value.day) {
+          lectureDayState.value = true;
         }
       } else {
-        if (lectureInfo.value.day === 7) {
-          isLectureDay.value = true;
+        if (lectureDetail.value.day === 7) {
+          lectureDayState.value = true;
         }
       }
     };
 
+    //TODO getStudentList -> getLectureStatusList
     const getStudentList = async () => {
       let data = {
         userKey: teacherKey.value,
         search: "",
-        lectureKey: lectureInfo.value?.lectureKey,
+        lectureKey: lectureDetail.value?.lectureKey,
       };
 
       const result = await ApiClient(
@@ -81,11 +79,11 @@ export default defineComponent({
               studentKey: item.studentKey,
               studentName: item.name,
               state: "",
-              lectureName: lectureInfo.value?.lectureName
-                ? lectureInfo.value?.lectureName
+              lectureName: lectureDetail.value?.lectureName
+                ? lectureDetail.value?.lectureName
                 : "",
-              lectureKey: lectureInfo.value?.lectureKey
-                ? lectureInfo.value?.lectureKey
+              lectureKey: lectureDetail.value?.lectureKey
+                ? lectureDetail.value?.lectureKey
                 : "",
               reason: "",
             });
@@ -95,15 +93,14 @@ export default defineComponent({
     };
 
     const backToSelect = () => {
-      lectureInfo.value = undefined;
-      console.log(lectureInfo.value);
+      lectureDetail.value = undefined;
       common.removeItem(KEYS.SS);
-      selectState.value = false;
+      selectLectureState.value = false;
     };
 
     const getAttendList = async () => {
       let data = {
-        lectureKey: lectureInfo.value?.lectureKey,
+        lectureKey: lectureDetail.value?.lectureKey,
         userKey: "",
       };
 
@@ -115,15 +112,15 @@ export default defineComponent({
       if (result) {
         if (result.count > 0) {
           result.resultData.map((item: attendInterface) => {
-            attendList.value.map((state: sendingAttendInterface) => {
+            attendList.value.map((sendingItem: sendingAttendInterface) => {
               if (
                 new Date(item.createDate).toISOString().substring(0, 10) ===
                 new Date().toISOString().substring(0, 10)
               ) {
-                existAttend.value = true;
+                existAttendState.value = true;
 
-                if (state.studentKey === item.studentKey_id) {
-                  state.state = item.state;
+                if (sendingItem.studentKey === item.studentKey_id) {
+                  sendingItem.state = item.state;
                 }
               }
             });
@@ -132,16 +129,16 @@ export default defineComponent({
       }
     };
 
-    const checkState = (s: string, i: defaultInterface) => {
+    const checkState = (student: string, attend: defaultInterface) => {
       attendList.value.map((item: sendingAttendInterface) => {
-        if (item.studentKey === s) {
-          item.state = i.VALUE as string;
+        if (item.studentKey === student) {
+          item.state = attend.VALUE as string;
         }
       });
     };
 
-    const allCheck = () => {
-      if (existAttend.value) {
+    const doAllCheck = () => {
+      if (existAttendState.value) {
         window.alert(
           "이미 출석 체크가 완료되었습니다.\n수정은 관리자에게 요청하세요."
         );
@@ -153,8 +150,8 @@ export default defineComponent({
       }
     };
 
-    const saveAttend = async () => {
-      if (existAttend.value) {
+    const createAttend = async () => {
+      if (existAttendState.value) {
         window.alert(
           "이미 출석 체크가 완료되었습니다.\n수정은 관리자에게 요청하세요."
         );
@@ -193,9 +190,9 @@ export default defineComponent({
     };
 
     watch(
-      () => selectState.value,
+      () => selectLectureState.value,
       async () => {
-        if (selectState.value) {
+        if (selectLectureState.value) {
           await getStudentList();
           await getAttendList();
         }
@@ -215,18 +212,18 @@ export default defineComponent({
     return {
       category,
       today,
-      backToSelect,
-      isLectureDay,
-      selectState,
-      lectureInfo,
+      lectureDayState,
+      selectLectureState,
+      lectureDetail,
       studentList,
-      existAttend,
+      existAttendState,
+      attendStateList,
       attendList,
-      stateList,
       selectLecture,
+      backToSelect,
       checkState,
-      allCheck,
-      saveAttend,
+      doAllCheck,
+      createAttend,
     };
   },
 });
@@ -245,7 +242,7 @@ export default defineComponent({
         }}
       </div>
       <div class="check-section-body">
-        <div class="check-section-body-today" v-if="selectState">
+        <div class="check-section-body-today" v-if="selectLectureState">
           <i class="fa-regular fa-calendar"></i>
           TODAY : {{ today.toISOString().substring(0, 4) }}년
           {{ today.toISOString().substring(5, 7) }}월
@@ -253,28 +250,28 @@ export default defineComponent({
           {{ today.toString().substring(0, 4) }}
           <span class="back-btn" @click="backToSelect">강의 다시 선택하기</span>
         </div>
-        <div class="check-section-body-lecture" v-if="!selectState">
+        <div class="check-section-body-lecture" v-if="!selectLectureState">
           <select-list-component
             list-type="LECTURE"
             @selectLecture="selectLecture"
           ></select-list-component>
         </div>
         <div class="check-section-body-list" v-else>
-          <div class="check-section-body-list-btn" v-if="!isLectureDay">
+          <div class="check-section-body-list-btn" v-if="!lectureDayState">
             오늘은 강의 날짜가 아닙니다.
           </div>
-          <div class="check-section-body-list-btn" v-if="isLectureDay">
+          <div class="check-section-body-list-btn" v-if="lectureDayState">
             <input
               type="button"
               value="전체 출석"
               class="all-btn"
-              @click="allCheck"
+              @click="doAllCheck"
             />
             <input
               type="button"
               value="저장하기"
               class="save-btn"
-              @click="saveAttend"
+              @click="createAttend"
             />
           </div>
           <div class="check-section-body-list-table">
@@ -295,9 +292,9 @@ export default defineComponent({
                         : 'check'
                     "
                     :style="{
-                      transition: existAttend ? 'all 0.1s' : 'all 0.2s',
+                      transition: existAttendState ? 'all 0.1s' : 'all 0.2s',
                     }"
-                    v-for="state in stateList"
+                    v-for="state in attendStateList"
                     @click="checkState(item.studentKey, state)"
                   >
                     <input
@@ -314,9 +311,12 @@ export default defineComponent({
               </tbody>
             </table>
           </div>
-          <div class="block-check" v-if="existAttend || !isLectureDay"></div>
+          <div
+            class="block-check"
+            v-if="existAttendState || !lectureDayState"
+          ></div>
         </div>
-        <div class="no-data" v-if="selectState && !studentList">
+        <div class="no-data" v-if="selectLectureState && !studentList">
           수강하는 학생이 없습니다.
         </div>
       </div>

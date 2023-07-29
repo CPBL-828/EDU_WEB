@@ -1,34 +1,29 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
-/*
-@brief 헤더 우측 상단의 캘린더 팝업
-       단순 날짜 확인용
- */
+import { defineComponent, ref } from "vue";
+
 export default defineComponent({
   name: "CalendarPopup",
   setup() {
-    const showState = ref(false);
-    const date = ref<Date>(new Date());
+    const viewState = ref(false);
+    const today = ref<Date>(new Date());
 
-    const changeShowState = () => {
-      showState.value = !showState.value;
+    const changeViewState = () => {
+      viewState.value = !viewState.value;
     };
 
-    onMounted(() => {});
-
     return {
-      showState,
-      date,
-      changeShowState,
+      viewState,
+      today,
+      changeViewState,
     };
   },
 });
 </script>
 
 <template>
-  <div id="calendar-btn" @click="changeShowState"></div>
+  <div id="calendar-btn" @click="changeViewState"></div>
   <div class="calendar-section">
-    <v-date-picker v-if="showState" mode="date" v-model="date"></v-date-picker>
+    <v-date-picker v-if="viewState" mode="date" v-model="today"></v-date-picker>
   </div>
-  <div v-if="showState" class="prevent-calendar"></div>
+  <div v-if="viewState" class="prevent-calendar"></div>
 </template>

@@ -4,6 +4,7 @@ import { defaultInterface } from "../../lib/types";
 import common from "../../lib/common";
 import { KEYS, USER_KEY } from "../../constant";
 import SelectListComponent from "../custom/SelectListComponent.vue";
+
 export default defineComponent({
   name: "ReportComponent",
   components: {
@@ -12,10 +13,10 @@ export default defineComponent({
   setup() {
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const adminState = ref<boolean>(false);
-    const selectLectureState = ref<boolean>(false);
+    const selectRoomState = ref<boolean>(false);
 
-    const selectLecture = () => {
-      selectLectureState.value = true;
+    const selectRoom = () => {
+      selectRoomState.value = true;
     };
 
     onMounted(() => {
@@ -32,8 +33,8 @@ export default defineComponent({
     return {
       category,
       adminState,
-      selectLectureState,
-      selectLecture,
+      selectRoomState,
+      selectRoom,
     };
   },
 });
@@ -55,9 +56,9 @@ export default defineComponent({
         <div class="lecture-report-section-body">
           <div class="lecture-report-section-body-room" v-if="adminState">
             <select-list-component
-              v-if="!selectLectureState"
+              v-if="!selectRoomState"
               list-type="ROOM"
-              @selectRoom="selectLecture"
+              @selectRoom="selectRoom"
             ></select-list-component>
             <div class="lecture-report-section-body-content" v-else>
               <div class="lecture-report-section-body-content-today">

@@ -10,11 +10,7 @@ import ModalPopupComponent from "../custom/ModalPopupComponent.vue";
 import TimetableComponent from "../custom/TimetableComponent.vue";
 import SelectButtonComponent from "../custom/SelectButtonComponent.vue";
 import { useRouter } from "vue-router";
-/*
-@brief [강사, 관리자] [Main]시간표 관리 [Sub]계획서 작성
-       강사는 계획서 작성 및 작성한 계획서 목록 열람
-       관리자는 강사가 작성한 계획서 열람 및 처리
- */
+
 export default defineComponent({
   name: "PlanMakeComponent",
   components: {
@@ -24,12 +20,12 @@ export default defineComponent({
     PaginationComponent,
   },
   setup() {
-    const router = useRouter();
     const store = useStore();
+    const router = useRouter();
+    const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
     const adminState = ref(false);
-    const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const day: Array<string> = [
+    const dayList: Array<string> = [
       "월요일",
       "화요일",
       "수요일",
@@ -38,27 +34,28 @@ export default defineComponent({
       "토요일",
       "일요일",
     ];
-    const header: defaultInterface[] = [
+    const planHeader: defaultInterface[] = [
       { KEY: "name", VALUE: "강의명" },
-      { KEY: "day", VALUE: "요일" },
+      { KEY: "dayList", VALUE: "요일" },
       { KEY: "time", VALUE: "시작 시간" },
       { KEY: "progress", VALUE: "처리 상태" },
       { KEY: "planner", VALUE: "강의 계획서" },
     ];
-    const selectItem: defaultInterface[] = [
+    const timeList: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectState = ref("pm");
+    const selectTime = ref("pm");
     const previewSchedule = ref<scheduleInterface | undefined>(undefined);
     const previewRoom = ref<string>("");
     const previewScheduleList = ref<Array<scheduleInterface>>([]);
     const rejectMode = ref(false);
     const rejectReason = ref<string>("");
     const scheduleList = ref<Array<scheduleInterface>>([]);
-    const showScheduleList = ref<Array<scheduleInterface>>([]);
+    const viewScheduleList = ref<Array<scheduleInterface>>([]);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
+
     const setLectureList = async () => {
       let data = {
         userKey: userKey.value,
@@ -93,42 +90,42 @@ export default defineComponent({
         }
 
         if (scheduleList.value.length > 11) {
-          showScheduleList.value = scheduleList.value.slice(0, 11);
+          viewScheduleList.value = scheduleList.value.slice(0, 11);
           page.value = Math.ceil(scheduleList.value.length / 11);
         } else {
-          showScheduleList.value = scheduleList.value;
+          viewScheduleList.value = scheduleList.value;
           page.value = 0;
         }
       }
     };
 
-    const selectPage = (p: number) => {
-      currentPage.value = p;
+    const selectPage = (page: number) => {
+      currentPage.value = page;
     };
 
-    const changePage = (p: number) => {
-      if (p === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (page: number) => {
+      if (page === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 
-    const viewProgress = (l: scheduleInterface) => {
-      previewSchedule.value = l;
+    const viewProgress = (schedule: scheduleInterface) => {
+      previewSchedule.value = schedule;
       store.commit("setModalState", true);
     };
 
-    const showDetail = async (l: scheduleInterface) => {
-      previewSchedule.value = l;
-      previewRoom.value = l.roomKey_id;
+    const showScheduleDetail = async (schedule: scheduleInterface) => {
+      previewSchedule.value = schedule;
+      previewRoom.value = schedule.roomKey_id;
       await setLectureList();
-      previewScheduleList.value.push(l);
+      previewScheduleList.value.push(schedule);
       store.commit("setModalState", true);
     };
 
-    const changeState = (s: string) => {
-      selectState.value = s;
+    const changeTime = (time: string) => {
+      selectTime.value = time;
     };
 
-    const doInsert = async () => {
+    const createLecture = async () => {
       let data = {
         lectureKey: previewSchedule.value?.lectureKey,
         adminKey: common.getItem(KEYS.LU).adminKey,
@@ -168,18 +165,18 @@ export default defineComponent({
           return false;
         }
 
-        await doInsert();
+        await createLecture();
       }
     };
 
-    const insertPlanner = async (l: scheduleInterface) => {
+    const editLecturePlanner = async (schedule: scheduleInterface) => {
       const plannerData = ref<FormData>(new FormData());
       const plannerFile: HTMLInputElement = document.getElementById(
-        l.lectureKey + "-input-file"
+        schedule.lectureKey + "-input-file"
       ) as HTMLInputElement;
 
       if (plannerFile.files) {
-        plannerData.value.append("lectureKey", l.lectureKey);
+        plannerData.value.append("lectureKey", schedule.lectureKey);
         plannerData.value.append("planner", plannerFile.files[0]);
       }
 
@@ -191,7 +188,7 @@ export default defineComponent({
       if (result) {
         if (result.chunbae === RESULT_KEY.EDIT) {
           window.alert(
-            l.lectureName +
+            schedule.lectureName +
               " 강의의 강의 계획서를 성공적으로 업로드 하였습니다."
           );
           router.go(0);
@@ -201,16 +198,15 @@ export default defineComponent({
       }
     };
 
-    // const plannerDownload = document.getElementById("planner-download");
-    const downloadPlanner = async (l: scheduleInterface | undefined) => {
-      if (l) {
-        if (l.planner) {
+    const downloadPlanner = async (schedule: scheduleInterface | undefined) => {
+      if (schedule) {
+        if (schedule.planner) {
           if (window.confirm("계획서를 다운로드 하시겠습니까?")) {
-            const plannerUrl = CONSTANT.BASE_URL + "/media/" + l.planner;
+            const plannerUrl = CONSTANT.BASE_URL + "/media/" + schedule.planner;
             const response = await fetch(plannerUrl);
             if (response.ok) {
               const blob = await response.blob();
-              const filename = `${l.teacherName}_${l.lectureName}_강의 계획서`;
+              const filename = `${schedule.teacherName}_${schedule.lectureName}_강의 계획서`;
               const link = document.createElement("a");
               link.href = URL.createObjectURL(blob);
               link.setAttribute("download", filename);
@@ -230,7 +226,7 @@ export default defineComponent({
     watch(
       () => currentPage.value,
       () => {
-        showScheduleList.value = scheduleList.value.slice(
+        viewScheduleList.value = scheduleList.value.slice(
           11 * currentPage.value - 11,
           11 * currentPage.value
         );
@@ -257,25 +253,25 @@ export default defineComponent({
     return {
       category,
       adminState,
-      day,
-      header,
-      selectItem,
-      selectState,
+      dayList,
+      planHeader,
+      timeList,
+      selectTime,
       previewSchedule,
       previewScheduleList,
       rejectMode,
       rejectReason,
-      showScheduleList,
+      viewScheduleList,
       page,
       currentPage,
       selectPage,
       changePage,
       viewProgress,
-      showDetail,
-      changeState,
-      doInsert,
+      showScheduleDetail,
+      changeTime,
+      createLecture,
       doReject,
-      insertPlanner,
+      editLecturePlanner,
       downloadPlanner,
     };
   },
@@ -304,17 +300,17 @@ export default defineComponent({
               <thead>
                 <tr>
                   <th v-if="adminState" class="teacher">강사명</th>
-                  <th class="name">{{ header[0].VALUE }}</th>
-                  <th class="day">{{ header[1].VALUE }}</th>
-                  <th class="time">{{ header[2].VALUE }}</th>
-                  <th class="progress">{{ header[3].VALUE }}</th>
+                  <th class="name">{{ planHeader[0].VALUE }}</th>
+                  <th class="dayList">{{ planHeader[1].VALUE }}</th>
+                  <th class="time">{{ planHeader[2].VALUE }}</th>
+                  <th class="progress">{{ planHeader[3].VALUE }}</th>
                   <th class="planner">
-                    {{ !adminState ? header[4].VALUE : "상세 보기" }}
+                    {{ !adminState ? planHeader[4].VALUE : "상세 보기" }}
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in showScheduleList">
+                <tr v-for="item in viewScheduleList">
                   <td
                     class="teacher"
                     v-if="adminState"
@@ -329,7 +325,7 @@ export default defineComponent({
                   >
                     {{ item.lectureName }}
                   </td>
-                  <td class="day">{{ day[item.day - 1] }}</td>
+                  <td class="dayList">{{ dayList[item.day - 1] }}</td>
                   <td class="time">
                     {{ item.start }}:{{
                       item.minute === 0 ? item.minute + "0" : item.minute
@@ -352,7 +348,7 @@ export default defineComponent({
                       >
                       <form>
                         <input
-                          @change="insertPlanner(item)"
+                          @change="editLecturePlanner(item)"
                           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                           type="file"
                           :id="item.lectureKey + '-input-file'"
@@ -365,7 +361,7 @@ export default defineComponent({
                         type="button"
                         value="상세 보기"
                         class="btn-input"
-                        @click="showDetail(item)"
+                        @click="showScheduleDetail(item)"
                       />
                     </div>
                   </td>
@@ -375,7 +371,7 @@ export default defineComponent({
           </div>
           <div class="planner-section-body-page">
             <pagination-component
-              :page="page"
+              :total-page="page"
               :current-page="currentPage"
               @selectPage="selectPage"
               @changePage="changePage"
@@ -396,9 +392,9 @@ export default defineComponent({
               <div class="preview-section-schedule-btn">
                 <div class="preview-section-schedule-btn-select">
                   <select-button-component
-                    :state-value="selectItem"
-                    :select-value="selectState"
-                    @changeState="changeState"
+                    :select-list="timeList"
+                    :select-value="selectTime"
+                    @changeTime="changeTime"
                   ></select-button-component>
                 </div>
                 <div
@@ -409,7 +405,7 @@ export default defineComponent({
                     type="button"
                     value="등록"
                     class="preview-section-schedule-btn-adm-insert"
-                    @click="doInsert"
+                    @click="createLecture"
                   />
                   <input
                     type="button"
@@ -421,8 +417,8 @@ export default defineComponent({
               </div>
               <div class="preview-section-schedule-timetable">
                 <timetable-component
-                  :schedule-list="previewScheduleList"
-                  :select-type="selectState"
+                  :lecture-list="previewScheduleList"
+                  :select-type="selectTime"
                 ></timetable-component>
               </div>
             </div>

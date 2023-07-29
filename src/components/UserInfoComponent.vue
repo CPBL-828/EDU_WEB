@@ -42,7 +42,7 @@ export default defineComponent({
     const teacherKey = ref<string>("");
     const adminState = ref(false);
     const userKey = ref<string | undefined>(undefined);
-    const userData = ref<
+    const userDetail = ref<
       Array<studentInterface | teacherInterface> | undefined
     >(undefined);
     const total = ref<string | undefined>(undefined);
@@ -55,7 +55,7 @@ export default defineComponent({
     const createMode = ref<string | undefined>(undefined);
     const parentList = ref<Array<parentInterface> | undefined>(undefined);
     const searchParentName = ref<string>("");
-    const parentData = ref<parentInterface>({
+    const parentDetail = ref<parentInterface>({
       parentKey: "",
       name: "",
       id: "",
@@ -88,7 +88,7 @@ export default defineComponent({
       { KEY: "AP", VALUE: "AP" },
     ];
     const birthNum = ref<string | undefined>(undefined);
-    const insertStudentData = ref({
+    const createStudentDetail = ref({
       parentKey: "",
       name: "",
       birth: "",
@@ -103,7 +103,7 @@ export default defineComponent({
     });
     const teacherLevel = ref<string | undefined>(undefined);
     const teacherGrade = ref<number | undefined>(undefined);
-    const insertTeacherData = ref({
+    const createTeacherDetail = ref({
       name: "",
       phone: "",
       email: "",
@@ -112,7 +112,7 @@ export default defineComponent({
       resSubject: "",
       joinDate: "",
     });
-    const groupInfo = ref<Array<groupInterface> | undefined>(undefined);
+    const groupDetail = ref<Array<groupInterface> | undefined>(undefined);
     const editState = ref(false);
     const filePreview = ref<Blob | null>(null);
     const profileURL = ref<string>("");
@@ -149,10 +149,10 @@ export default defineComponent({
 
         if (result) {
           console.log(result);
-          userData.value = [];
+          userDetail.value = [];
 
           if (result.count > 0) {
-            userData.value = result.resultData as studentInterface[];
+            userDetail.value = result.resultData as studentInterface[];
             total.value = result.count;
           } else {
             if (search.value) {
@@ -167,10 +167,10 @@ export default defineComponent({
         );
 
         if (result) {
-          userData.value = [];
+          userDetail.value = [];
 
           if (result.count > 0) {
-            userData.value = result.resultData as teacherInterface[];
+            userDetail.value = result.resultData as teacherInterface[];
             total.value = result.count;
           } else {
             if (search.value) {
@@ -181,7 +181,7 @@ export default defineComponent({
       }
     };
 
-    const getScheduleList = async () => {
+    const getLectureList = async () => {
       let data = {
         userKey: teacherKey.value ? teacherKey.value : "",
         search: "",
@@ -229,9 +229,9 @@ export default defineComponent({
 
       if (result) {
         if (result.count > 0) {
-          groupInfo.value = result.resultData as groupInterface[];
+          groupDetail.value = result.resultData as groupInterface[];
         } else {
-          groupInfo.value = undefined;
+          groupDetail.value = undefined;
         }
       }
     };
@@ -251,8 +251,8 @@ export default defineComponent({
       }
     };
 
-    const selectLecture = async (l: defaultInterface) => {
-      lectureKey.value = l.KEY;
+    const selectLecture = async (lecture: defaultInterface) => {
+      lectureKey.value = lecture.KEY;
       await getUserList();
     };
 
@@ -260,35 +260,35 @@ export default defineComponent({
       router.go(0);
     };
 
-    const changeCreateMode = async (u: string) => {
-      if (u === USER_KEY.STU) {
+    const changeCreateMode = async (user: string) => {
+      if (user === USER_KEY.STU) {
         await getParentList();
       }
 
       profileURL.value = "";
-      createMode.value = u;
+      createMode.value = user;
     };
 
-    const selectGrade = (l: defaultInterface) => {
-      teacherLevel.value = l.VALUE as string;
+    const selectGrade = (level: defaultInterface) => {
+      teacherLevel.value = level.VALUE as string;
     };
 
-    const selectSubject = (s: defaultInterface) => {
-      insertTeacherData.value.resSubject = s.VALUE as string;
+    const selectSubject = (subject: defaultInterface) => {
+      createTeacherDetail.value.resSubject = subject.VALUE as string;
     };
 
-    const selectParent = (p: parentInterface) => {
-      parentData.value = p;
-      insertStudentData.value.parentKey = p.parentKey;
-      insertStudentData.value.emergency = p.phone;
+    const selectParent = (parent: parentInterface) => {
+      parentDetail.value = parent;
+      createStudentDetail.value.parentKey = parent.parentKey;
+      createStudentDetail.value.emergency = parent.phone;
       selectedParent.value = true;
     };
 
-    const insertParent = async () => {
-      if (!parentData.value.name) {
+    const createParent = async () => {
+      if (!parentDetail.value.name) {
         window.alert("학부모 이름을 작성해 주세요.");
         return false;
-      } else if (!parentData.value.phone) {
+      } else if (!parentDetail.value.phone) {
         window.alert("학부모 연락처를 작성해 주세요.");
         return false;
       }
@@ -299,8 +299,8 @@ export default defineComponent({
         )
       ) {
         let data = {
-          name: parentData.value.name,
-          phone: parentData.value.phone,
+          name: parentDetail.value.name,
+          phone: parentDetail.value.phone,
         };
 
         const result = await ApiClient(
@@ -313,9 +313,9 @@ export default defineComponent({
             window.alert(
               "학부모 정보를 성공적으로 저장하였습니다.\n학생 정보 입력 단계로 넘어갑니다."
             );
-            parentData.value = result.resultData;
-            insertStudentData.value.parentKey = result.resultData.parentKey;
-            insertStudentData.value.emergency = result.resultData.phone;
+            parentDetail.value = result.resultData;
+            createStudentDetail.value.parentKey = result.resultData.parentKey;
+            createStudentDetail.value.emergency = result.resultData.phone;
 
             selectedParent.value = true;
           }
@@ -323,17 +323,17 @@ export default defineComponent({
       }
     };
 
-    const insertStudent = async () => {
-      if (!insertStudentData.value.name) {
+    const createStudent = async () => {
+      if (!createStudentDetail.value.name) {
         window.alert("학생명을 입력해주세요.");
         return false;
-      } else if (!insertStudentData.value.phone) {
+      } else if (!createStudentDetail.value.phone) {
         window.alert("연락처를 입력해주세요.");
         return false;
-      } else if (!insertStudentData.value.address) {
+      } else if (!createStudentDetail.value.address) {
         window.alert("주소를 입력해주세요.");
         return false;
-      } else if (!insertStudentData.value.school) {
+      } else if (!createStudentDetail.value.school) {
         if (
           !window.confirm(
             "학생의 학교 정보가 입력되지 않았습니다.\n재학 중인 학교 정보가 존재하지 않는 것이 확실한가요?"
@@ -352,7 +352,7 @@ export default defineComponent({
           );
           return false;
         } else {
-          insertStudentData.value.birth = new Date(
+          createStudentDetail.value.birth = new Date(
             birthNum.value.substring(0, 4) +
               "-" +
               birthNum.value.substring(4, 6) +
@@ -362,22 +362,22 @@ export default defineComponent({
             .toISOString()
             .substring(0, 10);
 
-          insertStudentData.value.sex =
+          createStudentDetail.value.sex =
             Number(birthNum.value.substring(-1)) % 2 === 0 ? "여" : "남";
         }
       }
 
       const result = await ApiClient(
         "/members/createStudent/",
-        common.makeJson(insertStudentData.value)
+        common.makeJson(createStudentDetail.value)
       );
 
       if (result) {
         if (result.chunbae === RESULT_KEY.CREATE) {
           if (profileURL.value) {
-            studentInfo.value = result.resultData as studentInterface;
+            studentDetail.value = result.resultData as studentInterface;
 
-            await uploadImg(USER_KEY.STU, "profile-img-insert");
+            await editUserProfile(USER_KEY.STU, "profile-img-insert");
           }
 
           window.alert(
@@ -394,26 +394,27 @@ export default defineComponent({
       }
     };
 
-    const insertTeacher = async () => {
-      if (!insertTeacherData.value.name) {
+    const createTeacher = async () => {
+      if (!createTeacherDetail.value.name) {
         window.alert("강사명을 입력해주세요.");
         return false;
-      } else if (!insertTeacherData.value.phone) {
+      } else if (!createTeacherDetail.value.phone) {
         window.alert("연락처를 입력해주세요.");
         return false;
-      } else if (!insertTeacherData.value.email) {
+      } else if (!createTeacherDetail.value.email) {
         window.alert("이메일을 입력해주세요.");
         return false;
-      } else if (!insertTeacherData.value.link) {
+      } else if (!createTeacherDetail.value.link) {
         window.alert("개인 SNS 링크를 입력해주세요.");
         return false;
-      } else if (!insertTeacherData.value.resSubject) {
+      } else if (!createTeacherDetail.value.resSubject) {
         window.alert("담당 과목을 선택해주세요.");
         return false;
       }
 
       if (teacherGrade.value && teacherLevel.value) {
-        insertTeacherData.value.part = teacherLevel.value + teacherGrade.value;
+        createTeacherDetail.value.part =
+          teacherLevel.value + teacherGrade.value;
       } else if (!teacherLevel.value) {
         window.alert("담당 학급을 선택해주세요.");
         return false;
@@ -424,7 +425,7 @@ export default defineComponent({
 
       const result = await ApiClient(
         "/members/createTeacher/",
-        common.makeJson(insertTeacherData.value)
+        common.makeJson(createTeacherDetail.value)
       );
 
       if (result) {
@@ -441,8 +442,8 @@ export default defineComponent({
     };
 
     const store = useStore();
-    const studentInfo = ref<studentInterface | undefined>(undefined);
-    const studentEditInfo = ref<studentInterface>({
+    const studentDetail = ref<studentInterface | undefined>(undefined);
+    const editStudentDetail = ref<studentInterface>({
       studentKey: "",
       parentKey: "",
       name: "",
@@ -461,18 +462,18 @@ export default defineComponent({
       editDate: "",
     });
 
-    const showStudentDetail = async (s: studentInterface) => {
-      studentInfo.value = s;
-      await getGroupList(USER_KEY.STU, s);
-      studentEditInfo.value.studentKey = s.studentKey;
-      studentEditInfo.value.phone = s.phone;
-      studentEditInfo.value.school = s.school;
-      studentEditInfo.value.grade = s.grade;
-      studentEditInfo.value.address = s.address;
-      studentEditInfo.value.remark = s.remark;
+    const showStudentDetail = async (student: studentInterface) => {
+      studentDetail.value = student;
+      await getGroupList(USER_KEY.STU, student);
+      editStudentDetail.value.studentKey = student.studentKey;
+      editStudentDetail.value.phone = student.phone;
+      editStudentDetail.value.school = student.school;
+      editStudentDetail.value.grade = student.grade;
+      editStudentDetail.value.address = student.address;
+      editStudentDetail.value.remark = student.remark;
 
-      if (studentInfo.value.profileImg) {
-        profileURL.value = CONSTANT.FILE_URL + studentInfo.value.profileImg;
+      if (studentDetail.value.profileImg) {
+        profileURL.value = CONSTANT.FILE_URL + studentDetail.value.profileImg;
       } else {
         profileURL.value = "";
       }
@@ -480,8 +481,8 @@ export default defineComponent({
       store.commit("setModalState", true);
     };
 
-    const teacherInfo = ref<teacherInterface | undefined>(undefined);
-    const teacherEditInfo = ref<teacherInterface>({
+    const teacherDetail = ref<teacherInterface | undefined>(undefined);
+    const editTeacherDetail = ref<teacherInterface>({
       teacherKey: "",
       name: "",
       id: "",
@@ -498,16 +499,16 @@ export default defineComponent({
       editDate: "",
     });
 
-    const showTeacherDetail = async (t: teacherInterface) => {
-      teacherInfo.value = t;
-      await getGroupList(USER_KEY.TEA, t);
-      teacherEditInfo.value.teacherKey = t.teacherKey;
-      teacherEditInfo.value.phone = t.phone;
-      teacherEditInfo.value.email = t.email;
-      teacherEditInfo.value.link = t.link;
+    const showTeacherDetail = async (teacher: teacherInterface) => {
+      teacherDetail.value = teacher;
+      await getGroupList(USER_KEY.TEA, teacher);
+      editTeacherDetail.value.teacherKey = teacher.teacherKey;
+      editTeacherDetail.value.phone = teacher.phone;
+      editTeacherDetail.value.email = teacher.email;
+      editTeacherDetail.value.link = teacher.link;
 
-      if (teacherInfo.value.profileImg) {
-        profileURL.value = CONSTANT.FILE_URL + teacherInfo.value.profileImg;
+      if (teacherDetail.value.profileImg) {
+        profileURL.value = CONSTANT.FILE_URL + teacherDetail.value.profileImg;
       } else {
         profileURL.value = "";
       }
@@ -519,16 +520,16 @@ export default defineComponent({
       editState.value = true;
     };
 
-    const changeProfile = (e: Event) => {
-      const v = e.target as HTMLInputElement;
+    const changeProfile = (event: Event) => {
+      const v = event.target as HTMLInputElement;
       filePreview.value = URL.createObjectURL(v.files![0]) as unknown as Blob;
       profileURL.value = filePreview.value as unknown as string;
     };
 
-    const uploadImg = async (u: string, i: string) => {
+    const editUserProfile = async (user: string, input: string) => {
       const profileData = ref<FormData>(new FormData());
       const photoFile: HTMLInputElement = document.getElementById(
-        i
+        input
       ) as HTMLInputElement;
       const maxSize = 3 * 1024 * 1024;
 
@@ -538,21 +539,21 @@ export default defineComponent({
           editState.value = false;
           return false;
         }
-        if (u === USER_KEY.STU) {
+        if (user === USER_KEY.STU) {
           profileData.value.append(
             "studentKey",
-            studentInfo.value?.studentKey as string
+            studentDetail.value?.studentKey as string
           );
         } else {
           profileData.value.append(
             "teacherKey",
-            teacherInfo.value?.teacherKey as string
+            teacherDetail.value?.teacherKey as string
           );
         }
         profileData.value.append("profileImg", photoFile.files[0]);
       }
 
-      if (u === USER_KEY.STU) {
+      if (user === USER_KEY.STU) {
         const result = await FileClient(
           "/members/editStudentProfile/",
           profileData.value
@@ -560,9 +561,10 @@ export default defineComponent({
 
         if (result) {
           if (result.chunbae === RESULT_KEY.EDIT) {
-            studentInfo.value = result.resultData as studentInterface;
+            studentDetail.value = result.resultData as studentInterface;
             window.alert("사진을 성공적으로 저장했습니다.");
-            profileURL.value = CONSTANT.BASE_URL + studentInfo.value.profileImg;
+            profileURL.value =
+              CONSTANT.BASE_URL + studentDetail.value.profileImg;
             editState.value = false;
           }
         } else {
@@ -577,9 +579,10 @@ export default defineComponent({
 
         if (result) {
           if (result.chunbae === RESULT_KEY.EDIT) {
-            teacherInfo.value = result.resultData as teacherInterface;
+            teacherDetail.value = result.resultData as teacherInterface;
             window.alert("사진을 성공적으로 수정했습니다.");
-            profileURL.value = CONSTANT.BASE_URL + teacherInfo.value.profileImg;
+            profileURL.value =
+              CONSTANT.BASE_URL + teacherDetail.value.profileImg;
             editState.value = false;
           }
         } else {
@@ -589,26 +592,32 @@ export default defineComponent({
       }
     };
 
-    const doEdit = async () => {
+    const editUser = async () => {
       let data = {};
 
-      if (studentEditInfo.value.studentKey) {
+      if (editStudentDetail.value.studentKey) {
         Object.assign(data, {
-          studentKey: studentEditInfo.value.studentKey,
-          phone: studentEditInfo.value.phone,
-          school: studentEditInfo.value.school,
-          grade: studentEditInfo.value.grade,
-          address: studentEditInfo.value.address,
-          remark: studentEditInfo.value.remark,
+          studentKey: editStudentDetail.value.studentKey,
+          phone: editStudentDetail.value.phone,
+          school: editStudentDetail.value.school,
+          grade: editStudentDetail.value.grade,
+          address: editStudentDetail.value.address,
+          remark: editStudentDetail.value.remark,
         });
 
-        if (studentInfo.value?.school !== studentEditInfo.value.school) {
-        } else if (studentInfo.value?.phone !== studentEditInfo.value.phone) {
-        } else if (studentInfo.value?.grade !== studentEditInfo.value.grade) {
+        if (studentDetail.value?.school !== editStudentDetail.value.school) {
         } else if (
-          studentInfo.value?.address !== studentEditInfo.value.address
+          studentDetail.value?.phone !== editStudentDetail.value.phone
         ) {
-        } else if (studentInfo.value?.remark !== studentEditInfo.value.remark) {
+        } else if (
+          studentDetail.value?.grade !== editStudentDetail.value.grade
+        ) {
+        } else if (
+          studentDetail.value?.address !== editStudentDetail.value.address
+        ) {
+        } else if (
+          studentDetail.value?.remark !== editStudentDetail.value.remark
+        ) {
         } else {
           if (
             window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")
@@ -627,10 +636,10 @@ export default defineComponent({
 
         if (result) {
           if (result.chunbae === RESULT_KEY.EDIT) {
-            studentInfo.value = result.resultData as studentInterface;
+            studentDetail.value = result.resultData as studentInterface;
             common.removeItem(KEYS.LU);
             window.alert("정보 수정을 성공했습니다.");
-            common.setItem(KEYS.LU, common.makeJson(studentInfo.value));
+            common.setItem(KEYS.LU, common.makeJson(studentDetail.value));
             editState.value = false;
           } else {
             window.alert("정보 수정을 실패했습니다.");
@@ -638,15 +647,17 @@ export default defineComponent({
         }
       } else {
         Object.assign(data, {
-          teacherKey: teacherEditInfo.value.teacherKey,
-          phone: teacherEditInfo.value.phone,
-          email: teacherEditInfo.value.email,
-          link: teacherEditInfo.value.link,
+          teacherKey: editTeacherDetail.value.teacherKey,
+          phone: editTeacherDetail.value.phone,
+          email: editTeacherDetail.value.email,
+          link: editTeacherDetail.value.link,
         });
 
-        if (teacherInfo.value?.email !== teacherEditInfo.value.email) {
-        } else if (teacherInfo.value?.phone !== teacherEditInfo.value.phone) {
-        } else if (teacherInfo.value?.link !== teacherEditInfo.value.link) {
+        if (teacherDetail.value?.email !== editTeacherDetail.value.email) {
+        } else if (
+          teacherDetail.value?.phone !== editTeacherDetail.value.phone
+        ) {
+        } else if (teacherDetail.value?.link !== editTeacherDetail.value.link) {
         } else {
           if (
             window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")
@@ -665,10 +676,10 @@ export default defineComponent({
 
         if (result) {
           if (result.chunbae === RESULT_KEY.EDIT) {
-            teacherInfo.value = result.resultData as teacherInterface;
+            teacherDetail.value = result.resultData as teacherInterface;
             common.removeItem(KEYS.LU);
             window.alert("정보 수정을 성공했습니다.");
-            common.setItem(KEYS.LU, common.makeJson(teacherInfo.value));
+            common.setItem(KEYS.LU, common.makeJson(teacherDetail.value));
             editState.value = false;
           }
         } else {
@@ -679,9 +690,9 @@ export default defineComponent({
 
     const deleteUser = async () => {
       if (window.confirm("정말 삭제하시겠습니까?")) {
-        if (studentInfo.value) {
+        if (studentDetail.value) {
           let data = {
-            studentKey: studentInfo.value?.studentKey,
+            studentKey: studentDetail.value?.studentKey,
           };
 
           const result = await ApiClient(
@@ -699,7 +710,7 @@ export default defineComponent({
           }
         } else {
           let data = {
-            teacherKey: teacherInfo.value?.teacherKey,
+            teacherKey: teacherDetail.value?.teacherKey,
           };
 
           const result = await ApiClient(
@@ -721,30 +732,30 @@ export default defineComponent({
       }
     };
 
-    const deleteImg = async (u: string) => {
+    const deleteUserProfile = async (user: string) => {
       let data = new FormData();
 
-      if (u === USER_KEY.STU) {
-        data.append("studentKey", studentInfo.value?.studentKey as string);
+      if (user === USER_KEY.STU) {
+        data.append("studentKey", studentDetail.value?.studentKey as string);
 
         const result = await FileClient("/members/editStudentProfile/", data);
 
         if (result) {
           if (result.chunbae === RESULT_KEY.EDIT) {
-            studentInfo.value = result.resultData as studentInterface;
+            studentDetail.value = result.resultData as studentInterface;
             window.alert("프로필 이미지를 정상적으로 삭제했습니다.");
             profileURL.value = "";
             editState.value = false;
           }
         }
       } else {
-        data.append("teacherKey", teacherInfo.value?.teacherKey as string);
+        data.append("teacherKey", teacherDetail.value?.teacherKey as string);
 
         const result = await FileClient("/members/editTeacherProfile/", data);
 
         if (result) {
           if (result.chunbae === RESULT_KEY.EDIT) {
-            teacherInfo.value = result.resultData as teacherInterface;
+            teacherDetail.value = result.resultData as teacherInterface;
             window.alert("프로필 이미지를 정상적으로 삭제했습니다.");
             profileURL.value = "";
             editState.value = false;
@@ -768,7 +779,7 @@ export default defineComponent({
       }
 
       await getUserList();
-      await getScheduleList();
+      await getLectureList();
     });
 
     return {
@@ -776,7 +787,7 @@ export default defineComponent({
       teacherKey,
       adminState,
       userKey,
-      userData,
+      userDetail,
       total,
       search,
       searchData,
@@ -784,41 +795,41 @@ export default defineComponent({
       createMode,
       parentList,
       searchParentName,
-      parentData,
+      parentDetail,
       selectedParent,
       gradeList,
       teacherGrade,
       subjectList,
       birthNum,
-      insertStudentData,
-      insertTeacherData,
-      groupInfo,
+      createStudentDetail,
+      createTeacherDetail,
+      groupDetail,
       editState,
       getUserList,
       getParentList,
       selectLecture,
       removeFilter,
       changeEditState,
-      doEdit,
+      editUser,
       deleteUser,
       changeCreateMode,
       selectGrade,
       selectSubject,
       selectParent,
-      insertParent,
-      insertStudent,
-      insertTeacher,
+      createParent,
+      createStudent,
+      createTeacher,
       // 모달 옮기는 중
-      studentInfo,
-      studentEditInfo,
+      studentDetail,
+      editStudentDetail,
       profileURL,
       showStudentDetail,
       changeProfile,
-      uploadImg,
-      teacherInfo,
-      teacherEditInfo,
+      editUserProfile,
+      teacherDetail,
+      editTeacherDetail,
       showTeacherDetail,
-      deleteImg,
+      deleteUserProfile,
     };
   },
 });
@@ -870,12 +881,12 @@ export default defineComponent({
           </div>
           <span v-if="total" class="total">학생 총 원 : {{ total }} 명</span>
           <card-list-component
-            v-if="userData && viewUser"
+            v-if="userDetail && viewUser"
             :view-user="viewUser"
-            :user-list="userData"
+            :user-list="userDetail"
             @showStudentDetail="showStudentDetail"
           ></card-list-component>
-          <span v-if="!userData" class="total"
+          <span v-if="!userDetail" class="total"
             >등록된 학생 정보가 없습니다.</span
           >
         </div>
@@ -902,12 +913,12 @@ export default defineComponent({
           </div>
           <span v-if="total" class="total">강사 총 원 : {{ total }} 명</span>
           <card-list-component
-            v-if="userData && viewUser"
+            v-if="userDetail && viewUser"
             :view-user="viewUser"
-            :user-list="userData"
+            :user-list="userDetail"
             @showTeacherDetail="showTeacherDetail"
           ></card-list-component>
-          <span v-if="!userData" class="total">
+          <span v-if="!userDetail" class="total">
             등록된 강사 정보가 없습니다.
           </span>
         </div>
@@ -915,7 +926,7 @@ export default defineComponent({
     </div>
 
     <modal-popup-component
-      :title="studentInfo ? '학생 정보 상세 조회' : '강사 정보 상세 조회'"
+      :title="studentDetail ? '학생 정보 상세 조회' : '강사 정보 상세 조회'"
       modal-height="620px"
       modal-width="1078px"
     >
@@ -923,7 +934,7 @@ export default defineComponent({
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"
-            @click="doEdit"
+            @click="editUser"
           >
             저장하기
           </div>
@@ -937,19 +948,19 @@ export default defineComponent({
       </template>
       <template v-slot:body>
         <span class="del-btn" @click="deleteUser" v-if="adminState"
-          >{{ teacherInfo ? "강사" : "학생" }} 정보 삭제하기</span
+          >{{ teacherDetail ? "강사" : "학생" }} 정보 삭제하기</span
         >
         <span class="tip">특이사항을 열람하려면 아래로 스크롤 하세요.</span>
         <div class="user">
           <div class="user-detail">
-            <div class="user-detail-profile" v-if="studentInfo">
+            <div class="user-detail-profile" v-if="studentDetail">
               <div class="user-detail-profile-name">
-                <span>{{ studentInfo?.name }}</span> 학생
+                <span>{{ studentDetail?.name }}</span> 학생
               </div>
               <div :style="{ position: 'relative' }">
                 <i
                   class="fa-solid fa-xmark"
-                  @click="deleteImg('STU')"
+                  @click="deleteUserProfile('STU')"
                   v-if="editState && profileURL"
                 ></i>
                 <img
@@ -960,33 +971,33 @@ export default defineComponent({
                   id="profile-img"
                 />
               </div>
-              <i class="fa-solid fa-user" v-if="!studentInfo?.profileImg"></i>
+              <i class="fa-solid fa-user" v-if="!studentDetail?.profileImg"></i>
               <form>
                 <input
                   type="file"
                   id="profile-img-edit"
                   accept="image/*"
-                  @change="uploadImg('STU', 'profile-img-edit')"
+                  @change="editUserProfile('STU', 'profile-img-edit')"
                   :style="{ bottom: '110px', zIndex: 10 }"
                   v-if="editState"
                 />
               </form>
               <i class="fa-solid fa-camera" v-if="editState"></i>
-              <div class="user-detail-profile-group" v-if="groupInfo">
+              <div class="user-detail-profile-group" v-if="groupDetail">
                 <div class="label">반</div>
                 <div class="item">
-                  <span v-for="item in groupInfo">{{ item.groupName }}</span>
+                  <span v-for="item in groupDetail">{{ item.groupName }}</span>
                 </div>
               </div>
             </div>
-            <div class="user-detail-profile" v-if="teacherInfo">
+            <div class="user-detail-profile" v-if="teacherDetail">
               <div class="user-detail-profile-name">
-                <span>{{ teacherInfo?.name }}</span> 강사님
+                <span>{{ teacherDetail?.name }}</span> 강사님
               </div>
               <div :style="{ position: 'relative' }">
                 <i
                   class="fa-solid fa-xmark"
-                  @click="deleteImg('TEA')"
+                  @click="deleteUserProfile('TEA')"
                   v-if="editState && profileURL"
                 ></i>
                 <img
@@ -997,29 +1008,29 @@ export default defineComponent({
                   id="profile-img"
                 />
               </div>
-              <i class="fa-solid fa-user" v-if="!teacherInfo?.profileImg"></i>
+              <i class="fa-solid fa-user" v-if="!teacherDetail?.profileImg"></i>
               <form>
                 <input
                   type="file"
                   id="profile-img-edit"
                   accept="image/*"
-                  @change="uploadImg('TEA', 'profile-img-edit')"
+                  @change="editUserProfile('TEA', 'profile-img-edit')"
                   :style="{ bottom: '110px', zIndex: 10 }"
                   v-if="editState"
                 />
               </form>
               <i class="fa-solid fa-camera" v-if="editState"></i>
-              <div class="user-detail-profile-group" v-if="groupInfo">
+              <div class="user-detail-profile-group" v-if="groupDetail">
                 <div class="label">반</div>
                 <div class="item">
-                  <span v-for="item in groupInfo">{{ item.groupName }}</span>
+                  <span v-for="item in groupDetail">{{ item.groupName }}</span>
                 </div>
               </div>
             </div>
             <div class="sap"></div>
             <div class="user-detail-info">
               <div class="user-detail-info-content">
-                <div class="user-detail-info-content-left" v-if="studentInfo">
+                <div class="user-detail-info-content-left" v-if="studentDetail">
                   <!--              학생 -->
                   <div class="name">
                     <span class="name-label">이름(아이디)</span>
@@ -1028,10 +1039,10 @@ export default defineComponent({
                       v-if="editState"
                       class="name-item"
                       :disabled="true"
-                      :value="studentInfo?.name"
+                      :value="studentDetail?.name"
                     />
                     <span class="name-item" v-else
-                      >{{ studentInfo?.name }} ({{ studentInfo?.id }})</span
+                      >{{ studentDetail?.name }} ({{ studentDetail?.id }})</span
                     >
                   </div>
                   <div class="part">
@@ -1041,10 +1052,10 @@ export default defineComponent({
                       v-if="editState"
                       class="name-item"
                       :disabled="true"
-                      :value="studentInfo?.birth"
+                      :value="studentDetail?.birth"
                     />
                     <span class="part-item" v-else>{{
-                      studentInfo?.birth
+                      studentDetail?.birth
                     }}</span>
                   </div>
                   <div class="email">
@@ -1053,11 +1064,11 @@ export default defineComponent({
                       type="text"
                       v-if="editState"
                       class="email-item"
-                      :placeholder="studentInfo?.school"
-                      v-model="studentEditInfo.school"
+                      :placeholder="studentDetail?.school"
+                      v-model="editStudentDetail.school"
                     />
                     <span class="email-item" v-else>{{
-                      studentInfo?.school
+                      studentDetail?.school
                     }}</span>
                   </div>
                   <div class="sns">
@@ -1066,34 +1077,34 @@ export default defineComponent({
                       type="text"
                       v-if="editState"
                       class="sns-item"
-                      :placeholder="studentInfo?.address"
-                      v-model="studentEditInfo.address"
+                      :placeholder="studentDetail?.address"
+                      v-model="editStudentDetail.address"
                     />
                     <span class="sns-item" v-else>{{
-                      studentInfo?.address
+                      studentDetail?.address
                     }}</span>
                   </div>
                 </div>
                 <!--              강사 -->
-                <div class="user-detail-info-content-left" v-if="teacherInfo">
+                <div class="user-detail-info-content-left" v-if="teacherDetail">
                   <div class="name">
                     <span class="name-label">이름(아이디)</span>
                     <span class="name-item" v-if="!editState"
-                      >{{ teacherInfo?.name }} ({{ teacherInfo?.id }})</span
+                      >{{ teacherDetail?.name }} ({{ teacherDetail?.id }})</span
                     >
                     <input
                       v-else
                       type="text"
                       class="name-item"
                       :disabled="true"
-                      :value="teacherInfo?.name"
+                      :value="teacherDetail?.name"
                     />
                   </div>
                   <div class="part">
                     <span class="part-label">담당</span>
                     <span class="part-item" v-if="!editState"
-                      >{{ teacherInfo?.part }}
-                      {{ teacherInfo?.resSubject }}</span
+                      >{{ teacherDetail?.part }}
+                      {{ teacherDetail?.resSubject }}</span
                     >
                     <div
                       v-else
@@ -1106,13 +1117,13 @@ export default defineComponent({
                         type="text"
                         class="part-item"
                         :disabled="true"
-                        :value="teacherInfo?.part"
+                        :value="teacherDetail?.part"
                       />
                       <input
                         type="text"
                         class="part-item"
                         :disabled="true"
-                        :value="teacherInfo?.resSubject"
+                        :value="teacherDetail?.resSubject"
                       />
                     </div>
                   </div>
@@ -1122,11 +1133,11 @@ export default defineComponent({
                       type="text"
                       v-if="editState"
                       class="name-item"
-                      :placeholder="teacherInfo?.email"
-                      v-model="teacherEditInfo.email"
+                      :placeholder="teacherDetail?.email"
+                      v-model="editTeacherDetail.email"
                     />
                     <span class="email-item" v-else>{{
-                      teacherInfo?.email
+                      teacherDetail?.email
                     }}</span>
                   </div>
                   <div class="sns">
@@ -1135,26 +1146,31 @@ export default defineComponent({
                       type="text"
                       v-if="editState"
                       class="sns-item"
-                      :placeholder="teacherInfo?.link"
-                      v-model="teacherEditInfo.link"
+                      :placeholder="teacherDetail?.link"
+                      v-model="editTeacherDetail.link"
                     />
-                    <span class="sns-item" v-else>{{ teacherInfo?.link }}</span>
+                    <span class="sns-item" v-else>{{
+                      teacherDetail?.link
+                    }}</span>
                   </div>
                 </div>
-                <div class="user-detail-info-content-right" v-if="studentInfo">
+                <div
+                  class="user-detail-info-content-right"
+                  v-if="studentDetail"
+                >
                   <div class="phone">
                     <span class="phone-label">연락처</span>
                     <input
                       type="text"
                       v-if="editState"
                       class="name-item"
-                      :placeholder="studentInfo.phone"
-                      v-model="studentEditInfo.phone"
+                      :placeholder="studentDetail.phone"
+                      v-model="editStudentDetail.phone"
                     />
                     <span class="phone-item" v-else>
-                      {{ studentInfo?.phone.substring(0, 3) }}-{{
-                        studentInfo?.phone.substring(3, 7)
-                      }}-{{ studentInfo?.phone.substring(7, 11) }}
+                      {{ studentDetail?.phone.substring(0, 3) }}-{{
+                        studentDetail?.phone.substring(3, 7)
+                      }}-{{ studentDetail?.phone.substring(7, 11) }}
                     </span>
                   </div>
                   <div class="join">
@@ -1163,63 +1179,66 @@ export default defineComponent({
                       type="text"
                       v-if="editState"
                       class="name-item"
-                      :placeholder="studentInfo?.grade"
-                      v-model="studentEditInfo.grade"
+                      :placeholder="studentDetail?.grade"
+                      v-model="editStudentDetail.grade"
                     />
                     <span class="name-item" v-else
-                      >{{ studentInfo?.grade }} 학년</span
+                      >{{ studentDetail?.grade }} 학년</span
                     >
                   </div>
                 </div>
-                <div class="user-detail-info-content-right" v-if="teacherInfo">
+                <div
+                  class="user-detail-info-content-right"
+                  v-if="teacherDetail"
+                >
                   <div class="phone">
                     <span class="phone-label">연락처</span>
                     <input
                       type="text"
                       v-if="editState"
                       class="name-item"
-                      :placeholder="teacherInfo.phone"
-                      v-model="teacherEditInfo.phone"
+                      :placeholder="teacherDetail.phone"
+                      v-model="editTeacherDetail.phone"
                     />
                     <span class="phone-item" v-else>
-                      {{ teacherInfo?.phone.substring(0, 3) }}-{{
-                        teacherInfo?.phone.substring(3, 7)
-                      }}-{{ teacherInfo?.phone.substring(7, 11) }}
+                      {{ teacherDetail?.phone.substring(0, 3) }}-{{
+                        teacherDetail?.phone.substring(3, 7)
+                      }}-{{ teacherDetail?.phone.substring(7, 11) }}
                     </span>
                   </div>
                   <div class="join">
                     <span class="join-label">입사일</span>
                     <span class="join-item" v-if="!editState"
-                      >{{ teacherInfo?.joinDate.substring(0, 4) }}.
-                      {{ teacherInfo?.joinDate.substring(5, 7) }}.
-                      {{ teacherInfo?.joinDate.substring(8, 10) }}</span
+                      >{{ teacherDetail?.joinDate.substring(0, 4) }}.
+                      {{ teacherDetail?.joinDate.substring(5, 7) }}.
+                      {{ teacherDetail?.joinDate.substring(8, 10) }}</span
                     >
                     <input
                       v-else
                       type="text"
                       class="name-item"
                       :disabled="true"
-                      :value="teacherInfo?.joinDate"
+                      :value="teacherDetail?.joinDate"
                     />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="user-remark" v-if="studentInfo">
+          <div class="user-remark" v-if="studentDetail">
             <span class="label">특이사항</span>
             <div class="user-remark-content" v-if="!editState">
               {{
-                studentInfo?.remark
-                  ? studentInfo?.remark
+                studentDetail?.remark
+                  ? studentDetail?.remark
                   : "작성된 특이사항이 없습니다."
               }}
             </div>
             <textarea
               v-else
-              :placeholder="studentInfo?.remark"
+              :placeholder="studentDetail?.remark"
               class="user-remark-content"
-              v-model="studentEditInfo.remark"
+              v-model="editStudentDetail.remark"
             />
 
             <div class="user-remark-btn">
@@ -1249,7 +1268,7 @@ export default defineComponent({
             type="button"
             class="insert-btn"
             value="저장하기"
-            @click="insertStudent"
+            @click="createStudent"
           />
 
           <!-- 학부모 입력-->
@@ -1264,20 +1283,20 @@ export default defineComponent({
                 <input
                   type="text"
                   placeholder="이름"
-                  v-model="parentData.name"
+                  v-model="parentDetail.name"
                 />
                 <span class="label">연락처</span>
                 <input
                   type="text"
                   placeholder="번호 11자리"
-                  v-model="parentData.phone"
+                  v-model="parentDetail.phone"
                 />
               </div>
               <input
                 type="button"
                 value="저장하고 다음 단계로"
                 class="student-insert-section-body-parent-new-save"
-                @click="insertParent"
+                @click="createParent"
               />
             </div>
             <div class="sap"></div>
@@ -1344,7 +1363,7 @@ export default defineComponent({
                 <input
                   type="text"
                   placeholder="이름"
-                  v-model="insertStudentData.name"
+                  v-model="createStudentDetail.name"
                 />
               </div>
 
@@ -1367,7 +1386,7 @@ export default defineComponent({
                 <input
                   type="text"
                   placeholder="'-' 없이 번호만 입력"
-                  v-model="insertStudentData.phone"
+                  v-model="createStudentDetail.phone"
                 />
               </div>
             </div>
@@ -1380,7 +1399,7 @@ export default defineComponent({
                     type="text"
                     class="input-school"
                     placeholder="학교명"
-                    v-model="insertStudentData.school"
+                    v-model="createStudentDetail.school"
                   />
                   <input
                     type="number"
@@ -1388,7 +1407,7 @@ export default defineComponent({
                     placeholder="학년"
                     min="1"
                     max="6"
-                    v-model="insertStudentData.grade"
+                    v-model="createStudentDetail.grade"
                   />
                 </div>
               </div>
@@ -1398,7 +1417,7 @@ export default defineComponent({
                 <input
                   type="text"
                   placeholder="주소"
-                  v-model="insertStudentData.address"
+                  v-model="createStudentDetail.address"
                 />
               </div>
 
@@ -1407,7 +1426,7 @@ export default defineComponent({
                 <textarea
                   placeholder="특이사항"
                   class="input-remark"
-                  v-model="insertStudentData.remark"
+                  v-model="createStudentDetail.remark"
                 />
               </div>
             </div>
@@ -1421,7 +1440,7 @@ export default defineComponent({
             type="button"
             class="insert-btn"
             value="저장하기"
-            @click="insertTeacher"
+            @click="createTeacher"
           />
           <span class="info-tip"> 모든 정보를 반드시 기입해 주세요. </span>
           <div class="student-insert-section-body-container">
@@ -1438,7 +1457,7 @@ export default defineComponent({
                 <input
                   type="text"
                   placeholder="이름"
-                  v-model="insertTeacherData.name"
+                  v-model="createTeacherDetail.name"
                 />
               </div>
 
@@ -1447,7 +1466,7 @@ export default defineComponent({
                 <input
                   type="text"
                   placeholder="'-' 없이 번호만 입력"
-                  v-model="insertTeacherData.phone"
+                  v-model="createTeacherDetail.phone"
                 />
               </div>
 
@@ -1496,7 +1515,7 @@ export default defineComponent({
                   <input
                     type="text"
                     placeholder="이메일"
-                    v-model="insertTeacherData.email"
+                    v-model="createTeacherDetail.email"
                   />
                 </div>
               </div>
@@ -1507,7 +1526,7 @@ export default defineComponent({
                   <input
                     type="text"
                     placeholder="SNS 링크"
-                    v-model="insertTeacherData.link"
+                    v-model="createTeacherDetail.link"
                   />
                 </div>
               </div>
@@ -1517,7 +1536,7 @@ export default defineComponent({
                 <input
                   type="text"
                   placeholder="YYYY-MM-DD"
-                  v-model="insertTeacherData.joinDate"
+                  v-model="createTeacherDetail.joinDate"
                 />
               </div>
             </div>

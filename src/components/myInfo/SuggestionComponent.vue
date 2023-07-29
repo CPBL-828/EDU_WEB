@@ -30,18 +30,18 @@ export default defineComponent({
     const userType = ref<string>("");
     const teacherDetail = ref<teacherInterface | undefined>(undefined);
     const studentDetail = ref<studentInterface | undefined>(undefined);
-    const selectState = ref("ok");
+    const selectedState = ref("ok");
     const stateList = ref<Array<defaultInterface>>([
       { KEY: "ok", VALUE: "처리 완료" },
       { KEY: "wait", VALUE: "대기중" },
     ]);
-    const header: defaultInterface[] = [
+    const suggestHeader: defaultInterface[] = [
       { KEY: "DATE", VALUE: "건의 일자" },
       { KEY: "TYPE", VALUE: "건의 유형" },
       { KEY: "WRITEr", VALUE: "작성자명" },
       { KEY: "DETAIL", VALUE: "상세 사항" },
     ];
-    const placeholder: string = "건의 유형";
+    const typeHolder: string = "건의 유형";
     const typeList: defaultInterface[] = [
       { KEY: "LECTURE", VALUE: "강의" },
       { KEY: "STUDENT", VALUE: "학생" },
@@ -84,7 +84,7 @@ export default defineComponent({
     };
 
     const changeState = (state: string) => {
-      selectState.value = state;
+      selectedState.value = state;
 
       if (suggestList.value) {
         viewSuggestList.value = [];
@@ -171,10 +171,10 @@ export default defineComponent({
 
     return {
       category,
-      selectState,
+      selectedState,
       stateList,
-      header,
-      placeholder,
+      suggestHeader,
+      typeHolder,
       typeList,
       content,
       dropboxWidth,
@@ -211,7 +211,7 @@ export default defineComponent({
             <div class="suggestion-section-body-state-button">
               <select-button-component
                 :select-list="stateList"
-                :select-value="selectState"
+                :select-value="selectedState"
                 @changeState="changeState"
               />
             </div>
@@ -220,7 +220,7 @@ export default defineComponent({
             <data-list-component
               list-type="suggest"
               :data-list="viewSuggestList"
-              :header="header"
+              :header="suggestHeader"
               :row-height="39"
               :total-cnt="totalCnt ? totalCnt : 0"
               :list-cnt="13"
@@ -233,7 +233,7 @@ export default defineComponent({
             </span>
             <div class="suggestion-section-body-write-drop">
               <drop-box-component
-                :placeholder="placeholder"
+                :placeholder="typeHolder"
                 :select-list="typeList"
                 :row-width="dropboxWidth"
                 @selectValue="selectType"

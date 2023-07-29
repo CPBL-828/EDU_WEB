@@ -28,22 +28,22 @@ export default defineComponent({
     const mainCategory = ref<categoryInterface[]>();
     const subCategory = ref<categoryInterface[]>();
     const resultSubItem = ref<defaultInterface[]>();
-    const showSubState = ref(false);
-    const selectSubState = ref<string | undefined>(undefined);
+    const viewSubState = ref(false);
+    const selectedSubState = ref<string | undefined>(undefined);
 
     const goToMain = () => {
       common.removeItem(KEYS.MR);
       common.removeItem(KEYS.SR);
 
-      showSubState.value = false;
-      selectSubState.value = undefined;
+      viewSubState.value = false;
+      selectedSubState.value = undefined;
 
       router.push("/main");
     };
 
     const onClickAway = (event: Event) => {
       if (event.isTrusted) {
-        showSubState.value = false;
+        viewSubState.value = false;
       }
     };
 
@@ -59,12 +59,12 @@ export default defineComponent({
             resultSubItem.value = item.VALUE as defaultInterface[];
         });
 
-        showSubState.value = true;
+        viewSubState.value = true;
       } else {
-        if (selectSubState.value) selectSubState.value = undefined;
+        if (selectedSubState.value) selectedSubState.value = undefined;
         if (common.getItem(KEYS.SR)) common.removeItem(KEYS.SR);
 
-        showSubState.value = false;
+        viewSubState.value = false;
 
         router.push("/" + common.getItem(KEYS.MR).mr);
       }
@@ -117,7 +117,7 @@ export default defineComponent({
       () => route.path,
       () => {
         if (route.path.split("/")[2]) {
-          selectSubState.value = route.path.split("/")[2].toUpperCase();
+          selectedSubState.value = route.path.split("/")[2].toUpperCase();
         }
       }
     );
@@ -147,15 +147,15 @@ export default defineComponent({
       }
 
       if (route.path.split("/")[2]) {
-        selectSubState.value = route.path.split("/")[2].toUpperCase();
+        selectedSubState.value = route.path.split("/")[2].toUpperCase();
       }
     });
 
     return {
       mainCategory,
       resultSubItem,
-      showSubState,
-      selectSubState,
+      viewSubState,
+      selectedSubState,
       goToMain,
       onClickAway,
       selectMain,
@@ -184,18 +184,18 @@ export default defineComponent({
 
     <section class="sub-sidebar">
       <div class="sub-sidebar">
-        <div :class="showSubState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
+        <div :class="viewSubState ? 'sub-sidebar-open' : 'sub-sidebar-close'">
           <div class="back">
             <i
               class="fa-solid fa-angles-left"
-              @click="showSubState = false"
+              @click="viewSubState = false"
             ></i>
           </div>
           <div class="hi">반갑습니다!</div>
           <div class="sub-sidebar-open-category" v-if="resultSubItem">
             <div
               :class="
-                selectSubState === item.KEY
+                selectedSubState === item.KEY
                   ? 'sub-sidebar-open-category-item-active'
                   : 'sub-sidebar-open-category-item'
               "

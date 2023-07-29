@@ -21,7 +21,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const userType = ref<string>("");
-    const selectUserType = ref<defaultInterface>();
+    const selectedUserType = ref<defaultInterface>();
     const userId = ref<string>("");
 
     const goBack = () => {
@@ -64,10 +64,12 @@ export default defineComponent({
           window.alert("로그인 성공. 환영합니다!");
           await router.push("/main");
         } else {
-          window.alert(selectUserType.value?.VALUE + " 정보를 찾을 수 없어요!");
+          window.alert(
+            selectedUserType.value?.VALUE + " 정보를 찾을 수 없어요!"
+          );
         }
       } else {
-        window.alert(selectUserType.value?.VALUE + " ID를 입력해 주세요!");
+        window.alert(selectedUserType.value?.VALUE + " ID를 입력해 주세요!");
       }
     };
 
@@ -78,18 +80,18 @@ export default defineComponent({
         .toUpperCase();
 
       if (userType.value === USER_KEY.STU) {
-        selectUserType.value = { KEY: USER_KEY.STU, VALUE: "학생" };
+        selectedUserType.value = { KEY: USER_KEY.STU, VALUE: "학생" };
       } else if (userType.value === USER_KEY.PAR) {
-        selectUserType.value = { KEY: USER_KEY.PAR, VALUE: "학부모" };
+        selectedUserType.value = { KEY: USER_KEY.PAR, VALUE: "학부모" };
       } else if (userType.value === USER_KEY.TEA) {
-        selectUserType.value = { KEY: USER_KEY.TEA, VALUE: "강사" };
+        selectedUserType.value = { KEY: USER_KEY.TEA, VALUE: "강사" };
       } else if (userType.value === USER_KEY.ADM) {
-        selectUserType.value = { KEY: USER_KEY.ADM, VALUE: "관리자" };
+        selectedUserType.value = { KEY: USER_KEY.ADM, VALUE: "관리자" };
       }
     });
 
     return {
-      selectUserType,
+      selectedUserType,
       userId,
       goBack,
       doLogin,
@@ -108,7 +110,7 @@ export default defineComponent({
         <div class="login-input-box-section">
           <div class="login-input-box-section-title">LOGIN</div>
           <div class="login-input-box-section-sub">
-            {{ selectUserType?.VALUE }} ID 입력해주세요
+            {{ selectedUserType?.VALUE }} ID 입력해주세요
           </div>
           <user-circle-icon class="login-input-box-section-icon" />
           <input

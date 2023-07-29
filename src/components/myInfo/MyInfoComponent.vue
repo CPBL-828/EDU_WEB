@@ -42,7 +42,7 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const fileURL: string = "http://52.78.111.175:8000";
     const studentDetail = ref<studentInterface | undefined>(undefined);
-    const studentEditDetail = ref<studentInterface>({
+    const editStudentDetail = ref<studentInterface>({
       studentKey: "",
       parentKey: "",
       name: "",
@@ -62,7 +62,7 @@ export default defineComponent({
     });
     const parentDetail = ref<parentInterface | undefined>(undefined);
     const teacherDetail = ref<teacherInterface | undefined>(undefined);
-    const teacherEditDetail = ref<teacherInterface>({
+    const editTeacherDetail = ref<teacherInterface>({
       teacherKey: "",
       name: "",
       id: "",
@@ -121,20 +121,20 @@ export default defineComponent({
       editState.value = true;
     };
 
-    const doEdit = async () => {
+    const editUser = async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
         let data = {
           teacherKey: teacherDetail.value?.teacherKey,
-          email: teacherEditDetail.value.email,
-          link: teacherEditDetail.value.link,
-          phone: teacherEditDetail.value.phone,
+          email: editTeacherDetail.value.email,
+          link: editTeacherDetail.value.link,
+          phone: editTeacherDetail.value.phone,
         };
 
-        if (teacherDetail.value?.email !== teacherEditDetail.value.email) {
+        if (teacherDetail.value?.email !== editTeacherDetail.value.email) {
         } else if (
-          teacherDetail.value?.phone !== teacherEditDetail.value.phone
+          teacherDetail.value?.phone !== editTeacherDetail.value.phone
         ) {
-        } else if (teacherDetail.value?.link !== teacherEditDetail.value.link) {
+        } else if (teacherDetail.value?.link !== editTeacherDetail.value.link) {
         } else {
           if (
             window.confirm("변경된 사항이 없어요. 수정을 취소하시겠습니까?")
@@ -161,19 +161,19 @@ export default defineComponent({
       } else {
         let data = {
           studentKey: studentDetail.value?.studentKey,
-          phone: studentEditDetail.value.phone,
-          address: studentEditDetail.value.address,
+          phone: editStudentDetail.value.phone,
+          address: editStudentDetail.value.address,
         };
 
-        if (studentDetail.value?.phone !== studentEditDetail.value.phone) {
+        if (studentDetail.value?.phone !== editStudentDetail.value.phone) {
         } else if (
-          studentDetail.value?.school !== studentEditDetail.value.phone
+          studentDetail.value?.school !== editStudentDetail.value.phone
         ) {
         } else if (
-          studentDetail.value?.grade !== studentEditDetail.value.grade
+          studentDetail.value?.grade !== editStudentDetail.value.grade
         ) {
         } else if (
-          studentDetail.value?.address !== studentEditDetail.value.address
+          studentDetail.value?.address !== editStudentDetail.value.address
         ) {
         } else {
           if (
@@ -272,15 +272,15 @@ export default defineComponent({
         parentDetail.value = props.userData as parentInterface;
       } else if (props.userKey === USER_KEY.STU) {
         studentDetail.value = props.userData as studentInterface;
-        studentEditDetail.value.school = studentDetail.value.school;
-        studentEditDetail.value.grade = studentDetail.value.grade;
-        studentEditDetail.value.address = studentDetail.value.address;
-        studentEditDetail.value.phone = studentDetail.value.phone;
+        editStudentDetail.value.school = studentDetail.value.school;
+        editStudentDetail.value.grade = studentDetail.value.grade;
+        editStudentDetail.value.address = studentDetail.value.address;
+        editStudentDetail.value.phone = studentDetail.value.phone;
       } else if (props.userKey === USER_KEY.TEA) {
         teacherDetail.value = props.userData as teacherInterface;
-        teacherEditDetail.value.email = teacherDetail.value.email;
-        teacherEditDetail.value.phone = teacherDetail.value.phone;
-        teacherEditDetail.value.link = teacherDetail.value.link;
+        editTeacherDetail.value.email = teacherDetail.value.email;
+        editTeacherDetail.value.phone = teacherDetail.value.phone;
+        editTeacherDetail.value.link = teacherDetail.value.link;
         resumeDownload?.addEventListener("click", downloadResume);
       }
     });
@@ -295,17 +295,17 @@ export default defineComponent({
       category,
       fileURL,
       studentDetail,
-      studentEditDetail,
+      editStudentDetail,
       parentDetail,
       teacherDetail,
-      teacherEditDetail,
+      editTeacherDetail,
       groupList,
       editState,
       resumeState,
       showEditModal,
       showResumeModal,
       changeEditState,
-      doEdit,
+      editUser,
       editTeacherResume,
       downloadResume,
     };
@@ -452,7 +452,7 @@ export default defineComponent({
         <div class="btn">
           <div
             :class="editState ? 'btn-save-active' : 'btn-save'"
-            @click="doEdit"
+            @click="editUser"
           >
             저장하기
           </div>
@@ -540,7 +540,7 @@ export default defineComponent({
                     type="text"
                     class="sns-item"
                     placeholder="주소"
-                    v-model="studentEditDetail.address"
+                    v-model="editStudentDetail.address"
                   />
                 </div>
               </div>
@@ -557,7 +557,7 @@ export default defineComponent({
                     class="phone-item"
                     type="text"
                     placeholder="연락처"
-                    v-model="studentEditDetail.phone"
+                    v-model="editStudentDetail.phone"
                   />
                 </div>
                 <div class="join">
@@ -635,7 +635,7 @@ export default defineComponent({
                     v-if="editState"
                     type="text"
                     class="email-item"
-                    v-model="teacherEditDetail.email"
+                    v-model="editTeacherDetail.email"
                   />
                 </div>
                 <div class="sns">
@@ -650,7 +650,7 @@ export default defineComponent({
                     type="text"
                     class="sns-item"
                     placeholder="SNS 주소"
-                    v-model="teacherEditDetail.link"
+                    v-model="editTeacherDetail.link"
                   />
                 </div>
               </div>
@@ -666,7 +666,7 @@ export default defineComponent({
                     v-if="editState"
                     class="phone-item"
                     type="text"
-                    v-model="teacherEditDetail.phone"
+                    v-model="editTeacherDetail.phone"
                   />
                 </div>
                 <div class="join">

@@ -8,16 +8,16 @@ export default defineComponent({
   name: "HeaderComponent",
   setup() {
     const route = useRoute();
-    const showRoute = ref(false);
+    const viewRouteState = ref(false);
     const currentCategory = ref<Array<defaultInterface> | undefined>(undefined);
 
     watch(
       () => route.path,
       () => {
         if (route.path === "/main") {
-          showRoute.value = false;
+          viewRouteState.value = false;
         } else {
-          showRoute.value = true;
+          viewRouteState.value = true;
           currentCategory.value = common.findCategory();
         }
       }
@@ -25,15 +25,15 @@ export default defineComponent({
 
     onMounted(() => {
       if (route.path === "/main") {
-        showRoute.value = false;
+        viewRouteState.value = false;
       } else {
-        showRoute.value = true;
+        viewRouteState.value = true;
         currentCategory.value = common.findCategory();
       }
     });
 
     return {
-      showRoute,
+      viewRouteState,
       currentCategory,
     };
   },
@@ -43,7 +43,7 @@ export default defineComponent({
 <template>
   <section class="header">
     <div class="header">
-      <div class="path" v-if="showRoute && currentCategory">
+      <div class="path" v-if="viewRouteState && currentCategory">
         <i class="fa-solid fa-bars"></i>
         {{ currentCategory[0] ? currentCategory[0]["VALUE"] : "" }}
         <i

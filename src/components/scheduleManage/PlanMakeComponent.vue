@@ -52,7 +52,7 @@ export default defineComponent({
     const rejectMode = ref(false);
     const rejectReason = ref<string>("");
     const scheduleList = ref<Array<scheduleInterface>>([]);
-    const showScheduleList = ref<Array<scheduleInterface>>([]);
+    const viewScheduleList = ref<Array<scheduleInterface>>([]);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
 
@@ -90,10 +90,10 @@ export default defineComponent({
         }
 
         if (scheduleList.value.length > 11) {
-          showScheduleList.value = scheduleList.value.slice(0, 11);
+          viewScheduleList.value = scheduleList.value.slice(0, 11);
           page.value = Math.ceil(scheduleList.value.length / 11);
         } else {
-          showScheduleList.value = scheduleList.value;
+          viewScheduleList.value = scheduleList.value;
           page.value = 0;
         }
       }
@@ -226,7 +226,7 @@ export default defineComponent({
     watch(
       () => currentPage.value,
       () => {
-        showScheduleList.value = scheduleList.value.slice(
+        viewScheduleList.value = scheduleList.value.slice(
           11 * currentPage.value - 11,
           11 * currentPage.value
         );
@@ -261,7 +261,7 @@ export default defineComponent({
       previewScheduleList,
       rejectMode,
       rejectReason,
-      showScheduleList,
+      viewScheduleList,
       page,
       currentPage,
       selectPage,
@@ -310,7 +310,7 @@ export default defineComponent({
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in showScheduleList">
+                <tr v-for="item in viewScheduleList">
                   <td
                     class="teacher"
                     v-if="adminState"

@@ -32,7 +32,7 @@ export default defineComponent({
     const store = useStore();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const teacherKey = ref<string>("");
-    const selectState = ref(false);
+    const selectLectureState = ref(false);
     const lectureDetail = ref<scheduleInterface | undefined>(undefined);
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const attendListHeader: Array<defaultInterface> = [
@@ -58,7 +58,7 @@ export default defineComponent({
 
     const selectLecture = (lecture: scheduleInterface) => {
       lectureDetail.value = lecture;
-      selectState.value = true;
+      selectLectureState.value = true;
     };
 
     //TODO getStudentList -> getLectureStatusList
@@ -141,7 +141,7 @@ export default defineComponent({
     };
 
     watch(
-      () => selectState.value,
+      () => selectLectureState.value,
       async () => {
         if (common.getItem(KEYS.UK).userKey === USER_KEY.PAR) {
         } else {
@@ -172,7 +172,7 @@ export default defineComponent({
 
     return {
       category,
-      selectState,
+      selectLectureState,
       lectureDetail,
       studentList,
       attendListHeader,
@@ -203,7 +203,10 @@ export default defineComponent({
           }}
         </div>
         <div class="attendance-section-body">
-          <div class="attendance-section-body-lecture" v-if="!selectState">
+          <div
+            class="attendance-section-body-lecture"
+            v-if="!selectLectureState"
+          >
             <select-list-component
               list-type="LECTURE"
               @selectLecture="selectLecture"

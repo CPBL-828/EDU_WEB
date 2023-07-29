@@ -33,18 +33,18 @@ export default defineComponent({
     const adminState = ref(false);
     const selectLectureState = ref(false);
     const lectureDetail = ref<scheduleInterface | undefined>(undefined);
-    const assignSelectList: defaultInterface[] = [
+    const typeList: defaultInterface[] = [
       { KEY: "ALL", VALUE: "전체" },
       { KEY: "PER", VALUE: "개별" },
     ];
     const viewAssignType = ref<string>("ALL");
-    const assignListHeader: defaultInterface[] = [
+    const assignHeader: defaultInterface[] = [
       { KEY: "CREATE", VALUE: "생성일" },
       { KEY: "DEADLINE", VALUE: "마감일" },
       { KEY: "FILE", VALUE: "과제 파일" },
     ];
     const assignList = ref<Array<assignInterface> | undefined>(undefined);
-    const assignTotalCnt = ref(0);
+    const totalCnt = ref(0);
     const createMode = ref(false);
     const modalFirstPage = ref(true);
     const createAssignType = ref("ALL");
@@ -85,7 +85,7 @@ export default defineComponent({
         if (result.count > 0) {
           assignList.value = result.resultData as assignInterface[];
 
-          assignTotalCnt.value = assignList.value?.length;
+          totalCnt.value = assignList.value?.length;
         }
       }
     };
@@ -338,11 +338,11 @@ export default defineComponent({
       adminState,
       selectLectureState,
       lectureDetail,
-      assignSelectList,
+      typeList,
       viewAssignType,
-      assignListHeader,
+      assignHeader,
       assignList,
-      assignTotalCnt,
+      totalCnt,
       createMode,
       modalFirstPage,
       createAssignType,
@@ -397,7 +397,7 @@ export default defineComponent({
             <div class="assignment-section-body-content-title-btn">
               <div class="assignment-section-body-content-title-btn-type">
                 <select-button-component
-                  :select-list="assignSelectList"
+                  :select-list="typeList"
                   :select-value="viewAssignType"
                   @changeState="changeViewAssignType"
                 ></select-button-component>
@@ -413,11 +413,11 @@ export default defineComponent({
           </div>
           <div class="assignment-section-body-content-list">
             <data-list-component
-              :header="assignListHeader"
+              :header="assignHeader"
               :data-list="assignList ? assignList : []"
               admin-state="N"
               :list-cnt="10"
-              :total-cnt="assignTotalCnt ? assignTotalCnt : 0"
+              :total-cnt="totalCnt ? totalCnt : 0"
               list-type="assign"
               :row-height="44"
               @downloadFile="downloadFile"
@@ -463,7 +463,7 @@ export default defineComponent({
             </div>
             <div class="assign-create-header-select">
               <select-button-component
-                :select-list="assignSelectList"
+                :select-list="typeList"
                 :select-value="createAssignType"
                 @changeState="changeCreateAssignType"
               ></select-button-component>

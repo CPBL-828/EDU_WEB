@@ -56,17 +56,17 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const showNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
-    const showSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
-    const showConsultList = ref<Array<consultInterface> | undefined>(undefined);
-    const showAnalysisList = ref<Array<analysisInterface> | undefined>(
+    const viewNoticeList = ref<Array<noticeInterface> | undefined>(undefined);
+    const viewSuggestList = ref<Array<suggestInterface> | undefined>(undefined);
+    const viewConsultList = ref<Array<consultInterface> | undefined>(undefined);
+    const viewAnalysisList = ref<Array<analysisInterface> | undefined>(
       undefined
     );
     const showAttendList = ref<Array<viewAttendInterface> | undefined>(
       undefined
     );
-    const showTestList = ref<Array<testInterface> | undefined>(undefined);
-    const showAssignList = ref<Array<assignInterface> | undefined>(undefined);
+    const viewTestList = ref<Array<testInterface> | undefined>(undefined);
+    const viewAssignList = ref<Array<assignInterface> | undefined>(undefined);
     const totalPage = ref<number>(0);
     const currentPage = ref<number>(1);
     const listCnt = ref<number>(0);
@@ -75,13 +75,13 @@ export default defineComponent({
     const setNoticeList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showNoticeList.value = props.dataList.slice(
+          viewNoticeList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as noticeInterface[];
           totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showNoticeList.value = props.dataList as noticeInterface[];
+          viewNoticeList.value = props.dataList as noticeInterface[];
           totalPage.value = 0;
         }
       }
@@ -91,13 +91,13 @@ export default defineComponent({
     const setSuggestList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showSuggestList.value = props.dataList.slice(
+          viewSuggestList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as suggestInterface[];
           totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showSuggestList.value = props.dataList as suggestInterface[];
+          viewSuggestList.value = props.dataList as suggestInterface[];
           totalPage.value = 0;
         }
       }
@@ -107,13 +107,13 @@ export default defineComponent({
     const setConsultList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showConsultList.value = props.dataList.slice(
+          viewConsultList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as consultInterface[];
           totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showConsultList.value = props.dataList as consultInterface[];
+          viewConsultList.value = props.dataList as consultInterface[];
           totalPage.value = 0;
         }
       }
@@ -123,13 +123,13 @@ export default defineComponent({
     const setAnalysisList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showAnalysisList.value = props.dataList.slice(
+          viewAnalysisList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as analysisInterface[];
           totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showAnalysisList.value = props.dataList as analysisInterface[];
+          viewAnalysisList.value = props.dataList as analysisInterface[];
           totalPage.value = 0;
         }
       }
@@ -155,13 +155,13 @@ export default defineComponent({
     const setTestList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showTestList.value = props.dataList.slice(
+          viewTestList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as testInterface[];
           totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showTestList.value = props.dataList as testInterface[];
+          viewTestList.value = props.dataList as testInterface[];
           totalPage.value = 0;
         }
       }
@@ -171,13 +171,13 @@ export default defineComponent({
     const setAssignList = () => {
       if (props.dataList) {
         if (props.totalCnt > listCnt.value) {
-          showAssignList.value = props.dataList.slice(
+          viewAssignList.value = props.dataList.slice(
             0,
             listCnt.value
           ) as assignInterface[];
           totalPage.value = Math.ceil(props.totalCnt / listCnt.value);
         } else {
-          showAssignList.value = props.dataList as assignInterface[];
+          viewAssignList.value = props.dataList as assignInterface[];
           totalPage.value = 0;
         }
       }
@@ -196,22 +196,22 @@ export default defineComponent({
       () => currentPage.value,
       () => {
         if (props.listType === "notice") {
-          showNoticeList.value = props.dataList?.slice(
+          viewNoticeList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as noticeInterface[];
         } else if (props.listType === "suggest") {
-          showSuggestList.value = props.dataList?.slice(
+          viewSuggestList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as suggestInterface[];
         } else if (props.listType === "consult") {
-          showConsultList.value = props.dataList?.slice(
+          viewConsultList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as consultInterface[];
         } else if (props.listType === "analysis") {
-          showAnalysisList.value = props.dataList?.slice(
+          viewAnalysisList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as analysisInterface[];
@@ -221,12 +221,12 @@ export default defineComponent({
             listCnt.value * currentPage.value
           ) as viewAttendInterface[];
         } else if (props.listType == "test") {
-          showTestList.value = props.dataList?.slice(
+          viewTestList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as testInterface[];
         } else if (props.listType == "assign") {
-          showAssignList.value = props.dataList?.slice(
+          viewAssignList.value = props.dataList?.slice(
             listCnt.value * currentPage.value - listCnt.value,
             listCnt.value * currentPage.value
           ) as assignInterface[];
@@ -280,13 +280,13 @@ export default defineComponent({
     });
 
     return {
-      showNoticeList,
-      showSuggestList,
-      showConsultList,
-      showAnalysisList,
+      viewNoticeList,
+      viewSuggestList,
+      viewConsultList,
+      viewAnalysisList,
       showAttendList,
-      showTestList,
-      showAssignList,
+      viewTestList,
+      viewAssignList,
       totalPage,
       currentPage,
       selectPage,
@@ -311,8 +311,8 @@ export default defineComponent({
           <!--        공지 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showNoticeList"
-            v-for="item in showNoticeList"
+            v-if="viewNoticeList"
+            v-for="item in viewNoticeList"
             @click="$emit('showNoticeDetail', item)"
           >
             <td
@@ -354,8 +354,8 @@ export default defineComponent({
           <!--          건의사항 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showSuggestList"
-            v-for="item in showSuggestList"
+            v-if="viewSuggestList"
+            v-for="item in viewSuggestList"
             @click="$emit('saveSuggestDetail', item)"
           >
             <td
@@ -400,8 +400,8 @@ export default defineComponent({
           <!--          상담 목록 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showConsultList"
-            v-for="item in showConsultList"
+            v-if="viewConsultList"
+            v-for="item in viewConsultList"
             @click="$emit('showConsultDetail', item)"
           >
             <td
@@ -451,8 +451,8 @@ export default defineComponent({
           <!--          분석 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showAnalysisList"
-            v-for="item in showAnalysisList"
+            v-if="viewAnalysisList"
+            v-for="item in viewAnalysisList"
           >
             <td
               :style="{
@@ -532,8 +532,8 @@ export default defineComponent({
           <!--        시험 목록 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showTestList"
-            v-for="item in showTestList"
+            v-if="viewTestList"
+            v-for="item in viewTestList"
           >
             <td
               :style="{
@@ -592,8 +592,8 @@ export default defineComponent({
           <!--          과제 목록 -->
           <tr
             class="data=list=section-body-item"
-            v-if="showAssignList"
-            v-for="item in showAssignList"
+            v-if="viewAssignList"
+            v-for="item in viewAssignList"
           >
             <td
               :style="{

@@ -74,7 +74,7 @@ export default defineComponent({
     const planDate = ref<Date | undefined>(undefined);
     const planDateCalendarState = ref(false);
     const planConsultList = ref<Array<consultInterface>>([]);
-    const showPlanConsultList = ref<Array<consultInterface>>([]);
+    const viewPlanConsultList = ref<Array<consultInterface>>([]);
     const planTotalCnt = ref<number>(0);
     const planPage = ref<number>(0);
     const planCurrentPage = ref<number>(1);
@@ -221,10 +221,10 @@ export default defineComponent({
       listTotalCnt.value = listConsultList.value.length;
       planTotalCnt.value = planConsultList.value.length;
       if (planTotalCnt.value > planListCnt) {
-        showPlanConsultList.value = planConsultList.value.slice(0, planListCnt);
+        viewPlanConsultList.value = planConsultList.value.slice(0, planListCnt);
         planPage.value = Math.ceil(planTotalCnt.value / planListCnt);
       } else {
-        showPlanConsultList.value = planConsultList.value;
+        viewPlanConsultList.value = planConsultList.value;
         planPage.value = 0;
       }
     };
@@ -451,7 +451,7 @@ export default defineComponent({
       () => planCurrentPage.value,
       () => {
         if (planConsultList.value.length > 0) {
-          showPlanConsultList.value = planConsultList.value?.slice(
+          viewPlanConsultList.value = planConsultList.value?.slice(
             planListCnt * planCurrentPage.value - planListCnt,
             planListCnt * planCurrentPage.value
           ) as [];
@@ -516,7 +516,7 @@ export default defineComponent({
       planDate,
       planDateCalendarState,
       planConsultList,
-      showPlanConsultList,
+      viewPlanConsultList,
       planTotalCnt,
       planPage,
       planCurrentPage,
@@ -725,7 +725,7 @@ export default defineComponent({
           <div class="underline"></div>
           <div v-if="planConsultList" class="consult-plan-section-body-list">
             <div
-              v-for="item in showPlanConsultList"
+              v-for="item in viewPlanConsultList"
               class="consult-plan-section-body-list-item"
             >
               <div class="consult-plan-section-body-list-item-date">

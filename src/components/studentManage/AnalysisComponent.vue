@@ -61,7 +61,7 @@ export default defineComponent({
     const totalCnt = ref<number>(0);
 
     const modalState = ref<string | undefined>(undefined);
-    const analysisInsertDetail = ref<string>("");
+    const insertAnalysisDetail = ref<string>("");
     const analysisDetail = ref<analysisInterface | undefined>(undefined);
 
     const editState = ref(false);
@@ -172,7 +172,7 @@ export default defineComponent({
     };
 
     const insertAnalysis = async () => {
-      if (!analysisInsertDetail.value) {
+      if (!insertAnalysisDetail.value) {
         window.alert("분석 내용을 입력해 주세요.");
         return false;
       }
@@ -182,7 +182,7 @@ export default defineComponent({
         studentName: selectedStudent.value?.name,
         writerKey: userKey.value,
         writerName: props.adminState ? "관리자" : teacherDetail.value?.name,
-        content: analysisInsertDetail.value,
+        content: insertAnalysisDetail.value,
       };
 
       const result = await ApiClient(
@@ -206,7 +206,7 @@ export default defineComponent({
     };
 
     const editAnalysis = async () => {
-      if (analysisDetail.value?.content === analysisInsertDetail.value) {
+      if (analysisDetail.value?.content === insertAnalysisDetail.value) {
         if (
           window.confirm("변경된 내용이 없습니다. 수정을 취소하시겠습니까?")
         ) {
@@ -215,7 +215,7 @@ export default defineComponent({
       } else {
         let data = {
           analysisKey: analysisDetail.value?.analysisKey,
-          content: analysisInsertDetail.value,
+          content: insertAnalysisDetail.value,
         };
 
         const result = await ApiClient(
@@ -320,7 +320,7 @@ export default defineComponent({
       analysisList,
       totalCnt,
       modalState,
-      analysisInsertDetail,
+      insertAnalysisDetail,
       analysisDetail,
       editState,
       goBack,
@@ -481,7 +481,7 @@ export default defineComponent({
           </div>
           <div class="sap"></div>
           <textarea
-            v-model="analysisInsertDetail"
+            v-model="insertAnalysisDetail"
             placeholder="분석 내용을 입력해주세요."
             class="analysis-insert-body"
           ></textarea>
@@ -506,7 +506,7 @@ export default defineComponent({
           </div>
           <textarea
             v-if="editState"
-            v-model="analysisInsertDetail"
+            v-model="insertAnalysisDetail"
             :placeholder="analysisDetail?.content"
             class="analysis-detail-body"
           ></textarea>

@@ -29,7 +29,7 @@ export default defineComponent({
       { KEY: "TEA", VALUE: "담당 강사" },
     ];
     const groupList = ref<Array<groupInterface>>([]);
-    const groupInsertDetail = ref<groupInterface>({
+    const insertGroupDetail = ref<groupInterface>({
       groupKey: "",
       teacherKey_id: "",
       teacherName: "",
@@ -55,7 +55,7 @@ export default defineComponent({
     const groupDetail = ref<groupInterface | undefined>(undefined);
     const teacherDetail = ref<teacherInterface | undefined>(undefined);
     const editState = ref(false);
-    const groupEditDetail = ref<groupInterface>({
+    const editGroupDetail = ref<groupInterface>({
       groupKey: "",
       teacherKey_id: "",
       teacherName: "",
@@ -166,7 +166,7 @@ export default defineComponent({
       if (result) {
         if (createState.value) {
           selectedTeacher.value = result.resultData[0] as teacherInterface;
-          groupInsertDetail.value.teacherKey_id =
+          insertGroupDetail.value.teacherKey_id =
             selectedTeacher.value.teacherKey;
         } else {
           teacherDetail.value = result.resultData[0] as teacherInterface;
@@ -264,10 +264,10 @@ export default defineComponent({
       }
     };
 
-    const showGroupDetail = async (gruop: groupInterface) => {
-      groupDetail.value = gruop;
+    const showGroupDetail = async (group: groupInterface) => {
+      groupDetail.value = group;
       await getGroupStatusList();
-      await getTeacherDetail(gruop.teacherKey_id);
+      await getTeacherDetail(group.teacherKey_id);
 
       store.commit("setModalState", true);
     };
@@ -316,22 +316,22 @@ export default defineComponent({
     };
 
     const createGroup = async (mode: number) => {
-      if (!groupInsertDetail.value.groupName) {
+      if (!insertGroupDetail.value.groupName) {
         window.alert("반 이름을 입력해 주세요.");
         return false;
-      } else if (!groupInsertDetail.value.groupContent) {
+      } else if (!insertGroupDetail.value.groupContent) {
         window.alert("반 설명을 입력해 주세요.");
         return false;
-      } else if (!groupInsertDetail.value.teacherKey_id) {
+      } else if (!insertGroupDetail.value.teacherKey_id) {
         window.alert("담당 강사님을 선택해 주세요.");
         return false;
       }
 
       if (window.confirm("입력하신 정보로 반을 생성하시겠습니까?")) {
         let data = {
-          teacherKey: groupInsertDetail.value.teacherKey_id,
-          groupName: groupInsertDetail.value.groupName,
-          groupContent: groupInsertDetail.value.groupContent,
+          teacherKey: insertGroupDetail.value.teacherKey_id,
+          groupName: insertGroupDetail.value.groupName,
+          groupContent: insertGroupDetail.value.groupContent,
         };
 
         const result = await ApiClient(
@@ -368,10 +368,10 @@ export default defineComponent({
       await setTeacherList();
 
       if (groupDetail.value) {
-        groupEditDetail.value.groupKey = groupDetail.value.groupKey;
-        groupEditDetail.value.teacherKey_id = groupDetail.value.teacherKey_id;
-        groupEditDetail.value.groupName = groupDetail.value.groupName;
-        groupEditDetail.value.groupContent = groupDetail.value.groupContent;
+        editGroupDetail.value.groupKey = groupDetail.value.groupKey;
+        editGroupDetail.value.teacherKey_id = groupDetail.value.teacherKey_id;
+        editGroupDetail.value.groupName = groupDetail.value.groupName;
+        editGroupDetail.value.groupContent = groupDetail.value.groupContent;
       }
 
       editState.value = true;
@@ -379,7 +379,7 @@ export default defineComponent({
 
     const selectTeacher = (teacher: defaultInterface) => {
       if (!createState.value) {
-        groupEditDetail.value.teacherKey_id = teacher.KEY;
+        editGroupDetail.value.teacherKey_id = teacher.KEY;
       }
 
       getTeacherDetail(teacher.KEY);
@@ -387,9 +387,9 @@ export default defineComponent({
 
     const editGroup = async () => {
       if (
-        groupDetail.value?.groupName === groupEditDetail.value.groupName &&
+        groupDetail.value?.groupName === editGroupDetail.value.groupName &&
         groupDetail.value?.teacherKey_id === teacherDetail.value?.teacherKey &&
-        groupDetail.value?.groupContent === groupEditDetail.value.groupContent
+        groupDetail.value?.groupContent === editGroupDetail.value.groupContent
       ) {
         if (
           window.confirm("수정된 내용이 없습니다.\n수정을 취소하시겠습니까?")
@@ -403,10 +403,10 @@ export default defineComponent({
 
       if (window.confirm("수정한 정보를 저장하시겠습니까?")) {
         let data = {
-          groupKey: groupEditDetail.value.groupKey,
-          teacherKey: groupEditDetail.value.teacherKey_id,
-          groupName: groupEditDetail.value.groupName,
-          groupContent: groupEditDetail.value.groupContent,
+          groupKey: editGroupDetail.value.groupKey,
+          teacherKey: editGroupDetail.value.teacherKey_id,
+          groupName: editGroupDetail.value.groupName,
+          groupContent: editGroupDetail.value.groupContent,
         };
 
         const result = await ApiClient(
@@ -447,7 +447,7 @@ export default defineComponent({
       moreState,
       groupHeader,
       groupList,
-      groupInsertDetail,
+      insertGroupDetail,
       selectedTeacher,
       searchStudent,
       studentList,
@@ -456,7 +456,7 @@ export default defineComponent({
       groupDetail,
       teacherDetail,
       editState,
-      groupEditDetail,
+      editGroupDetail,
       teacherList,
       deleteGroup,
       goBack,
@@ -547,7 +547,7 @@ export default defineComponent({
                     <span class="label">반 이름</span>
                     <input
                       type="text"
-                      v-model="groupInsertDetail.groupName"
+                      v-model="insertGroupDetail.groupName"
                       maxlength="50"
                     />
                   </div>
@@ -555,7 +555,7 @@ export default defineComponent({
                     class="group-section-body-insert-first-left-container-content"
                   >
                     <span class="label">반 설명</span>
-                    <textarea v-model="groupInsertDetail.groupContent" />
+                    <textarea v-model="insertGroupDetail.groupContent" />
                   </div>
                   <div
                     class="group-section-body-insert-first-left-container-teacher"
@@ -741,7 +741,7 @@ export default defineComponent({
                 <input
                   type="text"
                   v-if="editState"
-                  v-model="groupEditDetail.groupName"
+                  v-model="editGroupDetail.groupName"
                   maxlength="50"
                 />
                 <div class="item" v-else>{{ groupDetail?.groupName }}</div>
@@ -751,7 +751,7 @@ export default defineComponent({
                 <input
                   type="text"
                   v-if="editState"
-                  v-model="groupEditDetail.groupContent"
+                  v-model="editGroupDetail.groupContent"
                 />
                 <div class="item" v-else>{{ groupDetail?.groupContent }}</div>
               </div>

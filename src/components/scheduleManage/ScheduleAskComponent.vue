@@ -32,7 +32,7 @@ export default defineComponent({
     const roomKey = ref<string | undefined>(undefined);
     const roomName = ref<string>("");
     const scheduleName = ref<string>("");
-    const selectDay = ref<string>("");
+    const selectedDay = ref<string>("");
     const time = ref<Date>(new Date());
     const duration = ref<number>();
     const groupKey = ref<string>("");
@@ -56,10 +56,10 @@ export default defineComponent({
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectTime = ref("pm");
+    const selectedTime = ref("pm");
 
     const changeTime = (time: string) => {
-      selectTime.value = time;
+      selectedTime.value = time;
     };
 
     const getLectureList = async () => {
@@ -147,11 +147,11 @@ export default defineComponent({
       await getLectureList();
     };
 
-    const changeDay = (day: defaultInterface) => {
-      selectDay.value = day.VALUE as string;
+    const selectDay = (day: defaultInterface) => {
+      selectedDay.value = day.VALUE as string;
     };
 
-    const showScheduleBook = () => {
+    const showBookModal = () => {
       store.commit("setModalState", true);
     };
 
@@ -179,7 +179,7 @@ export default defineComponent({
       } else if (!scheduleName.value) {
         window.alert("강의명을 입력해 주세요.");
         return false;
-      } else if (!selectDay.value) {
+      } else if (!selectedDay.value) {
         window.alert("요일을 선택해 주세요.");
         return false;
       } else if (!duration.value) {
@@ -205,7 +205,7 @@ export default defineComponent({
           subject: common.getItem(KEYS.LU).resSubject,
           book: book.value,
           target: common.getItem(KEYS.LU).part,
-          day: days.indexOf(selectDay.value) + 1,
+          day: days.indexOf(selectedDay.value) + 1,
           startTime: time.value
             .toLocaleTimeString()
             .replace(":", "-")
@@ -257,7 +257,7 @@ export default defineComponent({
     return {
       category,
       scheduleName,
-      selectDay,
+      selectedDay,
       time,
       duration,
       book,
@@ -267,12 +267,12 @@ export default defineComponent({
       selectDayList,
       scheduleList,
       timeList,
-      selectTime,
+      selectedTime,
       changeTime,
       selectGroup,
       selectRoom,
-      changeDay,
-      showScheduleBook,
+      selectDay,
+      showBookModal,
       insertBook,
       createLecturePlan,
     };
@@ -305,7 +305,7 @@ export default defineComponent({
             <div class="schedule-ask-section-body-button-state">
               <select-button-component
                 :select-list="timeList"
-                :select-value="selectTime"
+                :select-value="selectedTime"
                 @changeTime="changeTime"
               ></select-button-component>
             </div>
@@ -313,7 +313,7 @@ export default defineComponent({
           <div class="schedule-ask-section-body-timetable">
             <timetable-component
               :lecture-list="scheduleList"
-              :select-type="selectTime"
+              :select-type="selectedTime"
             ></timetable-component>
           </div>
           <div class="schedule-ask-section-body-info">
@@ -345,7 +345,7 @@ export default defineComponent({
                   placeholder="요일"
                   row-width="216px"
                   row-height="30px"
-                  @selectValue="changeDay"
+                  @selectValue="selectDay"
                 ></drop-box-component>
                 <div class="start">
                   <div class="start-label">시작 시간</div>
@@ -378,7 +378,7 @@ export default defineComponent({
                 </button>
                 <button
                   class="schedule-ask-section-body-info-container-etc-book"
-                  @click="showScheduleBook"
+                  @click="showBookModal"
                 >
                   교재 링크 입력하기
                 </button>

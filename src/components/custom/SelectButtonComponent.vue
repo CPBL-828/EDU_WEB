@@ -18,18 +18,18 @@ export default defineComponent({
     const itemList = ref<Array<defaultInterface>>(
       props.selectList as defaultInterface[]
     );
-    const selectState = ref<string>(props.selectValue as string);
+    const selectedState = ref<string>(props.selectValue as string);
 
     watch(
       () => props.selectValue,
       () => {
-        selectState.value = props.selectValue as string;
+        selectedState.value = props.selectValue as string;
       }
     );
 
     return {
       itemList,
-      selectState,
+      selectedState,
     };
   },
 });
@@ -41,7 +41,7 @@ export default defineComponent({
       <div class="select-state">
         <div
           :class="
-            selectState === itemList[0].KEY
+            selectedState === itemList[0].KEY
               ? 'select-state-ok-active'
               : 'select-state-ok'
           "
@@ -51,7 +51,7 @@ export default defineComponent({
         </div>
         <div
           :class="
-            selectState === itemList[1].KEY
+            selectedState === itemList[1].KEY
               ? 'select-state-wait-active'
               : 'select-state-wait'
           "

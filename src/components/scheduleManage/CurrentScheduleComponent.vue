@@ -42,7 +42,7 @@ export default defineComponent({
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectTime = ref("pm");
+    const selectedTime = ref("pm");
 
     const getLectureList = async () => {
       if (common.getItem(KEYS.UK).userKey === USER_KEY.TEA) {
@@ -92,7 +92,7 @@ export default defineComponent({
     };
 
     const changeTime = (time: string) => {
-      selectTime.value = time;
+      selectedTime.value = time;
     };
 
     const selectSchedule = (schedule: scheduleInterface) => {
@@ -125,7 +125,7 @@ export default defineComponent({
       scheduleList,
       scheduleDetail,
       timeList,
-      selectTime,
+      selectedTime,
       selectRoom,
       goBack,
       changeTime,
@@ -170,7 +170,7 @@ export default defineComponent({
             <div class="current-schedule-section-body-button-state">
               <select-button-component
                 :select-list="timeList"
-                :select-value="selectTime"
+                :select-value="selectedTime"
                 @changeTime="changeTime"
               ></select-button-component>
             </div>
@@ -191,7 +191,7 @@ export default defineComponent({
           >
             <timetable-component
               :lecture-list="scheduleList"
-              :select-type="selectTime"
+              :select-type="selectedTime"
               @showLectureDetail="selectSchedule"
             ></timetable-component>
           </div>

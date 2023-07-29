@@ -28,7 +28,7 @@ export default defineComponent({
     const userKey = ref<string>("");
     const teacherDetail = ref<teacherInterface | undefined>(undefined);
     const lectureList = ref<Array<scheduleInterface>>([]);
-    const showLectureList = ref<Array<scheduleInterface>>([]);
+    const viewLectureList = ref<Array<scheduleInterface>>([]);
     const lectureColor = ref<Array<string>>([
       "#d57a7b",
       "#e39177",
@@ -45,25 +45,25 @@ export default defineComponent({
     ]);
     const lecturePage = ref<number>(0);
     const currentLecturePage = ref<number>(1);
-    const selectList: defaultInterface[] = [
+    const timeList: defaultInterface[] = [
       { KEY: "pm", VALUE: "오후" },
       { KEY: "am", VALUE: "오전" },
     ];
-    const selectValue = ref("pm");
+    const selectedTime = ref("pm");
 
     const roomList = ref<Array<roomInterface>>([]);
-    const showRoomList = ref<Array<roomInterface>>([]);
+    const viewRoomList = ref<Array<roomInterface>>([]);
     const roomPage = ref<number>(0);
     const currentRoomPage = ref<number>(1);
 
     const teacherList = ref<Array<teacherInterface>>([]);
-    const showTeacherList = ref<Array<teacherInterface>>([]);
+    const viewTeacherList = ref<Array<teacherInterface>>([]);
     const teacherPage = ref<number>(0);
     const currentTeacherPage = ref<number>(1);
 
     const setLectureList = async () => {
       lectureList.value = [];
-      showLectureList.value = [];
+      viewLectureList.value = [];
 
       let data = {
         userKey: userKey.value,
@@ -86,7 +86,7 @@ export default defineComponent({
               item.start = Number(item.startTime?.substring(0, 2));
               item.minute = Number(item.startTime?.substring(3, 5));
 
-              if (selectValue.value === "pm") {
+              if (selectedTime.value === "pm") {
                 if (item.start >= 13) lectureList.value.push(item);
               } else {
                 if (item.start < 13) lectureList.value.push(item);
@@ -97,10 +97,10 @@ export default defineComponent({
       }
 
       if (lectureList.value.length > 10) {
-        showLectureList.value = lectureList.value.slice(0, 10);
+        viewLectureList.value = lectureList.value.slice(0, 10);
         lecturePage.value = Math.ceil(lectureList.value.length / 10);
       } else {
-        showLectureList.value = lectureList.value;
+        viewLectureList.value = lectureList.value;
         lecturePage.value = 0;
       }
     };
@@ -120,10 +120,10 @@ export default defineComponent({
       }
 
       if (roomList.value.length > 10) {
-        showRoomList.value = roomList.value.slice(0, 10);
+        viewRoomList.value = roomList.value.slice(0, 10);
         roomPage.value = Math.ceil(roomList.value.length / 10);
       } else {
-        showRoomList.value = roomList.value;
+        viewRoomList.value = roomList.value;
         roomPage.value = 0;
       }
     };
@@ -143,16 +143,16 @@ export default defineComponent({
       }
 
       if (teacherList.value.length > 10) {
-        showTeacherList.value = teacherList.value.slice(0, 10);
+        viewTeacherList.value = teacherList.value.slice(0, 10);
         teacherPage.value = Math.ceil(teacherList.value.length / 10);
       } else {
-        showTeacherList.value = teacherList.value;
+        viewTeacherList.value = teacherList.value;
         teacherPage.value = 0;
       }
     };
 
     const changeState = (state: string) => {
-      selectValue.value = state;
+      selectedTime.value = state;
     };
 
     //TODO pagination
@@ -168,7 +168,7 @@ export default defineComponent({
     watch(
       () => currentLecturePage.value,
       () => {
-        showLectureList.value = lectureList.value.slice(
+        viewLectureList.value = lectureList.value.slice(
           10 * currentLecturePage.value - 10,
           10 * currentLecturePage.value
         );
@@ -176,7 +176,7 @@ export default defineComponent({
     );
 
     watch(
-      () => selectValue.value,
+      () => selectedTime.value,
       async () => {
         await setLectureList();
       }
@@ -199,16 +199,16 @@ export default defineComponent({
 
     return {
       teacherDetail,
-      showLectureList,
+      viewLectureList,
       lectureColor,
       lecturePage,
       currentLecturePage,
-      selectList,
-      selectValue,
-      showRoomList,
+      timeList,
+      selectedTime,
+      viewRoomList,
       roomPage,
       currentRoomPage,
-      showTeacherList,
+      viewTeacherList,
       teacherPage,
       currentTeacherPage,
       changeState,
@@ -232,8 +232,8 @@ export default defineComponent({
         >
         <div class="select-lecture-label-button">
           <select-button-component
-            :select-list="selectList"
-            :select-value="selectValue"
+            :select-list="timeList"
+            :select-value="selectedTime"
             @changeState="changeState"
           ></select-button-component>
         </div>
@@ -242,7 +242,7 @@ export default defineComponent({
       <div class="select-lecture-list">
         <div
           class="select-lecture-list-item"
-          v-for="(item, index) in showLectureList"
+          v-for="(item, index) in viewLectureList"
           :style="{ backgroundColor: lectureColor[index] }"
           @click="$emit('selectLecture', item)"
         >
@@ -269,7 +269,7 @@ export default defineComponent({
       <div class="select-lecture-list">
         <div
           class="select-lecture-list-item"
-          v-for="(item, index) in showRoomList"
+          v-for="(item, index) in viewRoomList"
           :style="{ backgroundColor: lectureColor[index] }"
           @click="$emit('selectRoom', item)"
         >
@@ -305,7 +305,7 @@ export default defineComponent({
         </div>
         <div
           class="select-lecture-list-item"
-          v-for="(item, index) in showTeacherList"
+          v-for="(item, index) in viewTeacherList"
           :style="{ backgroundColor: lectureColor[index] }"
           @click="$emit('selectTeacher', item)"
         >

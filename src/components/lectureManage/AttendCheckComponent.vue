@@ -28,7 +28,7 @@ export default defineComponent({
     const today = ref<Date>(new Date());
     const lectureDayState = ref(false);
     const teacherKey = ref<string>("");
-    const selectState = ref(false);
+    const selectLectureState = ref(false);
     const lectureDetail = ref<scheduleInterface | undefined>(undefined);
     const studentList = ref<Array<studentInterface> | undefined>(undefined);
     const existAttendState = ref(false);
@@ -42,7 +42,7 @@ export default defineComponent({
 
     const selectLecture = (lecture: scheduleInterface) => {
       lectureDetail.value = lecture;
-      selectState.value = true;
+      selectLectureState.value = true;
 
       if (today.value.getDay() !== 0) {
         if (today.value.getDay() === lectureDetail.value.day) {
@@ -95,7 +95,7 @@ export default defineComponent({
     const backToSelect = () => {
       lectureDetail.value = undefined;
       common.removeItem(KEYS.SS);
-      selectState.value = false;
+      selectLectureState.value = false;
     };
 
     const getAttendList = async () => {
@@ -190,9 +190,9 @@ export default defineComponent({
     };
 
     watch(
-      () => selectState.value,
+      () => selectLectureState.value,
       async () => {
-        if (selectState.value) {
+        if (selectLectureState.value) {
           await getStudentList();
           await getAttendList();
         }
@@ -213,7 +213,7 @@ export default defineComponent({
       category,
       today,
       lectureDayState,
-      selectState,
+      selectLectureState,
       lectureDetail,
       studentList,
       existAttendState,
@@ -242,7 +242,7 @@ export default defineComponent({
         }}
       </div>
       <div class="check-section-body">
-        <div class="check-section-body-today" v-if="selectState">
+        <div class="check-section-body-today" v-if="selectLectureState">
           <i class="fa-regular fa-calendar"></i>
           TODAY : {{ today.toISOString().substring(0, 4) }}년
           {{ today.toISOString().substring(5, 7) }}월
@@ -250,7 +250,7 @@ export default defineComponent({
           {{ today.toString().substring(0, 4) }}
           <span class="back-btn" @click="backToSelect">강의 다시 선택하기</span>
         </div>
-        <div class="check-section-body-lecture" v-if="!selectState">
+        <div class="check-section-body-lecture" v-if="!selectLectureState">
           <select-list-component
             list-type="LECTURE"
             @selectLecture="selectLecture"
@@ -316,7 +316,7 @@ export default defineComponent({
             v-if="existAttendState || !lectureDayState"
           ></div>
         </div>
-        <div class="no-data" v-if="selectState && !studentList">
+        <div class="no-data" v-if="selectLectureState && !studentList">
           수강하는 학생이 없습니다.
         </div>
       </div>

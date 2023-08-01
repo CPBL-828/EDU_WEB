@@ -14,14 +14,14 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
-    const isKyo = ref(false);
+    const kyomuState = ref(false);
     const editState = ref(false);
     const roomList = ref<Array<roomInterface>>([]);
-    const showRoomList = ref<Array<roomInterface>>([]);
-    const roomInfo = ref<roomInterface | undefined>(undefined);
+    const viewRoomList = ref<Array<roomInterface>>([]);
+    const roomDetail = ref<roomInterface | undefined>(undefined);
     const page = ref<number>(0);
     const currentPage = ref<number>(1);
-    const typePlaceholder = ref<string>("강의실 유형을 선택해주세요.");
+    const typeHolder = ref<string>("강의실 유형을 선택해주세요.");
     const typeList: Array<defaultInterface> = [
       { KEY: "basic", VALUE: "일반" },
       { KEY: "self", VALUE: "자습실" },
@@ -50,28 +50,28 @@ export default defineComponent({
       }
 
       if (roomList.value.length > 12) {
-        showRoomList.value = roomList.value.slice(0, 12);
+        viewRoomList.value = roomList.value.slice(0, 12);
         page.value = Math.ceil(roomList.value.length / 12);
       } else {
-        showRoomList.value = roomList.value;
+        viewRoomList.value = roomList.value;
         page.value = 0;
       }
     };
 
-    const selectPage = (p: number) => {
-      currentPage.value = p;
+    const selectPage = (page: number) => {
+      currentPage.value = page;
     };
 
-    const changePage = (p: number) => {
-      if (p === 1) currentPage.value = currentPage.value + 1;
+    const changePage = (page: number) => {
+      if (page === 1) currentPage.value = currentPage.value + 1;
       else currentPage.value = currentPage.value - 1;
     };
 
-    const selectRoomType = (t: defaultInterface) => {
-      roomType.value = t.VALUE as string;
+    const selectType = (type: defaultInterface) => {
+      roomType.value = type.VALUE as string;
     };
 
-    const saveRoom = async () => {
+    const createRoom = async () => {
       if (!roomName.value) {
         window.alert("강의실 명을 입력해주세요.");
         return false;
@@ -105,23 +105,23 @@ export default defineComponent({
       }
     };
 
-    const editRoom = (i: roomInterface) => {
+    const changeEditState = (room: roomInterface) => {
       editState.value = true;
 
-      roomKey.value = i.roomKey;
-      roomName.value = i.name;
-      beforeName.value = i.name;
-      roomType.value = i.type;
-      beforeType.value = i.type;
-      typePlaceholder.value = i.type;
-      totalPeople.value = i.totalPeople;
-      beforeTotal.value = i.totalPeople;
+      roomKey.value = room.roomKey;
+      roomName.value = room.name;
+      beforeName.value = room.name;
+      roomType.value = room.type;
+      beforeType.value = room.type;
+      typeHolder.value = room.type;
+      totalPeople.value = room.totalPeople;
+      beforeTotal.value = room.totalPeople;
     };
 
-    const removeRoom = async (i: roomInterface) => {
-      if (window.confirm(i.name + " 강의실을 삭제하시겠습니까?")) {
+    const deleteRoom = async (room: roomInterface) => {
+      if (window.confirm(room.name + " 강의실을 삭제하시겠습니까?")) {
         let data = {
-          roomKey: i.roomKey,
+          roomKey: room.roomKey,
         };
 
         const result = await ApiClient(
@@ -141,7 +141,7 @@ export default defineComponent({
       }
     };
 
-    const doEdit = async () => {
+    const editRoom = async () => {
       if (
         beforeName.value !== roomName.value ||
         beforeTotal.value !== totalPeople.value ||
@@ -176,14 +176,14 @@ export default defineComponent({
       }
     };
 
-    const selectRoom = (i: roomInterface) => {
-      roomInfo.value = i;
+    const selectRoom = (room: roomInterface) => {
+      roomDetail.value = room;
     };
 
     watch(
       () => currentPage.value,
       () => {
-        showRoomList.value = roomList.value.slice(
+        viewRoomList.value = roomList.value.slice(
           12 * currentPage.value - 12,
           12 * currentPage.value
         );
@@ -195,7 +195,7 @@ export default defineComponent({
 
       if (common.getItem(KEYS.UK)) {
         if (common.getItem(KEYS.UK).userKey === USER_KEY.KYO_ADM) {
-          isKyo.value = true;
+          kyomuState.value = true;
         }
       }
 
@@ -204,24 +204,24 @@ export default defineComponent({
 
     return {
       category,
-      isKyo,
+      kyomuState,
       editState,
-      showRoomList,
-      roomInfo,
+      viewRoomList,
+      roomDetail,
       page,
       currentPage,
-      typePlaceholder,
+      typeHolder,
       typeList,
       roomName,
       totalPeople,
       roomType,
       selectPage,
       changePage,
-      selectRoomType,
-      saveRoom,
+      selectType,
+      createRoom,
+      changeEditState,
+      deleteRoom,
       editRoom,
-      removeRoom,
-      doEdit,
       selectRoom,
     };
   },
@@ -250,11 +250,11 @@ export default defineComponent({
             <div class="lecture-detail-section-body-left-list" style="top: 50%">
               <div
                 :class="
-                  isKyo
+                  kyomuState
                     ? 'lecture-detail-section-body-left-list-item'
                     : 'lecture-detail-section-body-left-list-item-etc'
                 "
-                v-for="item in showRoomList"
+                v-for="item in viewRoomList"
                 @click="selectRoom(item)"
               >
                 <span class="lecture-name">{{ item.name }}</span>
@@ -262,18 +262,18 @@ export default defineComponent({
                   >수용 인원 : {{ item.totalPeople }}명</span
                 >
                 <span class="target">{{ item.type }}</span>
-                <div class="btn" v-if="isKyo">
+                <div class="btn" v-if="kyomuState">
                   <input
                     type="button"
                     class="btn-edit"
                     value="수정"
-                    @click="editRoom(item)"
+                    @click="changeEditState(item)"
                   />
                   <input
                     type="button"
                     class="btn-delete"
                     value="삭제"
-                    @click="removeRoom(item)"
+                    @click="deleteRoom(item)"
                   />
                 </div>
               </div>
@@ -289,7 +289,7 @@ export default defineComponent({
           </div>
 
           <div
-            v-if="isKyo"
+            v-if="kyomuState"
             class="lecture-detail-section-body-right"
             style="height: 514px"
           >
@@ -319,11 +319,11 @@ export default defineComponent({
                 <span class="label">강의실 유형</span>
                 <div class="page">
                   <drop-box-component
-                    :placeholder="typePlaceholder"
+                    :placeholder="typeHolder"
                     :select-list="typeList"
                     row-height="28px"
                     row-width="240px"
-                    @selectValue="selectRoomType"
+                    @selectValue="selectType"
                   ></drop-box-component>
                 </div>
                 <input
@@ -331,46 +331,46 @@ export default defineComponent({
                   type="button"
                   class="save-btn"
                   value="생성하기"
-                  @click="saveRoom"
+                  @click="createRoom"
                 />
                 <input
                   v-if="editState"
                   type="button"
                   class="save-btn"
                   value="수정하기"
-                  @click="doEdit"
+                  @click="editRoom"
                 />
               </div>
             </div>
           </div>
 
-          <div v-if="!isKyo" class="lecture-detail-section-body-right">
+          <div v-if="!kyomuState" class="lecture-detail-section-body-right">
             <div class="lecture-detail-section-body-right-main">
               <div
                 class="lecture-detail-section-body-right-main-tip"
-                v-if="!roomInfo"
+                v-if="!roomDetail"
               >
                 <span>강의실 상세 열람을</span
                 ><span>원하는 강의실 선택해 주세요.</span>
               </div>
               <div
                 class="lecture-detail-section-body-right-main-detail"
-                v-if="roomInfo"
+                v-if="roomDetail"
               >
                 <span class="title-label">강의실 상세 조회</span>
-                <span class="title-item">{{ roomInfo.name }}</span>
+                <span class="title-item">{{ roomDetail.name }}</span>
                 <div class="sap"></div>
                 <span class="label">강의실 유형</span>
-                <span class="item">{{ roomInfo.type }}</span>
+                <span class="item">{{ roomDetail.type }}</span>
                 <span class="label">총 수용 인원</span>
-                <span class="item">{{ roomInfo.totalPeople }} 명</span>
+                <span class="item">{{ roomDetail.totalPeople }} 명</span>
                 <span class="label">등록일</span>
                 <span class="item">{{
-                  roomInfo.createDate.substring(0, 4) +
+                  roomDetail.createDate.substring(0, 4) +
                   "년 " +
-                  roomInfo.createDate.substring(5, 7) +
+                  roomDetail.createDate.substring(5, 7) +
                   "월 " +
-                  roomInfo.createDate.substring(8, 10) +
+                  roomDetail.createDate.substring(8, 10) +
                   "일"
                 }}</span>
               </div>

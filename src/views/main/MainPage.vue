@@ -17,7 +17,7 @@ export default defineComponent({
   setup() {
     const adminState = ref(false);
     const userKey = ref<string | undefined>(undefined);
-    const userData = ref<
+    const userDetail = ref<
       parentInterface | studentInterface | teacherInterface | undefined
     >(undefined);
 
@@ -30,7 +30,7 @@ export default defineComponent({
         )
           adminState.value = true;
       }
-      userData.value = common.getItem(KEYS.LU);
+      userDetail.value = common.getItem(KEYS.LU);
 
       if (common.getItem(KEYS.MR)) common.removeItem(KEYS.MR);
       if (common.getItem(KEYS.SR)) common.removeItem(KEYS.SR);
@@ -39,7 +39,7 @@ export default defineComponent({
     return {
       adminState,
       userKey,
-      userData,
+      userDetail,
     };
   },
 });
@@ -47,9 +47,9 @@ export default defineComponent({
 
 <template>
   <my-info-component
-    v-if="userKey && userData && !adminState"
+    v-if="userKey && userDetail && !adminState"
     :userKey="userKey"
-    :user-data="userData"
+    :user-data="userDetail"
   ></my-info-component>
   <admin-main-component v-if="adminState"> </admin-main-component>
 </template>

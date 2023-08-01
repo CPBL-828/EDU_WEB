@@ -19,27 +19,27 @@ export default defineComponent({
   name: "NoticePage",
   components: { DropBoxComponent, ModalPopupComponent, DataListComponent },
   setup() {
+    const route = useRoute();
     const store = useStore();
     const router = useRouter();
-    const route = useRoute();
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const userKey = ref<string>("");
     const adminState = ref(false);
-    const header: defaultInterface[] = [
+    const noticeHeader: defaultInterface[] = [
       { KEY: "TYPE", VALUE: "공지 유형" },
       { KEY: "TITLE", VALUE: "공지 제목" },
       { KEY: "DATE", VALUE: "작성일자" },
       { KEY: "WRITER", VALUE: "작성자" },
     ];
-    const typePlaceholder = ref<string>("해당 없음");
-    const noticeType: defaultInterface[] = [
+    const typeHolder = ref<string>("해당 없음");
+    const noticeTypeList: defaultInterface[] = [
       { KEY: "ALL", VALUE: "전체" },
       { KEY: USER_KEY.TEA, VALUE: "강사" },
       { KEY: USER_KEY.STU, VALUE: "학생" },
     ];
     const userList = ref<Array<defaultInterface> | undefined>(undefined);
     const noticeList = ref<Array<noticeInterface> | undefined>(undefined);
-    const noticeInfo = ref<noticeInterface | undefined>(undefined);
+    const noticeDetail = ref<noticeInterface | undefined>(undefined);
     const writeState = ref(false);
     const totalCnt = ref<number | undefined>(undefined);
     const search = ref<string>("");
@@ -48,13 +48,13 @@ export default defineComponent({
     const yearList = ref<Array<defaultInterface> | undefined>(undefined);
     const teacherList = ref<Array<defaultInterface> | undefined>(undefined);
     const studentList = ref<Array<defaultInterface> | undefined>(undefined);
-    const reader = ref<defaultInterface | undefined>(undefined);
+    const inputTarget = ref<defaultInterface | undefined>(undefined);
     const inputType = ref<string>("");
     const inputTitle = ref<string>("");
     const inputContent = ref<string>("");
 
     const getNoticeList = async () => {
-      //TODO getNoticeList parameter: type, readerKey, year 추가
+      //TODO getNoticeList parameter: type, inputTargetKey, year 추가
       let data = {
         userKey: "",
         type: selectedType.value,
@@ -140,13 +140,13 @@ export default defineComponent({
       }
     };
 
-    const selectType = async (t: defaultInterface) => {
-      selectedType.value = t.VALUE as string;
+    const selectType = async (type: defaultInterface) => {
+      selectedType.value = type.VALUE as string;
       await getNoticeList();
     };
 
-    const selectYear = async (y: defaultInterface) => {
-      selectedYear.value = y.KEY;
+    const selectYear = async (year: defaultInterface) => {
+      selectedYear.value = year.KEY;
       await getNoticeList();
     };
 
@@ -157,15 +157,15 @@ export default defineComponent({
       store.commit("setModalState", true);
     };
 
-    const changeType = (t: defaultInterface) => {
-      inputType.value = t.VALUE as string;
+    const changeType = (type: defaultInterface) => {
+      inputType.value = type.VALUE as string;
     };
 
-    const changeReader = (r: defaultInterface) => {
-      reader.value = { KEY: r.KEY, VALUE: r.VALUE as string };
+    const changeTarget = (target: defaultInterface) => {
+      inputTarget.value = { KEY: target.KEY, VALUE: target.VALUE as string };
     };
 
-    const insertNotice = async () => {
+    const createNotice = async () => {
       if (!inputType.value) {
         window.alert("공지 유형을 선택해주세요.");
         return false;
@@ -177,15 +177,15 @@ export default defineComponent({
         return false;
       }
 
-      if (inputType.value !== "전체" && !reader.value) {
+      if (inputType.value !== "전체" && !inputTarget.value) {
         window.alert("공지 유형에 맞춰 열람 대상을 선택해주세요.");
         return false;
       }
 
       let data = {
         writerKey: userKey.value,
-        readerKey: reader.value ? reader.value.KEY : "",
-        readerNAme: reader.value ? reader.value.VALUE : "",
+        inputTargetKey: inputTarget.value ? inputTarget.value.KEY : "",
+        inputTargetNAme: inputTarget.value ? inputTarget.value.VALUE : "",
         type: inputType.value,
         title: inputTitle.value,
         content: inputContent.value,
@@ -205,8 +205,8 @@ export default defineComponent({
       }
     };
 
-    const showDetail = (i: noticeInterface) => {
-      noticeInfo.value = i;
+    const showNoticeDetail = (notice: noticeInterface) => {
+      noticeDetail.value = notice;
       writeState.value = false;
       store.commit("setModalState", true);
     };
@@ -226,10 +226,10 @@ export default defineComponent({
       () => inputType.value,
       () => {
         if (inputType.value === "전체") {
-          typePlaceholder.value = "해당 없음";
+          typeHolder.value = "해당 없음";
           userList.value = undefined;
         } else {
-          typePlaceholder.value = inputType.value + "명";
+          typeHolder.value = inputType.value + "명";
 
           if (inputType.value === "강사") {
             userList.value = teacherList.value;
@@ -268,12 +268,12 @@ export default defineComponent({
     return {
       category,
       adminState,
-      header,
-      typePlaceholder,
-      noticeType,
+      noticeHeader,
+      typeHolder,
+      noticeTypeList,
       userList,
       noticeList,
-      noticeInfo,
+      noticeDetail,
       writeState,
       totalCnt,
       search,
@@ -286,9 +286,9 @@ export default defineComponent({
       selectYear,
       writeNotice,
       changeType,
-      changeReader,
-      insertNotice,
-      showDetail,
+      changeTarget,
+      createNotice,
+      showNoticeDetail,
     };
   },
 });
@@ -320,7 +320,7 @@ export default defineComponent({
           <div class="notice-section-body-adm-filter" v-if="adminState">
             <div class="notice-section-body-adm-filter-type">
               <drop-box-component
-                :select-list="noticeType"
+                :select-list="noticeTypeList"
                 placeholder="공지 유형"
                 row-width="180px"
                 row-height="33px"
@@ -347,11 +347,11 @@ export default defineComponent({
           <div class="notice-section-body-content">
             <data-list-component
               v-if="noticeList"
-              :header="header"
+              :header="noticeHeader"
               list-type="notice"
               :data-list="noticeList"
               :total-cnt="totalCnt ? totalCnt : 0"
-              @showNoticeDetail="showDetail"
+              @showNoticeDetail="showNoticeDetail"
             ></data-list-component>
             <div class="no-data" v-if="!noticeList">
               불러올 데이터가 없습니다!
@@ -365,26 +365,26 @@ export default defineComponent({
       <template v-slot:body>
         <div class="notice-detail" v-if="!writeState">
           <div class="notice-detail-container">
-            <div class="notice-detail-container-header">
-              <div class="notice-detail-container-header-type">
+            <div class="notice-detail-container-noticeHeader">
+              <div class="notice-detail-container-noticeHeader-type">
                 <div class="type-label">공지 유형</div>
-                <div class="type-item">{{ noticeInfo?.type }}</div>
+                <div class="type-item">{{ noticeDetail?.type }}</div>
               </div>
-              <div class="notice-detail-container-header-title">
+              <div class="notice-detail-container-noticeHeader-title">
                 <div class="title-label">공지 제목</div>
-                <div class="title-item">{{ noticeInfo?.title }}</div>
+                <div class="title-item">{{ noticeDetail?.title }}</div>
               </div>
-              <div class="notice-detail-container-header-date">
+              <div class="notice-detail-container-noticeHeader-date">
                 <div class="date-label">작성 일자</div>
                 <div class="date-item">
-                  {{ noticeInfo?.createDate.substring(0, 4) }}-{{
-                    noticeInfo?.createDate.substring(5, 7)
-                  }}-{{ noticeInfo?.createDate.substring(8, 10) }}
+                  {{ noticeDetail?.createDate.substring(0, 4) }}-{{
+                    noticeDetail?.createDate.substring(5, 7)
+                  }}-{{ noticeDetail?.createDate.substring(8, 10) }}
                 </div>
               </div>
             </div>
             <div style="white-space: pre" class="notice-detail-container-body">
-              {{ noticeInfo?.content }}
+              {{ noticeDetail?.content }}
             </div>
           </div>
         </div>
@@ -393,16 +393,16 @@ export default defineComponent({
           type="button"
           class="write-btn"
           value="작성하기"
-          @click="insertNotice"
+          @click="createNotice"
           v-if="writeState"
         />
         <div class="notice-write" v-if="writeState">
           <div class="notice-write-container">
-            <div class="notice-write-container-header">
+            <div class="notice-write-container-noticeHeader">
               <div class="notice-write-type">
                 <drop-box-component
                   placeholder="공지 유형"
-                  :select-list="noticeType"
+                  :select-list="noticeTypeList"
                   row-width="120px"
                   row-height="31px"
                   @selectValue="changeType"
@@ -410,14 +410,14 @@ export default defineComponent({
               </div>
               <div class="notice-write-type">
                 <drop-box-component
-                  :placeholder="typePlaceholder"
+                  :placeholder="typeHolder"
                   :select-list="userList"
                   row-width="130px"
                   row-height="31px"
-                  @selectValue="changeReader"
+                  @selectValue="changeTarget"
                 ></drop-box-component>
               </div>
-              <div class="notice-write-container-header-title">
+              <div class="notice-write-container-noticeHeader-title">
                 <div class="title-label">공지 제목</div>
                 <div class="title-item">
                   <input
@@ -427,7 +427,7 @@ export default defineComponent({
                   />
                 </div>
               </div>
-              <div class="notice-write-container-header-date">
+              <div class="notice-write-container-noticeHeader-date">
                 <div class="date-label">작성 일자</div>
                 <div class="date-item">
                   {{ new Date().toISOString().substring(0, 10) }}

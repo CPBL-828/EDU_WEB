@@ -9,10 +9,10 @@ import { useStore } from "vuex";
 export default defineComponent({
   components: { HeaderComponent, CalendarPopup, SidebarComponent },
   setup() {
-    const store = useStore();
     const route = useRoute();
+    const store = useStore();
     const sidebarState = ref(true);
-    const modalBack = ref(false);
+    const modalBackgroundState = ref(false);
 
     watch(
       () => route.path,
@@ -25,20 +25,20 @@ export default defineComponent({
     watch(
       () => store.state.modalState,
       () => {
-        modalBack.value = store.state.modalState;
+        modalBackgroundState.value = store.state.modalState;
       }
     );
 
     return {
       sidebarState,
-      modalBack,
+      modalBackgroundState,
     };
   },
 });
 </script>
 
 <template>
-  <div class="modal-back" v-if="modalBack"></div>
+  <div class="modal-back" v-if="modalBackgroundState"></div>
   <calendar-popup v-if="!sidebarState"></calendar-popup>
   <sidebar-component v-if="!sidebarState"></sidebar-component>
   <header-component v-if="!sidebarState"></header-component>

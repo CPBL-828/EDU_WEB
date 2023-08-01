@@ -30,7 +30,7 @@ export default defineComponent({
     const category = ref<Array<defaultInterface> | undefined>(undefined);
     const adminState = ref(false);
     const selectState = ref(false);
-    const lectureInfo = ref<scheduleInterface | undefined>(undefined);
+    const lectureDetail = ref<scheduleInterface | undefined>(undefined);
     const testHeader: defaultInterface[] = [
       { KEY: "DATE", VALUE: "시험 일자" },
       { KEY: "TYPE", VALUE: "시험 유형" },
@@ -39,7 +39,7 @@ export default defineComponent({
     ];
     const testList = ref<Array<testInterface> | undefined>(undefined);
     const totalCnt = ref(0);
-    const testInfo = ref<testInterface | undefined>(undefined);
+    const testDetail = ref<testInterface | undefined>(undefined);
     const testStatus = ref<Array<testStatusInterface> | undefined>(undefined);
     const scoreMode = ref(false);
     const createMode = ref(false);
@@ -74,7 +74,7 @@ export default defineComponent({
 
     const getTestList = async () => {
       let data = {
-        lectureKey: lectureInfo.value?.lectureKey,
+        lectureKey: lectureDetail.value?.lectureKey,
         type: "",
         testDate: "",
       };
@@ -97,7 +97,7 @@ export default defineComponent({
 
     const getTestStatusList = async () => {
       let data = {
-        testKey: testInfo.value?.testKey,
+        testKey: testDetail.value?.testKey,
       };
 
       const result = await ApiClient(
@@ -113,35 +113,35 @@ export default defineComponent({
     };
 
     const backToSelect = () => {
-      lectureInfo.value = undefined;
+      lectureDetail.value = undefined;
       common.removeItem(KEYS.SS);
       selectState.value = false;
     };
 
-    const selectLecture = async (i: scheduleInterface) => {
-      lectureInfo.value = i;
-      common.setItem(KEYS.SS, common.makeJson(lectureInfo.value));
+    const selectLecture = async (lecture: scheduleInterface) => {
+      lectureDetail.value = lecture;
+      common.setItem(KEYS.SS, common.makeJson(lectureDetail.value));
 
       await getTestList();
       selectState.value = true;
     };
 
-    const showTestDetail = async (t: testInterface) => {
-      testInfo.value = t;
+    const showTestDetail = async (test: testInterface) => {
+      testDetail.value = test;
       await getTestStatusList();
       store.commit("setModalState", true);
     };
 
-    const downloadSheet = async (t: testInterface) => {
-      if (t.testSheet) {
+    const downloadSheet = async (test: testInterface) => {
+      if (test.testSheet) {
         if (window.confirm("첨부파일을 다운로드 하시겠습니까?")) {
-          const sheetUrl = CONSTANT.FILE_URL + t.testSheet;
+          const sheetUrl = CONSTANT.FILE_URL + test.testSheet;
           const response = await fetch(sheetUrl);
           if (response.ok) {
             const blob = await response.blob();
             const filename = `${
-              lectureInfo.value?.lectureName
-            }_${t.testDate.slice(0, 10)}_${t.testType}`;
+              lectureDetail.value?.lectureName
+            }_${test.testDate.slice(0, 10)}_${test.testType}`;
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.setAttribute("download", filename);
@@ -170,8 +170,8 @@ export default defineComponent({
       store.commit("setModalState", true);
     };
 
-    const selectType = (t: defaultInterface) => {
-      selectedType.value = t;
+    const selectType = (type: defaultInterface) => {
+      selectedType.value = type;
     };
 
     const showCalendar = () => {
@@ -188,7 +188,7 @@ export default defineComponent({
       }
     };
 
-    const doInsert = async () => {
+    const createTest = async () => {
       if (!selectedType.value) {
         window.alert("시험 유형을 선택해 주세요.");
         return false;
@@ -201,8 +201,8 @@ export default defineComponent({
       }
 
       let data = {
-        lectureKey: lectureInfo.value?.lectureKey,
-        lectureName: lectureInfo.value?.lectureName,
+        lectureKey: lectureDetail.value?.lectureKey,
+        lectureName: lectureDetail.value?.lectureName,
         testDate: selectedDate.value,
         testType: selectedType.value?.VALUE as string,
         content: content.value,
@@ -268,7 +268,7 @@ export default defineComponent({
       }
 
       if (common.getItem(KEYS.SS)) {
-        lectureInfo.value = common.getItem(KEYS.SS);
+        lectureDetail.value = common.getItem(KEYS.SS);
         selectState.value = true;
 
         await getTestList();
@@ -283,10 +283,10 @@ export default defineComponent({
       category,
       adminState,
       selectState,
-      lectureInfo,
+      lectureDetail,
       testHeader,
       testList,
-      testInfo,
+      testDetail,
       testStatus,
       totalCnt,
       scoreMode,
@@ -307,7 +307,7 @@ export default defineComponent({
       selectType,
       showCalendar,
       insertFile,
-      doInsert,
+      createTest,
       changePage,
     };
   },
@@ -340,8 +340,10 @@ export default defineComponent({
             >
             <div class="test-section-body-schedule-title">
               <div class="test-section-body-schedule-title-content">
-                <span class="lecture-name">{{ lectureInfo?.lectureName }}</span>
-                <span class="subject-name">{{ lectureInfo?.subject }}</span>
+                <span class="lecture-name">{{
+                  lectureDetail?.lectureName
+                }}</span>
+                <span class="subject-name">{{ lectureDetail?.subject }}</span>
               </div>
               <input
                 v-if="!adminState"
@@ -373,7 +375,7 @@ export default defineComponent({
     >
       <template v-slot:button>
         <div v-if="createMode" class="btn">
-          <div class="btn-save-active" @click="doInsert">등록하기</div>
+          <div class="btn-save-active" @click="createTest">등록하기</div>
         </div>
         <div v-else class="btn">
           <div
@@ -394,7 +396,7 @@ export default defineComponent({
         <div v-if="createMode" class="assign-create">
           <div class="assign-create-header">
             <div class="assign-create-header-lecture">
-              {{ lectureInfo?.lectureName }}
+              {{ lectureDetail?.lectureName }}
             </div>
             <div class="assign-create-header-select">
               <drop-box-component
@@ -441,18 +443,20 @@ export default defineComponent({
           <div v-if="!createMode && firstPage" class="test-status-first">
             <div class="test-status-first-header">
               <div class="test-status-first-header-lecture">
-                {{ lectureInfo?.lectureName }}
+                {{ lectureDetail?.lectureName }}
               </div>
               <div class="sap"></div>
               <div class="test-status-first-header-type">
-                시험 유형 : {{ testInfo?.testType }}
+                시험 유형 : {{ testDetail?.testType }}
               </div>
               <div class="sap"></div>
               <div class="test-status-first-header-deadline">
-                시험일자 : {{ testInfo?.testDate.split("T")[0] }}
+                시험일자 : {{ testDetail?.testDate.split("T")[0] }}
               </div>
             </div>
-            <div class="test-status-first-content">{{ testInfo?.content }}</div>
+            <div class="test-status-first-content">
+              {{ testDetail?.content }}
+            </div>
           </div>
 
           <div v-else-if="!createMode && !firstPage" class="test-status-list">

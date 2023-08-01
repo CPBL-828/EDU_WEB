@@ -7,7 +7,7 @@ export default defineComponent({
   name: "UserSelectPage",
   setup() {
     const router = useRouter();
-    const userType = ref([
+    const userTypeList = ref([
       {
         KEY: USER_KEY.STU,
         VALUE: "학생",
@@ -30,18 +30,19 @@ export default defineComponent({
       },
     ]);
 
-    const goLogin = (k: string) => {
-      let user: string = "";
-      if (k === USER_KEY.STU) user = "student";
-      else if (k === USER_KEY.PAR) user = "parent";
-      else if (k === USER_KEY.TEA) user = "teacher";
-      else if (k === USER_KEY.ADM) user = "admin";
+    const goLogin = (key: string) => {
+      let userType: string = "";
 
-      router.push("/" + user + "/login");
+      if (key === USER_KEY.STU) userType = "student";
+      else if (key === USER_KEY.PAR) userType = "parent";
+      else if (key === USER_KEY.TEA) userType = "teacher";
+      else if (key === USER_KEY.ADM) userType = "admin";
+
+      router.push("/" + userType + "/login");
     };
 
     return {
-      userType,
+      userTypeList,
       goLogin,
     };
   },
@@ -59,7 +60,7 @@ export default defineComponent({
         <div class="login-page-select-section">
           <div
             class="login-page-select-section-item"
-            v-for="item in userType"
+            v-for="item in userTypeList"
             @click="goLogin(item.KEY)"
           >
             <div class="login-page-select-section-item-user">

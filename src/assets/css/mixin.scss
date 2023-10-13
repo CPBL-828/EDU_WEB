@@ -1,0 +1,55 @@
+$background-color: #f8f8f8;
+$primary-color: #0099ff;
+$hover-color: #32adff;
+$sub-color: #565656;
+$disable-color: #cccccc;
+
+$laptop-width: 1200px;
+
+@mixin laptop-size {
+  @media (max-width: $laptop-width) {
+    @content;
+  }
+}
+
+@mixin section-custom {
+  position: relative;
+  width: calc(100% - 128px);
+  height: calc(100% - 95px);
+  overflow: scroll;
+}
+
+@mixin inner-section-custom {
+  position: absolute;
+  width: 100%;
+  top: calc(50% - 21px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin tag-custom {
+  width: 200px;
+  height: 42px;
+  background-color: $primary-color;
+  border-radius: 25px 25px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+}
+
+@mixin body-custom {
+  position: relative;
+  background-color: white;
+  width: 100%;
+  border-radius: 0 15px 15px 15px;
+}
+
+@mixin ellipsis {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+} ;

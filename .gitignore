@@ -26,3 +26,4 @@ dist-ssr
 /src/assets/css/*.css.map
 
 *.d.ts
+/src/constant.ts

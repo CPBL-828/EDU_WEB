@@ -1,16 +1,40 @@
-# Vue 3 + TypeScript + Vite
+# 학원 관련 데이터 및 학원생을 관리하는 ‘학원 관리 플랫폼 EDU’
+### 🖥️EDU Platform 개발 배경
+기존 학원 관리 시스템은 기능은 다양하지만 다음과 같은 문제점들이 발생했다 (실제 사용자들로부터 수렴):    
+- **사용자 경험(UX)과 인터페이스(UI)의 불편함**<br />
+2000년대 초반에 개발된 기존 프로그램(A 등)은 복잡하고 직관적이지 못한 화면 구성, 권한 구분이 불명확한 메뉴 노출, 최신 해상도에 맞지 않는 UI 등으로 사용자들의 불편함을 야기.
+- **권한 구조의 비효율성**<br />
+강사가 과도한 기능 접근 권한을 가지며, 데이터의 정확성과 일관성을 유지하기 어려운 구조로.
+관리자와 강사 간 역할 분리가 필요했지만 시스템상 구현이 어려웠음.
+- **데이터 가시성과 활용 부족**<br />
+학원 운영에 필요한 다양한 데이터가 분산되거나 수기 관리되며, 이를 활용해 운영 전략을 세우가 어려움.
+시각화와 자동 수집이 가능한 통합 시스템이 필요.
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+EDU 플랫폼은 이러한 문제를 해결하기 위해 **클라우드 기반의 관리자 및 강사용 데스크탑 플랫폼**으로 시작되어 운영 효율화와 직관적인 사용자 경험으로 최우선으로 고려하여 개발되었다.<br />
+이후 웹 시스템에서 축적된 운영 노하우와 구조를 기반으로, 학생과 학부모처럼 **데이터 열람 중심의 일반 사용자를 위한 모바일 애플리케이션과 키오스크 시스템**으로 확장 개발도 진행되었다.
 
-## Recommended IDE Setup
+📱<a href="https://github.com/CPBL-828/EDU_APP">EDU Application도 보러 가기</a>
+## 📝EDU 연구개발 목표
+EDU 플랫폼은 변화하는 교육 환경과 학원 운영 구조에 적합한 현대적 관리 플랫폼을 구축하는 것을 목표로 한다.<br />
+클라우드 기반 아키텍처를 통해 운영 비용을 절감하고 접근성을 향상시키며, 강사와 관리자의 권한을 명확히 구분함으로써 데이터의 정확성과 책임 구조를 강화한다. 학원 운영 권한의 치우친 업무 강도를 조정하고, 최종적으로는 체계적이고 유연한 운영 환경을 지원하고자 한다.
+## ✍️연구개발 내용
+**역할 기반 기능 분리**: 관리자·강사 간 권한 구분 및 상호작용 구조 설계 (ex. 건의 시스템)<br />
+**직관적 UI 구성**: 모바일에서 검증된 UX 패턴을 데스크탑에 적용하여 피로도 최소화<br />
+**데이터 기반 운영 최적화**: 출결, 상담, 시간표, 과제, 시험 등의 운영 데이터를 체계화<br />
+**가시성 높은 시각화**: 축적된 데이터를 분석·활용 가능한 형태로 시각화<br />
+**디바이스 확장 고려한 설계**: 태블릿/키오스크와 데이터 구조 일치 유지<br />
+## 🛜활용 분야
+사교육이 이루어지는 학원에서 사용할 수 있다. 정해진 교육 과정이 있고 해당 과정의 수강을 원하는 교육생들이 있을 때, 관리자가 교육 과정에 교육생들을 직접 배치한다. 그리고 배치된 교육생들을 관리하는 교육자가 있는 환경에서 프로그램을 사용할 것으로 생각하고 설계되었다.
+전체 과정을 관리자가 최종적으로 확인하는 과정을 거쳐 프로그램을 통해 일어나는 과정을 관리자가 필수적으로 인지할 수 있도록 하였다. 또한 어플리케이션은 학원에 다니는 학원생들과 자녀의 학업 관리를 위해 힘쓰는 학부모들은 관계자와 소통하고 학원 생활을 편리하게 관리할 수 있도록 하였다.
+## 🌟기대효과
+EDU 플랫폼은 규모와 관계없이 다양한 학원 환경에 적용될 수 있도록 설계되었다. 따라서 중·대형 학원에서도 복잡한 교무·행정 업무를 체계적으로 관리할 수 있는 시스템으로 활용 가능하다.<br />
+또한 강사와 관리자 간의 업무 영역을 명확히 나누고 협업할 수 있는 기능을 제공함으로써 운영 효율을 극대화 하고, 애플리케이션 및 키오스크와의 연동을 통한 스마트 학원 환경으로의 확장성도 고려하고 있다.
+## 🎥구현 영상
+[![Video Label](http://img.youtube.com/vi/wkHJjfJlmok/0.jpg)](https://youtu.be/wkHJjfJlmok)
+##### 🎥발표 영상
+[![Video Label](http://img.youtube.com/vi/DBk3ugJbSwM/0.jpg)](https://youtu.be/DBk3ugJbSwM)<br />
+[![Video Label](http://img.youtube.com/vi/kpkLQyLNy0Y/0.jpg)](https://youtu.be/kpkLQyLNy0Y)
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
-
-## Type Support For `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
-
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
-
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+## 🔍개발언어
+![js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
+![js](https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square)

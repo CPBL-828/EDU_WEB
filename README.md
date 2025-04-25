@@ -38,3 +38,4 @@ EDU 플랫폼은 규모와 관계없이 다양한 학원 환경에 적용될 수
 ## 🔍개발언어
 ![js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
 ![js](https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square)
+![js](https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=Sass&logoColor=white)
